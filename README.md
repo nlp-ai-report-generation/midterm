@@ -15,7 +15,7 @@ NLP-based project for analyzing lecture STT scripts and generating instructor fe
 ## Quick Start
 
 1. Create virtual environment.
-2. Install dependencies: `pip install -r requirements.txt -r requirements/dev.txt`
+2. Install dependencies: `pip install -r requirements.txt`
 3. Copy `.env.example` to `.env` and fill API keys.
 4. Run checks: `python scripts/check_env.py`
 5. Run tests: `pytest`

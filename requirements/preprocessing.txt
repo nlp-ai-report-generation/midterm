@@ -1,3 +1,4 @@
-﻿pandas>=2.2,<3.0
-numpy>=1.26,<3.0
+﻿-r base.txt
 konlpy>=0.6.0,<0.7
+pandas>=2.2,<3.0
+nltk>=3.9,<4.0

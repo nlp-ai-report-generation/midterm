@@ -3,3 +3,4 @@
 -r requirements/rule_analysis.txt
 -r requirements/llm_analysis.txt
 -r requirements/report_ui.txt
+-r requirements/dev.txt
