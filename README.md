@@ -47,3 +47,17 @@
 ## 문서
 
 - [의사결정 포인트](./docs/decision-points.md)
+
+## Agent Workflow
+
+- 공용 작업 규칙: [AGENTS.md](./AGENTS.md)
+- 공유 메모리 시작점: [memory/current-state.md](./memory/current-state.md)
+- 장기 결정 기록: [memory/decisions.md](./memory/decisions.md)
+- 저장소 전용 스킬: `agents/skills/`
+
+새 에이전트는 보통 아래 순서로 시작합니다.
+
+1. `AGENTS.md`와 `memory/current-state.md`를 읽습니다.
+2. `memory/decisions.md`에서 이미 정해진 방향을 확인합니다.
+3. 이번 작업에 맞는 스킬과 관련 문서만 추가로 읽습니다.
+4. 작업이 끝나면 메모리 문서를 업데이트합니다.
