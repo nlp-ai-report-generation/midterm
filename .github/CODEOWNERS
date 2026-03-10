@@ -1,0 +1,9 @@
+﻿# Assign default reviewers for all changes
+* @team-lead
+
+# Domain owners
+/src/preprocessing/ @member-a
+/src/rule_analysis/ @member-b
+/src/llm_analysis/ @member-c
+/src/report/ @member-d
+/app/ @member-d

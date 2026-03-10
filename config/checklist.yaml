@@ -1,0 +1,64 @@
+﻿weights:
+  high: 1.0
+  medium: 0.7
+  low: 0.4
+
+items:
+  - category: language_quality
+    item: filler_word_repetition
+    weight: high
+  - category: language_quality
+    item: utterance_completeness
+    weight: medium
+  - category: language_quality
+    item: language_consistency
+    weight: medium
+
+  - category: lecture_structure
+    item: learning_goal_intro
+    weight: high
+  - category: lecture_structure
+    item: previous_lesson_link
+    weight: high
+  - category: lecture_structure
+    item: explanation_order
+    weight: medium
+  - category: lecture_structure
+    item: key_point_emphasis
+    weight: medium
+  - category: lecture_structure
+    item: closing_summary
+    weight: low
+
+  - category: concept_clarity
+    item: concept_definition
+    weight: high
+  - category: concept_clarity
+    item: analogy_or_example
+    weight: high
+  - category: concept_clarity
+    item: prerequisite_check
+    weight: medium
+  - category: concept_clarity
+    item: speech_rate_appropriateness
+    weight: medium
+
+  - category: example_practice_link
+    item: example_relevance
+    weight: high
+  - category: example_practice_link
+    item: practice_connection
+    weight: high
+  - category: example_practice_link
+    item: error_response
+    weight: medium
+
+  - category: student_interaction
+    item: understanding_check_questions
+    weight: high
+  - category: student_interaction
+    item: participation_prompt
+    weight: high
+  - category: student_interaction
+    item: response_sufficiency
+    weight: high

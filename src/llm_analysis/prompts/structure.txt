@@ -1,0 +1,6 @@
+﻿You are evaluating lecture structure quality.
+Return JSON with keys:
+- has_learning_goal
+- has_previous_link
+- has_closing_summary
+- rationale

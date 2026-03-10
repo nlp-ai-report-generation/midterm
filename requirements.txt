@@ -1,0 +1,5 @@
+﻿-r requirements/base.txt
+-r requirements/preprocessing.txt
+-r requirements/rule_analysis.txt
+-r requirements/llm_analysis.txt
+-r requirements/report_ui.txt
