@@ -16,12 +16,12 @@
 python --version
 ```
 
-`Python 3.11.x` 이상이 출력되면 Step 2로 넘어간다. "명령을 찾을 수 없습니다"가 뜨거나 3.10 이하라면 아래 과정을 진행한다.
+`Python 3.11.x` 또는 `3.12.x`가 출력되면 Step 2로 넘어간다. "명령을 찾을 수 없습니다"가 뜨거나 3.10 이하라면 아래 과정을 진행한다.
 
 ### 1-2. Python 다운로드
 
 1. https://www.python.org/downloads/ 에 접속한다.
-2. 상단의 **"Download Python 3.12.x"** (또는 최신 3.11 이상) 버튼을 클릭한다.
+2. 상단의 **"Download Python 3.12.x"** (또는 3.11.x) 버튼을 클릭한다.
 3. 다운로드된 설치 파일(`python-3.x.x-amd64.exe`)을 실행한다.
 
 ### 1-3. 설치 시 주의사항
@@ -36,6 +36,18 @@ pip --version
 ```
 
 두 명령 모두 버전이 출력되면 정상이다.
+
+> **주의:** `3.13`, `3.14` 같은 최신 개발 버전은 일부 라이브러리 호환성 문제가 있다. 이 프로젝트는 `3.11` 또는 `3.12` 사용을 권장한다.
+
+### 1-4. Python Launcher 확인 (권장)
+
+Windows에서는 `py` 런처로 여러 버전 중 원하는 버전을 선택할 수 있다.
+
+```
+py -0p
+```
+
+목록에 `-V:3.12` 또는 `-V:3.11`이 보이면 정상이다.
 
 ---
 
@@ -132,15 +144,17 @@ cd init
 
 ## Step 5. 가상환경(venv) 생성 및 활성화
 
-### 5-1. venv 생성
+### 5-1. venv 생성 (3.12/3.11 고정)
 
 프로젝트 루트 디렉토리에서 아래 명령을 실행한다.
 
 ```
-python -m venv .venv
+py -3.12 -m venv .venv
 ```
 
 `.venv` 폴더가 생성된다. 이 폴더는 Git에 올리지 않는다 (.gitignore에 이미 포함).
+
+> `py -3.12`가 없다면 `py -3.11 -m venv .venv`로 생성한다.
 
 ### 5-2. venv 활성화
 
@@ -190,39 +204,39 @@ deactivate
 ### 6-1. pip 업그레이드 (선행)
 
 ```
-python -m pip install --upgrade pip
+.\.venv\Scripts\python -m pip install --upgrade pip
 ```
 
 ### 6-2. 본인 담당 모듈에 맞는 라이브러리 설치
 
 **담당자 A (전처리 + 인프라):**
 ```
-pip install -r requirements/preprocessing.txt
-pip install -r requirements/dev.txt
+.\.venv\Scripts\python -m pip install -r requirements/preprocessing.txt
+.\.venv\Scripts\python -m pip install -r requirements/dev.txt
 ```
 
 **담당자 B (규칙 기반 분석):**
 ```
-pip install -r requirements/rule_analysis.txt
-pip install -r requirements/dev.txt
+.\.venv\Scripts\python -m pip install -r requirements/rule_analysis.txt
+.\.venv\Scripts\python -m pip install -r requirements/dev.txt
 ```
 
 **담당자 C (LLM 분석):**
 ```
-pip install -r requirements/llm_analysis.txt
-pip install -r requirements/dev.txt
+.\.venv\Scripts\python -m pip install -r requirements/llm_analysis.txt
+.\.venv\Scripts\python -m pip install -r requirements/dev.txt
 ```
 
 **담당자 D (리포트 + UI):**
 ```
-pip install -r requirements/report_ui.txt
-pip install -r requirements/dev.txt
+.\.venv\Scripts\python -m pip install -r requirements/report_ui.txt
+.\.venv\Scripts\python -m pip install -r requirements/dev.txt
 ```
 
 ### 6-3. 설치 확인
 
 ```
-pip list
+.\.venv\Scripts\python -m pip list
 ```
 
 설치된 패키지 목록이 출력되면 정상이다.
@@ -255,7 +269,7 @@ ANTHROPIC_API_KEY=sk-ant-xxxxxxxxxxxxx
 ### 8-1. 검증 스크립트 실행
 
 ```
-python scripts/check_env.py
+.\.venv\Scripts\python scripts/check_env.py
 ```
 
 모든 항목이 OK로 표시되면 환경 세팅이 완료된 것이다.
@@ -286,7 +300,7 @@ python scripts/check_env.py
 ### 8-3. 테스트 실행
 
 ```
-pytest tests/ -v
+.\.venv\Scripts\python -m pytest tests/ -v
 ```
 
 기존 테스트가 통과하면 개발을 시작할 준비가 된 것이다.
@@ -333,8 +347,8 @@ git checkout -b feature/a-새기능이름
 다른 팀원이 requirements 파일을 수정했다면 재설치한다.
 
 ```
-pip install -r requirements/base.txt
-pip install -r requirements/본인모듈.txt
+.\.venv\Scripts\python -m pip install -r requirements/base.txt
+.\.venv\Scripts\python -m pip install -r requirements/본인모듈.txt
 ```
 
 ### 9-6. 작업 후 커밋 및 푸시
@@ -354,6 +368,32 @@ deactivate
 ---
 
 ## 자주 발생하는 문제 해결
+
+### venv 생성 후 pip이 없다는 오류
+
+가끔 `venv` 생성 직후 `pip`이 빠져 있을 수 있다. 아래 순서로 복구한다.
+
+```
+py -3.12 -m venv .venv
+.\.venv\Scripts\python -m ensurepip --upgrade
+.\.venv\Scripts\python -m pip install --upgrade pip
+```
+
+`ensurepip`가 실패하면 `TEMP` 경로를 바꿔서 재시도한다.
+
+```
+set TEMP=%CD%\.venv_tmp
+set TMP=%CD%\.venv_tmp
+.\.venv\Scripts\python -m ensurepip --upgrade
+```
+
+### pip 설치 중 `WinError 10013` (네트워크 차단)
+
+회사/학교 보안 정책이나 방화벽으로 인해 발생할 수 있다. 이 경우 관리자 권한 PowerShell에서 실행하거나, 보안 소프트웨어 예외 처리가 필요하다.
+
+### conda 환경과 충돌
+
+Anaconda가 기본 `pip`를 가로채는 경우가 있다. 항상 `.\.venv\Scripts\python -m pip ...` 형식으로 실행한다.
 
 ### "python" 명령이 인식되지 않음
 
