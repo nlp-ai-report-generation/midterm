@@ -16,6 +16,9 @@ htmlcov/
 venv/
 env/
 
+# Local temp dirs (created during setup / pip)
+.tmp/
+
 # Environment
 .env
 .env.*
