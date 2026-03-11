@@ -1,6 +1,0 @@
-﻿You are evaluating concept clarity.
-Return JSON with keys:
-- has_definition
-- has_analogy_or_example
-- checks_prerequisite
-- rationale

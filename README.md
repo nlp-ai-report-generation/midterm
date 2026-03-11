@@ -1,196 +1,176 @@
-# AI Lecture Analysis Report Generator
+# AI 강의 분석 리포트 생성기
 
-NLP-based project for analyzing lecture STT scripts and generating instructor feedback reports.
+STT 강의 스크립트를 자동 분석하여 강사 개선 인사이트를 생성하는 시스템.
+LangGraph 기반 에이전틱 평가 파이프라인으로 5개 카테고리, 18개 항목을 정량 평가한다.
 
-## 아키텍처 결정: 분석 접근 방식 비교
+## 아키텍처
 
-프로젝트의 핵심인 "강의 품질 분석"을 어떻게 구현할지 두 가지 접근 방식이 있습니다.
-
----
-
-### 1. 전통적 파이프라인 방식 (Rule-Based Pipeline)
-
-**흐름:**
 ```
-STT 원문 → 파싱 → 청킹(Chunking) → 전처리 → 규칙 기반 분석 → 점수 산출 → 리포트
-```
-
-**특징:**
-- 각 단계가 명확히 분리된 파이프라인
-- 정규표현식, 통계적 기법, 사전 정의된 규칙 활용
-- 2년 전 NLP 프로젝트에서 주로 사용하던 방식
-
-**장점:**
-- 실행 속도 빠름
-- 비용 저렴 (LLM 호출 없음)
-- 결과 일관성 높음
-- 디버깅 용이
-- 배포 단순
-
-**단점:**
-- 문맥 이해 부족 ("이건 반복인가?" 판단 어려움)
-- 새로운 분석 항목 추가 시 규칙 추가 필요
-- STT 오류에 취약
-- "설명의 명확성" 같은 정성 항목 분석 어려움
-
-**적합한 항목:**
-- 불필요한 반복 표현 (단순 카운트)
-- 부적절한 표현 (금지어 목록)
-- 발화 속도, 침묵 구간 등 시간 기반 분석
-
----
-
-### 2. 에이전틱 방식 (Agentic AI)
-
-**흐름:**
-```
-STT 원문 → LLM 에이전트 (도구 하네스 장착) → 분석 수행 → 결과 반환
+                    ┌──────────────┐
+                    │ Preprocessor │  스크립트 로드 + 타임스탬프 청킹
+                    └──────┬───────┘
+                           │
+          ┌────────────────┼────────────────┐
+          ▼                ▼                ▼
+   ┌────────────┐  ┌────────────┐  ┌────────────┐
+   │  Cat 1~2   │  │   Cat 3    │  │  Cat 4~5   │   ← 5개 카테고리 병렬 평가
+   │ (하네스 MD)│  │ (하네스 MD)│  │ (하네스 MD)│     (OpenAI GPT-4o)
+   └─────┬──────┘  └─────┬──────┘  └─────┬──────┘
+         └────────────────┼────────────────┘
+                          ▼
+                   ┌──────────────┐
+                   │  Aggregator  │  가중 평균 계산 (HIGH=3, MED=2, LOW=1)
+                   └──────┬───────┘
+                          ▼
+                   ┌──────────────┐
+                   │  Calibrator  │  교차 항목 일관성 보정 (±1점)
+                   └──────┬───────┘
+                          ▼
+                   ┌──────────────┐
+                   │   Report     │  한국어 마크다운 리포트 생성
+                   │  Generator   │
+                   └──────────────┘
 ```
 
-**특징:**
-- LLM이 "분석가" 역할을 수행
-- 필요할 때마다 도구(Tool)를 호출하여 작업 수행
-- Chain-of-Thought, ReAct 등의 프롬프팅 기법 활용
+**핵심 설계 결정:**
+- 룰베이스 대신 **LLM-as-Judge** 방식 채택 (18개 항목 중 다수가 맥락 이해 필요)
+- 각 평가 노드는 **MD 하네스 파일**로 구동 (프롬프트를 코드와 분리)
+- **실험 프레임워크** 내장 — 모델, 온도, 청킹 등 변수별 A/B 비교 가능
+- **IRR 메트릭** 내장 — Krippendorff's α, Cohen's κ, ICC로 평가 신뢰도 측정
 
-**장점:**
-- 문맥 이해 가능 ("이 반복은 의도적인가?")
-- 유연한 분석 (새로운 항목 추가 시 프롬프트만 수정)
-- 정성 항목 분석 가능 ("설명이 명확한가?")
-- 자연어로 된 피드백 생성 용이
+## 평가 체계
 
-**단점:**
-- 실행 속도 느림 (LLM 호출 비용)
-- 결과 일관성 낮음 (동일 입력, 다른 출력 가능)
-- 비용 증가
-- 디버깅 어려움 (왜 이런 결과가 나왔는지 추적 어려움)
+체크리스트 ver 2.0 기준, 5개 카테고리 × 18개 항목:
 
-**적합한 항목:**
-- 설명의 명확성
-- 예시의 적절성
-- 질문 유도 패턴
-- 종합적인 개선 제안
+| 카테고리 | 항목 수 | 핵심(HIGH) | 주요 평가 내용 |
+|---------|---------|-----------|--------------|
+| 1. 언어 표현 품질 | 3 | 1 | 반복 표현, 발화 완결성, 언어 일관성 |
+| 2. 강의 도입 및 구조 | 5 | 2 | 학습 목표, 복습 연계, 설명 순서, 마무리 |
+| 3. 개념 설명 명확성 | 4 | 2 | 개념 정의, 비유/예시, 발화 속도 |
+| 4. 예시 및 실습 연계 | 2 | 2 | 예시 적절성, 이론→실습 연결 |
+| 5. 수강생 상호작용 | 4 | 3 | 이해 확인, 참여 유도, 질문 응답 |
 
----
+- 점수: 1~5점 (매우미흡~매우우수)
+- 가중치: HIGH=3, MEDIUM=2, LOW=1
+- 가중 평균 범위: 1.0 ~ 5.0
 
-### 3. 하이브리드 방식 (추천)
+## 디렉토리 구조
 
-**흐름:**
 ```
-STT 원문 → [전처리 파이프라인] → [규칙 기반 1차 분석] → [LLM 2차 정성 분석] → 리포트
-```
+src/
+├── graph/                  # LangGraph 평가 파이프라인
+│   ├── builder.py          #   그래프 토폴로지 빌드
+│   ├── state.py            #   공유 상태 정의
+│   └── nodes/              #   개별 노드 구현
+├── harnesses/              # MD 기반 프롬프트 하네스
+│   ├── category_1~5_*.md   #   카테고리별 평가 프롬프트
+│   ├── calibration.md      #   교차 항목 보정
+│   └── report_synthesis.md #   리포트 생성
+├── chunking/               # 타임스탬프 기반 청킹
+├── scoring/                # 가중치 및 집계 로직
+├── experiment/             # 실험 프레임워크
+│   ├── config.py           #   ExperimentConfig
+│   ├── runner.py           #   실험 실행기
+│   ├── comparator.py       #   결과 비교
+│   └── metrics.py          #   IRR 메트릭 (κ, α, ICC)
+├── integrations/           # OpenAI 클라이언트, LangSmith
+├── models.py               # Pydantic 데이터 모델
+├── preprocessing/          # STT 파싱, 텍스트 정제
+└── rule_analysis/          # 규칙 기반 보조 분석
 
-**전략:**
-- **규칙 기반**: 빠르고 확실한 항목 (반복 표현, 부적절 표현, 발화 속도)
-- **LLM 기반**: 문맥 이해가 필요한 항목 (설명 명확성, 예시 적절성)
-- **결과 통합**: 정량 점수 + 정성 피드백
+scripts/
+├── run_single.py           # 단일 강의 평가
+├── run_batch.py            # 전체 15개 배치 평가
+└── run_experiment.py       # A/B 실험 실행/비교
 
-**장점:**
-- 각 방식의 장점 결합
-- 비용 효율적 (LLM은 필요한 부분만 호출)
-- 정량 + 정성 리포트 모두 가능
-- 일관성과 유연성 균형
-
-**구현 포인트:**
-```python
-# 예시 구조
-def analyze_lecture(transcript):
-    # 1차: 규칙 기반 분석 (빠름, 저렴)
-    rule_results = rule_based_analyze(transcript)
-    
-    # 2차: LLM 정성 분석 (필요한 부분만)
-    llm_results = llm_qualitative_analyze(
-        transcript, 
-        focus_areas=["clarity", "examples", "engagement"]
-    )
-    
-    # 결과 통합
-    return merge_results(rule_results, llm_results)
+experiments/                # 실험 결과 저장 (JSON + 마크다운)
+tests/                      # 50개 단위 테스트
 ```
 
----
+## 빠른 시작
 
-### 결정 필요 사항
+### 1. 환경 설정
 
-| 질문 | 옵션 | 고려사항 |
-|------|------|----------|
-| 기본 접근 방식은? | 파이프라인 / 에이전틱 / 하이브리드 | 시간, 비용, 품질 균형 |
-| LLM 사용 범위는? | 전체 / 일부 / 없음 | 어떤 항목에 LLM 필요한가? |
-| 규칙 기반으로 먼저 MVP? | 예 / 아니오 | 중간평가 시연 고려 |
-| 점수 체계는? | 규칙 기반 / LLM 보조 / LLM主导 | 신뢰성 vs 풍부함 |
+```bash
+pip install -e ".[dev]"
+```
 
----
+### 2. API 키 설정
 
-## Repository Layout
+```bash
+cp .env.example .env
+# .env 파일에 OPENAI_API_KEY 입력
+```
 
-- `src/preprocessing`: STT cleaning, timestamp parsing, speaker separation
-- `src/rule_analysis`: rule-based metrics and scoring
-- `src/llm_analysis`: model client abstraction and qualitative analysis
-- `src/report`: report data assembly and file export
-- `app`: Streamlit UI
-- `config`: settings and checklist definitions
-- `data/sample`: versioned sample data only
+### 3. 단일 강의 평가
 
-## Quick Start
+```bash
+python scripts/run_single.py --date 2026-02-02
+```
 
-1. Create virtual environment.
-2. Install dependencies: `pip install -r requirements.txt`
-3. Copy `.env.example` to `.env` and fill API keys.
-4. Run checks: `python scripts/check_env.py`
-5. Run tests: `pytest`
-6. Start app: `streamlit run app/main.py`
+### 4. 전체 배치 평가
 
-## Branch Strategy
+```bash
+python scripts/run_batch.py --model gpt-4o --passes 3
+```
 
-- `main`: stable releases
-- `develop`: integration branch
-- `feature/a-preprocessing`
-- `feature/b-rule-analysis`
-- `feature/c-llm-analysis`
-- `feature/d-report-ui`
+### 5. 실험 비교
 
-## 팀 구성
+```bash
+python scripts/run_experiment.py --compare <exp_id_1> <exp_id_2>
+```
 
-4인 1팀 (PM, 개발, 데이터, 발표 역할 분담)
+### 6. 테스트 실행
 
-## 일정
+```bash
+pytest -v
+```
 
-- 기간: 4주 (총 60시간)
-- 중간평가: 2주차 (기획서, 시연 영상, 진행 현황 보고서)
-- 최종평가: 4주차 (분석 리포트 샘플, 대시보드 시연, 최종 보고서)
+## 실험 프레임워크
 
-## 평가 기준
+변수를 바꿔가며 평가 품질을 비교할 수 있다:
 
-| 평가 항목 | 배점 | 세부 기준 |
-|----------|------|----------|
-| 서비스 완성도 | 30% | 분석 리포트의 품질, UI/UX 완성도, 결과물의 실용성 |
-| 커뮤니케이션 | 25% | 기획서/보고서 전달력, 진행 현황 공유의 적절성 |
-| 문제 해결력 | 25% | 데이터 한계 극복 방식, 분석 정확도 개선 노력 |
-| 프레젠테이션 | 20% | 시연의 명확성, 클라이언트 관점 어필 |
+| 실험 변수 | 기본값 | 대안 |
+|----------|--------|------|
+| 모델 | gpt-4o | gpt-4o-mini |
+| 온도 | 0.1 | 0.0, 0.3 |
+| 청킹 | 30분 윈도우 | 45분, 60분 |
+| 보정 | on | off |
+| 반복 | 1패스 | 3패스, 5패스 |
 
-## 제공 데이터
+결과는 `experiments/{id}/`에 JSON + 마크다운 리포트로 저장된다.
 
-- 강의 스크립트 (STT 기반 텍스트)
-- 강의 메타데이터 (과목명, 강사명, 강의 시간 정보)
-- 강의 품질 기준 (내부 평가 체크리스트)
+## 신뢰도 메트릭
+
+인간 ground truth 없이 LLM 자기 일관성 기반으로 측정:
+
+| 메트릭 | 목표 임계값 | 근거 |
+|--------|-----------|------|
+| Krippendorff's α | ≥ 0.667 | 교육측정 표준 |
+| Cohen's κ (가중) | ≥ 0.61 | Landis & Koch |
+| ICC(2,1) | ≥ 0.75 | Cicchetti, 1994 |
+
+## 데이터
+
+- 강의 스크립트: 15개 (STT 기반, 2026-02-02 ~ 02-27)
+- 강의 메타데이터: 30개 세션 (일별 통합)
+- 품질 체크리스트: 5 카테고리, 18 항목 (ver 2.0)
 
 ## 기술 스택
 
-(팀 내 논의 후 결정 예정)
+- **파이프라인**: LangGraph (병렬 팬아웃/팬인)
+- **LLM**: OpenAI GPT-4o (structured output)
+- **관측성**: LangSmith (옵션)
+- **데이터 모델**: Pydantic v2
+- **테스트**: pytest (50개)
+
+## 팀
+
+4인 1팀 · 멋쟁이사자처럼 인턴 · 4주 (60시간)
 
 ## 문서
 
+- [의사결정 기록](./memory/decisions.md)
+- [현재 상태](./memory/current-state.md)
+- [열린 질문](./memory/open-questions.md)
 - [의사결정 포인트](./docs/decision-points.md)
-
-## Agent Workflow
-
-- 공용 작업 규칙: [AGENTS.md](./AGENTS.md)
-- 공유 메모리 시작점: [memory/current-state.md](./memory/current-state.md)
-- 장기 결정 기록: [memory/decisions.md](./memory/decisions.md)
-- 저장소 전용 스킬: `agents/skills/`
-
-새 에이전트는 보통 아래 순서로 시작합니다.
-
-1. `AGENTS.md`와 `memory/current-state.md`를 읽습니다.
-2. `memory/decisions.md`에서 이미 정해진 방향을 확인합니다.
-3. 이번 작업에 맞는 스킬과 관련 문서만 추가로 읽습니다.
-4. 작업이 끝나면 메모리 문서를 업데이트합니다.
