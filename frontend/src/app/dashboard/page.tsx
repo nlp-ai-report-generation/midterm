@@ -81,9 +81,9 @@ export default function DashboardPage() {
   const recentLectures = [...evaluations].reverse().slice(0, 6);
 
   return (
-    <div className="space-y-5 max-w-[1200px] mx-auto">
+    <div className="mx-auto max-w-[1080px] space-y-8">
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
         {[
           {
             label: "총 강의",
@@ -109,26 +109,26 @@ export default function DashboardPage() {
         ].map((card) => (
           <div
             key={card.label}
-            className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
+            className="rounded-2xl bg-white px-6 py-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
           >
-            <p className="text-[13px] uppercase tracking-wide text-gray-500">
+            <p className="text-[12px] font-semibold uppercase tracking-wider text-[#8B95A1]">
               {card.label}
             </p>
             <p
-              className="mt-2 text-[32px] font-bold"
+              className="mt-3 text-[28px] font-bold leading-none"
               style={{ color: card.accent ? "#FF6B00" : "#191F28" }}
             >
               {card.value}
             </p>
-            <p className="mt-1 text-sm text-gray-400">{card.subtitle}</p>
+            <p className="mt-2 text-[13px] text-[#B0B8C1]">{card.subtitle}</p>
           </div>
         ))}
       </div>
 
       {/* Score Trend */}
-      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-        <h2 className="text-[15px] font-bold text-[#191F28] mb-1">점수 추이</h2>
-        <p className="text-sm text-gray-500 mb-5">{totalLectures}개 강의 가중 평균</p>
+      <div className="rounded-2xl bg-white px-7 py-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+        <h2 className="text-[16px] font-bold text-[#191F28] mb-1">점수 추이</h2>
+        <p className="text-[13px] text-[#8B95A1] mb-6">{totalLectures}개 강의 가중 평균</p>
         <ResponsiveContainer width="100%" height={280}>
           <AreaChart data={trendData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
             <defs>
@@ -175,9 +175,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Category Heatmap */}
-      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-        <h2 className="text-[15px] font-bold text-[#191F28] mb-1">카테고리 히트맵</h2>
-        <p className="text-sm text-gray-500 mb-5">카테고리 x 강의 날짜별 점수</p>
+      <div className="rounded-2xl bg-white px-7 py-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+        <h2 className="text-[16px] font-bold text-[#191F28] mb-1">카테고리 히트맵</h2>
+        <p className="text-[13px] text-[#8B95A1] mb-6">카테고리 × 강의 날짜별 점수</p>
         <div className="overflow-x-auto">
           <table className="w-full text-xs" aria-label="카테고리별 점수 히트맵">
             <thead>
@@ -223,8 +223,8 @@ export default function DashboardPage() {
 
       {/* Recent Lectures */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[15px] font-bold text-[#191F28]">최근 평가 결과</h2>
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-[16px] font-bold text-[#191F28]">최근 평가 결과</h2>
           <Link
             to="/lectures"
             className="text-sm font-medium text-gray-500 hover:text-[#FF6B00]"
@@ -232,24 +232,24 @@ export default function DashboardPage() {
             전체 보기
           </Link>
         </div>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {recentLectures.map((item) => (
             <Link
               key={item.lecture_date}
               to={`/lectures/${item.lecture_date}`}
-              className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)] transition-shadow"
+              className="rounded-2xl bg-white px-6 py-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)] transition-shadow"
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-[13px] text-gray-500">
+                  <p className="text-[12px] text-[#B0B8C1]">
                     {formatDateShort(item.lecture_date)}
                   </p>
-                  <p className="mt-1 text-sm font-semibold text-[#191F28]">
+                  <p className="mt-1.5 text-[14px] font-semibold text-[#191F28]">
                     {item.metadata.subjects?.[0] ?? "강의"}
                   </p>
                 </div>
                 <span
-                  className="flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold"
+                  className="flex h-10 w-10 items-center justify-center rounded-xl text-[14px] font-bold"
                   style={{
                     backgroundColor: scoreColor(item.weighted_average),
                     color: scoreBadgeTextColor(item.weighted_average),
