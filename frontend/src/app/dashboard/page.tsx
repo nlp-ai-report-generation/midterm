@@ -99,27 +99,14 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
         </p>
       </div>
 
-      {/* KPI Cards */}
+      {/* 핵심 지표 — 총 강의 + 평균만 */}
       <div
         className="card-grid"
-        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
+        style={{ gridTemplateColumns: "repeat(2, 1fr)" }}
       >
         <InsightCard label="분석 완료" value={totalLectures} subtitle={analysisRange} />
         <InsightCard label="전체 평균" value={avgScore.toFixed(2)} subtitle="5점 만점" accent />
-        <InsightCard
-          label="가장 높은 점수"
-          value={bestLecture ? bestLecture.weighted_average.toFixed(2) : "-"}
-          subtitle={bestLecture ? formatDateShort(bestLecture.lecture_date) : "-"}
-        />
-        <InsightCard
-          label="가장 낮은 점수"
-          value={worstLecture ? worstLecture.weighted_average.toFixed(2) : "-"}
-          subtitle={worstLecture ? formatDateShort(worstLecture.lecture_date) : "-"}
-        />
       </div>
-
-      {/* Score Trend */}
-      <ScoreTrendChart data={trendData} count={evaluations.length} />
 
       {/* Category Heatmap */}
       <div className="card card-padded">
@@ -174,6 +161,26 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
           </table>
         </div>
       </div>
+
+      {/* 최고 / 최저 + 점수 추이 */}
+      <div
+        className="card-grid"
+        style={{ gridTemplateColumns: "repeat(2, 1fr)" }}
+      >
+        <InsightCard
+          label="가장 높은 점수"
+          value={bestLecture ? bestLecture.weighted_average.toFixed(2) : "-"}
+          subtitle={bestLecture ? formatDateShort(bestLecture.lecture_date) : "-"}
+        />
+        <InsightCard
+          label="가장 낮은 점수"
+          value={worstLecture ? worstLecture.weighted_average.toFixed(2) : "-"}
+          subtitle={worstLecture ? formatDateShort(worstLecture.lecture_date) : "-"}
+        />
+      </div>
+
+      {/* Score Trend */}
+      <ScoreTrendChart data={trendData} count={evaluations.length} />
 
       {/* Attention-needed Lectures */}
       <div>
