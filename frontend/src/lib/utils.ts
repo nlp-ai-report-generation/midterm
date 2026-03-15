@@ -17,6 +17,13 @@ export function scoreColor(score: number): string {
   return SCORE_COLORS[Math.round(score)] ?? "var(--text-tertiary)";
 }
 
+/** 점수(1-5)에 대응하는 배지 텍스트 컬러 (score 3은 어두운 텍스트) */
+export function scoreBadgeTextColor(score: number): string {
+  const rounded = Math.round(score);
+  // score 3 (yellow) needs dark text for contrast
+  return rounded === 3 ? "#191F28" : "#FFFFFF";
+}
+
 /** 점수(1-5)에 대응하는 Tailwind 텍스트 클래스 */
 export function scoreTextClass(score: number): string {
   const rounded = Math.round(score);

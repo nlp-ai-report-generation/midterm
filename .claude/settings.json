@@ -27,7 +27,10 @@
       "Read(//Users/youngjson/멋사-인턴/**)",
       "Bash(wc -l /Users/youngjinson/멋사-인턴/frontend/src/app/*/page.tsx)",
       "Bash(rm -f components/layout/PageHero.tsx components/layout/TourOverlay.tsx components/layout/BottomTabBar.tsx lib/navigation.tsx components/cards/KPICard.tsx components/cards/LectureCard.tsx components/charts/ScoreTrend.tsx components/charts/CategoryHeatmap.tsx)",
-      "Bash(rm -rf components/cards components/charts)"
+      "Bash(rm -rf components/cards components/charts)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:developers-apps-in-toss.toss.im)",
+      "WebFetch(domain:toss.tech)"
     ],
     "additionalDirectories": [
       "/Users/youngjinson/멋사-인턴"

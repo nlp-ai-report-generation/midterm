@@ -146,13 +146,13 @@ export default function SettingsPage() {
   if (!mounted) return null;
 
   return (
-    <div className="space-y-6 p-6 max-w-[720px] mx-auto">
-      <h1 className="text-lg font-bold text-[#191F28]">설정</h1>
+    <div className="space-y-5 max-w-[720px] mx-auto">
+      <h1 className="text-xl font-bold text-[#191F28]">설정</h1>
 
       {/* API Connection */}
-      <div className="rounded-2xl border border-[#E5E8EB] bg-white p-6 shadow-sm">
+      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-bold text-[#191F28]">API 연결</h2>
+          <h2 className="text-[15px] font-bold text-[#191F28]">API 연결</h2>
           {apiStatus !== "idle" && (
             <span className="flex items-center gap-2 text-xs font-medium">
               <span
@@ -174,7 +174,9 @@ export default function SettingsPage() {
 
         <div className="flex gap-3">
           <div className="relative flex-1">
+            <label htmlFor="api-key-input" className="sr-only">API 키</label>
             <input
+              id="api-key-input"
               type={showKey ? "text" : "password"}
               value={settings.apiKey}
               onChange={(e) => update("apiKey", e.target.value)}
@@ -184,6 +186,7 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => setShowKey(!showKey)}
+              aria-label="API 키 표시/숨기기"
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#191F28]"
             >
               <svg
@@ -219,9 +222,9 @@ export default function SettingsPage() {
       </div>
 
       {/* Model Toggle */}
-      <div className="rounded-2xl border border-[#E5E8EB] bg-white p-6 shadow-sm">
-        <h2 className="text-sm font-bold text-[#191F28] mb-4">모델 선택</h2>
-        <div className="flex rounded-xl border border-[#E5E8EB] overflow-hidden w-fit">
+      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+        <h2 className="text-[15px] font-bold text-[#191F28] mb-4">모델 선택</h2>
+        <div className="flex rounded-xl overflow-hidden w-fit shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
           {(["gpt-4o-mini", "gpt-4o"] as const).map((m) => (
             <button
               key={m}
@@ -242,9 +245,9 @@ export default function SettingsPage() {
       </div>
 
       {/* Lecture Selection */}
-      <div className="rounded-2xl border border-[#E5E8EB] bg-white p-6 shadow-sm">
+      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-bold text-[#191F28]">강의 선택</h2>
+          <h2 className="text-[15px] font-bold text-[#191F28]">강의 선택</h2>
           <button
             onClick={selectAll}
             className="text-xs font-medium text-[#FF6B00] hover:opacity-80"
@@ -267,10 +270,10 @@ export default function SettingsPage() {
               <button
                 key={l.date}
                 onClick={() => toggleDate(l.date)}
-                className={`p-3 rounded-xl border text-left transition-all ${
+                className={`p-3 rounded-xl text-left transition-all ${
                   isSelected
-                    ? "border-[#FF6B00] bg-[#FFF4EC]"
-                    : "border-[#E5E8EB] bg-[#F7F8FA] hover:border-[#FF6B00]/30"
+                    ? "bg-[#FFF4EC] shadow-[0_0_0_1.5px_#FF6B00]"
+                    : "bg-[#F7F8FA] hover:shadow-[0_0_0_1px_rgba(255,107,0,0.3)]"
                 }`}
               >
                 <p
@@ -335,13 +338,14 @@ export default function SettingsPage() {
       )}
 
       {/* Advanced Settings */}
-      <div className="rounded-2xl border border-[#E5E8EB] bg-white shadow-sm overflow-hidden">
+      <div className="rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] overflow-hidden">
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
-          className="w-full flex items-center justify-between p-6 text-left hover:bg-[#F7F8FA] transition-colors"
+          aria-expanded={showAdvanced}
+          className="w-full flex items-center justify-between p-5 text-left hover:bg-[#F7F8FA] transition-colors"
         >
           <div>
-            <h2 className="text-sm font-bold text-[#191F28]">고급 설정</h2>
+            <h2 className="text-[15px] font-bold text-[#191F28]">고급 설정</h2>
             <p className="text-xs text-gray-400 mt-0.5">
               기본값으로 충분합니다. 필요한 경우에만 조정하세요.
             </p>
@@ -361,11 +365,11 @@ export default function SettingsPage() {
         </button>
 
         {showAdvanced && (
-          <div className="px-6 pb-6 space-y-5 border-t border-[#E5E8EB] pt-5">
+          <div className="px-5 pb-5 space-y-5 border-t border-[#E5E8EB] pt-5">
             {/* Temperature */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label className="text-sm font-semibold text-[#191F28]">
+                <label htmlFor="temperature-range" className="text-sm font-semibold text-[#191F28]">
                   Temperature
                 </label>
                 <span className="text-xs font-bold text-[#FF6B00] bg-[#FFF4EC] px-2 py-0.5 rounded-md">
@@ -373,6 +377,7 @@ export default function SettingsPage() {
                 </span>
               </div>
               <input
+                id="temperature-range"
                 type="range"
                 min="0"
                 max="1"
@@ -386,10 +391,11 @@ export default function SettingsPage() {
             {/* Chunk / Overlap */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-[#191F28] mb-2">
+                <label htmlFor="chunk-minutes" className="block text-sm font-semibold text-[#191F28] mb-2">
                   청크 윈도우 (분)
                 </label>
                 <input
+                  id="chunk-minutes"
                   type="number"
                   min="5"
                   max="120"
@@ -401,10 +407,11 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-[#191F28] mb-2">
+                <label htmlFor="overlap-minutes" className="block text-sm font-semibold text-[#191F28] mb-2">
                   오버랩 (분)
                 </label>
                 <input
+                  id="overlap-minutes"
                   type="number"
                   min="0"
                   max="30"
@@ -452,7 +459,11 @@ export default function SettingsPage() {
 
       {/* Toast */}
       {toast && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 bg-[#191F28] text-white rounded-xl shadow-lg text-sm font-medium">
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 bg-[#191F28] text-white rounded-xl shadow-lg text-sm font-medium"
+        >
           <svg
             width="16"
             height="16"

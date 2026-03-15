@@ -25,6 +25,7 @@
   --score-1: #F04452;
   --score-2: #FF8A00;
   --score-3: #FFB331;
+  --score-3-text: #191F28;
   --score-4: #4DABF7;
   --score-5: #00A86B;
 
@@ -92,7 +93,7 @@ a {
 
 ::-webkit-scrollbar-thumb {
   background: rgba(139, 149, 161, 0.2);
-  border-radius: 999px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

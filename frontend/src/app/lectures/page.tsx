@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAllEvaluations } from "@/lib/data";
-import { scoreColor, formatDateShort } from "@/lib/utils";
+import { scoreColor, scoreBadgeTextColor, formatDateShort } from "@/lib/utils";
 import type { EvaluationResult } from "@/types/evaluation";
 
 type SortKey = "latest" | "highest" | "lowest";
@@ -35,14 +35,14 @@ export default function LecturesPage() {
   }
 
   return (
-    <div className="space-y-6 p-6 max-w-[1200px] mx-auto">
+    <div className="space-y-5 max-w-[1200px] mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-bold text-[#191F28]">강의 목록</h1>
+          <h1 className="text-xl font-bold text-[#191F28]">강의 목록</h1>
           <p className="text-sm text-gray-500 mt-0.5">{evaluations.length}개 강의</p>
         </div>
-        <div className="flex rounded-xl border border-[#E5E8EB] bg-white overflow-hidden">
+        <div className="flex rounded-xl bg-white overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
           {(
             [
               { key: "latest", label: "최신순" },
@@ -67,7 +67,7 @@ export default function LecturesPage() {
 
       {/* Grid */}
       {displayed.length === 0 ? (
-        <div className="rounded-2xl border border-[#E5E8EB] bg-white py-16 text-center">
+        <div className="rounded-2xl bg-white py-16 text-center shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
           <p className="text-gray-500">강의 데이터가 없습니다.</p>
         </div>
       ) : (
@@ -76,11 +76,11 @@ export default function LecturesPage() {
             <Link
               key={evaluation.lecture_date}
               to={`/lectures/${evaluation.lecture_date}`}
-              className="rounded-2xl border border-[#E5E8EB] bg-white p-5 shadow-sm hover:border-[#FF6B00]/30 transition-colors"
+              className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)] transition-shadow"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-500">
+                  <p className="text-[13px] text-gray-500">
                     {formatDateShort(evaluation.lecture_date)}
                   </p>
                   <p className="mt-1 text-base font-semibold text-[#191F28] truncate">
@@ -88,8 +88,11 @@ export default function LecturesPage() {
                   </p>
                 </div>
                 <span
-                  className="flex h-11 w-11 items-center justify-center rounded-full text-lg font-bold text-white ml-3 shrink-0"
-                  style={{ backgroundColor: scoreColor(evaluation.weighted_average) }}
+                  className="flex h-11 w-11 items-center justify-center rounded-full text-lg font-bold ml-3 shrink-0"
+                  style={{
+                    backgroundColor: scoreColor(evaluation.weighted_average),
+                    color: scoreBadgeTextColor(evaluation.weighted_average),
+                  }}
                 >
                   {evaluation.weighted_average.toFixed(1)}
                 </span>

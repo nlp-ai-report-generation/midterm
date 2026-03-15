@@ -23,6 +23,7 @@ const NAV_ITEMS: NavItem[] = [
 export default function Sidebar() {
   return (
     <aside
+      aria-label="사이드바"
       style={{
         position: "fixed",
         top: 0,
@@ -74,7 +75,7 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav style={{ flex: 1, padding: "0 12px" }}>
+      <nav aria-label="메인 네비게이션" style={{ flex: 1, padding: "0 12px" }}>
         <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 2 }}>
           {NAV_ITEMS.map((item) => (
             <li key={item.to}>
@@ -91,7 +92,6 @@ export default function Sidebar() {
                   letterSpacing: "-0.02em",
                   color: isActive ? "#FF6B00" : "#6B7684",
                   background: isActive ? "#FFF4EB" : "transparent",
-                  borderLeft: isActive ? "3px solid #FF6B00" : "3px solid transparent",
                   textDecoration: "none",
                   transition: "color 0.15s, background 0.15s",
                 })}

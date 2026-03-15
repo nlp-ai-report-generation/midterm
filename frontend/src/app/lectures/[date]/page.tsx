@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "recharts";
 import { getEvaluation } from "@/lib/data";
-import { formatDate, scoreColor, scoreLabel, weightLabel } from "@/lib/utils";
+import { formatDate, scoreColor, scoreBadgeTextColor, scoreLabel, weightLabel } from "@/lib/utils";
 import type { EvaluationResult, CategoryResult, ItemScore } from "@/types/evaluation";
 
 export default function LectureDetailPage() {
@@ -38,8 +38,8 @@ export default function LectureDetailPage() {
 
   if (error || !evaluation) {
     return (
-      <div className="p-6 max-w-[1200px] mx-auto">
-        <div className="rounded-2xl border border-[#E5E8EB] bg-white py-16 text-center">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="rounded-2xl bg-white py-16 text-center shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
           <p className="text-gray-500">평가 데이터를 불러올 수 없습니다.</p>
           <Link to="/lectures" className="mt-3 inline-block text-sm text-[#FF6B00] font-medium">
             목록으로 돌아가기
@@ -67,7 +67,7 @@ export default function LectureDetailPage() {
   }));
 
   return (
-    <div className="space-y-8 p-6 max-w-[1200px] mx-auto">
+    <div className="space-y-5 max-w-[1200px] mx-auto">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
@@ -77,7 +77,7 @@ export default function LectureDetailPage() {
           >
             &larr; 목록으로
           </Link>
-          <h1 className="text-lg font-bold text-[#191F28]">
+          <h1 className="text-xl font-bold text-[#191F28]">
             {metadata.subjects?.[0] ?? "강의"}
           </h1>
           <div className="mt-1 flex items-center gap-3 text-sm text-gray-500">
@@ -92,7 +92,7 @@ export default function LectureDetailPage() {
         </div>
         <div className="text-right">
           <p
-            className="text-4xl font-bold"
+            className="text-[32px] font-bold"
             style={{ color: scoreColor(weighted_average) }}
           >
             {weighted_average.toFixed(2)}
@@ -102,8 +102,8 @@ export default function LectureDetailPage() {
       </div>
 
       {/* Radar Chart */}
-      <div className="rounded-2xl border border-[#E5E8EB] bg-white p-6 shadow-sm">
-        <h2 className="text-base font-bold text-[#191F28] mb-4">카테고리별 점수</h2>
+      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+        <h2 className="text-[15px] font-bold text-[#191F28] mb-4">카테고리별 점수</h2>
         <div className="h-[360px]">
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="75%">
@@ -122,7 +122,7 @@ export default function LectureDetailPage() {
                   if (!payload?.[0]) return null;
                   const d = payload[0].payload;
                   return (
-                    <div className="rounded-xl border border-[#E5E8EB] bg-white px-4 py-3 shadow-lg text-sm">
+                    <div className="rounded-xl bg-white px-4 py-3 shadow-lg text-sm">
                       <p className="font-semibold text-[#191F28]">{d.fullName}</p>
                       <p
                         className="text-lg font-bold mt-0.5"
@@ -149,7 +149,7 @@ export default function LectureDetailPage() {
 
       {/* Category Sections */}
       <div className="space-y-4">
-        <h2 className="text-base font-bold text-[#191F28]">카테고리별 상세 평가</h2>
+        <h2 className="text-[15px] font-bold text-[#191F28]">카테고리별 상세 평가</h2>
         {category_results.map((cat) => (
           <CategorySection key={cat.category_name} category={cat} />
         ))}
@@ -169,15 +169,19 @@ function CategorySection({ category }: { category: CategoryResult }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="rounded-2xl border border-[#E5E8EB] bg-white shadow-sm overflow-hidden">
+    <div className="rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
         className="w-full flex items-center justify-between p-5 text-left hover:bg-[#F7F8FA] transition-colors"
       >
         <div className="flex items-center gap-4">
           <span
-            className="flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold text-white"
-            style={{ backgroundColor: scoreColor(category.weighted_average) }}
+            className="flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold"
+            style={{
+              backgroundColor: scoreColor(category.weighted_average),
+              color: scoreBadgeTextColor(category.weighted_average),
+            }}
           >
             {category.weighted_average.toFixed(1)}
           </span>
@@ -211,7 +215,7 @@ function CategorySection({ category }: { category: CategoryResult }) {
 
 function ItemScoreCard({ item }: { item: ItemScore }) {
   return (
-    <div className="rounded-xl border border-[#E5E8EB] bg-[#F7F8FA] p-4">
+    <div className="rounded-xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
       <div className="flex items-start justify-between mb-2">
         <div className="flex items-center gap-2">
           <span className="text-xs text-gray-400 font-mono">{item.item_id}</span>
@@ -221,8 +225,11 @@ function ItemScoreCard({ item }: { item: ItemScore }) {
           </span>
         </div>
         <span
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white"
-          style={{ backgroundColor: scoreColor(item.score) }}
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold"
+          style={{
+            backgroundColor: scoreColor(item.score),
+            color: scoreBadgeTextColor(item.score),
+          }}
         >
           {item.score}
         </span>
@@ -238,7 +245,7 @@ function ItemScoreCard({ item }: { item: ItemScore }) {
           {item.evidence.map((e, i) => (
             <blockquote
               key={i}
-              className="text-sm text-gray-600 bg-white rounded-lg px-4 py-3 border-l-3 border-[#FF6B00]/40 italic leading-relaxed"
+              className="text-sm text-gray-600 bg-[#FFF8F2] rounded-lg px-4 py-3 italic leading-relaxed"
             >
               &ldquo;{e}&rdquo;
             </blockquote>
@@ -259,7 +266,7 @@ function SummaryCard({
   color: string;
 }) {
   return (
-    <div className="rounded-2xl border border-[#E5E8EB] bg-white p-5 shadow-sm">
+    <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
       <h3 className="text-sm font-bold mb-3 flex items-center gap-2" style={{ color }}>
         <span
           className="w-2 h-2 rounded-full"

@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { getAllEvaluations } from "@/lib/data";
-import { scoreColor, formatDateShort } from "@/lib/utils";
+import { scoreColor, scoreBadgeTextColor, formatDateShort } from "@/lib/utils";
 import type { EvaluationResult } from "@/types/evaluation";
 
 const CATEGORY_NAMES = [
@@ -81,7 +81,7 @@ export default function DashboardPage() {
   const recentLectures = [...evaluations].reverse().slice(0, 6);
 
   return (
-    <div className="space-y-8 p-6 max-w-[1200px] mx-auto">
+    <div className="space-y-5 max-w-[1200px] mx-auto">
       {/* KPI Cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {[
@@ -109,13 +109,13 @@ export default function DashboardPage() {
         ].map((card) => (
           <div
             key={card.label}
-            className="rounded-2xl border border-[#E5E8EB] bg-white p-6 shadow-sm"
+            className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
           >
-            <p className="text-xs uppercase tracking-wide text-gray-500">
+            <p className="text-[13px] uppercase tracking-wide text-gray-500">
               {card.label}
             </p>
             <p
-              className="mt-2 text-3xl font-bold"
+              className="mt-2 text-[32px] font-bold"
               style={{ color: card.accent ? "#FF6B00" : "#191F28" }}
             >
               {card.value}
@@ -126,8 +126,8 @@ export default function DashboardPage() {
       </div>
 
       {/* Score Trend */}
-      <div className="rounded-2xl border border-[#E5E8EB] bg-white p-6 shadow-sm">
-        <h2 className="text-base font-bold text-[#191F28] mb-1">점수 추이</h2>
+      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+        <h2 className="text-[15px] font-bold text-[#191F28] mb-1">점수 추이</h2>
         <p className="text-sm text-gray-500 mb-5">{totalLectures}개 강의 가중 평균</p>
         <ResponsiveContainer width="100%" height={280}>
           <AreaChart data={trendData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
@@ -175,11 +175,11 @@ export default function DashboardPage() {
       </div>
 
       {/* Category Heatmap */}
-      <div className="rounded-2xl border border-[#E5E8EB] bg-white p-6 shadow-sm">
-        <h2 className="text-base font-bold text-[#191F28] mb-1">카테고리 히트맵</h2>
+      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+        <h2 className="text-[15px] font-bold text-[#191F28] mb-1">카테고리 히트맵</h2>
         <p className="text-sm text-gray-500 mb-5">카테고리 x 강의 날짜별 점수</p>
         <div className="overflow-x-auto">
-          <table className="w-full text-xs">
+          <table className="w-full text-xs" aria-label="카테고리별 점수 히트맵">
             <thead>
               <tr>
                 <th className="text-left py-2 pr-4 font-medium text-gray-500 whitespace-nowrap">
@@ -204,8 +204,11 @@ export default function DashboardPage() {
                   {row.scores.map((cell) => (
                     <td key={cell.date} className="px-1 py-1.5 text-center">
                       <span
-                        className="inline-flex h-7 w-9 items-center justify-center rounded-lg text-[11px] font-bold text-white"
-                        style={{ backgroundColor: scoreColor(cell.score) }}
+                        className="inline-flex h-7 w-9 items-center justify-center rounded-lg text-[11px] font-bold"
+                        style={{
+                          backgroundColor: scoreColor(cell.score),
+                          color: scoreBadgeTextColor(cell.score),
+                        }}
                       >
                         {cell.score.toFixed(1)}
                       </span>
@@ -221,7 +224,7 @@ export default function DashboardPage() {
       {/* Recent Lectures */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-bold text-[#191F28]">최근 평가 결과</h2>
+          <h2 className="text-[15px] font-bold text-[#191F28]">최근 평가 결과</h2>
           <Link
             to="/lectures"
             className="text-sm font-medium text-gray-500 hover:text-[#FF6B00]"
@@ -234,11 +237,11 @@ export default function DashboardPage() {
             <Link
               key={item.lecture_date}
               to={`/lectures/${item.lecture_date}`}
-              className="rounded-2xl border border-[#E5E8EB] bg-white p-5 shadow-sm hover:border-[#FF6B00]/30 transition-colors"
+              className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)] transition-shadow"
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-[13px] text-gray-500">
                     {formatDateShort(item.lecture_date)}
                   </p>
                   <p className="mt-1 text-sm font-semibold text-[#191F28]">
@@ -246,8 +249,11 @@ export default function DashboardPage() {
                   </p>
                 </div>
                 <span
-                  className="flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold text-white"
-                  style={{ backgroundColor: scoreColor(item.weighted_average) }}
+                  className="flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold"
+                  style={{
+                    backgroundColor: scoreColor(item.weighted_average),
+                    color: scoreBadgeTextColor(item.weighted_average),
+                  }}
                 >
                   {item.weighted_average.toFixed(1)}
                 </span>
