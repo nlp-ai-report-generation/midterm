@@ -10,6 +10,7 @@ from src.graph.state import EvaluationState
 from src.harnesses.loader import load_calibration_harness
 from src.integrations.openai_client import OpenAIEvalClient
 from src.models import ItemScore
+from src.scoring.aggregation import aggregate_category, weighted_average, weighted_total
 
 logger = logging.getLogger(__name__)
 
@@ -85,6 +86,15 @@ async def _calibrate_async(state: EvaluationState) -> dict:
         consistency_issues = response.get("consistency_issues", [])
 
         calibrated = _apply_adjustments(category_scores, adjustments)
+        calibrated_results = []
+        calibrated_averages: dict[str, float] = {}
+        calibrated_items: list[ItemScore] = []
+
+        for cat_name, items in sorted(calibrated.items()):
+            result = aggregate_category(cat_name, items)
+            calibrated_results.append(result)
+            calibrated_averages[cat_name] = result.weighted_average
+            calibrated_items.extend(items)
 
         logger.info(
             "Calibration complete: %d adjustments, %d consistency issues",
@@ -95,6 +105,10 @@ async def _calibrate_async(state: EvaluationState) -> dict:
         return {
             "calibration_notes": calibration_notes,
             "calibrated_scores": calibrated,
+            "category_results": calibrated_results,
+            "category_averages": calibrated_averages,
+            "weighted_total": weighted_total(calibrated_items),
+            "weighted_average": weighted_average(calibrated_items),
         }
 
     except Exception:

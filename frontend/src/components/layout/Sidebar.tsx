@@ -101,70 +101,84 @@ export default function Sidebar() {
         key={item.href}
         href={item.href}
         className={cn(
-          "flex items-center gap-3.5 px-4 py-3 rounded-xl text-[15px] font-medium transition-all duration-200 relative",
+          "relative flex items-center gap-3 rounded-2xl px-4 py-3 text-[15px] font-semibold",
           isActive
-            ? "bg-primary-light text-primary font-semibold"
-            : "text-text-secondary hover:bg-[#F5F6F8] hover:text-foreground"
+            ? "bg-primary-soft text-primary shadow-[0_10px_24px_rgba(49,130,246,0.12)]"
+            : "text-text-secondary hover:bg-white hover:text-foreground"
         )}
       >
         {isActive && (
-          <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-primary rounded-r-full" />
+          <span className="absolute inset-y-2 left-1 w-1 rounded-full bg-primary" />
         )}
-        <span className={cn(isActive ? "text-primary" : "text-text-tertiary")}>
+        <span
+          className={cn(
+            "flex h-9 w-9 items-center justify-center rounded-2xl",
+            isActive
+              ? "bg-white text-primary"
+              : "bg-white/80 text-text-tertiary"
+          )}
+        >
           {item.icon}
         </span>
-        {item.label}
+        <span className="truncate">{item.label}</span>
       </Link>
     );
   };
 
   return (
     <aside
-      className="fixed left-0 top-0 bottom-0 flex flex-col bg-surface border-r border-border"
-      style={{ width: "var(--sidebar-width)" }}
+      className="surface-card sticky top-0 z-30 mx-4 mt-4 flex h-fit flex-col overflow-hidden border-none lg:fixed lg:inset-y-4 lg:left-4 lg:m-0 lg:w-[calc(var(--sidebar-width)-32px)]"
     >
-      {/* 로고 */}
-      <div className="flex items-center gap-3.5 px-6 h-[76px] border-b border-border-light">
-        <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center shadow-[0_2px_8px_rgba(255,107,0,0.3)]">
+      <div className="flex items-center gap-3 border-b border-divider px-5 py-5">
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#5aa5ff,#3182f6)] shadow-[0_12px_26px_rgba(49,130,246,0.28)]">
           <svg width="20" height="20" viewBox="0 0 18 18" fill="none">
             <path d="M9 1L2 5v8l7 4 7-4V5L9 1z" fill="white" />
           </svg>
         </div>
         <div>
-          <h1 className="text-[15px] font-extrabold text-foreground leading-tight tracking-tight">
-            강의 분석
+          <h1 className="text-[17px] font-bold leading-tight text-foreground">
+            Lecture Insight
           </h1>
-          <p className="text-xs text-text-tertiary leading-tight mt-0.5">
-            AI Report Generator
+          <p className="mt-0.5 text-[13px] leading-tight text-text-tertiary">
+            실제 분석 결과 기반 대시보드
           </p>
         </div>
       </div>
 
-      {/* 네비게이션 */}
-      <nav className="flex-1 py-5 px-4 space-y-1">
+      <nav className="grid gap-1.5 px-4 py-4 lg:flex-1">
         {NAV_ITEMS.map(renderNavItem)}
       </nav>
 
-      {/* 구분선 */}
-      <div className="mx-4 border-t border-border-light" />
+      <div className="mx-4 hidden border-t border-divider lg:block" />
 
-      {/* 설정 */}
       <div className="px-4 py-3">
         {renderNavItem(SETTINGS_ITEM)}
       </div>
 
-      {/* 하단 정보 - 미니 스탯 카드 */}
-      <div className="px-4 pb-5">
-        <div className="bg-[#F7F8FA] rounded-2xl p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-text-tertiary">분석 강의</p>
-            <p className="text-lg font-bold text-foreground leading-none">15</p>
+      <div className="px-4 pb-4 lg:pb-5">
+        <div className="rounded-[22px] border border-[rgba(49,130,246,0.08)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(239,246,255,0.78))] p-4">
+          <div className="mb-3 flex items-center justify-between">
+            <p className="text-[13px] font-semibold text-text-tertiary">
+              분석 상태
+            </p>
+            <span className="chip h-7 border-transparent bg-white text-primary">
+              live
+            </span>
           </div>
-          <div className="h-px bg-border-light" />
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-text-tertiary">데이터 기간</p>
-            <p className="text-xs font-semibold text-text-secondary leading-none">
-              02.02 ~ 02.27
+          <div className="space-y-3">
+            <div className="flex items-end justify-between">
+              <div>
+                <p className="text-[13px] text-text-tertiary">원본 강의</p>
+                <p className="text-[22px] font-bold tracking-tight text-foreground">15개</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[13px] text-text-tertiary">기간</p>
+                <p className="text-[15px] font-semibold text-text-secondary">02.02-02.27</p>
+              </div>
+            </div>
+            <div className="h-px bg-divider" />
+            <p className="text-[13px] leading-5 text-text-secondary">
+              실험 결과를 `public/data`에 반영해 정적 화면과 실제 평가를 맞춥니다.
             </p>
           </div>
         </div>

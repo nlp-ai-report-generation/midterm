@@ -114,6 +114,14 @@ python scripts/run_single.py --date 2026-02-02
 python scripts/run_batch.py --model gpt-4o --passes 3
 ```
 
+### 4-1. 프론트엔드 정적 데이터로 내보내기
+
+```bash
+python scripts/export_frontend_data.py --experiment-id <exp_id>
+```
+
+가장 최근 실험 결과를 쓰려면 `--experiment-id`를 생략할 수 있다.
+
 ### 5. 실험 비교
 
 ```bash
@@ -155,6 +163,7 @@ pytest -v
 - 강의 스크립트: 15개 (STT 기반, 2026-02-02 ~ 02-27)
 - 강의 메타데이터: 30개 세션 (일별 통합)
 - 품질 체크리스트: 5 카테고리, 18 항목 (ver 2.0)
+- 프론트 정적 평가 데이터: 실험 결과에서 `scripts/export_frontend_data.py`로 생성
 
 ## 기술 스택
 

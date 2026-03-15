@@ -16,14 +16,20 @@
 - LangSmith 옵션 통합
 - 단위 테스트 46개 전부 통과
 - 엔트리 스크립트 3종 (run_single, run_batch, run_experiment)
+- 로컬 `main` 브랜치를 `origin/main` 최신 커밋(`add509d`)까지 fast-forward 동기화
+- 프론트 대시보드 UI를 토스 스타일 토큰 기준으로 재정비 (`frontend/src/app/globals.css`, `frontend/src/components/layout/`, `frontend/src/app/dashboard/page.tsx`)
+- 실제 실험 결과를 프론트 정적 JSON으로 내보내는 스크립트 확장 (`scripts/export_frontend_data.py`)
+- 12시간제 STT 타임스탬프 래핑 보정 추가로 청킹 0건 문제 해결 (`src/chunking/strategy.py`)
+- OpenAI 스모크 테스트 성공: `2026-02-02` 단일 강의 평가 실행 완료 (`experiments/e68eb60a8e70/`)
+- 프론트 정적 평가 데이터는 샘플 JSON 대신 스모크 테스트 실제 결과 1건으로 교체 (`frontend/public/data/evaluations/2026-02-02.json`)
 
 ## 지금 중요한 일
 
-1. `.env` 파일에 `OPENAI_API_KEY` 설정 후 단일 강의 스모크 테스트
-2. 스모크 테스트 결과 기반으로 하네스 프롬프트 품질 튜닝
-3. 전체 15개 배치 평가 실행
-4. 반복 실행(3패스) → IRR 메트릭 확인 → 신뢰도 임계값 달성 여부 확인
-5. A/B 실험 설계 및 실행 (모델, 온도, 청킹 변수)
+1. 스모크 테스트 결과 기반으로 하네스 프롬프트 품질 튜닝
+2. 전체 15개 배치 평가 실행 후 프론트 정적 evaluation JSON 전체 교체
+3. 반복 실행(3패스) → IRR 메트릭 확인 → 신뢰도 임계값 달성 여부 확인
+4. A/B 실험 설계 및 실행 (모델, 온도, 청킹 변수)
+5. 실험 결과 기반 `/experiments` 페이지 실데이터 연결
 
 ## 현재 저장소 상태
 
@@ -31,15 +37,18 @@
 - 실험 프레임워크: **구현 완료** (`src/experiment/`)
 - 기존 코드(src/preprocessing, src/rule_analysis 등): 유지, 하이브리드 활용 가능
 - 테스트: 46개 통과 (chunking, scoring, metrics, harness loading)
-- 대시보드/UI: 미구현 (Streamlit 스캐폴드만 존재)
+- 프론트 UI: 토스 스타일 기준으로 1차 재정비 완료 (`frontend/`)
+- 정적 평가 데이터: 실제 분석 결과 1건 반영, 나머지 강의는 배치 실행 필요
+- Git 상태: 로컬 `main`과 `origin/main` 동기화 완료, 추적되지 않은 `.claude/` 디렉터리만 남음
 
 ## 다음 세션 시작 체크리스트
 
 1. `AGENTS.md` 읽기
 2. `memory/decisions.md` 확인
 3. `.env`에 `OPENAI_API_KEY` 확인
-4. `python3 scripts/run_single.py --date 2026-02-02` 실행
+4. `python3 scripts/run_single.py --date 2026-02-02 --model gpt-4o-mini` 실행
+5. `python3 scripts/export_frontend_data.py --experiment-id <id>` 실행
 
 ## 현재 블로커
 
-- `OPENAI_API_KEY` 설정 필요 (실제 평가 실행 전제조건)
+- 전체 15개 강의 실제 평가 결과를 아직 생성하지 않음

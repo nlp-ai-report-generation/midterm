@@ -10,6 +10,8 @@ export interface AppSettings {
 }
 
 const SETTINGS_KEY = "lecture-analysis-settings";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
 const DEFAULT_SETTINGS: AppSettings = {
   apiKey: "",
@@ -47,4 +49,32 @@ export function isApiKeyConfigured(): boolean {
 /** Basic client-side validation: must start with "sk-" and be at least 20 chars */
 export function validateApiKey(key: string): boolean {
   return key.startsWith("sk-") && key.length >= 20;
+}
+
+export async function validateApiKeyRemotely(key: string): Promise<{
+  valid: boolean;
+  message: string;
+}> {
+  if (!validateApiKey(key)) {
+    return {
+      valid: false,
+      message: "API 키 형식이 올바르지 않습니다",
+    };
+  }
+
+  const res = await fetch(`${API_BASE_URL}/api/validate-key`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      api_key: key,
+      model: "gpt-4o-mini",
+      temperature: 0.1,
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(`API 키 검증 요청 실패: ${res.status}`);
+  }
+
+  return res.json() as Promise<{ valid: boolean; message: string }>;
 }

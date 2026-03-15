@@ -24,12 +24,16 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <Sidebar />
-        <div style={{ marginLeft: "var(--sidebar-width)" }}>
-          <Header />
-          <main className="px-10 py-8">
-            <div className="max-w-[1400px] mx-auto">{children}</div>
-          </main>
+        <div className="app-shell lg:flex">
+          <Sidebar />
+          <div className="min-w-0 flex-1 lg:pl-[var(--sidebar-width)]">
+            <Header />
+            <main className="px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8">
+              <div className="mx-auto flex max-w-[1440px] flex-col gap-7">
+                {children}
+              </div>
+            </main>
+          </div>
         </div>
       </body>
     </html>

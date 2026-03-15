@@ -9,10 +9,19 @@ import asyncio
 import json
 import logging
 from dataclasses import dataclass, field
+from pathlib import Path
 
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, BadRequestError
+from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
+
+
+def _sanitize_text_for_json(text: str) -> str:
+    return "".join(
+        ch for ch in text
+        if ch in ("\n", "\r", "\t") or ord(ch) >= 32 and not 0xD800 <= ord(ch) <= 0xDFFF
+    )
 
 
 @dataclass
@@ -45,11 +54,13 @@ class OpenAIEvalClient:
     model: str = "gpt-4o"
     temperature: float = 0.1
     max_concurrent: int = 5
-    _client: AsyncOpenAI = field(default_factory=AsyncOpenAI, repr=False)
+    _client: AsyncOpenAI | None = field(default=None, init=False, repr=False)
     _semaphore: asyncio.Semaphore = field(init=False, repr=False)
     _total_usage: TokenUsage = field(default_factory=TokenUsage, repr=False)
 
     def __post_init__(self) -> None:
+        load_dotenv(Path(__file__).parents[2] / ".env")
+        self._client = AsyncOpenAI()
         self._semaphore = asyncio.Semaphore(self.max_concurrent)
 
     @property
@@ -90,7 +101,25 @@ class OpenAIEvalClient:
             else:
                 kwargs["response_format"] = {"type": "json_object"}
 
-            response = await self._client.chat.completions.create(**kwargs)
+            try:
+                response = await self._client.chat.completions.create(**kwargs)
+            except BadRequestError as exc:
+                error_message = str(exc)
+                if "We could not parse the JSON body of your request" not in error_message:
+                    raise
+
+                logger.warning("Retrying OpenAI request with sanitized prompt text")
+                kwargs["messages"] = [
+                    {
+                        "role": "system",
+                        "content": _sanitize_text_for_json(system_prompt),
+                    },
+                    {
+                        "role": "user",
+                        "content": _sanitize_text_for_json(user_prompt),
+                    },
+                ]
+                response = await self._client.chat.completions.create(**kwargs)
 
             if response.usage:
                 usage = TokenUsage(

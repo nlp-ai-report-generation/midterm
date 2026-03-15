@@ -14,57 +14,56 @@ export default function LectureCard({ evaluation }: LectureCardProps) {
 
   return (
     <Link href={`/lectures/${lecture_date}`}>
-      <div className="bg-surface rounded-2xl p-6 shadow-[var(--shadow-sm)] border border-border-light hover:shadow-[var(--shadow-lg)] hover:border-primary/20 hover:scale-[1.01] transition-all duration-200 cursor-pointer group">
-        {/* 헤더 */}
-        <div className="flex items-start justify-between mb-4">
+      <div className="surface-card-strong group rounded-[28px] p-6 transition-transform hover:-translate-y-1">
+        <div className="mb-5 flex items-start justify-between gap-4">
           <div>
-            <p className="text-sm text-text-tertiary">
-              {formatDate(lecture_date)}
+            <p className="text-[13px] font-semibold text-text-tertiary">
+              {formatDate(lecture_date)} 평가
             </p>
-            <p className="text-lg font-bold text-foreground mt-1 group-hover:text-primary transition-colors">
+            <p className="mt-2 text-[20px] font-bold leading-tight text-foreground group-hover:text-primary">
               {metadata.subjects?.[0] ?? "강의"}
             </p>
           </div>
           <div
-            className="flex items-center justify-center w-14 h-14 rounded-2xl text-white font-bold text-xl shrink-0"
-            style={{ backgroundColor: scoreColor(weighted_average) }}
+            className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-[22px] text-white shadow-[0_18px_30px_rgba(25,31,40,0.12)]"
+            style={{
+              background: `linear-gradient(180deg, color-mix(in srgb, ${scoreColor(weighted_average)} 88%, white), ${scoreColor(weighted_average)})`,
+            }}
           >
-            {weighted_average.toFixed(1)}
+            <span className="text-[24px] font-bold leading-none">{weighted_average.toFixed(1)}</span>
+            <span className="mt-1 text-[11px] font-semibold opacity-90">점수</span>
           </div>
         </div>
 
-        {/* 과목 */}
-        <p className="text-sm text-text-secondary mb-3.5 line-clamp-1">
-          {metadata.contents?.[0] ?? ""}
+        <p className="mb-4 line-clamp-2 min-h-12 text-[15px] leading-6 text-text-secondary">
+          {metadata.contents?.[0] ?? "분석 내용을 불러오는 중입니다."}
         </p>
 
-        {/* 점수 라벨 */}
-        <div className="flex items-center gap-2.5 mb-4">
+        <div className="mb-5 flex flex-wrap items-center gap-2">
           <span
-            className="text-xs font-medium px-2.5 py-1 rounded-lg"
+            className="rounded-full px-3 py-1.5 text-[12px] font-semibold"
             style={{
-              backgroundColor: `color-mix(in srgb, ${scoreColor(weighted_average)} 12%, transparent)`,
+              backgroundColor: `color-mix(in srgb, ${scoreColor(weighted_average)} 10%, white)`,
               color: scoreColor(weighted_average),
             }}
           >
             {scoreLabel(weighted_average)}
           </span>
-          <span className="text-xs text-text-tertiary">
-            강사: {metadata.instructor || "김영아"}
+          <span className="chip border-transparent bg-[var(--grey-100)]">
+            강사 {metadata.instructor || "미정"}
           </span>
         </div>
 
-        {/* 강점/개선점 미리보기 */}
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {strengths?.[0] && (
-            <p className="text-xs text-text-secondary line-clamp-1 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-success shrink-0" />
+            <p className="flex items-start gap-2 text-[13px] leading-5 text-text-secondary">
+              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
               {strengths[0]}
             </p>
           )}
           {improvements?.[0] && (
-            <p className="text-xs text-text-secondary line-clamp-1 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-error shrink-0" />
+            <p className="flex items-start gap-2 text-[13px] leading-5 text-text-secondary">
+              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-warning" />
               {improvements[0]}
             </p>
           )}

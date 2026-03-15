@@ -85,5 +85,7 @@ cd frontend && npx vercel
 
 ## 데이터
 
-- **정적 데이터:** `public/data/` — 샘플 평가 결과 JSON (백엔드 없이 동작)
+- **정적 데이터:** `public/data/` — 원본 스크립트 기반 EDA JSON + 실험 결과에서 내보낸 evaluation JSON
 - **실시간 평가:** API 서버 + OpenAI API 키 필요
+- **내보내기 스크립트:** 프로젝트 루트에서 `python3 scripts/export_frontend_data.py --experiment-id <id>`
+- **현재 커밋 기준:** 실제 스모크 테스트 결과 1건(`2026-02-02`)이 evaluation JSON으로 반영됨

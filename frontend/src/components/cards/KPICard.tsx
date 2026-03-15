@@ -1,7 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-
 interface KPICardProps {
   title: string;
   value: string | number;
@@ -22,21 +20,23 @@ export default function KPICard({
   const isTrendPositive = trend && trend.value >= 0;
 
   return (
-    <div className="bg-surface rounded-2xl p-7 shadow-[var(--shadow-sm)] border border-border-light hover:shadow-[var(--shadow-lg)] hover:border-border hover:-translate-y-0.5 transition-all duration-200 cursor-default">
-      <div className="flex items-start justify-between mb-4">
+    <div className="surface-card-strong cursor-default rounded-[26px] p-6 hover:-translate-y-0.5">
+      <div className="mb-5 flex items-start justify-between">
         <div
-          className="w-11 h-11 rounded-2xl flex items-center justify-center"
-          style={{ backgroundColor: `color-mix(in srgb, ${accentColor} 12%, transparent)` }}
+          className="flex h-12 w-12 items-center justify-center rounded-[18px]"
+          style={{
+            backgroundColor: `color-mix(in srgb, ${accentColor} 12%, white)`,
+          }}
         >
           <span style={{ color: accentColor }}>{icon}</span>
         </div>
         {trend && (
           <span
-            className="text-xs font-medium px-2 py-1 rounded-lg"
+            className="rounded-full px-2.5 py-1 text-[12px] font-semibold"
             style={{
               backgroundColor: isTrendPositive
-                ? "color-mix(in srgb, var(--success) 12%, transparent)"
-                : "color-mix(in srgb, var(--error) 12%, transparent)",
+                ? "color-mix(in srgb, var(--success) 10%, white)"
+                : "color-mix(in srgb, var(--error) 10%, white)",
               color: isTrendPositive ? "var(--success)" : "var(--error)",
             }}
           >
@@ -46,12 +46,10 @@ export default function KPICard({
           </span>
         )}
       </div>
-      <p className="text-sm text-text-secondary mb-1">{title}</p>
-      <p className="text-3xl font-bold text-foreground tracking-tight">
-        {value}
-      </p>
+      <p className="mb-1 text-[13px] font-semibold text-text-tertiary">{title}</p>
+      <p className="text-[30px] font-bold tracking-tight text-foreground">{value}</p>
       {subtitle && (
-        <p className="text-xs text-text-tertiary mt-1.5">{subtitle}</p>
+        <p className="mt-2 text-[13px] text-text-secondary">{subtitle}</p>
       )}
     </div>
   );

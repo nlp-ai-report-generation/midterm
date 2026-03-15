@@ -31,6 +31,9 @@ def _seconds_to_time(seconds: int) -> str:
 def parse_transcript(raw_text: str) -> list[TranscriptLine]:
     """스크립트 원문을 파싱하여 TranscriptLine 리스트로 변환."""
     lines: list[TranscriptLine] = []
+    offset = 0
+    prev_seconds: int | None = None
+
     for line in raw_text.strip().split("\n"):
         line = line.strip()
         if not line:
@@ -38,14 +41,19 @@ def parse_transcript(raw_text: str) -> list[TranscriptLine]:
         match = _LINE_RE.match(line)
         if match:
             ts, speaker, text = match.groups()
+            raw_seconds = _time_to_seconds(ts)
+            if prev_seconds is not None and raw_seconds < prev_seconds - 1800:
+                offset += 12 * 3600
+            seconds = raw_seconds + offset
             lines.append(
                 TranscriptLine(
                     timestamp=ts,
-                    seconds=_time_to_seconds(ts),
+                    seconds=seconds,
                     speaker_id=speaker,
                     text=text,
                 )
             )
+            prev_seconds = raw_seconds
     return lines
 
 

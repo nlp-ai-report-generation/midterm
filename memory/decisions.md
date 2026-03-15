@@ -69,3 +69,29 @@
 - 결정: 인간 ground truth 없이 LLM 자기 일관성 기반으로 평가한다.
 - 이유: 교육 평가 분야 표준(Krippendorff, 2004), LLM-as-Judge 연구(Zheng et al., 2023) 근거.
 - 결과: `src/experiment/metrics.py`에 4개 메트릭 구현. 목표 임계값: α≥0.667, κ≥0.61, ICC≥0.75.
+
+## 2026-03-15
+
+### 프론트 UI는 토스 스타일 토큰 기반으로 정리
+
+- 결정: 대시보드 전역 색상과 핵심 카드/차트 스타일을 토스 계열 블루/그레이 토큰 중심으로 재정비한다.
+- 이유: 기존 주황색 중심 스타일이 서비스 톤과 맞지 않았고, 사용자 요청이 토스 디자인 규칙 반영이었다.
+- 결과: `frontend/src/app/globals.css`에 토큰 재정의, `layout`, `dashboard`, 공용 카드/차트 컴포넌트 UI 정리.
+
+### 프론트 정적 evaluation JSON은 실험 결과에서 생성
+
+- 결정: 수동 샘플 JSON 유지 대신 `scripts/export_frontend_data.py`로 최신 실험 결과를 `frontend/public/data/evaluations/`로 내보낸다.
+- 이유: 샘플 기반 데모는 실제 분석 결과와 화면이 어긋나며, 사용자 요청도 직접 분석한 결과 반영이었다.
+- 결과: 스크립트가 EDA JSON과 evaluation JSON을 함께 생성하고, 스모크 테스트 결과 1건을 프론트 데이터로 반영했다.
+
+### STT 12시간제 타임스탬프 래핑을 청킹 단계에서 보정
+
+- 결정: `12:xx -> 01:xx`처럼 시각이 되감기면 12시간 오프셋을 더해 단조 증가 시간축으로 변환한다.
+- 이유: 실제 스크립트가 오전/오후 표기 없는 12시간 형식이라 기존 청킹 로직에서 0개 청크가 발생했다.
+- 결과: `src/chunking/strategy.py`와 테스트가 갱신됐고, `2026-02-02` 스모크 테스트에서 14개 청크가 생성됐다.
+
+### OpenAI 키는 `.env` 자동 로드와 API 검증 엔드포인트로 확인
+
+- 결정: OpenAI 클라이언트와 FastAPI 서버 시작 시 `.env`를 자동 로드하고, 설정 화면의 연결 테스트는 `/api/validate-key`를 실제 호출한다.
+- 이유: 로컬 정규식만으로는 실제 키 동작 여부를 검증할 수 없고, `health` 상태도 거짓 음성이 발생했다.
+- 결과: `src/integrations/openai_client.py`, `api/main.py`, `frontend/src/lib/api.ts`, `frontend/src/app/settings/page.tsx`가 갱신됐다.

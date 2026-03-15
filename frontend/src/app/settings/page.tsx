@@ -3,11 +3,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { getSettings, saveSettings, validateApiKey } from "@/lib/api";
+import {
+  getSettings,
+  saveSettings,
+  validateApiKey,
+  validateApiKeyRemotely,
+} from "@/lib/api";
 import type { AppSettings } from "@/lib/api";
 import { getAllLectures } from "@/lib/data";
 import type { LectureMetadata } from "@/types/evaluation";
-import { formatDate } from "@/lib/utils";
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<AppSettings>({
@@ -45,13 +49,28 @@ export default function SettingsPage() {
       setApiStatus("invalid");
       return;
     }
-    if (validateApiKey(settings.apiKey)) {
-      setApiStatus("valid");
-      // Also save the key
-      saveSettings(settings);
-      showToast("API 키가 확인되었습니다");
-    } else {
+    if (!validateApiKey(settings.apiKey)) {
       setApiStatus("invalid");
+      showToast("API 키 형식을 확인하세요");
+      return;
+    }
+
+    try {
+      const result = await validateApiKeyRemotely(settings.apiKey);
+      setApiStatus(result.valid ? "valid" : "invalid");
+      if (result.valid) {
+        saveSettings(settings);
+        showToast("OpenAI API 키가 정상 동작합니다");
+      } else {
+        showToast(result.message);
+      }
+    } catch (error) {
+      setApiStatus("invalid");
+      showToast(
+        error instanceof Error
+          ? error.message
+          : "API 키 검증 중 오류가 발생했습니다"
+      );
     }
   }, [settings]);
 

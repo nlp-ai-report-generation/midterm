@@ -17,7 +17,6 @@ import {
   formatDate,
   scoreColor,
   scoreLabel,
-  scoreTextClass,
   weightLabel,
 } from "@/lib/utils";
 import type { EvaluationResult, CategoryResult, ItemScore } from "@/types/evaluation";

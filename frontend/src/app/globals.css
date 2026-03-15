@@ -1,82 +1,81 @@
 @import "tailwindcss";
 
 :root {
-  /* 토스 스타일 주황색 테마 */
-  --primary: #FF6B00;
-  --primary-light: #FFF4ED;
-  --primary-dark: #E55A00;
-  --primary-hover: #FF8C38;
+  --blue-500: #3182f6;
+  --blue-600: #1b64da;
+  --blue-50: #eff6ff;
+  --red-500: #f04452;
+  --orange-500: #ff8a00;
+  --green-500: #00a86b;
 
-  /* 점수 컬러 */
-  --score-1: #FF4D4D;
-  --score-2: #FF8C38;
-  --score-3: #FFB020;
-  --score-4: #7ED957;
-  --score-5: #00C853;
+  --grey-50: #f9fafb;
+  --grey-100: #f2f4f6;
+  --grey-200: #e5e8eb;
+  --grey-300: #d1d6db;
+  --grey-400: #b0b8c1;
+  --grey-500: #8b95a1;
+  --grey-600: #6b7684;
+  --grey-700: #4e5968;
+  --grey-800: #333d4b;
+  --grey-900: #191f28;
 
-  /* 뉴트럴 */
-  --background: #FAFAFA;
-  --surface: #FFFFFF;
-  --foreground: #191F28;
-  --text-secondary: #6B7684;
-  --text-tertiary: #8B95A1;
-  --border: #E5E8EB;
-  --border-light: #F2F4F6;
+  --primary: var(--blue-500);
+  --primary-strong: var(--blue-600);
+  --primary-soft: var(--blue-50);
 
-  /* 시맨틱 */
-  --success: #00C853;
-  --warning: #FFB020;
-  --error: #FF4D4D;
-  --info: #3182F6;
+  --background: var(--grey-50);
+  --surface: #ffffff;
+  --surface-muted: rgba(255, 255, 255, 0.72);
+  --foreground: var(--grey-900);
+  --text-secondary: var(--grey-700);
+  --text-tertiary: var(--grey-600);
+  --border: var(--grey-200);
+  --border-strong: var(--grey-300);
+  --divider: rgba(229, 232, 235, 0.9);
 
-  /* 레이아웃 */
-  --sidebar-width: 272px;
-  --header-height: 72px;
+  --score-1: #f04452;
+  --score-2: #ff8a00;
+  --score-3: #ffb331;
+  --score-4: #4dabf7;
+  --score-5: #00a86b;
 
-  /* 그림자 - 더블 레이어 */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03), 0 1px 6px rgba(0, 0, 0, 0.02);
-  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.04), 0 8px 32px rgba(0, 0, 0, 0.06);
+  --success: var(--green-500);
+  --warning: var(--orange-500);
+  --error: var(--red-500);
+  --info: var(--blue-500);
 
-  /* 반지름 - 토스 스타일 */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  --sidebar-width: 280px;
+  --header-height: 76px;
+
+  --radius-xs: 10px;
+  --radius-sm: 14px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.03);
+  --shadow-sm: 0 6px 20px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 14px 36px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 56px rgba(15, 23, 42, 0.12);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
-  --color-primary-light: var(--primary-light);
-  --color-primary-dark: var(--primary-dark);
-  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-strong: var(--primary-strong);
   --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
   --color-text-secondary: var(--text-secondary);
   --color-text-tertiary: var(--text-tertiary);
   --color-border: var(--border);
-  --color-border-light: var(--border-light);
+  --color-border-strong: var(--border-strong);
+  --color-divider: var(--divider);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
   --color-info: var(--info);
-  --font-sans: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #17171C;
-    --surface: #1E1E24;
-    --foreground: #ECECEC;
-    --text-secondary: #8B95A1;
-    --text-tertiary: #6B7684;
-    --border: #2C2C35;
-    --border-light: #23232B;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.15), 0 1px 6px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.15);
-    --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.2), 0 8px 32px rgba(0, 0, 0, 0.25);
-  }
+  --font-sans: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }
 
 * {
@@ -85,74 +84,134 @@
   padding: 0;
 }
 
-/* 모든 인터랙티브 요소에 부드러운 트랜지션 */
-a, button, input, select, textarea,
-[role="button"], [tabindex] {
-  transition: all 0.2s ease;
-}
-
-/* 포커스 스타일 - 프라이머리 컬러 */
-:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* 선택 색상 */
-::selection {
-  background: color-mix(in srgb, var(--primary) 20%, transparent);
-  color: var(--foreground);
-}
-
 html {
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(49, 130, 246, 0.08), transparent 28%),
+    linear-gradient(180deg, #fbfcfe 0%, var(--background) 32%, #f6f7fb 100%);
   color: var(--foreground);
-  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  line-height: 1.6;
+  font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  line-height: 1.5;
   letter-spacing: -0.02em;
 }
 
-/* 카드 유틸리티 클래스 */
-.card {
-  background: var(--surface);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-light);
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+a,
+button,
+input,
+select,
+textarea,
+[role="button"],
+[tabindex] {
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease,
+    opacity 0.18s ease;
 }
 
-.card:hover {
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--primary) 72%, white);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(49, 130, 246, 0.18);
+  color: var(--foreground);
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.page-section {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.surface-card {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(229, 232, 235, 0.9);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(18px);
+}
+
+.surface-card-strong {
+  background: #ffffff;
+  border: 1px solid rgba(209, 214, 219, 0.72);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
 }
 
-/* 스켈레톤 로딩 플레이스홀더 */
+.section-eyebrow {
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.section-title {
+  font-size: 30px;
+  line-height: 1.28;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.section-body {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(229, 232, 235, 0.9);
+  background: rgba(255, 255, 255, 0.84);
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
 .skeleton {
   background: linear-gradient(
     90deg,
-    var(--border-light) 25%,
-    color-mix(in srgb, var(--border-light) 60%, var(--surface)) 50%,
-    var(--border-light) 75%
+    rgba(229, 232, 235, 0.7) 25%,
+    rgba(242, 244, 246, 1) 50%,
+    rgba(229, 232, 235, 0.7) 75%
   );
   background-size: 200% 100%;
-  animation: skeleton-shimmer 1.5s ease-in-out infinite;
-  border-radius: var(--radius-sm);
+  animation: skeleton-shimmer 1.3s ease-in-out infinite;
+  border-radius: var(--radius-xs);
 }
 
 @keyframes skeleton-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
-/* 토스 스타일 스크롤바 - 더 얇고, 호버시에만 표시 */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -160,26 +219,26 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 2px;
-  transition: background 0.2s ease;
-}
-
-*:hover > ::-webkit-scrollbar-thumb,
-*::-webkit-scrollbar-thumb:hover {
-  background: var(--text-tertiary);
+  background: rgba(139, 149, 161, 0.24);
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-secondary);
+  background: rgba(107, 118, 132, 0.38);
 }
 
-/* 호버 시에만 스크롤바 보이기 */
 * {
   scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
+  scrollbar-color: rgba(139, 149, 161, 0.24) transparent;
 }
 
-*:hover {
-  scrollbar-color: var(--text-tertiary) transparent;
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 100%;
+    --header-height: 68px;
+  }
+
+  .section-title {
+    font-size: 26px;
+  }
 }

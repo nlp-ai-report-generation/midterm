@@ -52,6 +52,17 @@ class TestParseTranscript:
         lines = parse_transcript(text)
         assert len(lines) == 1
 
+    def test_wraps_12_hour_timestamps_monotonically(self):
+        text = (
+            "<11:58:00> sp1: 오전 끝 무렵\n"
+            "<12:10:00> sp1: 정오 무렵\n"
+            "<01:05:00> sp1: 오후 첫 시간"
+        )
+        lines = parse_transcript(text)
+        assert len(lines) == 3
+        assert lines[2].seconds > lines[1].seconds
+        assert lines[2].seconds == (13 * 3600) + (5 * 60)
+
 
 class TestChunkByTimeWindow:
     def test_basic_chunking(self):

@@ -15,10 +15,12 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from dotenv import load_dotenv
 
 # 프로젝트 루트를 path에 추가
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
+load_dotenv(PROJECT_ROOT / ".env")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -134,13 +136,6 @@ async def evaluate_lectures(req: EvaluateRequest):
             status_code=400,
             detail="OpenAI API 키가 설정되지 않았습니다. /api/settings에서 설정하세요.",
         )
-
-    try:
-        from dotenv import load_dotenv
-
-        load_dotenv(PROJECT_ROOT / ".env")
-    except ImportError:
-        pass
 
     try:
         from src.experiment.config import ExperimentConfig

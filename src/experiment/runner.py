@@ -13,7 +13,6 @@ from src.experiment.config import ExperimentConfig
 from src.graph.builder import build_evaluation_graph
 from src.graph.nodes.preprocessor import SCRIPTS_DIR
 from src.integrations.langsmith import set_experiment_project, setup_langsmith
-from src.models import EvaluationResult
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +31,22 @@ def _discover_transcripts(config: ExperimentConfig) -> list[Path]:
 def _extract_date_from_filename(path: Path) -> str:
     """파일명에서 날짜 추출. e.g., 2026-02-02_kdt-backendj-21th.txt → 2026-02-02"""
     return path.stem.split("_")[0]
+
+
+def _serialize_metadata(metadata: object) -> dict:
+    if hasattr(metadata, "model_dump"):
+        return metadata.model_dump()
+    return metadata if isinstance(metadata, dict) else {}
+
+
+def _serialize_category_results(category_results: list[object]) -> list[dict]:
+    serialized = []
+    for result in category_results:
+        if hasattr(result, "model_dump"):
+            serialized.append(result.model_dump())
+        elif isinstance(result, dict):
+            serialized.append(result)
+    return serialized
 
 
 def run_experiment(config: ExperimentConfig) -> Path:
@@ -99,6 +114,11 @@ def run_experiment(config: ExperimentConfig) -> Path:
             result_data = {
                 "lecture_date": lecture_date,
                 "pass_num": pass_num,
+                "transcript_path": str(transcript_path),
+                "metadata": _serialize_metadata(result.get("metadata", {})),
+                "category_results": _serialize_category_results(
+                    result.get("category_results", [])
+                ),
                 "weighted_average": result.get("weighted_average", 0),
                 "weighted_total": result.get("weighted_total", 0),
                 "category_averages": result.get("category_averages", {}),
@@ -110,6 +130,8 @@ def run_experiment(config: ExperimentConfig) -> Path:
                 "strengths": result.get("strengths", []),
                 "improvements": result.get("improvements", []),
                 "recommendations": result.get("recommendations", []),
+                "token_usage": result.get("token_usage", {}),
+                "cost_usd": result.get("cost_usd", 0),
             }
 
             with open(result_file, "w", encoding="utf-8") as f:
