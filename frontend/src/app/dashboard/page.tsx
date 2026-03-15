@@ -40,7 +40,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#FF6B00] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
       </div>
     );
   }
@@ -109,54 +109,54 @@ export default function DashboardPage() {
         ].map((card) => (
           <div
             key={card.label}
-            className="rounded-2xl bg-white px-6 py-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
+            className="card card-padded"
           >
-            <p className="text-[12px] font-semibold uppercase tracking-wider text-[#8B95A1]">
+            <p className="text-label">
               {card.label}
             </p>
             <p
-              className="mt-3 text-[28px] font-bold leading-none"
-              style={{ color: card.accent ? "#FF6B00" : "#191F28" }}
+              className="text-number mt-3"
+              style={{ color: card.accent ? "var(--primary)" : "var(--text-primary)" }}
             >
               {card.value}
             </p>
-            <p className="mt-2 text-[13px] text-[#B0B8C1]">{card.subtitle}</p>
+            <p className="text-caption mt-2">{card.subtitle}</p>
           </div>
         ))}
       </div>
 
       {/* Score Trend */}
-      <div className="rounded-2xl bg-white px-7 py-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-        <h2 className="text-[16px] font-bold text-[#191F28] mb-1">점수 추이</h2>
-        <p className="text-[13px] text-[#8B95A1] mb-6">{totalLectures}개 강의 가중 평균</p>
+      <div className="card card-padded">
+        <h2 className="text-section mb-1">점수 추이</h2>
+        <p className="text-caption mb-6">{totalLectures}개 강의 가중 평균</p>
         <ResponsiveContainer width="100%" height={280}>
           <AreaChart data={trendData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
             <defs>
               <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#FF6B00" stopOpacity={0.15} />
-                <stop offset="100%" stopColor="#FF6B00" stopOpacity={0} />
+                <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.15} />
+                <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E8EB" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
             <XAxis
               dataKey="date"
               tickFormatter={formatDateShort}
-              tick={{ fontSize: 11, fill: "#8B95A1" }}
-              axisLine={{ stroke: "#E5E8EB" }}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
+              axisLine={{ stroke: "var(--border)" }}
               tickLine={false}
             />
             <YAxis
               domain={[1, 5]}
-              tick={{ fontSize: 11, fill: "#8B95A1" }}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
               axisLine={false}
               tickLine={false}
               width={30}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#fff",
-                border: "1px solid #E5E8EB",
-                borderRadius: "12px",
+                backgroundColor: "var(--surface)",
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius-inner)",
                 fontSize: 13,
               }}
               labelFormatter={(l) => formatDateShort(l as string)}
@@ -164,31 +164,31 @@ export default function DashboardPage() {
             <Area
               type="monotone"
               dataKey="score"
-              stroke="#FF6B00"
+              stroke="var(--primary)"
               strokeWidth={2}
               fill="url(#scoreGrad)"
-              dot={{ r: 3, fill: "#fff", stroke: "#FF6B00", strokeWidth: 2 }}
-              activeDot={{ r: 5, fill: "#FF6B00" }}
+              dot={{ r: 3, fill: "var(--surface)", stroke: "var(--primary)", strokeWidth: 2 }}
+              activeDot={{ r: 5, fill: "var(--primary)" }}
             />
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
       {/* Category Heatmap */}
-      <div className="rounded-2xl bg-white px-7 py-6 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-        <h2 className="text-[16px] font-bold text-[#191F28] mb-1">카테고리 히트맵</h2>
-        <p className="text-[13px] text-[#8B95A1] mb-6">카테고리 × 강의 날짜별 점수</p>
+      <div className="card card-padded">
+        <h2 className="text-section mb-1">카테고리 히트맵</h2>
+        <p className="text-caption mb-6">카테고리 × 강의 날짜별 점수</p>
         <div className="overflow-x-auto">
           <table className="w-full text-xs" aria-label="카테고리별 점수 히트맵">
             <thead>
               <tr>
-                <th className="text-left py-2 pr-4 font-medium text-gray-500 whitespace-nowrap">
+                <th className="text-left py-2 pr-4 font-medium text-text-tertiary whitespace-nowrap">
                   카테고리
                 </th>
                 {evaluations.map((e) => (
                   <th
                     key={e.lecture_date}
-                    className="px-1 py-2 font-medium text-gray-400 text-center"
+                    className="px-1 py-2 font-medium text-text-muted text-center"
                   >
                     {formatDateShort(e.lecture_date)}
                   </th>
@@ -198,7 +198,7 @@ export default function DashboardPage() {
             <tbody>
               {heatmapRows.map((row) => (
                 <tr key={row.name}>
-                  <td className="py-1.5 pr-4 text-gray-600 whitespace-nowrap">
+                  <td className="py-1.5 pr-4 text-text-secondary whitespace-nowrap">
                     {row.name.replace(/^\d+\.\s*/, "")}
                   </td>
                   {row.scores.map((cell) => (
@@ -224,10 +224,10 @@ export default function DashboardPage() {
       {/* Recent Lectures */}
       <div>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-[16px] font-bold text-[#191F28]">최근 평가 결과</h2>
+          <h2 className="text-section">최근 평가 결과</h2>
           <Link
             to="/lectures"
-            className="text-sm font-medium text-gray-500 hover:text-[#FF6B00]"
+            className="text-sm font-medium text-text-tertiary hover:text-primary"
           >
             전체 보기
           </Link>
@@ -237,19 +237,19 @@ export default function DashboardPage() {
             <Link
               key={item.lecture_date}
               to={`/lectures/${item.lecture_date}`}
-              className="rounded-2xl bg-white px-6 py-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)] transition-shadow"
+              className="card card-padded card-hover transition-shadow"
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-[12px] text-[#B0B8C1]">
+                  <p className="text-caption">
                     {formatDateShort(item.lecture_date)}
                   </p>
-                  <p className="mt-1.5 text-[14px] font-semibold text-[#191F28]">
+                  <p className="mt-1.5 text-[14px] font-semibold text-foreground">
                     {item.metadata.subjects?.[0] ?? "강의"}
                   </p>
                 </div>
                 <span
-                  className="flex h-10 w-10 items-center justify-center rounded-xl text-[14px] font-bold"
+                  className="score-badge score-badge-sm"
                   style={{
                     backgroundColor: scoreColor(item.weighted_average),
                     color: scoreBadgeTextColor(item.weighted_average),

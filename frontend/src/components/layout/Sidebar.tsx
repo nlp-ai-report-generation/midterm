@@ -30,8 +30,8 @@ export default function Sidebar() {
         left: 0,
         bottom: 0,
         width: 240,
-        background: "#FFFFFF",
-        borderRight: "1px solid #E5E8EB",
+        background: "var(--surface)",
+        borderRight: "1px solid var(--border)",
         display: "flex",
         flexDirection: "column",
         zIndex: 30,
@@ -51,11 +51,11 @@ export default function Sidebar() {
             width: 32,
             height: 32,
             borderRadius: 10,
-            background: "#FF6B00",
+            background: "var(--primary)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#FFFFFF",
+            color: "var(--surface)",
             fontSize: 14,
             fontWeight: 800,
           }}
@@ -66,7 +66,7 @@ export default function Sidebar() {
           style={{
             fontSize: 17,
             fontWeight: 700,
-            color: "#191F28",
+            color: "var(--text-primary)",
             letterSpacing: "-0.02em",
           }}
         >
@@ -90,8 +90,8 @@ export default function Sidebar() {
                   fontSize: 14,
                   fontWeight: 600,
                   letterSpacing: "-0.02em",
-                  color: isActive ? "#FF6B00" : "#6B7684",
-                  background: isActive ? "#FFF4EB" : "transparent",
+                  color: isActive ? "var(--primary)" : "var(--text-secondary)",
+                  background: isActive ? "var(--primary-light)" : "transparent",
                   textDecoration: "none",
                   transition: "color 0.15s, background 0.15s",
                 })}
@@ -108,9 +108,9 @@ export default function Sidebar() {
       <div
         style={{
           padding: "20px 24px",
-          borderTop: "1px solid #E5E8EB",
+          borderTop: "1px solid var(--border)",
           fontSize: 12,
-          color: "#8B95A1",
+          color: "var(--text-tertiary)",
           letterSpacing: "-0.02em",
         }}
       >

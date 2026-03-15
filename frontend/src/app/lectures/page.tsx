@@ -29,7 +29,7 @@ export default function LecturesPage() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#FF6B00] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
       </div>
     );
   }
@@ -39,10 +39,10 @@ export default function LecturesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-[#191F28]">강의 목록</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{evaluations.length}개 강의</p>
+          <h1 className="text-title">강의 목록</h1>
+          <p className="text-caption mt-0.5">{evaluations.length}개 강의</p>
         </div>
-        <div className="flex rounded-xl bg-white overflow-hidden shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+        <div className="tab-bar" role="tablist">
           {(
             [
               { key: "latest", label: "최신순" },
@@ -52,12 +52,10 @@ export default function LecturesPage() {
           ).map((item) => (
             <button
               key={item.key}
+              role="tab"
+              aria-selected={sortBy === item.key}
               onClick={() => setSortBy(item.key)}
-              className={`px-4 py-2 text-xs font-semibold transition-colors ${
-                sortBy === item.key
-                  ? "bg-[#FF6B00] text-white"
-                  : "text-gray-500 hover:text-[#191F28]"
-              }`}
+              className="tab-item"
             >
               {item.label}
             </button>
@@ -67,8 +65,8 @@ export default function LecturesPage() {
 
       {/* Grid */}
       {displayed.length === 0 ? (
-        <div className="rounded-2xl bg-white py-16 text-center shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-          <p className="text-gray-500">강의 데이터가 없습니다.</p>
+        <div className="card py-16 text-center">
+          <p className="text-text-tertiary">강의 데이터가 없습니다.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -76,19 +74,19 @@ export default function LecturesPage() {
             <Link
               key={evaluation.lecture_date}
               to={`/lectures/${evaluation.lecture_date}`}
-              className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.1)] transition-shadow"
+              className="card card-padded card-hover transition-shadow"
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1 min-w-0">
-                  <p className="text-[13px] text-gray-500">
+                  <p className="text-caption">
                     {formatDateShort(evaluation.lecture_date)}
                   </p>
-                  <p className="mt-1 text-base font-semibold text-[#191F28] truncate">
+                  <p className="mt-1 text-base font-semibold text-foreground truncate">
                     {evaluation.metadata.subjects?.[0] ?? "강의"}
                   </p>
                 </div>
                 <span
-                  className="flex h-11 w-11 items-center justify-center rounded-full text-lg font-bold ml-3 shrink-0"
+                  className="score-badge score-badge-md rounded-full ml-3 shrink-0"
                   style={{
                     backgroundColor: scoreColor(evaluation.weighted_average),
                     color: scoreBadgeTextColor(evaluation.weighted_average),
@@ -99,14 +97,14 @@ export default function LecturesPage() {
               </div>
               <div className="space-y-1.5">
                 {evaluation.strengths?.[0] && (
-                  <p className="text-xs text-gray-500 line-clamp-1">
-                    <span className="text-green-600 font-medium">+</span>{" "}
+                  <p className="text-xs text-text-tertiary line-clamp-1">
+                    <span className="text-success font-medium">+</span>{" "}
                     {evaluation.strengths[0]}
                   </p>
                 )}
                 {evaluation.improvements?.[0] && (
-                  <p className="text-xs text-gray-500 line-clamp-1">
-                    <span className="text-amber-500 font-medium">-</span>{" "}
+                  <p className="text-xs text-text-tertiary line-clamp-1">
+                    <span className="text-warning font-medium">-</span>{" "}
                     {evaluation.improvements[0]}
                   </p>
                 )}

@@ -43,13 +43,13 @@ const TABS: { key: TabKey; label: string }[] = [
 const SUBJECT_COLORS: Record<string, string> = {
   "객체지향 프로그래밍": "#8B5CF6",
   프론트엔드: "#3182F6",
-  백엔드: "#FF6B00",
+  백엔드: "var(--primary)",
 };
 
 const CHART_TOOLTIP_STYLE = {
-  backgroundColor: "#fff",
-  border: "1px solid #E5E8EB",
-  borderRadius: "12px",
+  backgroundColor: "var(--surface)",
+  border: "1px solid var(--border)",
+  borderRadius: "var(--radius-inner)",
   fontSize: 13,
 };
 
@@ -83,28 +83,24 @@ export default function EDAPage() {
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-[#FF6B00] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
       </div>
     );
   }
 
   return (
     <div className="space-y-5 max-w-[1200px] mx-auto">
-      <h1 className="text-xl font-bold text-[#191F28]">탐색적 데이터 분석</h1>
+      <h1 className="text-title">탐색적 데이터 분석</h1>
 
       {/* Tab Bar */}
-      <div className="flex gap-1 rounded-xl bg-white p-1 w-fit shadow-[0_1px_3px_rgba(0,0,0,0.06)]" role="tablist">
+      <div className="tab-bar" role="tablist">
         {TABS.map((tab) => (
           <button
             key={tab.key}
             role="tab"
             aria-selected={activeTab === tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${
-              activeTab === tab.key
-                ? "bg-[#FF6B00] text-white"
-                : "text-gray-500 hover:text-[#191F28]"
-            }`}
+            className="tab-item"
           >
             {tab.label}
           </button>
@@ -126,9 +122,9 @@ export default function EDAPage() {
 /* --- Summary Card --- */
 function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-      <p className="text-[13px] uppercase tracking-wide text-gray-500">{label}</p>
-      <p className="mt-2 text-2xl font-bold text-[#191F28]">{value}</p>
+    <div className="card card-padded">
+      <p className="text-label">{label}</p>
+      <p className="text-number mt-2">{value}</p>
     </div>
   );
 }
@@ -149,21 +145,21 @@ function StatsTab({ data }: { data: TranscriptStats[] }) {
         <SummaryCard label="최소" value={`${minLines.toLocaleString()}줄`} />
       </div>
 
-      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-        <h3 className="text-[15px] font-bold text-[#191F28] mb-1">강의별 라인 수</h3>
-        <p className="text-xs text-gray-500 mb-5">STT 트랜스크립트 라인 수 비교</p>
+      <div className="card card-padded">
+        <h3 className="text-section mb-1">강의별 라인 수</h3>
+        <p className="text-caption mb-5">STT 트랜스크립트 라인 수 비교</p>
         <ResponsiveContainer width="100%" height={320}>
           <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E8EB" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
             <XAxis
               dataKey="date"
               tickFormatter={formatDateShort}
-              tick={{ fontSize: 11, fill: "#8B95A1" }}
-              axisLine={{ stroke: "#E5E8EB" }}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
+              axisLine={{ stroke: "var(--border)" }}
               tickLine={false}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#8B95A1" }}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
               axisLine={false}
               tickLine={false}
               width={45}
@@ -176,7 +172,7 @@ function StatsTab({ data }: { data: TranscriptStats[] }) {
               {data.map((entry) => (
                 <Cell
                   key={entry.date}
-                  fill={entry.line_count < 1200 ? "#FF9500" : "#FF6B00"}
+                  fill={entry.line_count < 1200 ? "#FF9500" : "var(--primary)"}
                 />
               ))}
             </Bar>
@@ -184,20 +180,20 @@ function StatsTab({ data }: { data: TranscriptStats[] }) {
         </ResponsiveContainer>
       </div>
 
-      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-        <h3 className="text-[15px] font-bold text-[#191F28] mb-1">발화속도 추이</h3>
-        <p className="text-xs text-gray-500 mb-5">시간당 발화 라인 수</p>
+      <div className="card card-padded">
+        <h3 className="text-section mb-1">발화속도 추이</h3>
+        <p className="text-caption mb-5">시간당 발화 라인 수</p>
         <ResponsiveContainer width="100%" height={280}>
           <LineChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E8EB" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
             <XAxis
               dataKey="date"
               tickFormatter={formatDateShort}
-              tick={{ fontSize: 11, fill: "#8B95A1" }}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
               tickLine={false}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#8B95A1" }}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
               axisLine={false}
               tickLine={false}
               width={40}
@@ -212,7 +208,7 @@ function StatsTab({ data }: { data: TranscriptStats[] }) {
               name="줄/시간"
               stroke="#3182F6"
               strokeWidth={2}
-              dot={{ r: 3, fill: "#fff", stroke: "#3182F6", strokeWidth: 2 }}
+              dot={{ r: 3, fill: "var(--surface)", stroke: "#3182F6", strokeWidth: 2 }}
               activeDot={{ r: 5, fill: "#3182F6" }}
             />
           </LineChart>
@@ -253,20 +249,20 @@ function SpeakersTab({ data }: { data: SpeakerDistribution[] }) {
         />
       </div>
 
-      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-        <h3 className="text-[15px] font-bold text-[#191F28] mb-1">화자별 발화 분포</h3>
-        <p className="text-xs text-gray-500 mb-5">강의별 주강사 / 보조강사 / 기타</p>
+      <div className="card card-padded">
+        <h3 className="text-section mb-1">화자별 발화 분포</h3>
+        <p className="text-caption mb-5">강의별 주강사 / 보조강사 / 기타</p>
         <ResponsiveContainer width="100%" height={360}>
           <BarChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E8EB" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
             <XAxis
               dataKey="date"
               tickFormatter={formatDateShort}
-              tick={{ fontSize: 11, fill: "#8B95A1" }}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
               tickLine={false}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#8B95A1" }}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
               axisLine={false}
               tickLine={false}
               width={45}
@@ -276,9 +272,9 @@ function SpeakersTab({ data }: { data: SpeakerDistribution[] }) {
               labelFormatter={(l) => formatDateShort(l as string)}
             />
             <Legend />
-            <Bar dataKey="주강사" stackId="a" fill="#FF6B00" />
+            <Bar dataKey="주강사" stackId="a" fill="var(--primary)" />
             <Bar dataKey="보조강사" stackId="a" fill="#FF9F5A" />
-            <Bar dataKey="기타" stackId="a" fill="#D1D6DB" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="기타" stackId="a" fill="var(--grey-300)" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -300,20 +296,20 @@ function InteractionTab({ data }: { data: InteractionMetrics[] }) {
         <SummaryCard label="평균 질문 빈도" value={`${avgQuestions}회/강의`} />
       </div>
 
-      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-        <h3 className="text-[15px] font-bold text-[#191F28] mb-1">상호작용 지표 추이</h3>
-        <p className="text-xs text-gray-500 mb-5">질문, 이해도 확인, 참여 유도</p>
+      <div className="card card-padded">
+        <h3 className="text-section mb-1">상호작용 지표 추이</h3>
+        <p className="text-caption mb-5">질문, 이해도 확인, 참여 유도</p>
         <ResponsiveContainer width="100%" height={320}>
           <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E8EB" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
             <XAxis
               dataKey="date"
               tickFormatter={formatDateShort}
-              tick={{ fontSize: 11, fill: "#8B95A1" }}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
               tickLine={false}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#8B95A1" }}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
               axisLine={false}
               tickLine={false}
               width={35}
@@ -326,7 +322,7 @@ function InteractionTab({ data }: { data: InteractionMetrics[] }) {
             <Bar
               dataKey="question_count"
               name="질문"
-              fill="#FF6B00"
+              fill="var(--primary)"
               radius={[4, 4, 0, 0]}
             />
             <Bar
@@ -361,15 +357,15 @@ function FillerTab({ data }: { data: FillerWordStats[] }) {
   );
 
   const pieData = Object.entries(totalByWord).map(([name, value]) => ({ name, value }));
-  const COLORS = ["#FF6B00", "#3182F6", "#FF9500", "#34C759", "#8B5CF6"];
+  const COLORS = ["var(--primary)", "#3182F6", "#FF9500", "#34C759", "#8B5CF6"];
 
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         {/* Pie Chart */}
-        <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-          <h3 className="text-[15px] font-bold text-[#191F28] mb-1">습관어 비율</h3>
-          <p className="text-xs text-gray-500 mb-5">전체 강의 합산</p>
+        <div className="card card-padded">
+          <h3 className="text-section mb-1">습관어 비율</h3>
+          <p className="text-caption mb-5">전체 강의 합산</p>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -399,7 +395,7 @@ function FillerTab({ data }: { data: FillerWordStats[] }) {
             .map(([word, count], i) => (
               <div
                 key={word}
-                className="rounded-2xl bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)]"
+                className="card" style={{ padding: "16px 20px" }}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -407,15 +403,15 @@ function FillerTab({ data }: { data: FillerWordStats[] }) {
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: COLORS[i % COLORS.length] }}
                     />
-                    <span className="text-base font-bold text-[#191F28]">
+                    <span className="text-base font-bold text-foreground">
                       &ldquo;{word}&rdquo;
                     </span>
                   </div>
-                  <span className="text-lg font-bold text-[#191F28]">
+                  <span className="text-lg font-bold text-foreground">
                     {count.toLocaleString()}
                   </span>
                 </div>
-                <p className="text-xs text-gray-400 mt-1 ml-6">
+                <p className="text-caption mt-1 ml-6">
                   평균 {(count / data.length).toFixed(1)}회/강의
                 </p>
               </div>
@@ -424,20 +420,20 @@ function FillerTab({ data }: { data: FillerWordStats[] }) {
       </div>
 
       {/* Per-lecture bar chart */}
-      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-        <h3 className="text-[15px] font-bold text-[#191F28] mb-1">강의별 습관어 총량</h3>
-        <p className="text-xs text-gray-500 mb-5">날짜별 습관어 사용 빈도</p>
+      <div className="card card-padded">
+        <h3 className="text-section mb-1">강의별 습관어 총량</h3>
+        <p className="text-caption mb-5">날짜별 습관어 사용 빈도</p>
         <ResponsiveContainer width="100%" height={320}>
           <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E8EB" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
             <XAxis
               dataKey="date"
               tickFormatter={formatDateShort}
-              tick={{ fontSize: 11, fill: "#8B95A1" }}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
               tickLine={false}
             />
             <YAxis
-              tick={{ fontSize: 11, fill: "#8B95A1" }}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
               axisLine={false}
               tickLine={false}
               width={40}
@@ -446,7 +442,7 @@ function FillerTab({ data }: { data: FillerWordStats[] }) {
               contentStyle={CHART_TOOLTIP_STYLE}
               labelFormatter={(l) => formatDateShort(l as string)}
             />
-            <Bar dataKey="total" name="합계" fill="#FF6B00" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="total" name="합계" fill="var(--primary)" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -457,13 +453,13 @@ function FillerTab({ data }: { data: FillerWordStats[] }) {
 /* --- Curriculum Tab --- */
 function CurriculumTab({ data }: { data: CurriculumEntry[] }) {
   return (
-    <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-      <h3 className="text-[15px] font-bold text-[#191F28] mb-1">커리큘럼 타임라인</h3>
-      <p className="text-xs text-gray-500 mb-6">날짜별 과목 및 학습 내용 흐름</p>
+    <div className="card card-padded">
+      <h3 className="text-section mb-1">커리큘럼 타임라인</h3>
+      <p className="text-caption mb-6">날짜별 과목 및 학습 내용 흐름</p>
 
       <div className="space-y-0">
         {data.map((entry, i) => {
-          const color = SUBJECT_COLORS[entry.subject] ?? "#8B95A1";
+          const color = SUBJECT_COLORS[entry.subject] ?? "var(--text-tertiary)";
           const isNewSubject = i === 0 || data[i - 1].subject !== entry.subject;
 
           return (
@@ -474,7 +470,7 @@ function CurriculumTab({ data }: { data: CurriculumEntry[] }) {
                   className="w-3.5 h-3.5 rounded-full border-[3px] mt-0.5"
                   style={{
                     borderColor: color,
-                    backgroundColor: isNewSubject ? color : "#fff",
+                    backgroundColor: isNewSubject ? color : "var(--surface)",
                   }}
                 />
                 {i < data.length - 1 && (
@@ -488,7 +484,7 @@ function CurriculumTab({ data }: { data: CurriculumEntry[] }) {
               {/* Content */}
               <div className="flex-1 pb-5">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-medium text-gray-400">
+                  <span className="text-caption">
                     {formatDateShort(entry.date)}
                   </span>
                   {isNewSubject && (
@@ -500,7 +496,7 @@ function CurriculumTab({ data }: { data: CurriculumEntry[] }) {
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-[#191F28] leading-relaxed">
+                <p className="text-sm text-foreground leading-relaxed">
                   {entry.contents.join(", ")}
                 </p>
               </div>

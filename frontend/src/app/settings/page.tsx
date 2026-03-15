@@ -147,12 +147,12 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-5 max-w-[720px] mx-auto">
-      <h1 className="text-xl font-bold text-[#191F28]">설정</h1>
+      <h1 className="text-title">설정</h1>
 
       {/* API Connection */}
-      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+      <div className="card card-padded">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[15px] font-bold text-[#191F28]">API 연결</h2>
+          <h2 className="text-section">API 연결</h2>
           {apiStatus !== "idle" && (
             <span className="flex items-center gap-2 text-xs font-medium">
               <span
@@ -181,13 +181,14 @@ export default function SettingsPage() {
               value={settings.apiKey}
               onChange={(e) => update("apiKey", e.target.value)}
               placeholder="sk-proj-..."
-              className="w-full px-4 py-3 pr-10 bg-[#F7F8FA] rounded-xl border border-[#E5E8EB] text-sm text-[#191F28] placeholder:text-gray-400 focus:outline-none focus:border-[#FF6B00]"
+              className="input-field pr-10"
+              style={{ border: "1px solid var(--border)" }}
             />
             <button
               type="button"
               onClick={() => setShowKey(!showKey)}
               aria-label="API 키 표시/숨기기"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#191F28]"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-foreground"
             >
               <svg
                 width="18"
@@ -214,7 +215,7 @@ export default function SettingsPage() {
           </div>
           <button
             onClick={handleTestConnection}
-            className="px-5 py-3 bg-[#191F28] text-white font-semibold text-sm rounded-xl hover:opacity-90 shrink-0"
+            className="btn-secondary shrink-0"
           >
             연결 테스트
           </button>
@@ -222,40 +223,38 @@ export default function SettingsPage() {
       </div>
 
       {/* Model Toggle */}
-      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-        <h2 className="text-[15px] font-bold text-[#191F28] mb-4">모델 선택</h2>
-        <div className="flex rounded-xl overflow-hidden w-fit shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+      <div className="card card-padded">
+        <h2 className="text-section mb-4">모델 선택</h2>
+        <div className="tab-bar">
           {(["gpt-4o-mini", "gpt-4o"] as const).map((m) => (
             <button
               key={m}
+              role="tab"
+              aria-selected={settings.model === m}
               onClick={() => update("model", m)}
-              className={`px-5 py-2.5 text-sm font-semibold transition-colors ${
-                settings.model === m
-                  ? "bg-[#FF6B00] text-white"
-                  : "text-gray-500 hover:text-[#191F28]"
-              }`}
+              className="tab-item"
             >
               {m}
             </button>
           ))}
         </div>
-        <p className="text-xs text-gray-400 mt-2">
+        <p className="text-caption mt-2">
           예상 비용: 강의당 {COST_PER_LECTURE[settings.model] ?? "~$0.03"}
         </p>
       </div>
 
       {/* Lecture Selection */}
-      <div className="rounded-2xl bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+      <div className="card card-padded">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[15px] font-bold text-[#191F28]">강의 선택</h2>
+          <h2 className="text-section">강의 선택</h2>
           <button
             onClick={selectAll}
-            className="text-xs font-medium text-[#FF6B00] hover:opacity-80"
+            className="text-xs font-medium text-primary hover:opacity-80"
           >
             {selectedDates.length === lectures.length ? "전체 해제" : "전체 선택"}
           </button>
         </div>
-        <p className="text-xs text-gray-400 mb-3">
+        <p className="text-caption mb-3">
           {selectedDates.length}개 선택 / {lectures.length}개 강의 | 예상 비용 ~$
           {(
             parseFloat(
@@ -270,20 +269,19 @@ export default function SettingsPage() {
               <button
                 key={l.date}
                 onClick={() => toggleDate(l.date)}
-                className={`p-3 rounded-xl text-left transition-all ${
-                  isSelected
-                    ? "bg-[#FFF4EC] shadow-[0_0_0_1.5px_#FF6B00]"
-                    : "bg-[#F7F8FA] hover:shadow-[0_0_0_1px_rgba(255,107,0,0.3)]"
-                }`}
+                className="p-3 rounded-xl text-left transition-all"
+                style={{
+                  background: isSelected ? "var(--primary-light)" : "var(--background)",
+                  boxShadow: isSelected ? "0 0 0 1.5px var(--primary)" : "none",
+                }}
               >
                 <p
-                  className={`text-xs font-bold ${
-                    isSelected ? "text-[#FF6B00]" : "text-[#191F28]"
-                  }`}
+                  className="text-xs font-bold"
+                  style={{ color: isSelected ? "var(--primary)" : "var(--text-primary)" }}
                 >
                   {l.date.slice(5)}
                 </p>
-                <p className="text-[10px] text-gray-400 mt-0.5 line-clamp-1">
+                <p className="text-[10px] text-text-muted mt-0.5 line-clamp-1">
                   {l.subjects?.[0] ?? "강의"}
                 </p>
               </button>
@@ -296,7 +294,7 @@ export default function SettingsPage() {
       <button
         onClick={handleRunEvaluation}
         disabled={evaluating || selectedDates.length === 0 || apiStatus !== "valid"}
-        className="w-full py-3.5 bg-[#FF6B00] text-white font-semibold text-sm rounded-xl hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="btn-primary w-full py-3.5"
       >
         {evaluating ? (
           <>
@@ -324,12 +322,12 @@ export default function SettingsPage() {
       </button>
 
       {evalProgress && (
-        <p className="text-sm text-gray-500 text-center">
+        <p className="text-body text-center">
           {evalProgress}
           {evalProgress.startsWith("완료") && (
             <Link
               to="/dashboard"
-              className="text-[#FF6B00] font-semibold ml-2 hover:underline"
+              className="text-primary font-semibold ml-2 hover:underline"
             >
               대시보드에서 확인
             </Link>
@@ -338,15 +336,15 @@ export default function SettingsPage() {
       )}
 
       {/* Advanced Settings */}
-      <div className="rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.06)] overflow-hidden">
+      <div className="card overflow-hidden">
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
           aria-expanded={showAdvanced}
-          className="w-full flex items-center justify-between p-5 text-left hover:bg-[#F7F8FA] transition-colors"
+          className="w-full flex items-center justify-between p-5 text-left hover:bg-background transition-colors"
         >
           <div>
-            <h2 className="text-[15px] font-bold text-[#191F28]">고급 설정</h2>
-            <p className="text-xs text-gray-400 mt-0.5">
+            <h2 className="text-section">고급 설정</h2>
+            <p className="text-caption mt-0.5">
               기본값으로 충분합니다. 필요한 경우에만 조정하세요.
             </p>
           </div>
@@ -358,21 +356,21 @@ export default function SettingsPage() {
             stroke="currentColor"
             strokeWidth="2"
             strokeLinecap="round"
-            className={`text-gray-400 transition-transform ${showAdvanced ? "rotate-180" : ""}`}
+            className={`text-text-muted transition-transform ${showAdvanced ? "rotate-180" : ""}`}
           >
             <polyline points="6 9 12 15 18 9" />
           </svg>
         </button>
 
         {showAdvanced && (
-          <div className="px-5 pb-5 space-y-5 border-t border-[#E5E8EB] pt-5">
+          <div className="px-5 pb-5 space-y-5 border-t border-border pt-5">
             {/* Temperature */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label htmlFor="temperature-range" className="text-sm font-semibold text-[#191F28]">
+                <label htmlFor="temperature-range" className="text-sm font-semibold text-foreground">
                   Temperature
                 </label>
-                <span className="text-xs font-bold text-[#FF6B00] bg-[#FFF4EC] px-2 py-0.5 rounded-md">
+                <span className="text-xs font-bold text-primary bg-primary-light px-2 py-0.5 rounded-md">
                   {settings.temperature.toFixed(1)}
                 </span>
               </div>
@@ -384,14 +382,14 @@ export default function SettingsPage() {
                 step="0.1"
                 value={settings.temperature}
                 onChange={(e) => update("temperature", parseFloat(e.target.value))}
-                className="w-full h-1.5 bg-[#E5E8EB] rounded-full appearance-none cursor-pointer accent-[#FF6B00]"
+                className="w-full h-1.5 bg-border rounded-full appearance-none cursor-pointer accent-primary"
               />
             </div>
 
             {/* Chunk / Overlap */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="chunk-minutes" className="block text-sm font-semibold text-[#191F28] mb-2">
+                <label htmlFor="chunk-minutes" className="block text-sm font-semibold text-foreground mb-2">
                   청크 윈도우 (분)
                 </label>
                 <input
@@ -403,11 +401,12 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     update("chunkMinutes", parseInt(e.target.value) || 30)
                   }
-                  className="w-full px-3 py-2.5 bg-[#F7F8FA] rounded-xl border border-[#E5E8EB] text-sm text-[#191F28] focus:outline-none focus:border-[#FF6B00]"
+                  className="input-field"
+                  style={{ border: "1px solid var(--border)" }}
                 />
               </div>
               <div>
-                <label htmlFor="overlap-minutes" className="block text-sm font-semibold text-[#191F28] mb-2">
+                <label htmlFor="overlap-minutes" className="block text-sm font-semibold text-foreground mb-2">
                   오버랩 (분)
                 </label>
                 <input
@@ -419,7 +418,8 @@ export default function SettingsPage() {
                   onChange={(e) =>
                     update("overlapMinutes", parseInt(e.target.value) || 5)
                   }
-                  className="w-full px-3 py-2.5 bg-[#F7F8FA] rounded-xl border border-[#E5E8EB] text-sm text-[#191F28] focus:outline-none focus:border-[#FF6B00]"
+                  className="input-field"
+                  style={{ border: "1px solid var(--border)" }}
                 />
               </div>
             </div>
@@ -427,29 +427,23 @@ export default function SettingsPage() {
             {/* Calibrator Toggle */}
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-[#191F28]">Calibrator</p>
-                <p className="text-xs text-gray-400 mt-0.5">점수 보정 및 일관성 검증</p>
+                <p className="text-sm font-semibold text-foreground">Calibrator</p>
+                <p className="text-caption mt-0.5">점수 보정 및 일관성 검증</p>
               </div>
               <button
                 type="button"
                 role="switch"
                 aria-checked={settings.useCalibrator}
                 onClick={() => update("useCalibrator", !settings.useCalibrator)}
-                className={`relative w-11 h-6 rounded-full transition-colors ${
-                  settings.useCalibrator ? "bg-[#FF6B00]" : "bg-[#D1D6DB]"
-                }`}
+                className="toggle"
               >
-                <span
-                  className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${
-                    settings.useCalibrator ? "translate-x-5" : ""
-                  }`}
-                />
+                <span className="toggle-knob" />
               </button>
             </div>
 
             <button
               onClick={handleSave}
-              className="w-full py-3 bg-[#191F28] text-white font-semibold text-sm rounded-xl hover:opacity-90 transition-opacity"
+              className="btn-secondary w-full py-3"
             >
               설정 저장
             </button>
@@ -462,7 +456,8 @@ export default function SettingsPage() {
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 bg-[#191F28] text-white rounded-xl shadow-lg text-sm font-medium"
+          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-xl shadow-lg text-sm font-medium"
+          style={{ background: "var(--text-primary)", color: "var(--surface)" }}
         >
           <svg
             width="16"

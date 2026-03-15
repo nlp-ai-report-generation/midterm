@@ -24,8 +24,8 @@ export default function Header() {
         top: 0,
         zIndex: 20,
         height: 60,
-        background: "#FFFFFF",
-        borderBottom: "1px solid #E5E8EB",
+        background: "var(--surface)",
+        borderBottom: "1px solid var(--border)",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -36,7 +36,7 @@ export default function Header() {
         style={{
           fontSize: 20,
           fontWeight: 700,
-          color: "#191F28",
+          color: "var(--text-primary)",
           letterSpacing: "-0.02em",
         }}
       >
@@ -50,8 +50,8 @@ export default function Header() {
           justifyContent: "center",
           width: 36,
           height: 36,
-          borderRadius: 8,
-          color: "#8B95A1",
+          borderRadius: "var(--radius-sm)",
+          color: "var(--text-tertiary)",
           transition: "color 0.15s",
         }}
         aria-label="설정"
