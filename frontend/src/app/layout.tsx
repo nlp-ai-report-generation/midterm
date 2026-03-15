@@ -27,7 +27,9 @@ export default function RootLayout({
         <Sidebar />
         <div style={{ marginLeft: "var(--sidebar-width)" }}>
           <Header />
-          <main className="p-8">{children}</main>
+          <main className="px-10 py-8">
+            <div className="max-w-[1400px] mx-auto">{children}</div>
+          </main>
         </div>
       </body>
     </html>

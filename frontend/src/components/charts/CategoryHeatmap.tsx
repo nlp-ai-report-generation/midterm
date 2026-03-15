@@ -29,7 +29,7 @@ export default function CategoryHeatmap({ data, categoryNames }: HeatmapProps) {
       </p>
 
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full" style={{ borderSpacing: "3px", borderCollapse: "separate" }}>
           <thead>
             <tr>
               <th className="text-left text-xs font-medium text-text-tertiary pb-3 pr-4 min-w-[100px]">
@@ -48,15 +48,15 @@ export default function CategoryHeatmap({ data, categoryNames }: HeatmapProps) {
           <tbody>
             {categoryNames.map((cat) => (
               <tr key={cat}>
-                <td className="text-sm text-text-secondary py-1.5 pr-4 whitespace-nowrap">
+                <td className="text-[13px] font-medium text-text-secondary py-1.5 pr-4 whitespace-nowrap">
                   {SHORT_CATEGORY_NAMES[cat] ?? cat}
                 </td>
                 {data.map((d) => {
                   const score = d.categories[cat] ?? 0;
                   return (
-                    <td key={d.date} className="px-1 py-1.5">
+                    <td key={d.date} className="px-0.5 py-0.5">
                       <div
-                        className="w-full aspect-square rounded-lg flex items-center justify-center text-white text-xs font-bold min-w-[32px] transition-transform hover:scale-110"
+                        className="w-full aspect-square rounded-xl flex items-center justify-center text-white text-xs font-bold min-w-[38px] transition-transform hover:scale-110"
                         style={{
                           backgroundColor: scoreColor(score),
                           opacity: score > 0 ? 1 : 0.2,
@@ -75,12 +75,12 @@ export default function CategoryHeatmap({ data, categoryNames }: HeatmapProps) {
       </div>
 
       {/* 범례 */}
-      <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border-light">
+      <div className="flex items-center gap-4 mt-5 pt-4 border-t border-border-light">
         <span className="text-xs text-text-tertiary">점수:</span>
         {[1, 2, 3, 4, 5].map((s) => (
-          <div key={s} className="flex items-center gap-1">
+          <div key={s} className="flex items-center gap-1.5">
             <div
-              className="w-3 h-3 rounded"
+              className="w-3.5 h-3.5 rounded-md"
               style={{ backgroundColor: scoreColor(s) }}
             />
             <span className="text-xs text-text-tertiary">{s}</span>

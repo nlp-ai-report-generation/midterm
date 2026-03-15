@@ -2,23 +2,40 @@
 
 ## 사전 준비
 
-- **Node.js 18+** 설치 필요 (`node -v`로 확인)
-- **npm** 패키지 매니저 (Node.js에 포함)
+- **Node.js 18+** (`node -v`로 확인)
+- **Python 3.11+** (API 서버 실행 시)
 
-## 로컬 실행
+## 1. 프론트엔드 실행
 
 ```bash
-# 1. 프론트엔드 디렉토리 이동
 cd frontend
-
-# 2. 의존성 설치
 npm install
-
-# 3. 개발 서버 시작
 npm run dev
 ```
 
-브라우저에서 **http://localhost:3000** 접속하면 대시보드로 자동 리다이렉트됩니다.
+브라우저에서 **http://localhost:3000** 접속 → 대시보드로 자동 리다이렉트.
+
+## 2. API 서버 실행 (OpenAI 연동)
+
+실제 강의 평가를 실행하려면 백엔드 API 서버가 필요합니다.
+
+```bash
+# 프로젝트 루트에서
+pip install -r api/requirements.txt
+uvicorn api.main:app --reload --port 8000
+```
+
+API 서버가 **http://localhost:8000** 에서 실행됩니다.
+
+### API 키 설정
+
+프론트엔드 설정 페이지(`/settings`)에서 OpenAI API 키를 입력하거나,
+`.env` 파일에 직접 설정:
+
+```bash
+cp .env.example .env
+# .env 파일에서 OPENAI_API_KEY=sk-... 설정
+```
 
 ## 페이지 구조
 
@@ -31,39 +48,42 @@ npm run dev
 | `/lectures/{date}` | 개별 강의 — 레이더 차트, 항목별 점수, 근거 |
 | `/experiments` | 실험 비교 — 신뢰도 지표 (κ, α, ICC, SSI) |
 | `/reports` | 리포트 생성 — 강의 선택, 마크다운 미리보기, 다운로드 |
+| `/settings` | 설정 — OpenAI API 키, 모델, 파라미터 설정 |
+
+## API 엔드포인트
+
+| 메서드 | 경로 | 설명 |
+|--------|------|------|
+| GET | `/api/health` | 헬스 체크 |
+| POST | `/api/settings` | API 키 설정 |
+| POST | `/api/validate-key` | API 키 유효성 검증 |
+| POST | `/api/evaluate` | 강의 평가 실행 |
+| GET | `/api/experiments` | 실험 결과 목록 |
+| GET | `/api/experiments/{id}` | 실험 상세 결과 |
 
 ## 빌드 확인
 
 ```bash
+cd frontend
 npm run build
 ```
 
-에러 없이 완료되면 프로덕션 배포 준비 완료.
-
 ## Vercel 배포
 
-### 방법 1: CLI
-
 ```bash
-npx vercel
+# CLI 배포
+cd frontend && npx vercel
+
+# 또는 GitHub 연동 (Root Directory → frontend)
 ```
-
-### 방법 2: GitHub 연동
-
-1. GitHub 레포를 Vercel에 연결
-2. **Root Directory**를 `frontend`로 설정
-3. 자동 배포 활성화
 
 ## 기술 스택
 
-- Next.js 15 (App Router)
-- TypeScript
-- Tailwind CSS
-- Recharts (차트)
-- Framer Motion (애니메이션)
-- react-markdown (리포트 렌더링)
+- **프론트엔드:** Next.js 15, TypeScript, Tailwind CSS, Recharts, Framer Motion
+- **백엔드 API:** FastAPI, uvicorn
+- **평가 파이프라인:** LangGraph, OpenAI GPT-4o
 
 ## 데이터
 
-`public/data/` 디렉토리에 정적 JSON 파일로 관리됩니다.
-별도의 백엔드 서버 없이 동작합니다.
+- **정적 데이터:** `public/data/` — 샘플 평가 결과 JSON (백엔드 없이 동작)
+- **실시간 평가:** API 서버 + OpenAI API 키 필요

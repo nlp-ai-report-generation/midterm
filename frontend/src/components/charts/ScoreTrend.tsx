@@ -18,7 +18,7 @@ interface ScoreTrendProps {
   height?: number;
 }
 
-export default function ScoreTrend({ data, height = 300 }: ScoreTrendProps) {
+export default function ScoreTrend({ data, height = 340 }: ScoreTrendProps) {
   return (
     <div className="bg-surface rounded-2xl p-6 shadow-[var(--shadow-sm)] border border-border-light">
       <h3 className="text-base font-bold text-foreground mb-1">
@@ -43,14 +43,14 @@ export default function ScoreTrend({ data, height = 300 }: ScoreTrendProps) {
           <XAxis
             dataKey="date"
             tickFormatter={formatDateShort}
-            tick={{ fontSize: 12, fill: "var(--text-tertiary)" }}
+            tick={{ fontSize: 13, fill: "var(--text-tertiary)" }}
             axisLine={{ stroke: "var(--border)" }}
             tickLine={false}
           />
           <YAxis
             domain={[1, 5]}
             ticks={[1, 2, 3, 4, 5]}
-            tick={{ fontSize: 12, fill: "var(--text-tertiary)" }}
+            tick={{ fontSize: 13, fill: "var(--text-tertiary)" }}
             axisLine={false}
             tickLine={false}
             width={30}
@@ -58,10 +58,10 @@ export default function ScoreTrend({ data, height = 300 }: ScoreTrendProps) {
           <Tooltip
             contentStyle={{
               backgroundColor: "var(--surface)",
-              border: "1px solid var(--border)",
-              borderRadius: "12px",
-              boxShadow: "var(--shadow-md)",
-              padding: "12px 16px",
+              border: "1px solid var(--border-light)",
+              borderRadius: "16px",
+              boxShadow: "var(--shadow-lg)",
+              padding: "14px 20px",
             }}
             labelFormatter={(label) => `${formatDateShort(label as string)}`}
             formatter={(value) => [Number(value).toFixed(2), "가중 평균"]}
@@ -70,16 +70,16 @@ export default function ScoreTrend({ data, height = 300 }: ScoreTrendProps) {
             type="monotone"
             dataKey="score"
             stroke="var(--primary)"
-            strokeWidth={2.5}
+            strokeWidth={3}
             fill="url(#scoreGradient)"
             dot={{
-              r: 4,
+              r: 5,
               fill: "var(--surface)",
               stroke: "var(--primary)",
               strokeWidth: 2,
             }}
             activeDot={{
-              r: 6,
+              r: 7,
               fill: "var(--primary)",
               stroke: "var(--surface)",
               strokeWidth: 2,

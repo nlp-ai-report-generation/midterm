@@ -20,7 +20,7 @@
   --score-5: #00C853;
 
   /* 뉴트럴 */
-  --background: #F7F8FA;
+  --background: #FAFAFA;
   --surface: #FFFFFF;
   --foreground: #191F28;
   --text-secondary: #6B7684;
@@ -35,13 +35,13 @@
   --info: #3182F6;
 
   /* 레이아웃 */
-  --sidebar-width: 260px;
-  --header-height: 64px;
+  --sidebar-width: 272px;
+  --header-height: 72px;
 
-  /* 그림자 - 토스 스타일 */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  /* 그림자 - 더블 레이어 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03), 0 1px 6px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.04), 0 8px 32px rgba(0, 0, 0, 0.06);
 
   /* 반지름 - 토스 스타일 */
   --radius-sm: 8px;
@@ -78,9 +78,9 @@
     --text-tertiary: #6B7684;
     --border: #2C2C35;
     --border-light: #23232B;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.15), 0 1px 6px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.2), 0 8px 32px rgba(0, 0, 0, 0.25);
   }
 }
 
@@ -88,6 +88,25 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* 모든 인터랙티브 요소에 부드러운 트랜지션 */
+a, button, input, select, textarea,
+[role="button"], [tabindex] {
+  transition: all 0.2s ease;
+}
+
+/* 포커스 스타일 - 프라이머리 컬러 */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 선택 색상 */
+::selection {
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+  color: var(--foreground);
 }
 
 html {
@@ -104,10 +123,41 @@ body {
   letter-spacing: -0.02em;
 }
 
-/* 토스 스타일 스크롤바 */
+/* 카드 유틸리티 클래스 */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* 스켈레톤 로딩 플레이스홀더 */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--border-light) 25%,
+    color-mix(in srgb, var(--border-light) 60%, var(--surface)) 50%,
+    var(--border-light) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* 토스 스타일 스크롤바 - 더 얇고, 호버시에만 표시 */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -115,10 +165,26 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+*:hover > ::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb:hover {
   background: var(--text-tertiary);
-  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-secondary);
+}
+
+/* 호버 시에만 스크롤바 보이기 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+*:hover {
+  scrollbar-color: var(--text-tertiary) transparent;
 }
