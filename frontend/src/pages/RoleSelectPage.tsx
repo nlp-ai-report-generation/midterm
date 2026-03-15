@@ -1,45 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useRole } from "@/contexts/RoleContext";
-import { ShieldCheck, GraduationCap, BarChart3, MessageSquare, FileText } from "lucide-react";
-
-const ROLES = [
-  {
-    key: "operator" as const,
-    icon: ShieldCheck,
-    title: "교육 운영 담당자",
-    description: "전체 강의 품질을 관리하고, 강의 간 비교와 추이를 확인합니다.",
-  },
-  {
-    key: "instructor" as const,
-    icon: GraduationCap,
-    title: "강사",
-    description: "내 강의를 돌아보고, 구체적인 개선 방향을 확인합니다.",
-  },
-];
-
-const FEATURES = [
-  {
-    icon: BarChart3,
-    title: "AI 기반 강의 평가",
-    description: "LLM이 18개 항목을 기준으로 강의를 분석합니다.",
-  },
-  {
-    icon: MessageSquare,
-    title: "근거 기반 피드백",
-    description: "트랜스크립트에서 직접 인용한 근거를 함께 제공합니다.",
-  },
-  {
-    icon: FileText,
-    title: "데이터 분석",
-    description: "발화량, 화자 구성, 소통 빈도 등 정량 분석을 지원합니다.",
-  },
-];
 
 export default function RoleSelectPage() {
   const { setRole } = useRole();
   const navigate = useNavigate();
 
-  const handleSelect = (role: "operator" | "instructor") => {
+  const pick = (role: "operator" | "instructor") => {
     setRole(role);
     navigate("/dashboard");
   };
@@ -48,169 +14,122 @@ export default function RoleSelectPage() {
     <div
       style={{
         minHeight: "100vh",
+        background: "var(--surface)",
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "48px 24px",
-        background: "var(--background)",
+        padding: "40px 24px",
       }}
     >
-      {/* 로고 + 제목 */}
-      <div
-        style={{
-          width: 40,
-          height: 40,
-          borderRadius: "var(--radius-inner)",
-          background: "var(--primary)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "var(--surface)",
-          fontSize: 16,
-          fontWeight: 800,
-          marginBottom: 20,
-        }}
-      >
-        L
-      </div>
-      <h1 className="text-title" style={{ textAlign: "center" }}>
-        AI 강의 분석 리포트
-      </h1>
-      <p
-        className="text-body"
-        style={{ textAlign: "center", marginTop: 8, maxWidth: 400 }}
-      >
-        STT 트랜스크립트를 AI가 분석하여
-        <br />
-        강의 품질 개선을 위한 인사이트를 제공합니다.
-      </p>
-
-      {/* 기능 소개 */}
-      <div
-        style={{
-          display: "flex",
-          gap: 16,
-          marginTop: 40,
-          marginBottom: 48,
-          flexWrap: "wrap",
-          justifyContent: "center",
-          maxWidth: 720,
-        }}
-      >
-        {FEATURES.map((f) => (
+      <div style={{ width: "100%", maxWidth: 520 }}>
+        {/* 헤드라인 */}
+        <div style={{ marginBottom: 56 }}>
           <div
-            key={f.title}
             style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: 12,
-              width: 220,
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              background: "var(--primary)",
+              marginBottom: 28,
+            }}
+          />
+          <h1
+            style={{
+              fontSize: 32,
+              fontWeight: 800,
+              color: "var(--text-primary)",
+              lineHeight: 1.3,
+              letterSpacing: "-0.03em",
             }}
           >
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: "var(--radius-sm)",
-                background: "var(--primary-light)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "var(--primary)",
-                flexShrink: 0,
-              }}
-            >
-              <f.icon size={18} />
-            </div>
-            <div>
-              <p
-                style={{
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: "var(--text-primary)",
-                }}
-              >
-                {f.title}
-              </p>
-              <p className="text-caption" style={{ marginTop: 2 }}>
-                {f.description}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
+            강의가 어땠는지,
+            <br />
+            데이터로 확인하세요.
+          </h1>
+          <p
+            className="text-body"
+            style={{ marginTop: 12, maxWidth: 360 }}
+          >
+            15개 강의의 STT 트랜스크립트를 AI가 분석해서
+            항목별 점수와 근거를 정리해드립니다.
+          </p>
+        </div>
 
-      {/* 역할 선택 */}
-      <p className="text-label" style={{ marginBottom: 16 }}>
-        시작하기
-      </p>
-      <div
-        style={{
-          display: "flex",
-          gap: 20,
-          flexWrap: "wrap",
-          justifyContent: "center",
-        }}
-      >
-        {ROLES.map((r) => (
+        {/* 역할 선택 */}
+        <p
+          style={{
+            fontSize: 13,
+            fontWeight: 600,
+            color: "var(--text-muted)",
+            marginBottom: 12,
+          }}
+        >
+          어떤 관점에서 보시겠어요?
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <button
-            key={r.key}
-            onClick={() => handleSelect(r.key)}
+            onClick={() => pick("operator")}
             className="card card-hover"
             style={{
-              width: 280,
-              padding: "36px 28px",
               display: "flex",
-              flexDirection: "column",
               alignItems: "center",
-              gap: 14,
+              justifyContent: "space-between",
+              padding: "20px 24px",
               cursor: "pointer",
               border: "none",
-              textAlign: "center",
+              textAlign: "left",
               transition: "box-shadow 0.2s, transform 0.15s",
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-2px)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}
           >
-            <div
-              style={{
-                width: 52,
-                height: 52,
-                borderRadius: "var(--radius)",
-                background: "var(--primary-light)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "var(--primary)",
-              }}
-            >
-              <r.icon size={26} />
+            <div>
+              <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)" }}>
+                운영 담당자
+              </p>
+              <p className="text-caption" style={{ marginTop: 4 }}>
+                전체 강의 품질을 비교하고 관리합니다
+              </p>
             </div>
-            <span
-              style={{
-                fontSize: 16,
-                fontWeight: 700,
-                color: "var(--text-primary)",
-              }}
-            >
-              {r.title}
-            </span>
-            <span className="text-caption">{r.description}</span>
+            <span style={{ fontSize: 20, color: "var(--text-muted)" }}>→</span>
           </button>
-        ))}
-      </div>
 
-      <p
-        className="text-caption"
-        style={{ marginTop: 32, textAlign: "center" }}
-      >
-        설정에서 언제든 역할을 변경할 수 있습니다.
-      </p>
+          <button
+            onClick={() => pick("instructor")}
+            className="card card-hover"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "20px 24px",
+              cursor: "pointer",
+              border: "none",
+              textAlign: "left",
+              transition: "box-shadow 0.2s, transform 0.15s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}
+          >
+            <div>
+              <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)" }}>
+                강사
+              </p>
+              <p className="text-caption" style={{ marginTop: 4 }}>
+                내 강의를 돌아보고 다음 수업을 준비합니다
+              </p>
+            </div>
+            <span style={{ fontSize: 20, color: "var(--text-muted)" }}>→</span>
+          </button>
+        </div>
+
+        <p
+          className="text-caption"
+          style={{ marginTop: 24 }}
+        >
+          언제든 설정에서 바꿀 수 있어요.
+        </p>
+      </div>
     </div>
   );
 }
