@@ -51,14 +51,16 @@ export default function PreprocessingPage() {
   }, []);
 
   return (
-    <div className="space-y-10">
+    <div className="page-section">
       {/* Page Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        className="page-hero surface-card-strong"
       >
-        <h1 className="text-2xl font-bold text-foreground">전처리 파이프라인</h1>
-        <p className="text-text-secondary mt-1">
+        <p className="section-eyebrow">Pipeline</p>
+        <h1 className="page-hero-title mt-3">전처리와 평가 흐름을 한 장으로 정리했습니다</h1>
+        <p className="page-hero-copy">
           LangGraph 기반 에이전틱 강의 평가 파이프라인 시각화
         </p>
       </motion.div>
@@ -68,7 +70,7 @@ export default function PreprocessingPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="bg-surface rounded-2xl p-7 shadow-[var(--shadow-sm)] border border-border-light overflow-x-auto"
+        className="panel-card overflow-x-auto"
       >
         <h2 className="text-lg font-bold text-foreground mb-5">파이프라인 구조</h2>
         <div className="min-w-[1120px]">

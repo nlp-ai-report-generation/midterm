@@ -42,33 +42,33 @@ export default function Header() {
 
   return (
     <header
-      className="sticky top-0 z-20 mb-2"
+      className="sticky top-0 z-20 px-4 pt-4 sm:px-6 lg:px-8 lg:pt-5"
       style={{ height: "var(--header-height)" }}
     >
-      <div className="surface-card mx-4 flex h-full items-center justify-between rounded-[28px] px-5 sm:px-6 lg:mx-10 lg:rounded-[30px] lg:px-8">
+      <div className="surface-card flex h-full items-center justify-between px-5 sm:px-6 lg:px-8">
         <div className="min-w-0">
-          <p className="mb-1 text-[13px] font-semibold text-primary">
-            AI Lecture Report
+          <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
+            analysis workspace
           </p>
-          <h2 className="truncate text-[26px] font-bold tracking-tight text-foreground">
+          <h2 className="truncate text-[30px] font-bold tracking-[-0.05em] text-foreground">
             {pageInfo.title}
           </h2>
           {pageInfo.description ? (
             <p
-              className="mt-1 truncate text-[15px] text-text-secondary"
+              className="mt-1 truncate text-[14px] text-text-secondary"
               style={{ animation: "headerSubtitleFade 0.35s ease 0.05s both" }}
             >
               {pageInfo.description}
             </p>
           ) : null}
         </div>
-        <div className="flex items-center gap-2">
-          <div className="hidden rounded-full bg-[rgba(49,130,246,0.08)] px-3 py-2 text-[13px] font-semibold text-primary sm:block">
-            Toss-style UI refresh
+        <div className="flex items-center gap-2.5">
+          <div className="hidden rounded-full border border-[rgba(49,130,246,0.08)] bg-[rgba(255,255,255,0.9)] px-3 py-2 text-[12px] font-semibold text-text-secondary sm:block">
+            실제 평가 결과 기준
           </div>
           <Link
             to="/settings"
-            className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-text-tertiary shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:text-foreground"
+            className="flex h-11 w-11 items-center justify-center rounded-[16px] border border-border-light bg-white text-text-tertiary shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:text-foreground"
             title="설정"
           >
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">

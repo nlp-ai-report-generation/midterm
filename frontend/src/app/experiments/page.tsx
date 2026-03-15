@@ -92,14 +92,16 @@ function CircularProgress({
 
 export default function ExperimentsPage() {
   return (
-    <div className="space-y-10">
+    <div className="page-section">
       {/* Page Header */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
+        className="page-hero surface-card-strong"
       >
-        <h1 className="text-2xl font-bold text-foreground">실험 프레임워크</h1>
-        <p className="text-text-secondary mt-1">
+        <p className="section-eyebrow">Reliability</p>
+        <h1 className="page-hero-title mt-3">평가가 일관되게 동작하는지 검증하는 화면입니다</h1>
+        <p className="page-hero-copy">
           LLM 기반 평가의 신뢰성을 검증하기 위한 실험 설계 및 결과
         </p>
       </motion.div>
@@ -109,7 +111,7 @@ export default function ExperimentsPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
-        className="bg-surface rounded-2xl p-7 shadow-[var(--shadow-sm)] border border-border-light"
+        className="panel-card"
       >
         <h2 className="text-lg font-bold text-foreground mb-4">실험 설계</h2>
         <div className="space-y-3 text-sm text-text-secondary leading-relaxed">
@@ -138,7 +140,7 @@ export default function ExperimentsPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 + i * 0.08 }}
-              className="bg-surface rounded-2xl p-7 shadow-[var(--shadow-sm)] border border-border-light"
+              className="panel-card"
             >
               <div className="flex items-start gap-6">
                 {/* Circular SVG Progress Indicator */}
@@ -173,7 +175,7 @@ export default function ExperimentsPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="bg-surface rounded-2xl p-7 shadow-[var(--shadow-sm)] border border-border-light text-center py-16"
+        className="panel-card py-16 text-center"
       >
         <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-primary-light flex items-center justify-center">
           <svg className="w-8 h-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -18,25 +18,28 @@ const SHORT_CATEGORY_NAMES: Record<string, string> = {
 
 export default function CategoryHeatmap({ data, categoryNames }: HeatmapProps) {
   return (
-    <div className="surface-card-strong rounded-[28px] p-6">
-      <h3 className="text-[20px] font-bold text-foreground">
-        카테고리별 점수 히트맵
-      </h3>
-      <p className="mb-6 mt-1 text-[15px] text-text-secondary">
-        어떤 카테고리에서 흔들리는지 날짜 단위로 비교합니다.
-      </p>
+    <div className="panel-card">
+      <div className="panel-heading">
+        <div>
+          <h3 className="panel-title">카테고리 히트맵</h3>
+          <p className="panel-copy">어떤 기준에서 흔들리는지 날짜 단위로 비교합니다.</p>
+        </div>
+        <span className="chip border-transparent bg-[var(--surface-subtle)]">
+          {data.length}개 강의
+        </span>
+      </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full" style={{ borderSpacing: "6px", borderCollapse: "separate" }}>
+        <table className="w-full" style={{ borderSpacing: "8px", borderCollapse: "separate" }}>
           <thead>
             <tr>
-              <th className="min-w-[100px] pb-3 pr-4 text-left text-[12px] font-semibold text-text-tertiary">
+              <th className="min-w-[110px] pb-3 pr-4 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-text-tertiary">
                 카테고리
               </th>
               {data.map((d) => (
                 <th
                   key={d.date}
-                  className="px-1 pb-3 text-center text-[12px] font-semibold text-text-tertiary"
+                  className="px-1 pb-3 text-center text-[11px] font-semibold uppercase tracking-[0.08em] text-text-tertiary"
                 >
                   {formatDateShort(d.date)}
                 </th>
@@ -54,11 +57,11 @@ export default function CategoryHeatmap({ data, categoryNames }: HeatmapProps) {
                   return (
                     <td key={d.date} className="px-0.5 py-0.5">
                       <div
-                        className="flex aspect-square min-w-[40px] items-center justify-center rounded-[16px] text-[12px] font-bold text-white transition-transform hover:scale-105"
+                        className="flex aspect-square min-w-[44px] items-center justify-center rounded-[18px] text-[12px] font-bold text-white transition-transform hover:scale-[1.03]"
                         style={{
                           background: score > 0
                             ? `linear-gradient(180deg, color-mix(in srgb, ${scoreColor(score)} 84%, white), ${scoreColor(score)})`
-                            : "var(--grey-100)",
+                            : "var(--surface-subtle)",
                           opacity: score > 0 ? 1 : 0.2,
                           boxShadow: score > 0 ? "0 10px 20px rgba(15, 23, 42, 0.10)" : "none",
                         }}
@@ -75,8 +78,8 @@ export default function CategoryHeatmap({ data, categoryNames }: HeatmapProps) {
         </table>
       </div>
 
-      <div className="mt-5 flex items-center gap-4 border-t border-divider pt-4">
-        <span className="text-[12px] font-semibold text-text-tertiary">점수</span>
+      <div className="mt-6 flex items-center gap-4 border-t border-divider pt-5">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text-tertiary">점수</span>
         {[1, 2, 3, 4, 5].map((s) => (
           <div key={s} className="flex items-center gap-1.5">
             <div

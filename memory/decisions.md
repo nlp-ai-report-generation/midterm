@@ -103,3 +103,9 @@
 - 결정: 프론트엔드 런타임을 Next.js에서 React + Vite + React Router로 전환한다.
 - 이유: 사용자 요청이 "Next.js 말고 그냥 React로 싹다 바꾸기"였고, 현재 앱은 SSR/서버 컴포넌트 이점보다 정적 데이터 대시보드와 API 호출 중심 구조가 더 적합하다.
 - 결과: `frontend/src/main.tsx`, `frontend/src/App.tsx`, `frontend/vite.config.ts`를 기준 진입점으로 사용하고, 기존 페이지 컴포넌트는 React Router 경로로 재연결한다.
+
+### 프론트 화면은 공통 hero/panel/card 시스템으로 정리
+
+- 결정: 페이지별로 제각각 쓰던 카드와 버튼 스타일 대신 `globals.css`의 공통 토큰과 `page-hero`, `panel-card`, `primary-button`, `segmented-control` 계열 스타일을 기준으로 화면을 정리한다.
+- 이유: 색상만 토스 계열로 바꾸고 레이아웃 리듬이 남아 있으면 여백, 타이포, 정보 위계가 무너져 전체 화면이 산만해진다.
+- 결과: 대시보드, 강의 목록, 실험, 리포트, 전처리, EDA 탭 UI가 같은 밀도와 위계를 공유하도록 갱신했다.

@@ -12,28 +12,30 @@ export default function LectureCard({ evaluation }: LectureCardProps) {
 
   return (
     <Link to={`/lectures/${lecture_date}`}>
-      <div className="surface-card-strong group rounded-[28px] p-6 transition-transform hover:-translate-y-1">
-        <div className="mb-5 flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[13px] font-semibold text-text-tertiary">
+      <div className="panel-card group p-6 transition-transform hover:-translate-y-1">
+        <div className="mb-6 flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-text-tertiary">
               {formatDate(lecture_date)} 평가
             </p>
-            <p className="mt-2 text-[20px] font-bold leading-tight text-foreground group-hover:text-primary">
+            <p className="mt-2 line-clamp-2 text-[22px] font-bold leading-[1.2] tracking-[-0.04em] text-foreground group-hover:text-primary">
               {metadata.subjects?.[0] ?? "강의"}
             </p>
           </div>
           <div
-            className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-[22px] text-white shadow-[0_18px_30px_rgba(25,31,40,0.12)]"
+            className="flex h-[74px] w-[74px] shrink-0 flex-col items-center justify-center rounded-[24px] text-white shadow-[0_18px_30px_rgba(25,31,40,0.12)]"
             style={{
               background: `linear-gradient(180deg, color-mix(in srgb, ${scoreColor(weighted_average)} 88%, white), ${scoreColor(weighted_average)})`,
             }}
           >
-            <span className="text-[24px] font-bold leading-none">{weighted_average.toFixed(1)}</span>
-            <span className="mt-1 text-[11px] font-semibold opacity-90">점수</span>
+            <span className="text-[26px] font-bold leading-none tracking-[-0.05em]">
+              {weighted_average.toFixed(1)}
+            </span>
+            <span className="mt-1 text-[11px] font-semibold opacity-90">score</span>
           </div>
         </div>
 
-        <p className="mb-4 line-clamp-2 min-h-12 text-[15px] leading-6 text-text-secondary">
+        <p className="mb-5 line-clamp-3 min-h-[72px] text-[14px] leading-6 text-text-secondary">
           {metadata.contents?.[0] ?? "분석 내용을 불러오는 중입니다."}
         </p>
 
@@ -47,12 +49,12 @@ export default function LectureCard({ evaluation }: LectureCardProps) {
           >
             {scoreLabel(weighted_average)}
           </span>
-          <span className="chip border-transparent bg-[var(--grey-100)]">
+          <span className="chip border-transparent bg-[var(--surface-subtle)]">
             강사 {metadata.instructor || "미정"}
           </span>
         </div>
 
-        <div className="space-y-2.5">
+        <div className="space-y-2.5 border-t border-divider pt-5">
           {strengths?.[0] && (
             <p className="flex items-start gap-2 text-[13px] leading-5 text-text-secondary">
               <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-success" />

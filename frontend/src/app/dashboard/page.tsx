@@ -26,6 +26,10 @@ function stagger(i: number) {
   return { ...fadeUp, transition: { ...fadeUp.transition, delay: i * 0.08 } };
 }
 
+function formatCompactDate(date?: string) {
+  return date ? date.slice(5).replace("-", ".") : "-";
+}
+
 export default function DashboardPage() {
   const [evaluations, setEvaluations] = useState<EvaluationResult[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,8 +44,8 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-3 border-primary border-t-transparent" />
       </div>
     );
   }
@@ -91,93 +95,137 @@ export default function DashboardPage() {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 5);
 
+  const analysisRange =
+    totalLectures > 0
+      ? `${formatCompactDate(evaluations[0]?.lecture_date)} - ${formatCompactDate(evaluations[totalLectures - 1]?.lecture_date)}`
+      : "-";
+  const recentLectures = [...evaluations].reverse().slice(0, 6);
+
   return (
     <div className="page-section">
-      <motion.div
-        {...fadeUp}
-        className="surface-card-strong relative overflow-hidden rounded-[32px] p-7 sm:p-8"
-      >
-        <div className="absolute inset-y-0 right-0 w-[34%] bg-[radial-gradient(circle_at_top,rgba(49,130,246,0.18),transparent_62%)]" />
-        <div className="relative z-10 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <motion.section {...fadeUp} className="page-hero surface-card-strong">
+        <div className="page-hero-grid">
           {totalLectures > 0 ? (
             <>
-              <div className="space-y-5">
-                <div className="chip w-fit border-transparent bg-primary-soft text-primary">
-                  실제 분석 결과 반영
-                </div>
-                <div>
-                  <p className="section-eyebrow">AI 강의 분석 리포트</p>
-                  <h1 className="section-title mt-2">
-                    {totalLectures}개 강의를 같은 기준으로 다시 읽었습니다.
-                  </h1>
-                  <p className="section-body mt-3 max-w-2xl">
-                    샘플 문구가 아니라 실제 강의 스크립트와 품질 체크리스트를 기준으로 생성된 결과입니다.
-                    대시보드는 강의별 점수 흐름, 취약 카테고리, 반복되는 개선 포인트를 한 화면에서 보여줍니다.
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2.5">
-                  <span className="chip">평균 {avgScore.toFixed(2)}점</span>
-                  <span className="chip">
-                    최고 {bestLecture?.lecture_date} / {bestLecture?.weighted_average.toFixed(1)}
+              <div>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <span className="chip border-transparent bg-primary-soft text-primary">
+                    실제 분석 결과
                   </span>
-                  <span className="chip">
-                    최저 {worstLecture?.lecture_date} / {worstLecture?.weighted_average.toFixed(1)}
-                  </span>
+                  <span className="chip">{analysisRange}</span>
+                </div>
+                <p className="section-eyebrow mt-5">AI Lecture Review</p>
+                <h1 className="page-hero-title mt-3">
+                  점수보다 먼저 흐름을 읽는 강의 운영 대시보드
+                </h1>
+                <p className="page-hero-copy">
+                  실제 강의 스크립트와 품질 체크리스트를 기준으로 생성된 결과만 모았습니다.
+                  평균 점수보다 더 중요한 건 어디에서 흔들리고, 무엇이 반복적으로 개선 포인트로 잡히는지입니다.
+                </p>
+
+                <div className="page-stat-grid">
+                  <div className="page-stat">
+                    <p className="page-stat-label">전체 강의</p>
+                    <p className="page-stat-value">{totalLectures}</p>
+                    <p className="page-stat-copy">동일 체크리스트 기준으로 집계</p>
+                  </div>
+                  <div className="page-stat">
+                    <p className="page-stat-label">평균 점수</p>
+                    <p className="page-stat-value">{avgScore.toFixed(2)}</p>
+                    <p className="page-stat-copy">5점 만점 가중 평균</p>
+                  </div>
+                  <div className="page-stat">
+                    <p className="page-stat-label">핵심 취약점</p>
+                    <p className="page-stat-value text-[22px]">
+                      {sortedImprovements[0]?.[1] ?? 0}회
+                    </p>
+                    <p className="page-stat-copy">{sortedImprovements[0]?.[0] ?? "집계 중"}</p>
+                  </div>
                 </div>
               </div>
-              <div className="rounded-[28px] border border-[rgba(49,130,246,0.12)] bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(239,246,255,0.9))] p-6">
-                <p className="text-[13px] font-semibold text-text-tertiary">현재 상태</p>
-                <div className="mt-4 space-y-4">
-                  {[
-                    ["총 평가 강의", `${totalLectures}개`],
-                    ["분석 기간", "2026.02.02 - 2026.02.27"],
-                    ["주요 취약 구간", sortedImprovements[0]?.[0] ?? "집계 중"],
-                  ].map(([label, value]) => (
-                    <div key={label} className="flex items-start justify-between gap-4">
-                      <span className="text-[13px] text-text-tertiary">{label}</span>
-                      <span className="max-w-[180px] text-right text-[15px] font-semibold text-foreground">
-                        {value}
-                      </span>
-                    </div>
-                  ))}
+
+              <div className="panel-card p-6">
+                <div className="panel-heading">
+                  <div>
+                    <h2 className="panel-title">운영 요약</h2>
+                    <p className="panel-copy">지금 화면에서 먼저 봐야 할 값만 추렸습니다.</p>
+                  </div>
+                </div>
+                <div className="grid gap-3">
+                  <div className="rounded-[22px] bg-[var(--surface-subtle)] px-5 py-4">
+                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-text-tertiary">
+                      최고 점수
+                    </p>
+                    <p className="mt-2 text-[30px] font-bold tracking-[-0.05em] text-foreground">
+                      {bestLecture?.weighted_average.toFixed(1) ?? "-"}
+                    </p>
+                    <p className="mt-1 text-[13px] text-text-secondary">
+                      {bestLecture?.lecture_date ?? "데이터 없음"}
+                    </p>
+                  </div>
+                  <div className="rounded-[22px] bg-[var(--surface-subtle)] px-5 py-4">
+                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-text-tertiary">
+                      최저 점수
+                    </p>
+                    <p className="mt-2 text-[30px] font-bold tracking-[-0.05em] text-foreground">
+                      {worstLecture?.weighted_average.toFixed(1) ?? "-"}
+                    </p>
+                    <p className="mt-1 text-[13px] text-text-secondary">
+                      {worstLecture?.lecture_date ?? "데이터 없음"}
+                    </p>
+                  </div>
+                  <div className="rounded-[22px] border border-[rgba(49,130,246,0.1)] bg-[linear-gradient(180deg,rgba(239,246,255,0.86),#ffffff)] px-5 py-4">
+                    <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-primary">
+                      반복 강점
+                    </p>
+                    <p className="mt-2 text-[18px] font-bold tracking-[-0.04em] text-foreground">
+                      {sortedStrengths[0]?.[0] ?? "집계 중"}
+                    </p>
+                    <p className="mt-1 text-[13px] text-text-secondary">
+                      전체 강의에서 {sortedStrengths[0]?.[1] ?? 0}회 관찰
+                    </p>
+                  </div>
                 </div>
               </div>
             </>
           ) : (
             <>
               <div>
-                <p className="section-eyebrow">AI 강의 분석 리포트</p>
-                <h1 className="section-title mt-2">강의 분석을 시작해보세요</h1>
+                <p className="section-eyebrow">AI Lecture Review</p>
+                <h1 className="page-hero-title mt-3">강의 분석을 시작할 준비만 남았습니다.</h1>
+                <p className="page-hero-copy">
+                  API 키를 연결하고 실제 강의 평가를 실행하면, 샘플이 아니라 분석 결과 중심의 대시보드가 채워집니다.
+                </p>
               </div>
-              <div className="grid gap-3 sm:grid-cols-3 lg:col-span-2">
+              <div className="grid gap-3">
                 {[
-                  { step: "1", label: "API 키 입력", href: "/settings" },
-                  { step: "2", label: "강의 선택 & 평가 실행", href: "/settings" },
+                  { step: "1", label: "API 키 연결", href: "/settings" },
+                  { step: "2", label: "평가 실행", href: "/settings" },
                   { step: "3", label: "결과 확인", href: "/dashboard" },
                 ].map((s) => (
                   <Link
                     key={s.step}
                     to={s.href}
-                    className="surface-card rounded-[24px] px-5 py-4 text-text-secondary hover:-translate-y-0.5 hover:text-foreground"
+                    className="panel-card p-5 text-text-secondary hover:-translate-y-0.5 hover:text-foreground"
                   >
-                    <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-full bg-primary-soft text-[13px] font-bold text-primary">
+                    <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-primary-soft text-[13px] font-bold text-primary">
                       {s.step}
                     </div>
-                    <span className="text-[15px] font-semibold">{s.label}</span>
+                    <span className="text-[16px] font-semibold">{s.label}</span>
                   </Link>
                 ))}
               </div>
             </>
           )}
         </div>
-      </motion.div>
+      </motion.section>
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
         <motion.div {...stagger(0)}>
           <KPICard
             title="총 강의 수"
             value={totalLectures}
-            subtitle="2026.02.02 - 02.27"
+            subtitle={analysisRange}
             icon={
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <rect x="3" y="2" width="14" height="16" rx="2" fill="currentColor" />
@@ -202,7 +250,7 @@ export default function DashboardPage() {
           <KPICard
             title="최고 점수"
             value={bestLecture ? bestLecture.weighted_average.toFixed(2) : "\u2014"}
-            subtitle={bestLecture ? `${bestLecture.lecture_date}` : ""}
+            subtitle={bestLecture ? bestLecture.lecture_date : ""}
             accentColor="var(--success)"
             icon={
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -215,7 +263,7 @@ export default function DashboardPage() {
           <KPICard
             title="최저 점수"
             value={worstLecture ? worstLecture.weighted_average.toFixed(2) : "\u2014"}
-            subtitle={worstLecture ? `${worstLecture.lecture_date}` : ""}
+            subtitle={worstLecture ? worstLecture.lecture_date : ""}
             accentColor="var(--warning)"
             icon={
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -226,10 +274,10 @@ export default function DashboardPage() {
         </motion.div>
       </div>
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="section-heading">
         <div>
           <p className="section-eyebrow">Overview</p>
-          <h2 className="mt-1 text-[22px] font-bold text-foreground">점수 흐름과 취약 카테고리</h2>
+          <h2 className="section-heading-title">점수 흐름과 취약 카테고리</h2>
         </div>
         <span className="chip hidden sm:inline-flex">{totalLectures}개 강의 기준</span>
       </div>
@@ -243,23 +291,25 @@ export default function DashboardPage() {
         </motion.div>
       </div>
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="section-heading">
         <div>
           <p className="section-eyebrow">Insights</p>
-          <h2 className="mt-1 text-[22px] font-bold text-foreground">반복적으로 보이는 강점과 개선 포인트</h2>
+          <h2 className="section-heading-title">반복적으로 보이는 강점과 개선 포인트</h2>
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <motion.div {...stagger(6)} className="surface-card-strong rounded-[28px] p-7">
-          <h3 className="mb-5 text-[20px] font-bold text-foreground">
-            <span className="relative top-[-1px] mr-2.5 inline-block h-2.5 w-2.5 rounded-full bg-success" />
-            주요 강점 (전체 강의)
-          </h3>
-          <ul className="space-y-3.5">
+        <motion.div {...stagger(6)} className="panel-card">
+          <div className="panel-heading">
+            <div>
+              <h3 className="panel-title">주요 강점</h3>
+              <p className="panel-copy">강의 전반에서 반복적으로 포착된 장점입니다.</p>
+            </div>
+          </div>
+          <ul className="list-stack">
             {sortedStrengths.map(([text, count]) => (
-              <li key={text} className="flex items-start gap-3">
-                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--success)_12%,white)] text-[12px] font-bold text-success">
+              <li key={text} className="list-row">
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--success)_12%,white)] text-[12px] font-bold text-success">
                   {count}
                 </span>
                 <span className="text-[15px] leading-6 text-text-secondary">{text}</span>
@@ -271,15 +321,17 @@ export default function DashboardPage() {
           </ul>
         </motion.div>
 
-        <motion.div {...stagger(7)} className="surface-card-strong rounded-[28px] p-7">
-          <h3 className="mb-5 text-[20px] font-bold text-foreground">
-            <span className="relative top-[-1px] mr-2.5 inline-block h-2.5 w-2.5 rounded-full bg-warning" />
-            개선 필요 사항 (전체 강의)
-          </h3>
-          <ul className="space-y-3.5">
+        <motion.div {...stagger(7)} className="panel-card">
+          <div className="panel-heading">
+            <div>
+              <h3 className="panel-title">개선 필요 사항</h3>
+              <p className="panel-copy">자주 반복된 약점부터 우선순위를 잡을 수 있습니다.</p>
+            </div>
+          </div>
+          <ul className="list-stack">
             {sortedImprovements.map(([text, count]) => (
-              <li key={text} className="flex items-start gap-3">
-                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--warning)_12%,white)] text-[12px] font-bold text-warning">
+              <li key={text} className="list-row">
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[color-mix(in_srgb,var(--warning)_12%,white)] text-[12px] font-bold text-warning">
                   {count}
                 </span>
                 <span className="text-[15px] leading-6 text-text-secondary">{text}</span>
@@ -292,15 +344,18 @@ export default function DashboardPage() {
         </motion.div>
       </div>
 
-      <div className="flex items-center justify-between gap-3">
+      <div className="section-heading">
         <div>
           <p className="section-eyebrow">Lectures</p>
-          <h2 className="mt-1 text-[22px] font-bold text-foreground">전체 강의 결과</h2>
+          <h2 className="section-heading-title">최근 평가 결과</h2>
         </div>
+        <Link to="/lectures" className="soft-button hidden sm:inline-flex">
+          전체 강의 보기
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {evaluations.map((e, i) => (
+        {recentLectures.map((e, i) => (
           <motion.div key={e.lecture_date} {...stagger(i)}>
             <LectureCard evaluation={e} />
           </motion.div>

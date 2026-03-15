@@ -138,15 +138,15 @@ export default function EDAPage() {
   return (
     <div className="space-y-8">
       {/* Tabs */}
-      <motion.div {...fadeUp} className="flex gap-1.5 bg-surface rounded-2xl p-2 shadow-[var(--shadow-sm)] border border-border-light w-fit">
+      <motion.div {...fadeUp} className="segmented-control">
         {TABS.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+            className={`segmented-button transition-all duration-200 ${
               activeTab === tab.key
-                ? "bg-primary text-white shadow-sm"
-                : "text-text-secondary hover:text-foreground hover:bg-border-light"
+                ? "active"
+                : "hover:bg-[var(--surface-subtle)] hover:text-foreground"
             }`}
           >
             <span className="flex-shrink-0">{tab.icon}</span>

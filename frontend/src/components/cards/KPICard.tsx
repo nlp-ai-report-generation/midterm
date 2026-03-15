@@ -18,12 +18,13 @@ export default function KPICard({
   const isTrendPositive = trend && trend.value >= 0;
 
   return (
-    <div className="surface-card-strong cursor-default rounded-[26px] p-6 hover:-translate-y-0.5">
-      <div className="mb-5 flex items-start justify-between">
+    <div className="panel-card cursor-default p-6 hover:-translate-y-0.5">
+      <div className="mb-6 flex items-start justify-between gap-4">
         <div
           className="flex h-12 w-12 items-center justify-center rounded-[18px]"
           style={{
-            backgroundColor: `color-mix(in srgb, ${accentColor} 12%, white)`,
+            background:
+              `linear-gradient(180deg, color-mix(in srgb, ${accentColor} 15%, white), color-mix(in srgb, ${accentColor} 7%, white))`,
           }}
         >
           <span style={{ color: accentColor }}>{icon}</span>
@@ -44,10 +45,14 @@ export default function KPICard({
           </span>
         )}
       </div>
-      <p className="mb-1 text-[13px] font-semibold text-text-tertiary">{title}</p>
-      <p className="text-[30px] font-bold tracking-tight text-foreground">{value}</p>
+      <p className="text-[12px] font-semibold uppercase tracking-[0.08em] text-text-tertiary">
+        {title}
+      </p>
+      <p className="mt-2 text-[38px] font-bold tracking-[-0.06em] text-foreground">
+        {value}
+      </p>
       {subtitle && (
-        <p className="mt-2 text-[13px] text-text-secondary">{subtitle}</p>
+        <p className="mt-2 text-[13px] leading-5 text-text-secondary">{subtitle}</p>
       )}
     </div>
   );

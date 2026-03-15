@@ -26,10 +26,10 @@ export default function App() {
     <div className="app-shell lg:flex">
       <ScrollToTop />
       <Sidebar />
-      <div className="min-w-0 flex-1 lg:pl-[var(--sidebar-width)]">
+      <div className="relative z-10 min-w-0 flex-1 lg:pl-[var(--sidebar-width)]">
         <Header />
-        <main className="px-4 py-5 sm:px-6 sm:py-6 lg:px-10 lg:py-8">
-          <div className="mx-auto flex max-w-[1440px] flex-col gap-7">
+        <main className="px-4 pb-8 sm:px-6 sm:pb-10 lg:px-8 lg:pb-12">
+          <div className="mx-auto flex max-w-[1480px] flex-col gap-8">
             <Routes>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<DashboardPage />} />

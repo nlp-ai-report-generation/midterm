@@ -82,11 +82,12 @@ export default function ReportsPage() {
   }
 
   return (
-    <div className="space-y-10">
+    <div className="page-section">
       {/* Page Header */}
-      <motion.div {...fadeUp}>
-        <h1 className="text-2xl font-bold text-foreground">리포트 생성</h1>
-        <p className="text-text-secondary mt-1">
+      <motion.div {...fadeUp} className="page-hero surface-card-strong">
+        <p className="section-eyebrow">Reports</p>
+        <h1 className="page-hero-title mt-3">선택한 강의를 바로 리포트로 묶습니다</h1>
+        <p className="page-hero-copy">
           강의를 선택하고 평가 리포트를 미리보기 및 내보내기하세요
         </p>
       </motion.div>
@@ -95,7 +96,7 @@ export default function ReportsPage() {
         {/* Lecture Selector */}
         <motion.div
           {...fadeUp}
-          className="lg:col-span-1 bg-surface rounded-2xl p-7 shadow-[var(--shadow-sm)] border border-border-light"
+          className="panel-card lg:col-span-1"
         >
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-lg font-bold text-foreground">강의 선택</h2>
@@ -176,7 +177,7 @@ export default function ReportsPage() {
             <button
               onClick={downloadMarkdown}
               disabled={selected.size === 0}
-              className="flex items-center gap-2 px-5 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary-dark transition-colors shadow-[var(--shadow-sm)] disabled:opacity-40 disabled:cursor-not-allowed"
+              className="primary-button disabled:cursor-not-allowed disabled:opacity-40"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -188,7 +189,7 @@ export default function ReportsPage() {
             <button
               onClick={downloadPDF}
               disabled={selected.size === 0}
-              className="flex items-center gap-2 px-5 py-3 bg-foreground text-surface font-semibold rounded-xl hover:opacity-90 transition-opacity shadow-[var(--shadow-sm)] disabled:opacity-40 disabled:cursor-not-allowed"
+              className="soft-button disabled:cursor-not-allowed disabled:opacity-40"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -200,7 +201,7 @@ export default function ReportsPage() {
           </div>
 
           {/* Preview Area */}
-          <div className="bg-surface rounded-2xl p-7 shadow-[var(--shadow-sm)] border border-border-light min-h-[400px]">
+          <div className="panel-card min-h-[400px]">
             <h2 className="text-lg font-bold text-foreground mb-5">미리보기</h2>
 
             {selected.size === 0 ? (

@@ -19,6 +19,7 @@
 - 로컬 `main` 브랜치를 `origin/main` 최신 커밋(`add509d`)까지 fast-forward 동기화
 - 프론트 대시보드 UI를 토스 스타일 토큰 기준으로 재정비 (`frontend/src/app/globals.css`, `frontend/src/components/layout/`, `frontend/src/app/dashboard/page.tsx`)
 - 프론트엔드를 Next.js에서 React + Vite + React Router SPA로 전환 (`frontend/src/main.tsx`, `frontend/src/App.tsx`, `frontend/vite.config.ts`)
+- 프론트 레이아웃/타이포/카드 체계를 재설계해 공통 디자인 토큰과 패널 스타일로 통일 (`frontend/src/app/globals.css`, `frontend/src/components/layout/`, `frontend/src/app/dashboard/page.tsx`)
 - 실제 실험 결과를 프론트 정적 JSON으로 내보내는 스크립트 확장 (`scripts/export_frontend_data.py`)
 - 12시간제 STT 타임스탬프 래핑 보정 추가로 청킹 0건 문제 해결 (`src/chunking/strategy.py`)
 - OpenAI 스모크 테스트 성공: `2026-02-02` 단일 강의 평가 실행 완료 (`experiments/e68eb60a8e70/`)
@@ -39,7 +40,7 @@
 - 실험 프레임워크: **구현 완료** (`src/experiment/`)
 - 기존 코드(src/preprocessing, src/rule_analysis 등): 유지, 하이브리드 활용 가능
 - 테스트: 46개 통과 (chunking, scoring, metrics, harness loading)
-- 프론트 UI: 토스 스타일 기준 1차 재정비 + React SPA 전환 완료 (`frontend/`)
+- 프론트 UI: 토스 계열 색상 + 공통 hero/panel/card 체계 기준으로 재정비 완료 (`frontend/`)
 - 정적 평가 데이터: 실제 분석 결과 1건 반영, 나머지 강의는 배치 실행 필요
 - Git 상태: 프론트 React 전환 관련 변경 존재, `.claude/` 디렉터리는 계속 미추적 상태
 
