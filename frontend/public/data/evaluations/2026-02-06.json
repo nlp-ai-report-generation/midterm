@@ -1,0 +1,322 @@
+{
+  "lecture_date": "2026-02-06",
+  "transcript_path": "transcripts/2026-02-06.txt",
+  "metadata": {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-06",
+    "subjects": ["프론트엔드"],
+    "contents": ["JavaScript 기초"],
+    "instructor": "김영아",
+    "sub_instructors": []
+  },
+  "category_results": [
+    {
+      "category_name": "언어 표현 품질",
+      "items": [
+        {
+          "item_id": "1.1",
+          "item_name": "불필요한 반복 표현",
+          "category": "언어 표현 품질",
+          "score": 4,
+          "weight": "HIGH",
+          "evidence": [
+            "함수와 객체 설명 시 간결한 표현 사용",
+            "\"그래서 그래서\" 형태의 반복이 1회만 관찰"
+          ],
+          "reasoning": "전날 대비 반복 표현이 감소하여 전달이 더 깔끔해짐",
+          "confidence": 0.85,
+          "caveats": []
+        },
+        {
+          "item_id": "1.2",
+          "item_name": "발화 완결성",
+          "category": "언어 표현 품질",
+          "score": 3,
+          "weight": "MEDIUM",
+          "evidence": [
+            "함수 체이닝 설명 시 \"이걸 이렇게 연결하면... 이렇게 되는데...\" 형태의 미완결 문장 관찰",
+            "개별 개념 정의 시에는 완결된 문장 유지"
+          ],
+          "reasoning": "복잡한 코드 구조 설명 시 발화 완결성이 저하되는 경향",
+          "confidence": 0.80,
+          "caveats": []
+        },
+        {
+          "item_id": "1.3",
+          "item_name": "언어 일관성",
+          "category": "언어 표현 품질",
+          "score": 3,
+          "weight": "MEDIUM",
+          "evidence": [
+            "\"콜백\"과 \"callback\"을 혼용",
+            "\"화살표 함수\"와 \"arrow function\"을 상황에 따라 다르게 사용"
+          ],
+          "reasoning": "JavaScript 특유의 영어 용어가 많아 혼용이 다소 발생",
+          "confidence": 0.78,
+          "caveats": ["JavaScript 생태계 특성상 영어 용어 혼용이 불가피한 측면"]
+        }
+      ],
+      "weighted_average": 3.43
+    },
+    {
+      "category_name": "강의 도입 및 구조",
+      "items": [
+        {
+          "item_id": "2.1",
+          "item_name": "학습 목표 안내",
+          "category": "강의 도입 및 구조",
+          "score": 4,
+          "weight": "HIGH",
+          "evidence": [
+            "\"오늘은 함수, 객체, 배열 메서드, 그리고 DOM 조작까지 나갈 겁니다\"",
+            "슬라이드에 오늘의 목차 제시"
+          ],
+          "reasoning": "학습 목표가 명확하게 제시됨",
+          "confidence": 0.88,
+          "caveats": []
+        },
+        {
+          "item_id": "2.2",
+          "item_name": "전날 복습 연계",
+          "category": "강의 도입 및 구조",
+          "score": 4,
+          "weight": "HIGH",
+          "evidence": [
+            "\"어제 변수, 조건문, 반복문 배웠는데 기억나시나요?\"라고 질문",
+            "어제 코드를 화면에 띄우고 간단히 복습 진행"
+          ],
+          "reasoning": "전날 수업 내용과의 연계가 자연스럽고 효과적",
+          "confidence": 0.87,
+          "caveats": []
+        },
+        {
+          "item_id": "2.3",
+          "item_name": "설명 순서",
+          "category": "강의 도입 및 구조",
+          "score": 3,
+          "weight": "MEDIUM",
+          "evidence": [
+            "함수 -> 객체 -> 배열 메서드 -> DOM 순서로 진행",
+            "DOM 조작으로 넘어가기 전 HTML 연결 설명이 갑작스러움"
+          ],
+          "reasoning": "전반적 순서는 논리적이나 DOM 전환 시 맥락 전환이 다소 급작스러움",
+          "confidence": 0.81,
+          "caveats": []
+        },
+        {
+          "item_id": "2.4",
+          "item_name": "핵심 내용 강조",
+          "category": "강의 도입 및 구조",
+          "score": 3,
+          "weight": "MEDIUM",
+          "evidence": [
+            "클로저와 스코프의 중요성을 언급하나 심화 설명은 부족",
+            "DOM 조작의 중요성을 \"프론트엔드의 핵심\"이라고 강조"
+          ],
+          "reasoning": "핵심 강조는 하나 일부 주제에서 깊이가 부족",
+          "confidence": 0.79,
+          "caveats": []
+        },
+        {
+          "item_id": "2.5",
+          "item_name": "마무리 요약",
+          "category": "강의 도입 및 구조",
+          "score": 3,
+          "weight": "LOW",
+          "evidence": [
+            "\"오늘 배운 걸로 주말에 간단한 웹 앱 만들어보세요\"라고 과제 안내",
+            "배운 내용 정리는 간략히 진행"
+          ],
+          "reasoning": "과제 안내는 있으나 배운 내용의 체계적 정리가 부족",
+          "confidence": 0.77,
+          "caveats": []
+        }
+      ],
+      "weighted_average": 3.53
+    },
+    {
+      "category_name": "개념 설명 명확성",
+      "items": [
+        {
+          "item_id": "3.1",
+          "item_name": "개념 정의",
+          "category": "개념 설명 명확성",
+          "score": 3,
+          "weight": "HIGH",
+          "evidence": [
+            "함수와 객체의 정의는 명확",
+            "클로저 개념의 정의가 다소 추상적으로 전달됨"
+          ],
+          "reasoning": "기본 개념은 잘 정의하나 심화 개념의 정의 명확성이 부족",
+          "confidence": 0.82,
+          "caveats": []
+        },
+        {
+          "item_id": "3.2",
+          "item_name": "비유 및 예시 활용",
+          "category": "개념 설명 명확성",
+          "score": 3,
+          "weight": "HIGH",
+          "evidence": [
+            "객체를 \"속성이 담긴 명함\"에 비유",
+            "DOM을 \"HTML 문서의 나무 구조\"로 설명하며 시각화"
+          ],
+          "reasoning": "일부 개념에 대한 비유는 좋으나 모든 개념에 균등하게 적용되지 않음",
+          "confidence": 0.80,
+          "caveats": []
+        },
+        {
+          "item_id": "3.3",
+          "item_name": "선행 개념 확인",
+          "category": "개념 설명 명확성",
+          "score": 3,
+          "weight": "MEDIUM",
+          "evidence": [
+            "어제 배운 조건문/반복문 활용은 전제하고 진행",
+            "스코프 개념을 Java의 블록 스코프와 비교하지 않고 독립적으로 설명"
+          ],
+          "reasoning": "선행 지식 활용이 일부 이루어지나 일관되지 않음",
+          "confidence": 0.78,
+          "caveats": []
+        },
+        {
+          "item_id": "3.4",
+          "item_name": "발화 속도 적절성",
+          "category": "개념 설명 명확성",
+          "score": 3,
+          "weight": "MEDIUM",
+          "evidence": [
+            "배열 메서드(map, filter, reduce) 설명 시 속도가 빠름",
+            "학생들이 \"잠깐만요\"라고 요청한 경우 1회 관찰"
+          ],
+          "reasoning": "분량이 많아 속도가 전반적으로 빠른 편이며, 이는 학습에 부담을 줄 수 있음",
+          "confidence": 0.81,
+          "caveats": ["하루에 다루는 분량이 많은 것이 근본 원인"]
+        }
+      ],
+      "weighted_average": 3.0
+    },
+    {
+      "category_name": "예시 및 실습 연계",
+      "items": [
+        {
+          "item_id": "4.1",
+          "item_name": "예시 적절성",
+          "category": "예시 및 실습 연계",
+          "score": 3,
+          "weight": "HIGH",
+          "evidence": [
+            "To-Do 리스트 예시를 통해 DOM 조작 시연",
+            "다만 예시가 복잡하여 한 번에 이해하기 어려울 수 있음"
+          ],
+          "reasoning": "실용적 예시이나 기초 단계에서는 더 단순한 예시가 적합했을 수 있음",
+          "confidence": 0.80,
+          "caveats": []
+        },
+        {
+          "item_id": "4.2",
+          "item_name": "실습 연결",
+          "category": "예시 및 실습 연계",
+          "score": 3,
+          "weight": "HIGH",
+          "evidence": [
+            "실습 시간은 있으나 보조 강사 부재로 개별 지원 어려움",
+            "\"어려우면 채팅으로 질문해주세요\"라고 안내"
+          ],
+          "reasoning": "전날 대비 보조 강사 부재로 실습 지원의 질이 저하됨",
+          "confidence": 0.83,
+          "caveats": ["보조 강사 부재가 외부 요인"]
+        },
+        {
+          "item_id": "4.3",
+          "item_name": "오류 대응",
+          "category": "예시 및 실습 연계",
+          "score": 3,
+          "weight": "MEDIUM",
+          "evidence": [
+            "콘솔 에러 메시지 읽는 법을 안내",
+            "개별 오류 대응에 시간 소요가 많아 진도에 영향"
+          ],
+          "reasoning": "오류 대응 노력은 있으나 혼자서 다수의 학생 지원에 한계",
+          "confidence": 0.79,
+          "caveats": []
+        }
+      ],
+      "weighted_average": 3.0
+    },
+    {
+      "category_name": "수강생 상호작용",
+      "items": [
+        {
+          "item_id": "5.1",
+          "item_name": "이해도 확인 질문",
+          "category": "수강생 상호작용",
+          "score": 3,
+          "weight": "HIGH",
+          "evidence": [
+            "\"여기까지 따라오고 계신 거 맞죠?\"라는 형식적 확인 위주",
+            "구체적 개념 확인 질문은 1회 관찰"
+          ],
+          "reasoning": "이해도 확인이 형식적인 수준에 그침",
+          "confidence": 0.81,
+          "caveats": []
+        },
+        {
+          "item_id": "5.2",
+          "item_name": "참여 유도",
+          "category": "수강생 상호작용",
+          "score": 2,
+          "weight": "HIGH",
+          "evidence": [
+            "강사 중심의 일방향 설명이 대부분",
+            "학생 참여 활동이 실습 시간 외에는 거의 없음"
+          ],
+          "reasoning": "분량 소화에 집중하다 보니 학생 참여 유도가 부족",
+          "confidence": 0.83,
+          "caveats": []
+        },
+        {
+          "item_id": "5.3",
+          "item_name": "응답 충분성",
+          "category": "수강생 상호작용",
+          "score": 3,
+          "weight": "HIGH",
+          "evidence": [
+            "채팅 질문에 답변하나 간략한 수준",
+            "\"이건 나중에 React할 때 더 자세히 다룰 거예요\"라고 미루는 경우 2회"
+          ],
+          "reasoning": "시간 제약으로 답변이 간략하거나 미뤄지는 경향",
+          "confidence": 0.80,
+          "caveats": []
+        }
+      ],
+      "weighted_average": 2.67
+    }
+  ],
+  "weighted_total": 56.14,
+  "weighted_average": 3.12,
+  "category_averages": {
+    "언어 표현 품질": 3.43,
+    "강의 도입 및 구조": 3.53,
+    "개념 설명 명확성": 3.0,
+    "예시 및 실습 연계": 3.0,
+    "수강생 상호작용": 2.67
+  },
+  "report_markdown": "## 종합 요약\n\n2026년 2월 6일 JavaScript 기초(함수, 객체, DOM) 강의는 분량이 많아 전반적으로 빠른 진행이 이루어졌으며, 보조 강사 부재로 실습 지원이 다소 부족했습니다. 종합 점수 **3.12/5.0**.\n\n### 카테고리별 점수\n\n| 카테고리 | 점수 |\n|---------|------|\n| 언어 표현 품질 | 3.43 |\n| 강의 도입 및 구조 | 3.53 |\n| 개념 설명 명확성 | 3.00 |\n| 예시 및 실습 연계 | 3.00 |\n| 수강생 상호작용 | 2.67 |\n\n### 주요 강점\n- 전날 수업 내용과의 효과적인 연계\n- 학습 목표의 명확한 안내\n- 실용적 예시(To-Do 리스트) 활용\n\n### 개선 필요 사항\n- 하루 강의 분량 조절 필요 (과다 분량으로 속도 과빠름)\n- 보조 강사 부재 시 대체 실습 지원 방안 마련 필요\n- 학생 참여 유도 활동 보강\n\n### 권고사항\n- 강의 분량을 줄이고 핵심 개념에 집중하는 방식으로 재구성\n- 보조 강사 부재 시 온라인 Q&A 채널이나 피어 학습 활용\n- 클로저, 스코프 등 심화 개념은 별도 세션으로 분리 권장",
+  "strengths": [
+    "전날 수업과의 자연스러운 연계와 복습",
+    "학습 목표의 명확한 제시",
+    "To-Do 리스트 등 실용적 프로젝트 예시 활용"
+  ],
+  "improvements": [
+    "하루 강의 분량 과다로 인한 빠른 진행",
+    "보조 강사 부재 시 실습 지원 부족",
+    "학생 참여 유도 활동 미흡"
+  ],
+  "recommendations": [
+    "하루 분량을 핵심 개념 2-3개로 제한하여 깊이 있는 학습 유도",
+    "보조 강사 부재 시 피어 학습(짝 프로그래밍) 등 대체 방안 활용",
+    "심화 개념은 별도 보충 자료나 세션으로 분리"
+  ]
+}

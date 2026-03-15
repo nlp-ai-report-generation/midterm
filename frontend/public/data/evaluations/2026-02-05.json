@@ -1,0 +1,322 @@
+{
+  "lecture_date": "2026-02-05",
+  "transcript_path": "transcripts/2026-02-05.txt",
+  "metadata": {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-05",
+    "subjects": ["프론트엔드"],
+    "contents": ["JavaScript 기초"],
+    "instructor": "김영아",
+    "sub_instructors": ["김다은", "정석현"]
+  },
+  "category_results": [
+    {
+      "category_name": "언어 표현 품질",
+      "items": [
+        {
+          "item_id": "1.1",
+          "item_name": "불필요한 반복 표현",
+          "category": "언어 표현 품질",
+          "score": 3,
+          "weight": "HIGH",
+          "evidence": [
+            "\"변수는 변수라는 게 값을 저장하는...\" 형태의 반복이 초반에 관찰",
+            "후반부로 갈수록 반복이 줄어드는 경향"
+          ],
+          "reasoning": "새로운 프로그래밍 언어 도입 시 강조 의도의 반복이 일부 나타나나 점차 안정됨",
+          "confidence": 0.81,
+          "caveats": []
+        },
+        {
+          "item_id": "1.2",
+          "item_name": "발화 완결성",
+          "category": "언어 표현 품질",
+          "score": 4,
+          "weight": "MEDIUM",
+          "evidence": [
+            "\"JavaScript에서 변수를 선언할 때는 let, const, var 세 가지 키워드를 사용할 수 있습니다\"와 같이 완결된 설명",
+            "코드 실행 결과를 설명할 때도 완결된 문장 유지"
+          ],
+          "reasoning": "전반적으로 발화 완결성이 잘 유지됨",
+          "confidence": 0.86,
+          "caveats": []
+        },
+        {
+          "item_id": "1.3",
+          "item_name": "언어 일관성",
+          "category": "언어 표현 품질",
+          "score": 4,
+          "weight": "MEDIUM",
+          "evidence": [
+            "\"함수\", \"변수\", \"배열\" 등 한국어 용어를 일관되게 사용",
+            "영어 키워드(let, const, function)는 원어 그대로 사용하여 구분이 명확"
+          ],
+          "reasoning": "프로그래밍 용어와 한국어 설명의 구분이 일관되고 명확",
+          "confidence": 0.85,
+          "caveats": []
+        }
+      ],
+      "weighted_average": 3.57
+    },
+    {
+      "category_name": "강의 도입 및 구조",
+      "items": [
+        {
+          "item_id": "2.1",
+          "item_name": "학습 목표 안내",
+          "category": "강의 도입 및 구조",
+          "score": 4,
+          "weight": "HIGH",
+          "evidence": [
+            "\"오늘은 JavaScript의 기본 문법을 배울 건데요, 변수, 자료형, 조건문, 반복문까지 다룰 예정입니다\"",
+            "보조 강사 소개와 역할 안내도 함께 진행"
+          ],
+          "reasoning": "학습 목표와 보조 강사 역할을 모두 명확히 안내",
+          "confidence": 0.89,
+          "caveats": []
+        },
+        {
+          "item_id": "2.2",
+          "item_name": "전날 복습 연계",
+          "category": "강의 도입 및 구조",
+          "score": 3,
+          "weight": "HIGH",
+          "evidence": [
+            "\"어제 웹 디자인 했는데, 오늘부터는 동적인 웹을 만들기 위해 JavaScript를 배울 겁니다\"",
+            "HTML/CSS와 JavaScript의 관계를 간단히 설명"
+          ],
+          "reasoning": "주제 전환의 맥락은 설명하나 이전 내용에 대한 구체적 복습은 부족",
+          "confidence": 0.82,
+          "caveats": []
+        },
+        {
+          "item_id": "2.3",
+          "item_name": "설명 순서",
+          "category": "강의 도입 및 구조",
+          "score": 4,
+          "weight": "MEDIUM",
+          "evidence": [
+            "변수/자료형 -> 연산자 -> 조건문 -> 반복문 순서로 체계적 진행",
+            "각 개념이 이전 개념을 기반으로 자연스럽게 이어짐"
+          ],
+          "reasoning": "프로그래밍 학습에 적합한 논리적 순서로 진행",
+          "confidence": 0.88,
+          "caveats": []
+        },
+        {
+          "item_id": "2.4",
+          "item_name": "핵심 내용 강조",
+          "category": "강의 도입 및 구조",
+          "score": 4,
+          "weight": "MEDIUM",
+          "evidence": [
+            "\"const와 let의 차이는 면접에서도 자주 나오는 질문이에요\"라고 실용적 관점에서 강조",
+            "호이스팅 개념의 중요성을 별도로 강조"
+          ],
+          "reasoning": "실무/면접 관점에서 핵심 내용을 효과적으로 강조",
+          "confidence": 0.86,
+          "caveats": []
+        },
+        {
+          "item_id": "2.5",
+          "item_name": "마무리 요약",
+          "category": "강의 도입 및 구조",
+          "score": 3,
+          "weight": "LOW",
+          "evidence": [
+            "배운 내용을 간략히 나열하는 수준의 마무리",
+            "\"내일은 함수와 객체를 배울 거예요\"라고 예고"
+          ],
+          "reasoning": "마무리가 있으나 핵심 포인트 정리보다는 나열에 그침",
+          "confidence": 0.79,
+          "caveats": []
+        }
+      ],
+      "weighted_average": 3.59
+    },
+    {
+      "category_name": "개념 설명 명확성",
+      "items": [
+        {
+          "item_id": "3.1",
+          "item_name": "개념 정의",
+          "category": "개념 설명 명확성",
+          "score": 4,
+          "weight": "HIGH",
+          "evidence": [
+            "\"변수는 데이터를 저장하는 이름이 붙은 공간입니다\"라고 명확히 정의",
+            "자료형별 차이를 명확하게 구분하여 설명"
+          ],
+          "reasoning": "기초 프로그래밍 개념을 명확하고 쉽게 정의",
+          "confidence": 0.90,
+          "caveats": []
+        },
+        {
+          "item_id": "3.2",
+          "item_name": "비유 및 예시 활용",
+          "category": "개념 설명 명확성",
+          "score": 4,
+          "weight": "HIGH",
+          "evidence": [
+            "변수를 \"이름표가 붙은 상자\"에 비유",
+            "조건문을 \"갈림길에서 방향을 선택하는 것\"에 비유",
+            "Java와 비교하며 차이점을 설명 (백엔드 과정 학생 맥락 활용)"
+          ],
+          "reasoning": "학생들의 배경(Java 학습 경험)을 고려한 비교 설명이 효과적",
+          "confidence": 0.88,
+          "caveats": []
+        },
+        {
+          "item_id": "3.3",
+          "item_name": "선행 개념 확인",
+          "category": "개념 설명 명확성",
+          "score": 4,
+          "weight": "MEDIUM",
+          "evidence": [
+            "\"Java에서 변수 선언 어떻게 했죠? int a = 5; 이렇게 했잖아요\"라고 선행 지식과 연결",
+            "프로그래밍 기초 개념은 Java에서 이미 배웠음을 전제로 활용"
+          ],
+          "reasoning": "Java 학습 경험을 선행 지식으로 잘 활용하여 새로운 언어 학습을 수월하게 함",
+          "confidence": 0.87,
+          "caveats": []
+        },
+        {
+          "item_id": "3.4",
+          "item_name": "발화 속도 적절성",
+          "category": "개념 설명 명확성",
+          "score": 3,
+          "weight": "MEDIUM",
+          "evidence": [
+            "기본 문법 설명은 적절한 속도",
+            "조건문/반복문 코드 작성 시 속도가 빨라짐"
+          ],
+          "reasoning": "친숙한 개념은 빠르게 넘어가는 경향이 있으나, Java 경험이 적은 학생에겐 부담될 수 있음",
+          "confidence": 0.80,
+          "caveats": []
+        }
+      ],
+      "weighted_average": 3.86
+    },
+    {
+      "category_name": "예시 및 실습 연계",
+      "items": [
+        {
+          "item_id": "4.1",
+          "item_name": "예시 적절성",
+          "category": "예시 및 실습 연계",
+          "score": 4,
+          "weight": "HIGH",
+          "evidence": [
+            "브라우저 콘솔에서 직접 코드 실행 결과를 보여줌",
+            "실생활 예시(성적 등급 판정, 구구단 출력)를 활용한 코드 예시"
+          ],
+          "reasoning": "친숙한 문제를 코드로 해결하는 예시가 학습 동기를 높임",
+          "confidence": 0.87,
+          "caveats": []
+        },
+        {
+          "item_id": "4.2",
+          "item_name": "실습 연결",
+          "category": "예시 및 실습 연계",
+          "score": 4,
+          "weight": "HIGH",
+          "evidence": [
+            "보조 강사(김다은, 정석현)가 실습 시간에 개별 학생 지원",
+            "\"5분 드릴 테니 직접 해보세요\"라는 명시적 실습 시간 제공"
+          ],
+          "reasoning": "보조 강사 지원으로 실습의 질이 향상됨",
+          "confidence": 0.88,
+          "caveats": []
+        },
+        {
+          "item_id": "4.3",
+          "item_name": "오류 대응",
+          "category": "예시 및 실습 연계",
+          "score": 4,
+          "weight": "MEDIUM",
+          "evidence": [
+            "학생의 undefined 오류를 화면 공유로 함께 디버깅",
+            "보조 강사가 실습 중 발생하는 개별 오류에 즉각 대응"
+          ],
+          "reasoning": "메인/보조 강사의 협업으로 오류 대응이 효과적으로 이루어짐",
+          "confidence": 0.86,
+          "caveats": []
+        }
+      ],
+      "weighted_average": 4.0
+    },
+    {
+      "category_name": "수강생 상호작용",
+      "items": [
+        {
+          "item_id": "5.1",
+          "item_name": "이해도 확인 질문",
+          "category": "수강생 상호작용",
+          "score": 4,
+          "weight": "HIGH",
+          "evidence": [
+            "\"let과 const 차이 한 번 말해보실 분?\"이라고 구체적 질문",
+            "각 섹션 후 간단한 퀴즈 형태로 이해도 확인"
+          ],
+          "reasoning": "구체적이고 개념 확인형 질문을 통해 효과적으로 이해도를 점검",
+          "confidence": 0.87,
+          "caveats": []
+        },
+        {
+          "item_id": "5.2",
+          "item_name": "참여 유도",
+          "category": "수강생 상호작용",
+          "score": 3,
+          "weight": "HIGH",
+          "evidence": [
+            "실습 시간을 통해 참여 유도",
+            "그룹 활동이나 짝 프로그래밍은 이루어지지 않음"
+          ],
+          "reasoning": "개별 실습 위주로 참여가 이루어지며 협력 활동은 부족",
+          "confidence": 0.82,
+          "caveats": []
+        },
+        {
+          "item_id": "5.3",
+          "item_name": "응답 충분성",
+          "category": "수강생 상호작용",
+          "score": 4,
+          "weight": "HIGH",
+          "evidence": [
+            "\"Java랑 왜 이렇게 다른 거예요?\"라는 질문에 JavaScript 설계 철학을 간략히 설명",
+            "보조 강사도 채팅 질문에 실시간 답변 제공"
+          ],
+          "reasoning": "메인/보조 강사 협업으로 질문 대응이 충실하고 빠름",
+          "confidence": 0.87,
+          "caveats": []
+        }
+      ],
+      "weighted_average": 3.67
+    }
+  ],
+  "weighted_total": 66.78,
+  "weighted_average": 3.71,
+  "category_averages": {
+    "언어 표현 품질": 3.57,
+    "강의 도입 및 구조": 3.59,
+    "개념 설명 명확성": 3.86,
+    "예시 및 실습 연계": 4.0,
+    "수강생 상호작용": 3.67
+  },
+  "report_markdown": "## 종합 요약\n\n2026년 2월 5일 JavaScript 기초 강의는 보조 강사 지원으로 실습 연계가 우수했으며, Java와의 비교를 통한 설명이 효과적이었습니다. 종합 점수 **3.71/5.0**.\n\n### 카테고리별 점수\n\n| 카테고리 | 점수 |\n|---------|------|\n| 언어 표현 품질 | 3.57 |\n| 강의 도입 및 구조 | 3.59 |\n| 개념 설명 명확성 | 3.86 |\n| 예시 및 실습 연계 | 4.00 |\n| 수강생 상호작용 | 3.67 |\n\n### 주요 강점\n- Java와의 비교를 통한 효과적인 JavaScript 개념 전달\n- 보조 강사(김다은, 정석현) 지원으로 우수한 실습 환경\n- 실용적 관점(면접, 실무)에서의 핵심 내용 강조\n\n### 개선 필요 사항\n- 학생 간 협력 활동(짝 프로그래밍 등) 도입 필요\n- 마무리 요약의 질적 향상 필요\n\n### 권고사항\n- 보조 강사 활용을 극대화하여 소그룹 활동 운영\n- JavaScript 특유의 개념(호이스팅, 클로저 등) 설명 시 충분한 시간 배분\n- 마무리 시 핵심 포인트를 정리하는 시간 확보",
+  "strengths": [
+    "Java 학습 경험을 활용한 비교 설명으로 학습 효과 극대화",
+    "보조 강사 지원으로 우수한 실습 환경과 빠른 질문 대응",
+    "실무/면접 관점에서 핵심 내용을 효과적으로 강조"
+  ],
+  "improvements": [
+    "학생 간 협력 학습 활동 부족",
+    "마무리 요약이 나열 수준에 그침"
+  ],
+  "recommendations": [
+    "보조 강사를 활용한 소그룹 멘토링 운영",
+    "짝 프로그래밍 활동 도입으로 협력 학습 기회 확대",
+    "마무리 시 오늘 배운 핵심 3가지를 학생이 직접 정리하게 하는 활동 도입"
+  ]
+}

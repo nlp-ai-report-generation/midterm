@@ -1,0 +1,17 @@
+[
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-02", "subjects": ["객체지향 프로그래밍"], "contents": ["디자인 패턴 (데코레이터, 옵저버, 파사드, 전략)"], "instructor": "김영아", "sub_instructors": []},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-03", "subjects": ["프론트엔드"], "contents": ["HTML/CSS 기초"], "instructor": "김영아", "sub_instructors": []},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-04", "subjects": ["프론트엔드"], "contents": ["웹 디자인"], "instructor": "김영아", "sub_instructors": []},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-05", "subjects": ["프론트엔드"], "contents": ["JavaScript 기초"], "instructor": "김영아", "sub_instructors": ["김다은", "정석현"]},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-06", "subjects": ["프론트엔드"], "contents": ["JavaScript 기초"], "instructor": "김영아", "sub_instructors": []},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-09", "subjects": ["프론트엔드"], "contents": ["React.js 웹사이트 구현"], "instructor": "김영아", "sub_instructors": []},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-10", "subjects": ["프론트엔드"], "contents": ["React.js 웹사이트 구현"], "instructor": "김영아", "sub_instructors": []},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-11", "subjects": ["프론트엔드"], "contents": ["React.js 웹사이트 구현"], "instructor": "김영아", "sub_instructors": []},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-12", "subjects": ["프론트엔드"], "contents": ["컴포넌트 스타일링 (Tailwind)"], "instructor": "김영아", "sub_instructors": []},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-13", "subjects": ["프론트엔드"], "contents": ["컴포넌트 스타일링 (Tailwind)"], "instructor": "김영아", "sub_instructors": []},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-23", "subjects": ["프론트엔드"], "contents": ["React Query (서버 상태 관리)"], "instructor": "김영아", "sub_instructors": []},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-24", "subjects": ["백엔드"], "contents": ["HTTP 통신"], "instructor": "김영아", "sub_instructors": []},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-25", "subjects": ["백엔드"], "contents": ["HTTP 통신, 웹 메커니즘"], "instructor": "김영아", "sub_instructors": ["김다은", "정석현"]},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-26", "subjects": ["백엔드"], "contents": ["웹 메커니즘"], "instructor": "김영아", "sub_instructors": ["김다은"]},
+  {"course_id": "kdt-backendj-21th", "course_name": "백엔드 부트캠프 21기: Java", "date": "2026-02-27", "subjects": ["백엔드"], "contents": ["웹 메커니즘"], "instructor": "김영아", "sub_instructors": []}
+]
