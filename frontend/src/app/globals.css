@@ -80,7 +80,22 @@ body {
 }
 
 .card-padded {
-  padding: 24px 28px;
+  padding: 28px 32px;
+}
+
+/* 페이지 레이아웃 */
+.page-content {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* 카드 그리드 간격 */
+.card-grid {
+  display: grid;
+  gap: 20px;
 }
 
 .card-hover:hover {

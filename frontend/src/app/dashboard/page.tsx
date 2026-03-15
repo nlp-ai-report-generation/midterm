@@ -81,9 +81,9 @@ export default function DashboardPage() {
   const recentLectures = [...evaluations].reverse().slice(0, 6);
 
   return (
-    <div className="mx-auto max-w-[1080px] space-y-8">
+    <div className="page-content">
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
         {[
           {
             label: "총 강의",
@@ -232,7 +232,7 @@ export default function DashboardPage() {
             전체 보기
           </Link>
         </div>
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
           {recentLectures.map((item) => (
             <Link
               key={item.lecture_date}

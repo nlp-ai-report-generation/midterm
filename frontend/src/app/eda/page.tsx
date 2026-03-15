@@ -89,7 +89,7 @@ export default function EDAPage() {
   }
 
   return (
-    <div className="space-y-5 max-w-[1200px] mx-auto">
+    <div className="page-content">
       <h1 className="text-title">탐색적 데이터 분석</h1>
 
       {/* Tab Bar */}
@@ -452,57 +452,71 @@ function FillerTab({ data }: { data: FillerWordStats[] }) {
 
 /* --- Curriculum Tab --- */
 function CurriculumTab({ data }: { data: CurriculumEntry[] }) {
+  // 과목별로 그룹핑
+  const groups: { subject: string; color: string; entries: CurriculumEntry[] }[] = [];
+  data.forEach((entry) => {
+    const last = groups[groups.length - 1];
+    if (last && last.subject === entry.subject) {
+      last.entries.push(entry);
+    } else {
+      groups.push({
+        subject: entry.subject,
+        color: SUBJECT_COLORS[entry.subject] ?? "var(--text-tertiary)",
+        entries: [entry],
+      });
+    }
+  });
+
   return (
-    <div className="card card-padded">
-      <h3 className="text-section mb-1">커리큘럼 타임라인</h3>
-      <p className="text-caption mb-6">날짜별 과목 및 학습 내용 흐름</p>
+    <div className="space-y-5">
+      <div className="card card-padded">
+        <h3 className="text-section mb-1">커리큘럼 진행 현황</h3>
+        <p className="text-caption mb-6">
+          전체 {data.length}일 수업 · {groups.length}개 과목
+        </p>
 
-      <div className="space-y-0">
-        {data.map((entry, i) => {
-          const color = SUBJECT_COLORS[entry.subject] ?? "var(--text-tertiary)";
-          const isNewSubject = i === 0 || data[i - 1].subject !== entry.subject;
-
-          return (
-            <div key={entry.date} className="flex items-start gap-5 group">
-              {/* Timeline */}
-              <div className="flex flex-col items-center shrink-0 pt-1">
-                <div
-                  className="w-3.5 h-3.5 rounded-full border-[3px] mt-0.5"
-                  style={{
-                    borderColor: color,
-                    backgroundColor: isNewSubject ? color : "var(--surface)",
-                  }}
+        {/* 과목별 카드 */}
+        <div className="space-y-4">
+          {groups.map((group) => (
+            <div key={group.subject} className="inner-card">
+              <div className="flex items-center gap-3 mb-4">
+                <span
+                  className="w-3 h-3 rounded-full shrink-0"
+                  style={{ backgroundColor: group.color }}
                 />
-                {i < data.length - 1 && (
-                  <div
-                    className="w-0.5 h-12 mt-1"
-                    style={{ backgroundColor: `${color}30` }}
-                  />
-                )}
+                <span className="text-[15px] font-bold text-foreground">{group.subject}</span>
+                <span className="text-caption">{group.entries.length}일</span>
               </div>
 
-              {/* Content */}
-              <div className="flex-1 pb-5">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-caption">
-                    {formatDateShort(entry.date)}
-                  </span>
-                  {isNewSubject && (
-                    <span
-                      className="text-[10px] font-semibold px-2 py-0.5 rounded-md text-white"
-                      style={{ backgroundColor: color }}
-                    >
-                      {entry.subject}
+              <div className="space-y-2">
+                {group.entries.map((entry) => (
+                  <div key={entry.date} className="flex items-start gap-4">
+                    <span className="text-[13px] font-mono text-text-muted w-12 shrink-0 pt-0.5">
+                      {formatDateShort(entry.date)}
                     </span>
-                  )}
-                </div>
-                <p className="text-sm text-foreground leading-relaxed">
-                  {entry.contents.join(", ")}
-                </p>
+                    <p className="text-body">{entry.contents.join(", ")}</p>
+                  </div>
+                ))}
               </div>
             </div>
-          );
-        })}
+          ))}
+        </div>
+      </div>
+
+      {/* 요약 */}
+      <div className="card-grid" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
+        {groups.map((g) => (
+          <div key={g.subject} className="card card-padded">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: g.color }} />
+              <span className="text-label">{g.subject}</span>
+            </div>
+            <p className="text-number">{g.entries.length}일</p>
+            <p className="text-caption mt-1">
+              {formatDateShort(g.entries[0].date)} ~ {formatDateShort(g.entries[g.entries.length - 1].date)}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   );

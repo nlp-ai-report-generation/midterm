@@ -146,8 +146,11 @@ export default function SettingsPage() {
   if (!mounted) return null;
 
   return (
-    <div className="space-y-5 max-w-[720px] mx-auto">
-      <h1 className="text-title">설정</h1>
+    <div className="page-content" style={{ maxWidth: 720 }}>
+      <div>
+        <h1 className="text-title">설정</h1>
+        <p className="text-caption mt-1">API 연결, 모델 선택, 평가 실행을 한 곳에서 관리합니다.</p>
+      </div>
 
       {/* API Connection */}
       <div className="card card-padded">

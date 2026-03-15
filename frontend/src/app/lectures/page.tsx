@@ -35,7 +35,7 @@ export default function LecturesPage() {
   }
 
   return (
-    <div className="space-y-5 max-w-[1200px] mx-auto">
+    <div className="page-content">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -69,7 +69,7 @@ export default function LecturesPage() {
           <p className="text-text-tertiary">강의 데이터가 없습니다.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
           {displayed.map((evaluation) => (
             <Link
               key={evaluation.lecture_date}
