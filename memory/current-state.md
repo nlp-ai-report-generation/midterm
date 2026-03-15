@@ -1,6 +1,6 @@
 # 현재 상태
 
-- 기준일: `2026-03-11`
+- 기준일: `2026-03-16`
 - 현재 운영 목표: LangGraph 기반 에이전틱 평가 시스템의 핵심 파이프라인을 구현하고, 15개 강의 배치 평가를 실행한다.
 - 프로젝트 목표: 강의 스크립트와 품질 기준을 바탕으로 강사 개선 인사이트를 자동 생성하는 분석 리포트 시스템을 만든다.
 
@@ -18,6 +18,7 @@
 - 엔트리 스크립트 3종 (run_single, run_batch, run_experiment)
 - 로컬 `main` 브랜치를 `origin/main` 최신 커밋(`add509d`)까지 fast-forward 동기화
 - 프론트 대시보드 UI를 토스 스타일 토큰 기준으로 재정비 (`frontend/src/app/globals.css`, `frontend/src/components/layout/`, `frontend/src/app/dashboard/page.tsx`)
+- 프론트엔드를 Next.js에서 React + Vite + React Router SPA로 전환 (`frontend/src/main.tsx`, `frontend/src/App.tsx`, `frontend/vite.config.ts`)
 - 실제 실험 결과를 프론트 정적 JSON으로 내보내는 스크립트 확장 (`scripts/export_frontend_data.py`)
 - 12시간제 STT 타임스탬프 래핑 보정 추가로 청킹 0건 문제 해결 (`src/chunking/strategy.py`)
 - OpenAI 스모크 테스트 성공: `2026-02-02` 단일 강의 평가 실행 완료 (`experiments/e68eb60a8e70/`)
@@ -30,6 +31,7 @@
 3. 반복 실행(3패스) → IRR 메트릭 확인 → 신뢰도 임계값 달성 여부 확인
 4. A/B 실험 설계 및 실행 (모델, 온도, 청킹 변수)
 5. 실험 결과 기반 `/experiments` 페이지 실데이터 연결
+6. React SPA 배포 경로와 정적 데이터 갱신 흐름 문서 보강
 
 ## 현재 저장소 상태
 
@@ -37,17 +39,18 @@
 - 실험 프레임워크: **구현 완료** (`src/experiment/`)
 - 기존 코드(src/preprocessing, src/rule_analysis 등): 유지, 하이브리드 활용 가능
 - 테스트: 46개 통과 (chunking, scoring, metrics, harness loading)
-- 프론트 UI: 토스 스타일 기준으로 1차 재정비 완료 (`frontend/`)
+- 프론트 UI: 토스 스타일 기준 1차 재정비 + React SPA 전환 완료 (`frontend/`)
 - 정적 평가 데이터: 실제 분석 결과 1건 반영, 나머지 강의는 배치 실행 필요
-- Git 상태: 로컬 `main`과 `origin/main` 동기화 완료, 추적되지 않은 `.claude/` 디렉터리만 남음
+- Git 상태: 프론트 React 전환 관련 변경 존재, `.claude/` 디렉터리는 계속 미추적 상태
 
 ## 다음 세션 시작 체크리스트
 
 1. `AGENTS.md` 읽기
 2. `memory/decisions.md` 확인
 3. `.env`에 `OPENAI_API_KEY` 확인
-4. `python3 scripts/run_single.py --date 2026-02-02 --model gpt-4o-mini` 실행
-5. `python3 scripts/export_frontend_data.py --experiment-id <id>` 실행
+4. `cd frontend && npm run dev`로 React SPA 확인
+5. `python3 scripts/run_single.py --date 2026-02-02 --model gpt-4o-mini` 실행
+6. `python3 scripts/export_frontend_data.py --experiment-id <id>` 실행
 
 ## 현재 블로커
 

@@ -1,8 +1,6 @@
-"use client";
-
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import {
   getSettings,
   saveSettings,
@@ -333,7 +331,7 @@ export default function SettingsPage() {
           <p className="text-sm text-text-secondary mt-3 text-center">
             {evalProgress}
             {evalProgress.startsWith("완료") && (
-              <Link href="/dashboard" className="text-primary font-semibold ml-2 hover:underline">
+              <Link to="/dashboard" className="text-primary font-semibold ml-2 hover:underline">
                 대시보드에서 확인 →
               </Link>
             )}

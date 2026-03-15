@@ -95,3 +95,11 @@
 - 결정: OpenAI 클라이언트와 FastAPI 서버 시작 시 `.env`를 자동 로드하고, 설정 화면의 연결 테스트는 `/api/validate-key`를 실제 호출한다.
 - 이유: 로컬 정규식만으로는 실제 키 동작 여부를 검증할 수 없고, `health` 상태도 거짓 음성이 발생했다.
 - 결과: `src/integrations/openai_client.py`, `api/main.py`, `frontend/src/lib/api.ts`, `frontend/src/app/settings/page.tsx`가 갱신됐다.
+
+## 2026-03-16
+
+### 프론트엔드는 Next.js 대신 React SPA로 운영
+
+- 결정: 프론트엔드 런타임을 Next.js에서 React + Vite + React Router로 전환한다.
+- 이유: 사용자 요청이 "Next.js 말고 그냥 React로 싹다 바꾸기"였고, 현재 앱은 SSR/서버 컴포넌트 이점보다 정적 데이터 대시보드와 API 호출 중심 구조가 더 적합하다.
+- 결과: `frontend/src/main.tsx`, `frontend/src/App.tsx`, `frontend/vite.config.ts`를 기준 진입점으로 사용하고, 기존 페이지 컴포넌트는 React Router 경로로 재연결한다.

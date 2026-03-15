@@ -1,7 +1,5 @@
-"use client";
-
 import { useState, useEffect } from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getAllLectures } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
@@ -292,7 +290,7 @@ export default function PreprocessingPage() {
                   transition={{ delay: 0.5 + i * 0.03 }}
                 >
                   <Link
-                    href={`/preprocessing/${lecture.date}`}
+                    to={`/preprocessing/${lecture.date}`}
                     className="block bg-background rounded-xl p-4 text-center border border-border-light hover:border-primary/30 hover:shadow-[var(--shadow-md)] transition-all duration-200 group"
                   >
                     <p className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">

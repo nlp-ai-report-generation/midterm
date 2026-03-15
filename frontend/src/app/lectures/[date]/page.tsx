@@ -1,7 +1,5 @@
-"use client";
-
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   RadarChart,
@@ -161,7 +159,7 @@ function CategoryAccordion({ category }: { category: CategoryResult }) {
 
 export default function LectureDetailPage() {
   const params = useParams();
-  const date = params.date as string;
+  const date = params.date ?? "";
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

@@ -1,8 +1,6 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import KPICard from "@/components/cards/KPICard";
 import ScoreTrend from "@/components/charts/ScoreTrend";
 import CategoryHeatmap from "@/components/charts/CategoryHeatmap";
@@ -11,11 +9,11 @@ import { getAllEvaluations } from "@/lib/data";
 import type { EvaluationResult } from "@/types/evaluation";
 
 const CATEGORY_NAMES = [
-  "언어 표현 품질",
-  "강의 도입 및 구조",
-  "개념 설명 명확성",
-  "예시 및 실습 연계",
-  "수강생 상호작용",
+  "1. 언어 표현 품질",
+  "2. 강의 도입 및 구조",
+  "3. 개념 설명 명확성",
+  "4. 예시 및 실습 연계",
+  "5. 수강생 상호작용",
 ];
 
 const fadeUp = {
@@ -159,7 +157,7 @@ export default function DashboardPage() {
                 ].map((s) => (
                   <Link
                     key={s.step}
-                    href={s.href}
+                    to={s.href}
                     className="surface-card rounded-[24px] px-5 py-4 text-text-secondary hover:-translate-y-0.5 hover:text-foreground"
                   >
                     <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-full bg-primary-soft text-[13px] font-bold text-primary">
@@ -233,7 +231,7 @@ export default function DashboardPage() {
           <p className="section-eyebrow">Overview</p>
           <h2 className="mt-1 text-[22px] font-bold text-foreground">점수 흐름과 취약 카테고리</h2>
         </div>
-        <span className="chip hidden sm:inline-flex">15개 강의 기준</span>
+        <span className="chip hidden sm:inline-flex">{totalLectures}개 강의 기준</span>
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">

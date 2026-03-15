@@ -1,6 +1,4 @@
-"use client";
-
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { formatDate, scoreColor, scoreLabel } from "@/lib/utils";
 import type { EvaluationResult } from "@/types/evaluation";
 
@@ -13,7 +11,7 @@ export default function LectureCard({ evaluation }: LectureCardProps) {
     evaluation;
 
   return (
-    <Link href={`/lectures/${lecture_date}`}>
+    <Link to={`/lectures/${lecture_date}`}>
       <div className="surface-card-strong group rounded-[28px] p-6 transition-transform hover:-translate-y-1">
         <div className="mb-5 flex items-start justify-between gap-4">
           <div>

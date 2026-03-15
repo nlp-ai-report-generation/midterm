@@ -1,7 +1,4 @@
-"use client";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -91,7 +88,7 @@ const SETTINGS_ITEM: NavItem = {
 };
 
 export default function Sidebar() {
-  const pathname = usePathname();
+  const { pathname } = useLocation();
 
   const renderNavItem = (item: NavItem) => {
     const isActive =
@@ -99,7 +96,7 @@ export default function Sidebar() {
     return (
       <Link
         key={item.href}
-        href={item.href}
+        to={item.href}
         className={cn(
           "relative flex items-center gap-3 rounded-2xl px-4 py-3 text-[15px] font-semibold",
           isActive

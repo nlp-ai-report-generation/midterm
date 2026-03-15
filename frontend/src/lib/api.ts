@@ -11,7 +11,7 @@ export interface AppSettings {
 
 const SETTINGS_KEY = "lecture-analysis-settings";
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+  import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000";
 
 const DEFAULT_SETTINGS: AppSettings = {
   apiKey: "",

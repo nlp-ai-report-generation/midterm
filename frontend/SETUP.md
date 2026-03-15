@@ -68,7 +68,12 @@ cd frontend
 npm run build
 ```
 
-## Vercel 배포
+빌드 산출물은 `frontend/dist/`에 생성됩니다.
+
+## 정적 배포
+
+정적 호스팅 기준으로 `dist/` 디렉터리를 배포합니다.
+현재 `vercel.json`은 SPA 라우팅이 유지되도록 모든 경로를 `index.html`로 리라이트합니다.
 
 ```bash
 # CLI 배포
@@ -79,7 +84,7 @@ cd frontend && npx vercel
 
 ## 기술 스택
 
-- **프론트엔드:** Next.js 15, TypeScript, Tailwind CSS, Recharts, Framer Motion
+- **프론트엔드:** React 19, Vite, React Router, TypeScript, Tailwind CSS, Recharts, Framer Motion
 - **백엔드 API:** FastAPI, uvicorn
 - **평가 파이프라인:** LangGraph, OpenAI GPT-4o
 

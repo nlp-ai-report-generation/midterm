@@ -1,5 +1,3 @@
-"use client";
-
 import { formatDateShort, scoreColor } from "@/lib/utils";
 
 interface HeatmapProps {
@@ -11,11 +9,11 @@ interface HeatmapProps {
 }
 
 const SHORT_CATEGORY_NAMES: Record<string, string> = {
-  "언어 표현 품질": "언어 품질",
-  "강의 도입 및 구조": "강의 구조",
-  "개념 설명 명확성": "개념 명확성",
-  "예시 및 실습 연계": "예시/실습",
-  "수강생 상호작용": "상호작용",
+  "1. 언어 표현 품질": "언어 품질",
+  "2. 강의 도입 및 구조": "강의 구조",
+  "3. 개념 설명 명확성": "개념 명확성",
+  "4. 예시 및 실습 연계": "예시/실습",
+  "5. 수강생 상호작용": "상호작용",
 };
 
 export default function CategoryHeatmap({ data, categoryNames }: HeatmapProps) {

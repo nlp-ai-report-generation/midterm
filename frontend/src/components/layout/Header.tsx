@@ -1,7 +1,4 @@
-"use client";
-
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, useLocation } from "react-router-dom";
 
 const PAGE_TITLES: Record<string, { title: string; description: string }> = {
   "/dashboard": {
@@ -35,7 +32,7 @@ const PAGE_TITLES: Record<string, { title: string; description: string }> = {
 };
 
 export default function Header() {
-  const pathname = usePathname();
+  const { pathname } = useLocation();
 
   const basePath = "/" + (pathname.split("/")[1] ?? "");
   const pageInfo = PAGE_TITLES[basePath] ?? {
@@ -70,7 +67,7 @@ export default function Header() {
             Toss-style UI refresh
           </div>
           <Link
-            href="/settings"
+            to="/settings"
             className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-text-tertiary shadow-[var(--shadow-xs)] hover:-translate-y-0.5 hover:text-foreground"
             title="설정"
           >
@@ -81,18 +78,6 @@ export default function Header() {
           </Link>
         </div>
       </div>
-      <style jsx>{`
-        @keyframes headerSubtitleFade {
-          from {
-            opacity: 0;
-            transform: translateY(6px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </header>
   );
 }
