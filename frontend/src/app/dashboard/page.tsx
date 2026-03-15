@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import KPICard from "@/components/cards/KPICard";
 import ScoreTrend from "@/components/charts/ScoreTrend";
 import CategoryHeatmap from "@/components/charts/CategoryHeatmap";
@@ -94,22 +95,42 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-10">
-      {/* Hero Greeting Card */}
+      {/* 온보딩 / 요약 히어로 */}
       <motion.div
         {...fadeUp}
         className="relative overflow-hidden bg-gradient-to-br from-primary to-[#FF8C38] rounded-2xl p-8 shadow-[var(--shadow-lg)]"
       >
         <div className="relative z-10">
-          <p className="text-white/80 text-sm font-medium">AI 강의 분석 리포트</p>
-          <h1 className="text-3xl font-extrabold text-white mt-1 tracking-tight">
-            안녕하세요, 강의 분석을 시작하세요
-          </h1>
-          <p className="text-white/70 text-sm mt-2 max-w-lg">
-            총 {totalLectures}개 강의에 대한 LangGraph 기반 에이전틱 평가가 완료되었습니다.
-            평균 점수 {avgScore.toFixed(2)}점으로, 아래에서 전체 현황을 확인하세요.
-          </p>
+          {totalLectures > 0 ? (
+            <>
+              <p className="text-white/80 text-sm font-medium">AI 강의 분석 리포트</p>
+              <h1 className="text-2xl font-extrabold text-white mt-1 tracking-tight">
+                {totalLectures}개 강의 분석 완료
+              </h1>
+              <p className="text-white/70 text-sm mt-2">
+                평균 점수 {avgScore.toFixed(2)}점 · 최고 {bestLecture?.weighted_average.toFixed(1)} · 최저 {worstLecture?.weighted_average.toFixed(1)}
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-2xl font-extrabold text-white tracking-tight">
+                강의 분석을 시작해보세요
+              </h1>
+              <div className="flex flex-col sm:flex-row gap-4 mt-4">
+                {[
+                  { step: "1", label: "API 키 입력", href: "/settings" },
+                  { step: "2", label: "강의 선택 & 평가 실행", href: "/settings" },
+                  { step: "3", label: "결과 확인", href: "/dashboard" },
+                ].map((s) => (
+                  <Link key={s.step} href={s.href} className="flex items-center gap-2 text-white/90 hover:text-white">
+                    <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs font-bold">{s.step}</span>
+                    <span className="text-sm font-medium">{s.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
         </div>
-        {/* Decorative circles */}
         <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-white/10" />
         <div className="absolute -bottom-14 -right-6 w-36 h-36 rounded-full bg-white/5" />
       </motion.div>

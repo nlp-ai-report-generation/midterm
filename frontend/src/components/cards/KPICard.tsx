@@ -32,12 +32,13 @@ export default function KPICard({
         </div>
         {trend && (
           <span
-            className={cn(
-              "text-xs font-medium px-2 py-1 rounded-lg",
-              isTrendPositive
-                ? "bg-[color-mix(in_srgb,var(--success)_12%,transparent)] text-success"
-                : "bg-[color-mix(in_srgb,var(--error)_12%,transparent)] text-error"
-            )}
+            className="text-xs font-medium px-2 py-1 rounded-lg"
+            style={{
+              backgroundColor: isTrendPositive
+                ? "color-mix(in srgb, var(--success) 12%, transparent)"
+                : "color-mix(in srgb, var(--error) 12%, transparent)",
+              color: isTrendPositive ? "var(--success)" : "var(--error)",
+            }}
           >
             {isTrendPositive ? "+" : ""}
             {trend.value}

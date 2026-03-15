@@ -1,17 +1,109 @@
 [
-  {"date": "2026-02-02", "subject": "객체지향 프로그래밍", "contents": ["디자인 패턴 (데코레이터, 옵저버, 파사드, 전략)"]},
-  {"date": "2026-02-03", "subject": "프론트엔드", "contents": ["HTML/CSS 기초"]},
-  {"date": "2026-02-04", "subject": "프론트엔드", "contents": ["웹 디자인"]},
-  {"date": "2026-02-05", "subject": "프론트엔드", "contents": ["JavaScript 기초"]},
-  {"date": "2026-02-06", "subject": "프론트엔드", "contents": ["JavaScript 기초"]},
-  {"date": "2026-02-09", "subject": "프론트엔드", "contents": ["React.js 웹사이트 구현"]},
-  {"date": "2026-02-10", "subject": "프론트엔드", "contents": ["React.js 웹사이트 구현"]},
-  {"date": "2026-02-11", "subject": "프론트엔드", "contents": ["React.js 웹사이트 구현"]},
-  {"date": "2026-02-12", "subject": "프론트엔드", "contents": ["컴포넌트 스타일링 (Tailwind)"]},
-  {"date": "2026-02-13", "subject": "프론트엔드", "contents": ["컴포넌트 스타일링 (Tailwind)"]},
-  {"date": "2026-02-23", "subject": "프론트엔드", "contents": ["React Query (서버 상태 관리)"]},
-  {"date": "2026-02-24", "subject": "백엔드", "contents": ["HTTP 통신"]},
-  {"date": "2026-02-25", "subject": "백엔드", "contents": ["HTTP 통신, 웹 메커니즘"]},
-  {"date": "2026-02-26", "subject": "백엔드", "contents": ["웹 메커니즘"]},
-  {"date": "2026-02-27", "subject": "백엔드", "contents": ["웹 메커니즘"]}
+  {
+    "date": "2026-02-02",
+    "subject": "객체지향 프로그래밍",
+    "contents": [
+      "데코레이터 패턴, 옵저버 패턴",
+      "파사드 패턴, 전략 패턴"
+    ]
+  },
+  {
+    "date": "2026-02-03",
+    "subject": "Front-End Programming",
+    "contents": [
+      "HTML, CSS를 이용한 화면 설계 및 표현"
+    ]
+  },
+  {
+    "date": "2026-02-04",
+    "subject": "Front-End Programming",
+    "contents": [
+      "HTML, CSS를 이용한 화면 설계 및 표현"
+    ]
+  },
+  {
+    "date": "2026-02-05",
+    "subject": "Front-End Programming",
+    "contents": [
+      "JavaScript 기본 문법"
+    ]
+  },
+  {
+    "date": "2026-02-06",
+    "subject": "Front-End Programming",
+    "contents": [
+      "JavaScript 기본 문법"
+    ]
+  },
+  {
+    "date": "2026-02-09",
+    "subject": "Front-End Programming",
+    "contents": [
+      "React.js 기반의 웹 사이트 구현"
+    ]
+  },
+  {
+    "date": "2026-02-10",
+    "subject": "Front-End Programming",
+    "contents": [
+      "React.js 기반의 웹 사이트 구현"
+    ]
+  },
+  {
+    "date": "2026-02-11",
+    "subject": "Front-End Programming",
+    "contents": [
+      "React.js 기반의 웹 사이트 구현"
+    ]
+  },
+  {
+    "date": "2026-02-12",
+    "subject": "Front-End Programming",
+    "contents": [
+      "React.js 기반의 웹 사이트 구현",
+      "컴포넌트 스타일링(테일윈드 등)"
+    ]
+  },
+  {
+    "date": "2026-02-13",
+    "subject": "Front-End Programming",
+    "contents": [
+      "컴포넌트 스타일링(테일윈드 등)"
+    ]
+  },
+  {
+    "date": "2026-02-23",
+    "subject": "Front-End Programming",
+    "contents": [
+      "React Query 와 같은 서버상태 관리도구 사용"
+    ]
+  },
+  {
+    "date": "2026-02-24",
+    "subject": "Back-End Programming",
+    "contents": [
+      "HTTP 통신 개요 및 웹 작동 방식"
+    ]
+  },
+  {
+    "date": "2026-02-25",
+    "subject": "Back-End Programming",
+    "contents": [
+      "HTTP 통신 개요 및 웹 작동 방식"
+    ]
+  },
+  {
+    "date": "2026-02-26",
+    "subject": "Back-End Programming",
+    "contents": [
+      "HTTP 통신 개요 및 웹 작동 방식"
+    ]
+  },
+  {
+    "date": "2026-02-27",
+    "subject": "Back-End Programming",
+    "contents": [
+      "HTTP 통신 개요 및 웹 작동 방식"
+    ]
+  }
 ]

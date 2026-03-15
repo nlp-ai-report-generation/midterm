@@ -47,14 +47,33 @@ export async function getTranscriptStats(): Promise<TranscriptStats[]> {
   return fetchJSON<TranscriptStats[]>("eda/transcript_stats.json");
 }
 
-/** EDA: 화자 분포 */
+/** EDA: 화자 분포 — 새 형식(배열) → 기존 형식(Record) 변환 */
 export async function getSpeakerDistribution(): Promise<SpeakerDistribution[]> {
-  return fetchJSON<SpeakerDistribution[]>("eda/speaker_distribution.json");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const raw = await fetchJSON<any[]>("eda/speaker_distribution.json");
+  return raw.map((item) => {
+    // 새 형식: speakers가 배열인 경우
+    if (Array.isArray(item.speakers)) {
+      const speakersMap: Record<string, number> = {};
+      for (const s of item.speakers) {
+        speakersMap[s.role || s.speaker_id] = s.line_count;
+      }
+      return { date: item.date, speakers: speakersMap };
+    }
+    // 기존 형식: speakers가 Record인 경우
+    return item as SpeakerDistribution;
+  });
 }
 
-/** EDA: 습관어 통계 */
+/** EDA: 습관어 통계 — 새 형식 → 기존 형식 변환 */
 export async function getFillerWords(): Promise<FillerWordStats[]> {
-  return fetchJSON<FillerWordStats[]>("eda/filler_words.json");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const raw = await fetchJSON<any[]>("eda/filler_words.json");
+  return raw.map((item) => ({
+    date: item.date,
+    words: item.filler_counts ?? item.words ?? {},
+    total: item.total_fillers ?? item.total ?? 0,
+  }));
 }
 
 /** EDA: 상호작용 지표 */

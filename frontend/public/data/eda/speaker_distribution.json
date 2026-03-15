@@ -1,17 +1,212 @@
 [
-  {"date": "2026-02-02", "speakers": {"주강사": 1484}},
-  {"date": "2026-02-03", "speakers": {"주강사": 1856, "기타": 4}},
-  {"date": "2026-02-04", "speakers": {"주강사": 1771}},
-  {"date": "2026-02-05", "speakers": {"주강사": 780, "보조강사1": 649, "보조강사2": 227}},
-  {"date": "2026-02-06", "speakers": {"주강사": 1671}},
-  {"date": "2026-02-09", "speakers": {"주강사": 1555}},
-  {"date": "2026-02-10", "speakers": {"주강사": 1672}},
-  {"date": "2026-02-11", "speakers": {"주강사": 1560}},
-  {"date": "2026-02-12", "speakers": {"주강사": 840, "보조강사1": 146}},
-  {"date": "2026-02-13", "speakers": {"주강사": 1539, "기타": 4}},
-  {"date": "2026-02-23", "speakers": {"주강사": 1469}},
-  {"date": "2026-02-24", "speakers": {"주강사": 1578}},
-  {"date": "2026-02-25", "speakers": {"주강사": 714, "보조강사1": 267, "보조강사2": 317}},
-  {"date": "2026-02-26", "speakers": {"주강사": 783, "보조강사1": 233, "기타": 1}},
-  {"date": "2026-02-27", "speakers": {"주강사": 1636}}
+  {
+    "date": "2026-02-02",
+    "file": "2026-02-02_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "b54f46b0",
+        "line_count": 1484,
+        "role": "주강사"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-03",
+    "file": "2026-02-03_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "b8c55a6e",
+        "line_count": 1856,
+        "role": "주강사"
+      },
+      {
+        "speaker_id": "e9e9b678",
+        "line_count": 4,
+        "role": "보조강사1"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-04",
+    "file": "2026-02-04_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "23033da8",
+        "line_count": 1771,
+        "role": "주강사"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-05",
+    "file": "2026-02-05_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "39c1d32b",
+        "line_count": 780,
+        "role": "주강사"
+      },
+      {
+        "speaker_id": "dffb71cf",
+        "line_count": 649,
+        "role": "보조강사1"
+      },
+      {
+        "speaker_id": "ac0a797b",
+        "line_count": 227,
+        "role": "보조강사2"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-06",
+    "file": "2026-02-06_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "979b6235",
+        "line_count": 1671,
+        "role": "주강사"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-09",
+    "file": "2026-02-09_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "e241d60d",
+        "line_count": 1555,
+        "role": "주강사"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-10",
+    "file": "2026-02-10_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "810410c4",
+        "line_count": 1672,
+        "role": "주강사"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-11",
+    "file": "2026-02-11_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "8c06a3a6",
+        "line_count": 1560,
+        "role": "주강사"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-12",
+    "file": "2026-02-12_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "f1db1019",
+        "line_count": 840,
+        "role": "주강사"
+      },
+      {
+        "speaker_id": "7844ac8b",
+        "line_count": 146,
+        "role": "보조강사1"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-13",
+    "file": "2026-02-13_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "410d984d",
+        "line_count": 1539,
+        "role": "주강사"
+      },
+      {
+        "speaker_id": "c20160c1",
+        "line_count": 4,
+        "role": "보조강사1"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-23",
+    "file": "2026-02-23_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "f28a7c02",
+        "line_count": 1469,
+        "role": "주강사"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-24",
+    "file": "2026-02-24_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "f3a139ae",
+        "line_count": 1578,
+        "role": "주강사"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-25",
+    "file": "2026-02-25_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "bf205665",
+        "line_count": 714,
+        "role": "주강사"
+      },
+      {
+        "speaker_id": "3f2f07f3",
+        "line_count": 317,
+        "role": "보조강사1"
+      },
+      {
+        "speaker_id": "68b8c7d3",
+        "line_count": 267,
+        "role": "보조강사2"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-26",
+    "file": "2026-02-26_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "99602dab",
+        "line_count": 783,
+        "role": "주강사"
+      },
+      {
+        "speaker_id": "33581d96",
+        "line_count": 233,
+        "role": "보조강사1"
+      },
+      {
+        "speaker_id": "7b1a22df",
+        "line_count": 1,
+        "role": "보조강사2"
+      }
+    ]
+  },
+  {
+    "date": "2026-02-27",
+    "file": "2026-02-27_kdt-backendj-21th.txt",
+    "speakers": [
+      {
+        "speaker_id": "767644ba",
+        "line_count": 1636,
+        "role": "주강사"
+      }
+    ]
+  }
 ]
