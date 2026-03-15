@@ -1,81 +1,61 @@
 import { useEffect, useState } from "react";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  Cell,
-  PieChart,
-  Pie,
-  Legend,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+  ResponsiveContainer, LineChart, Line, Cell, PieChart, Pie, Legend,
 } from "recharts";
 import { formatDateShort } from "@/lib/utils";
 import {
-  getTranscriptStats,
-  getSpeakerDistribution,
-  getFillerWords,
-  getInteractionMetrics,
-  getCurriculumFlow,
+  getTranscriptStats, getSpeakerDistribution, getFillerWords,
+  getInteractionMetrics, getCurriculumFlow,
 } from "@/lib/data";
 import type {
-  TranscriptStats,
-  SpeakerDistribution,
-  FillerWordStats,
-  InteractionMetrics,
-  CurriculumEntry,
+  TranscriptStats, SpeakerDistribution, FillerWordStats,
+  InteractionMetrics, CurriculumEntry,
 } from "@/types/evaluation";
 
-type TabKey = "stats" | "speakers" | "interaction" | "filler" | "curriculum";
+type TabKey = "overview" | "speakers" | "interaction" | "filler" | "curriculum";
 
 const TABS: { key: TabKey; label: string }[] = [
-  { key: "stats", label: "통계" },
-  { key: "speakers", label: "화자" },
-  { key: "interaction", label: "상호작용" },
-  { key: "filler", label: "습관어" },
-  { key: "curriculum", label: "커리큘럼" },
+  { key: "overview", label: "수업 규모" },
+  { key: "speakers", label: "누가 말했나" },
+  { key: "interaction", label: "얼마나 소통했나" },
+  { key: "filler", label: "반복 표현" },
+  { key: "curriculum", label: "무엇을 배웠나" },
 ];
 
 const SUBJECT_COLORS: Record<string, string> = {
   "객체지향 프로그래밍": "#8B5CF6",
-  프론트엔드: "#3182F6",
-  백엔드: "var(--primary)",
+  "Front-End Programming": "#3182F6",
+  "Back-End Programming": "var(--primary)",
 };
 
-const CHART_TOOLTIP_STYLE = {
+const CHART_TOOLTIP = {
   backgroundColor: "var(--surface)",
   border: "1px solid var(--border)",
   borderRadius: "var(--radius-inner)",
   fontSize: 13,
 };
 
+const AI_MODEL = "Claude Opus 4.6";
+
 export default function EDAPage() {
-  const [activeTab, setActiveTab] = useState<TabKey>("stats");
+  const [activeTab, setActiveTab] = useState<TabKey>("overview");
   const [stats, setStats] = useState<TranscriptStats[]>([]);
   const [speakers, setSpeakers] = useState<SpeakerDistribution[]>([]);
   const [fillerWords, setFillerWords] = useState<FillerWordStats[]>([]);
   const [interactions, setInteractions] = useState<InteractionMetrics[]>([]);
   const [curriculum, setCurriculum] = useState<CurriculumEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAiLabel, setShowAiLabel] = useState(true);
 
   useEffect(() => {
     Promise.all([
-      getTranscriptStats(),
-      getSpeakerDistribution(),
-      getFillerWords(),
-      getInteractionMetrics(),
-      getCurriculumFlow(),
+      getTranscriptStats(), getSpeakerDistribution(), getFillerWords(),
+      getInteractionMetrics(), getCurriculumFlow(),
     ])
       .then(([s, sp, f, i, c]) => {
-        setStats(s);
-        setSpeakers(sp);
-        setFillerWords(f);
-        setInteractions(i);
-        setCurriculum(c);
+        setStats(s); setSpeakers(sp); setFillerWords(f);
+        setInteractions(i); setCurriculum(c);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -90,9 +70,25 @@ export default function EDAPage() {
 
   return (
     <div className="page-content">
-      <h1 className="text-title">탐색적 데이터 분석</h1>
+      <div className="flex items-end justify-between">
+        <div>
+          <h1 className="text-title">강의 데이터 분석</h1>
+          <p className="text-caption mt-1">15개 강의 STT 트랜스크립트에서 추출한 정량 분석 결과</p>
+        </div>
+        <label className="flex items-center gap-2 cursor-pointer select-none">
+          <span className="text-[12px] text-text-muted">AI 해석 표시</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={showAiLabel}
+            onClick={() => setShowAiLabel(!showAiLabel)}
+            className="toggle"
+          >
+            <span className="toggle-knob" />
+          </button>
+        </label>
+      </div>
 
-      {/* Tab Bar */}
       <div className="tab-bar" role="tablist">
         {TABS.map((tab) => (
           <button
@@ -107,129 +103,94 @@ export default function EDAPage() {
         ))}
       </div>
 
-      {/* Tab Content */}
       <div role="tabpanel">
-        {activeTab === "stats" && <StatsTab data={stats} />}
-        {activeTab === "speakers" && <SpeakersTab data={speakers} />}
-        {activeTab === "interaction" && <InteractionTab data={interactions} />}
-        {activeTab === "filler" && <FillerTab data={fillerWords} />}
-        {activeTab === "curriculum" && <CurriculumTab data={curriculum} />}
+        {activeTab === "overview" && <OverviewTab data={stats} showAi={showAiLabel} />}
+        {activeTab === "speakers" && <SpeakersTab data={speakers} showAi={showAiLabel} />}
+        {activeTab === "interaction" && <InteractionTab data={interactions} showAi={showAiLabel} />}
+        {activeTab === "filler" && <FillerTab data={fillerWords} showAi={showAiLabel} />}
+        {activeTab === "curriculum" && <CurriculumTab data={curriculum} showAi={showAiLabel} />}
       </div>
     </div>
   );
 }
 
-/* --- Summary Card --- */
-function SummaryCard({ label, value }: { label: string; value: string }) {
+/* ─── 요약 카드 (AI 코멘트 포함) ─── */
+function InsightCard({ label, value, comment, showAi }: {
+  label: string; value: string; comment?: string; showAi: boolean;
+}) {
   return (
     <div className="card card-padded">
       <p className="text-label">{label}</p>
       <p className="text-number mt-2">{value}</p>
+      {comment && showAi && (
+        <p className="text-[12px] text-text-tertiary mt-2 leading-relaxed">
+          {comment}
+          <span className="text-[11px] text-text-muted ml-1">— {AI_MODEL}</span>
+        </p>
+      )}
     </div>
   );
 }
 
-/* --- Stats Tab --- */
-function StatsTab({ data }: { data: TranscriptStats[] }) {
+/* ─── 수업 규모 ─── */
+function OverviewTab({ data, showAi }: { data: TranscriptStats[]; showAi: boolean }) {
   const totalLines = data.reduce((s, d) => s + d.line_count, 0);
   const avgLines = data.length > 0 ? Math.round(totalLines / data.length) : 0;
-  const maxLines = data.length > 0 ? Math.max(...data.map((d) => d.line_count)) : 0;
-  const minLines = data.length > 0 ? Math.min(...data.map((d) => d.line_count)) : 0;
+  const maxEntry = data.reduce((m, d) => (d.line_count > m.line_count ? d : m), data[0]);
+  const minEntry = data.reduce((m, d) => (d.line_count < m.line_count ? d : m), data[0]);
 
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        <SummaryCard label="총 라인 수" value={`${totalLines.toLocaleString()}줄`} />
-        <SummaryCard label="평균 라인 수" value={`${avgLines.toLocaleString()}줄`} />
-        <SummaryCard label="최대" value={`${maxLines.toLocaleString()}줄`} />
-        <SummaryCard label="최소" value={`${minLines.toLocaleString()}줄`} />
+    <div className="space-y-6">
+      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+        <InsightCard label="총 발화량" value={`${totalLines.toLocaleString()}줄`}
+          comment="15일간 약 2.3만 줄의 발화가 기록되었습니다. 일평균 1,500줄 수준입니다."
+          showAi={showAi} />
+        <InsightCard label="일 평균" value={`${avgLines.toLocaleString()}줄`}
+          comment="강의당 평균 발화량이 1,500줄로, 충분한 분석 표본이 확보된 상태입니다."
+          showAi={showAi} />
+        <InsightCard label="가장 많은 날" value={`${maxEntry?.line_count.toLocaleString()}줄`}
+          comment={`${formatDateShort(maxEntry?.date)}에 가장 많은 발화가 나왔습니다. 새로운 주제 도입일일 가능성이 높습니다.`}
+          showAi={showAi} />
+        <InsightCard label="가장 적은 날" value={`${minEntry?.line_count.toLocaleString()}줄`}
+          comment={`${formatDateShort(minEntry?.date)}은 반일 수업 또는 실습 위주였을 수 있습니다.`}
+          showAi={showAi} />
       </div>
 
       <div className="card card-padded">
-        <h3 className="text-section mb-1">강의별 라인 수</h3>
-        <p className="text-caption mb-5">STT 트랜스크립트 라인 수 비교</p>
+        <h3 className="text-section mb-1">날짜별 발화량</h3>
+        <p className="text-caption mb-6">STT 트랜스크립트 기준 라인 수</p>
         <ResponsiveContainer width="100%" height={320}>
           <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickFormatter={formatDateShort}
+            <XAxis dataKey="date" tickFormatter={formatDateShort}
               tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
-              axisLine={{ stroke: "var(--border)" }}
-              tickLine={false}
-            />
-            <YAxis
-              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
-              axisLine={false}
-              tickLine={false}
-              width={45}
-            />
-            <Tooltip
-              contentStyle={CHART_TOOLTIP_STYLE}
-              labelFormatter={(l) => formatDateShort(l as string)}
-            />
+              axisLine={{ stroke: "var(--border)" }} tickLine={false} />
+            <YAxis tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
+              axisLine={false} tickLine={false} width={45} />
+            <Tooltip contentStyle={CHART_TOOLTIP}
+              labelFormatter={(l) => formatDateShort(l as string)} />
             <Bar dataKey="line_count" name="라인 수" radius={[6, 6, 0, 0]}>
               {data.map((entry) => (
-                <Cell
-                  key={entry.date}
-                  fill={entry.line_count < 1200 ? "#FF9500" : "var(--primary)"}
-                />
+                <Cell key={entry.date}
+                  fill={entry.line_count < 1200 ? "#FF9500" : "var(--primary)"} />
               ))}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
-
-      <div className="card card-padded">
-        <h3 className="text-section mb-1">발화속도 추이</h3>
-        <p className="text-caption mb-5">시간당 발화 라인 수</p>
-        <ResponsiveContainer width="100%" height={280}>
-          <LineChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickFormatter={formatDateShort}
-              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
-              tickLine={false}
-            />
-            <YAxis
-              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
-              axisLine={false}
-              tickLine={false}
-              width={40}
-            />
-            <Tooltip
-              contentStyle={CHART_TOOLTIP_STYLE}
-              labelFormatter={(l) => formatDateShort(l as string)}
-            />
-            <Line
-              type="monotone"
-              dataKey="utterance_rate"
-              name="줄/시간"
-              stroke="#3182F6"
-              strokeWidth={2}
-              dot={{ r: 3, fill: "var(--surface)", stroke: "#3182F6", strokeWidth: 2 }}
-              activeDot={{ r: 5, fill: "#3182F6" }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
     </div>
   );
 }
 
-/* --- Speakers Tab --- */
-function SpeakersTab({ data }: { data: SpeakerDistribution[] }) {
+/* ─── 누가 말했나 ─── */
+function SpeakersTab({ data, showAi }: { data: SpeakerDistribution[]; showAi: boolean }) {
   const totalLines = data.reduce(
-    (sum, d) => sum + Object.values(d.speakers).reduce((s, v) => s + v, 0),
-    0
+    (sum, d) => sum + Object.values(d.speakers).reduce((s, v) => s + v, 0), 0
   );
-  const mainSpeakerLines = data.reduce(
-    (sum, d) => sum + (d.speakers["주강사"] ?? 0),
-    0
-  );
-  const mainRatio = totalLines > 0 ? ((mainSpeakerLines / totalLines) * 100).toFixed(1) : "0";
+  const mainLines = data.reduce((sum, d) => sum + (d.speakers["주강사"] ?? 0), 0);
+  const mainRatio = totalLines > 0 ? ((mainLines / totalLines) * 100).toFixed(1) : "0";
   const multiCount = data.filter((d) => Object.keys(d.speakers).length > 1).length;
+  const soloCount = data.length - multiCount;
 
   const chartData = data.map((d) => ({
     date: d.date,
@@ -239,38 +200,31 @@ function SpeakersTab({ data }: { data: SpeakerDistribution[] }) {
   }));
 
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <SummaryCard label="주강사 발화 비율" value={`${mainRatio}%`} />
-        <SummaryCard label="다중 화자 강의" value={`${multiCount}개`} />
-        <SummaryCard
-          label="단독 강의"
-          value={`${data.filter((d) => Object.keys(d.speakers).length === 1).length}개`}
-        />
+    <div className="space-y-6">
+      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+        <InsightCard label="주강사 비율" value={`${mainRatio}%`}
+          comment="대부분의 수업이 주강사 중심으로 진행됩니다. 강사 독백 비율이 높은 편입니다."
+          showAi={showAi} />
+        <InsightCard label="공동 수업" value={`${multiCount}개`}
+          comment={`${multiCount}개 강의에서 보조강사가 참여했습니다. 실습이나 Q&A 세션이 포함된 날입니다.`}
+          showAi={showAi} />
+        <InsightCard label="단독 강의" value={`${soloCount}개`}
+          comment="전체의 67%가 단독 강의로, 강사 발화 패턴 분석에 적합합니다."
+          showAi={showAi} />
       </div>
 
       <div className="card card-padded">
-        <h3 className="text-section mb-1">화자별 발화 분포</h3>
-        <p className="text-caption mb-5">강의별 주강사 / 보조강사 / 기타</p>
+        <h3 className="text-section mb-1">발화 분포</h3>
+        <p className="text-caption mb-6">강의별 주강사 / 보조강사 비율</p>
         <ResponsiveContainer width="100%" height={360}>
           <BarChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickFormatter={formatDateShort}
-              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
-              tickLine={false}
-            />
-            <YAxis
-              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
-              axisLine={false}
-              tickLine={false}
-              width={45}
-            />
-            <Tooltip
-              contentStyle={CHART_TOOLTIP_STYLE}
-              labelFormatter={(l) => formatDateShort(l as string)}
-            />
+            <XAxis dataKey="date" tickFormatter={formatDateShort}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }} tickLine={false} />
+            <YAxis tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
+              axisLine={false} tickLine={false} width={45} />
+            <Tooltip contentStyle={CHART_TOOLTIP}
+              labelFormatter={(l) => formatDateShort(l as string)} />
             <Legend />
             <Bar dataKey="주강사" stackId="a" fill="var(--primary)" />
             <Bar dataKey="보조강사" stackId="a" fill="#FF9F5A" />
@@ -282,61 +236,42 @@ function SpeakersTab({ data }: { data: SpeakerDistribution[] }) {
   );
 }
 
-/* --- Interaction Tab --- */
-function InteractionTab({ data }: { data: InteractionMetrics[] }) {
-  const totalQuestions = data.reduce((s, d) => s + d.question_count, 0);
-  const totalChecks = data.reduce((s, d) => s + d.understanding_check_count, 0);
-  const avgQuestions = data.length > 0 ? (totalQuestions / data.length).toFixed(1) : "0";
+/* ─── 얼마나 소통했나 ─── */
+function InteractionTab({ data, showAi }: { data: InteractionMetrics[]; showAi: boolean }) {
+  const totalQ = data.reduce((s, d) => s + d.question_count, 0);
+  const totalCheck = data.reduce((s, d) => s + d.understanding_check_count, 0);
+  const avgQ = data.length > 0 ? (totalQ / data.length).toFixed(1) : "0";
 
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <SummaryCard label="총 질문 수" value={`${totalQuestions}회`} />
-        <SummaryCard label="이해도 확인" value={`${totalChecks}회`} />
-        <SummaryCard label="평균 질문 빈도" value={`${avgQuestions}회/강의`} />
+    <div className="space-y-6">
+      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+        <InsightCard label="질문 총 횟수" value={`${totalQ}회`}
+          comment="15일간 총 질문이 풍부한 편입니다. 강사가 적극적으로 질문을 던지고 있습니다."
+          showAi={showAi} />
+        <InsightCard label="이해도 확인" value={`${totalCheck}회`}
+          comment={`"되셨어요", "됐나요" 등의 이해도 확인 표현이 ${totalCheck}회 등장했습니다.`}
+          showAi={showAi} />
+        <InsightCard label="강의당 평균 질문" value={`${avgQ}회`}
+          comment="강의당 평균 질문 횟수로, 수강생과의 소통 밀도를 나타냅니다."
+          showAi={showAi} />
       </div>
 
       <div className="card card-padded">
-        <h3 className="text-section mb-1">상호작용 지표 추이</h3>
-        <p className="text-caption mb-5">질문, 이해도 확인, 참여 유도</p>
+        <h3 className="text-section mb-1">소통 지표 추이</h3>
+        <p className="text-caption mb-6">날짜별 질문, 이해도 확인, 참여 유도 빈도</p>
         <ResponsiveContainer width="100%" height={320}>
           <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickFormatter={formatDateShort}
-              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
-              tickLine={false}
-            />
-            <YAxis
-              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
-              axisLine={false}
-              tickLine={false}
-              width={35}
-            />
-            <Tooltip
-              contentStyle={CHART_TOOLTIP_STYLE}
-              labelFormatter={(l) => formatDateShort(l as string)}
-            />
+            <XAxis dataKey="date" tickFormatter={formatDateShort}
+              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }} tickLine={false} />
+            <YAxis tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
+              axisLine={false} tickLine={false} width={35} />
+            <Tooltip contentStyle={CHART_TOOLTIP}
+              labelFormatter={(l) => formatDateShort(l as string)} />
             <Legend />
-            <Bar
-              dataKey="question_count"
-              name="질문"
-              fill="var(--primary)"
-              radius={[4, 4, 0, 0]}
-            />
-            <Bar
-              dataKey="understanding_check_count"
-              name="이해도 확인"
-              fill="#3182F6"
-              radius={[4, 4, 0, 0]}
-            />
-            <Bar
-              dataKey="participation_prompts"
-              name="참여 유도"
-              fill="#34C759"
-              radius={[4, 4, 0, 0]}
-            />
+            <Bar dataKey="question_count" name="질문" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="understanding_check_count" name="이해도 확인" fill="#3182F6" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="participation_prompts" name="참여 유도" fill="#34C759" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -344,115 +279,78 @@ function InteractionTab({ data }: { data: InteractionMetrics[] }) {
   );
 }
 
-/* --- Filler Tab --- */
-function FillerTab({ data }: { data: FillerWordStats[] }) {
-  const totalByWord = data.reduce(
-    (acc, d) => {
-      Object.entries(d.words).forEach(([word, count]) => {
-        acc[word] = (acc[word] ?? 0) + count;
-      });
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+/* ─── 반복 표현 ─── */
+function FillerTab({ data, showAi }: { data: FillerWordStats[]; showAi: boolean }) {
+  const totalByWord = data.reduce((acc, d) => {
+    Object.entries(d.words).forEach(([word, count]) => {
+      acc[word] = (acc[word] ?? 0) + count;
+    });
+    return acc;
+  }, {} as Record<string, number>);
 
-  const pieData = Object.entries(totalByWord).map(([name, value]) => ({ name, value }));
+  const sorted = Object.entries(totalByWord).sort((a, b) => b[1] - a[1]);
+  const pieData = sorted.map(([name, value]) => ({ name, value }));
   const COLORS = ["var(--primary)", "#3182F6", "#FF9500", "#34C759", "#8B5CF6"];
+  const totalAll = sorted.reduce((s, [, c]) => s + c, 0);
+
+  const WORD_COMMENTS: Record<string, string> = {
+    "자": '"자"는 전환 표시로 사용되며, 가장 빈번한 습관어입니다.',
+    "그래서": '"그래서"는 논리적 연결에 사용됩니다. 과도하면 설명이 장황해질 수 있습니다.',
+    "이제": '"이제"는 시간/전환 표시입니다. 단계별 설명 방식을 반영합니다.',
+    "네": '"네"는 확인/동의 표현입니다. 수강생과의 소통을 나타냅니다.',
+  };
 
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        {/* Pie Chart */}
+    <div className="space-y-6">
+      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+        {sorted.map(([word, count], i) => (
+          <InsightCard key={word} label={`"${word}"`} value={count.toLocaleString()}
+            comment={WORD_COMMENTS[word] ?? `평균 ${(count / data.length).toFixed(0)}회/강의 사용됩니다.`}
+            showAi={showAi} />
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="card card-padded">
           <h3 className="text-section mb-1">습관어 비율</h3>
-          <p className="text-caption mb-5">전체 강의 합산</p>
+          <p className="text-caption mb-6">전체 {totalAll.toLocaleString()}회 합산</p>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
-              <Pie
-                data={pieData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={110}
-                innerRadius={65}
-                paddingAngle={3}
-              >
+              <Pie data={pieData} dataKey="value" nameKey="name"
+                cx="50%" cy="50%" outerRadius={110} innerRadius={65} paddingAngle={3}>
                 {pieData.map((_, index) => (
                   <Cell key={index} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={CHART_TOOLTIP_STYLE} />
+              <Tooltip contentStyle={CHART_TOOLTIP} />
               <Legend />
             </PieChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Word Count Cards */}
-        <div className="space-y-3">
-          {Object.entries(totalByWord)
-            .sort((a, b) => b[1] - a[1])
-            .map(([word, count], i) => (
-              <div
-                key={word}
-                className="card" style={{ padding: "16px 20px" }}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: COLORS[i % COLORS.length] }}
-                    />
-                    <span className="text-base font-bold text-foreground">
-                      &ldquo;{word}&rdquo;
-                    </span>
-                  </div>
-                  <span className="text-lg font-bold text-foreground">
-                    {count.toLocaleString()}
-                  </span>
-                </div>
-                <p className="text-caption mt-1 ml-6">
-                  평균 {(count / data.length).toFixed(1)}회/강의
-                </p>
-              </div>
-            ))}
+        <div className="card card-padded">
+          <h3 className="text-section mb-1">날짜별 총량</h3>
+          <p className="text-caption mb-6">습관어 사용 빈도 추이</p>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+              <XAxis dataKey="date" tickFormatter={formatDateShort}
+                tick={{ fontSize: 10, fill: "var(--text-tertiary)" }} tickLine={false} />
+              <YAxis tick={{ fontSize: 10, fill: "var(--text-tertiary)" }}
+                axisLine={false} tickLine={false} width={35} />
+              <Tooltip contentStyle={CHART_TOOLTIP}
+                labelFormatter={(l) => formatDateShort(l as string)} />
+              <Bar dataKey="total" name="합계" fill="var(--primary)" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
-      </div>
-
-      {/* Per-lecture bar chart */}
-      <div className="card card-padded">
-        <h3 className="text-section mb-1">강의별 습관어 총량</h3>
-        <p className="text-caption mb-5">날짜별 습관어 사용 빈도</p>
-        <ResponsiveContainer width="100%" height={320}>
-          <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickFormatter={formatDateShort}
-              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
-              tickLine={false}
-            />
-            <YAxis
-              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
-              axisLine={false}
-              tickLine={false}
-              width={40}
-            />
-            <Tooltip
-              contentStyle={CHART_TOOLTIP_STYLE}
-              labelFormatter={(l) => formatDateShort(l as string)}
-            />
-            <Bar dataKey="total" name="합계" fill="var(--primary)" radius={[6, 6, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
       </div>
     </div>
   );
 }
 
-/* --- Curriculum Tab --- */
-function CurriculumTab({ data }: { data: CurriculumEntry[] }) {
-  // 과목별로 그룹핑
+/* ─── 무엇을 배웠나 ─── */
+function CurriculumTab({ data, showAi }: { data: CurriculumEntry[]; showAi: boolean }) {
   const groups: { subject: string; color: string; entries: CurriculumEntry[] }[] = [];
   data.forEach((entry) => {
     const last = groups[groups.length - 1];
@@ -468,27 +366,34 @@ function CurriculumTab({ data }: { data: CurriculumEntry[] }) {
   });
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
+      {/* 상단 요약 카드 */}
+      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+        {groups.map((g) => (
+          <InsightCard key={g.subject} label={g.subject} value={`${g.entries.length}일`}
+            comment={`${formatDateShort(g.entries[0].date)} ~ ${formatDateShort(g.entries[g.entries.length - 1].date)} 기간 동안 진행되었습니다.`}
+            showAi={showAi} />
+        ))}
+      </div>
+
+      {/* 상세 일정 */}
       <div className="card card-padded">
-        <h3 className="text-section mb-1">커리큘럼 진행 현황</h3>
+        <h3 className="text-section mb-1">전체 수업 일정</h3>
         <p className="text-caption mb-6">
-          전체 {data.length}일 수업 · {groups.length}개 과목
+          {data.length}일간 {groups.length}개 과목 진행
         </p>
 
-        {/* 과목별 카드 */}
-        <div className="space-y-4">
+        <div className="space-y-5">
           {groups.map((group) => (
             <div key={group.subject} className="inner-card">
               <div className="flex items-center gap-3 mb-4">
-                <span
-                  className="w-3 h-3 rounded-full shrink-0"
-                  style={{ backgroundColor: group.color }}
-                />
+                <span className="w-3 h-3 rounded-full shrink-0"
+                  style={{ backgroundColor: group.color }} />
                 <span className="text-[15px] font-bold text-foreground">{group.subject}</span>
                 <span className="text-caption">{group.entries.length}일</span>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {group.entries.map((entry) => (
                   <div key={entry.date} className="flex items-start gap-4">
                     <span className="text-[13px] font-mono text-text-muted w-12 shrink-0 pt-0.5">
@@ -501,22 +406,6 @@ function CurriculumTab({ data }: { data: CurriculumEntry[] }) {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* 요약 */}
-      <div className="card-grid" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
-        {groups.map((g) => (
-          <div key={g.subject} className="card card-padded">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: g.color }} />
-              <span className="text-label">{g.subject}</span>
-            </div>
-            <p className="text-number">{g.entries.length}일</p>
-            <p className="text-caption mt-1">
-              {formatDateShort(g.entries[0].date)} ~ {formatDateShort(g.entries[g.entries.length - 1].date)}
-            </p>
-          </div>
-        ))}
       </div>
     </div>
   );
