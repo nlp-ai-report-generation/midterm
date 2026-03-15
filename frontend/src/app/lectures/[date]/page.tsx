@@ -162,11 +162,26 @@ export default function LectureDetailPage() {
         </div>
       </div>
 
-      {/* 강점 / 개선점 / 권장 사항 */}
+      {/* 종합 피드백 */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-        <SummaryCard title="강점" items={strengths} color="var(--score-5)" />
-        <SummaryCard title="개선점" items={improvements} color="var(--score-2)" />
-        <SummaryCard title="권장 사항" items={recommendations} color="#3182F6" />
+        <FeedbackCard
+          title="잘하고 있는 부분"
+          subtitle="이 강의에서 효과적이었던 점입니다"
+          items={strengths}
+          color="var(--score-5)"
+        />
+        <FeedbackCard
+          title="더 나아질 수 있는 부분"
+          subtitle="다음 수업에서 시도해볼 수 있는 변화입니다"
+          items={improvements}
+          color="var(--score-2)"
+        />
+        <FeedbackCard
+          title="구체적 제안"
+          subtitle="실행 가능한 다음 단계를 정리했습니다"
+          items={recommendations}
+          color="#3182F6"
+        />
       </div>
     </div>
   );
@@ -274,41 +289,37 @@ function ItemScoreCard({ item }: { item: ItemScore }) {
   );
 }
 
-function SummaryCard({
+function FeedbackCard({
   title,
+  subtitle,
   items,
   color,
 }: {
   title: string;
+  subtitle: string;
   items?: string[];
   color: string;
 }) {
   return (
     <div className="card card-padded">
-      <h3
-        className="text-[14px] font-bold mb-4 flex items-center gap-2.5"
-        style={{ color }}
-      >
+      <div className="flex items-center gap-2.5 mb-2">
         <span
           className="w-2.5 h-2.5 rounded-full shrink-0"
           style={{ backgroundColor: color }}
         />
-        {title}
-      </h3>
+        <h3 className="text-[15px] font-bold text-foreground">{title}</h3>
+      </div>
+      <p className="text-caption mb-5">{subtitle}</p>
       {items && items.length > 0 ? (
-        <ul className="space-y-3">
+        <ul className="space-y-4">
           {items.map((s, i) => (
-            <li
-              key={i}
-              className="text-body leading-[1.7] flex items-start gap-2.5"
-            >
-              <span className="mt-[7px] w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: color }} />
+            <li key={i} className="text-body leading-[1.8]">
               {s}
             </li>
           ))}
         </ul>
       ) : (
-        <p className="text-caption">데이터 없음</p>
+        <p className="text-caption">아직 분석 결과가 없습니다</p>
       )}
     </div>
   );

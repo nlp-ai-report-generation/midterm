@@ -5,6 +5,7 @@ import LecturesPage from "@/app/lectures/page";
 import LectureDetailPage from "@/app/lectures/[date]/page";
 import EDAPage from "@/app/eda/page";
 import SettingsPage from "@/app/settings/page";
+import ExperimentsPage from "@/app/experiments/page";
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/lectures" element={<LecturesPage />} />
         <Route path="/lectures/:date" element={<LectureDetailPage />} />
         <Route path="/eda" element={<EDAPage />} />
+        <Route path="/experiments" element={<ExperimentsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Route>

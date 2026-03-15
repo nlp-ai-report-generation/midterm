@@ -247,7 +247,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Lecture Selection */}
-      <div className="card card-padded">
+      <div className="card card-padded mt-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-section">강의 선택</h2>
           <button
@@ -265,18 +265,16 @@ export default function SettingsPage() {
             ) * selectedDates.length
           ).toFixed(2)}
         </p>
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 max-h-[240px] overflow-y-auto">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 max-h-[260px] overflow-y-auto p-2">
           {lectures.map((l) => {
             const isSelected = selectedDates.includes(l.date);
             return (
               <button
                 key={l.date}
                 onClick={() => toggleDate(l.date)}
-                className="p-3 rounded-xl text-left transition-all"
-                style={{
-                  background: isSelected ? "var(--primary-light)" : "var(--background)",
-                  boxShadow: isSelected ? "0 0 0 1.5px var(--primary)" : "none",
-                }}
+                className={`px-3.5 py-3 rounded-xl text-left transition-all ${
+                  isSelected ? "bg-[var(--primary-light)]" : "bg-[var(--grey-100)]"
+                }`}
               >
                 <p
                   className="text-xs font-bold"
@@ -297,7 +295,7 @@ export default function SettingsPage() {
       <button
         onClick={handleRunEvaluation}
         disabled={evaluating || selectedDates.length === 0 || apiStatus !== "valid"}
-        className="btn-primary w-full py-3.5"
+        className="btn-primary w-full py-3.5 mt-8"
       >
         {evaluating ? (
           <>
@@ -339,11 +337,11 @@ export default function SettingsPage() {
       )}
 
       {/* Advanced Settings */}
-      <div className="card overflow-hidden">
+      <div className="card overflow-hidden mt-8">
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
           aria-expanded={showAdvanced}
-          className="w-full flex items-center justify-between p-5 text-left hover:bg-background transition-colors"
+          className="w-full flex items-center justify-between px-7 py-6 text-left hover:bg-background transition-colors"
         >
           <div>
             <h2 className="text-section">고급 설정</h2>
@@ -366,7 +364,7 @@ export default function SettingsPage() {
         </button>
 
         {showAdvanced && (
-          <div className="px-5 pb-5 space-y-5 border-t border-border pt-5">
+          <div className="px-7 pb-7 space-y-6 border-t border-border pt-6">
             {/* Temperature */}
             <div>
               <div className="flex items-center justify-between mb-2">

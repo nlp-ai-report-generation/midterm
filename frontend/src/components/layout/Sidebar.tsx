@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   BookOpen,
   Search,
+  FlaskConical,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -17,6 +18,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: "/dashboard", label: "대시보드", icon: LayoutDashboard },
   { to: "/lectures", label: "강의 평가", icon: BookOpen },
   { to: "/eda", label: "EDA 분석", icon: Search },
+  { to: "/experiments", label: "실험 기록", icon: FlaskConical },
   { to: "/settings", label: "설정", icon: Settings },
 ];
 
