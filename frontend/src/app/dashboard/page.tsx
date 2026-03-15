@@ -117,18 +117,40 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
             <thead>
               <tr>
                 <th
-                  className="text-left py-2 pr-4 font-medium whitespace-nowrap"
-                  style={{ color: "var(--text-tertiary)" }}
+                  className="text-left pr-4 font-medium whitespace-nowrap"
+                  style={{ color: "var(--text-tertiary)", paddingBottom: 4 }}
                 >
                   카테고리
                 </th>
                 {evaluations.map((e) => (
                   <th
                     key={e.lecture_date}
-                    className="px-1 py-2 font-medium text-center"
-                    style={{ color: "var(--text-muted)" }}
+                    className="px-1 font-medium text-center"
+                    style={{ color: "var(--text-muted)", paddingBottom: 4 }}
                   >
                     {formatDateShort(e.lecture_date)}
+                  </th>
+                ))}
+              </tr>
+              <tr>
+                <th />
+                {evaluations.map((e) => (
+                  <th
+                    key={`subj-${e.lecture_date}`}
+                    className="px-1 text-center"
+                    style={{
+                      color: "var(--text-muted)",
+                      fontSize: 10,
+                      fontWeight: 500,
+                      paddingBottom: 8,
+                      maxWidth: 60,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                    title={e.metadata?.subjects?.[0] ?? ""}
+                  >
+                    {(e.metadata?.subjects?.[0] ?? "").slice(0, 6)}
                   </th>
                 ))}
               </tr>
