@@ -9,13 +9,17 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { useRole } from "@/contexts/RoleContext";
 import { getEvaluation } from "@/lib/data";
 import { formatDate, scoreColor, scoreBadgeTextColor, scoreLabel, weightLabel } from "@/lib/utils";
+import ScoreBadge from "@/components/shared/ScoreBadge";
+import FeedbackCard from "@/components/shared/FeedbackCard";
 import type { EvaluationResult, CategoryResult, ItemScore } from "@/types/evaluation";
 
 export default function LectureDetailPage() {
   const params = useParams();
   const date = params.date ?? "";
+  const { isOperator } = useRole();
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -38,11 +42,15 @@ export default function LectureDetailPage() {
 
   if (error || !evaluation) {
     return (
-      <div className="mx-auto max-w-[1080px]">
-        <div className="card py-20 text-center">
+      <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+        <div className="card" style={{ padding: "80px 0", textAlign: "center" }}>
           <p className="text-body">평가 데이터를 불러올 수 없습니다.</p>
-          <Link to="/lectures" className="mt-4 inline-block text-[14px] text-primary font-semibold">
-            ← 목록으로 돌아가기
+          <Link
+            to="/lectures"
+            className="inline-block font-semibold"
+            style={{ marginTop: 16, fontSize: 14, color: "var(--primary)" }}
+          >
+            &larr; 목록으로 돌아가기
           </Link>
         </div>
       </div>
@@ -66,53 +74,81 @@ export default function LectureDetailPage() {
     fullMark: 5,
   }));
 
+  // Role-dependent feedback config
+  const feedbackConfig = isOperator
+    ? {
+        strengthTitle: "강점",
+        strengthSubtitle: "이 강의에서 높은 평가를 받은 영역입니다",
+        improvementTitle: "개선 필요",
+        improvementSubtitle: "추가적인 보완이 필요한 영역입니다",
+        recommendationTitle: "권장 사항",
+        recommendationSubtitle: "품질 향상을 위한 조치 사항입니다",
+      }
+    : {
+        strengthTitle: "잘하고 있는 부분",
+        strengthSubtitle: "이 강의에서 효과적이었던 점입니다",
+        improvementTitle: "더 나아질 수 있는 부분",
+        improvementSubtitle: "다음 수업에서 시도해볼 수 있는 변화입니다",
+        recommendationTitle: "구체적 제안",
+        recommendationSubtitle: "실행 가능한 다음 단계를 정리했습니다",
+      };
+
   return (
-    <div className="mx-auto max-w-[1080px] space-y-8">
-      {/* 헤더 — 강의 정보 + 종합 점수 */}
+    <div style={{ maxWidth: 1080, margin: "0 auto", display: "flex", flexDirection: "column", gap: 32 }}>
+      {/* Header */}
       <div className="card card-padded">
         <Link
           to="/lectures"
-          className="inline-flex items-center gap-1 text-caption hover:text-primary mb-5"
+          className="inline-flex items-center gap-1 text-caption hover:text-primary"
+          style={{ marginBottom: 20 }}
         >
-          ← 강의 목록
+          &larr; 강의 목록
         </Link>
 
         <div className="flex items-end justify-between">
           <div>
-            <h1 className="text-title">
-              {metadata.subjects?.[0] ?? "강의"}
-            </h1>
-            <p className="mt-2 text-body leading-relaxed">
+            <h1 className="text-title">{metadata.subjects?.[0] ?? "강의"}</h1>
+            <p className="text-body" style={{ marginTop: 8, lineHeight: 1.7 }}>
               {metadata.contents?.[0] ?? ""}
             </p>
-            <div className="mt-3 flex items-center gap-2 text-caption">
+            <div
+              className="flex items-center gap-2 text-caption"
+              style={{ marginTop: 12 }}
+            >
               <span>{formatDate(evaluation.lecture_date)}</span>
               {metadata.instructor && (
                 <>
-                  <span>·</span>
+                  <span style={{ color: "var(--text-muted)" }}>·</span>
                   <span>{metadata.instructor}</span>
                 </>
               )}
             </div>
           </div>
 
-          <div className="text-right pl-8">
-            <p className="text-caption mb-1">종합 점수</p>
+          <div style={{ textAlign: "right", paddingLeft: 32 }}>
+            <p className="text-caption" style={{ marginBottom: 4 }}>종합 점수</p>
             <p
-              className="text-[40px] font-extrabold leading-none tracking-tight"
-              style={{ color: scoreColor(weighted_average) }}
+              style={{
+                fontSize: 40,
+                fontWeight: 800,
+                lineHeight: 1,
+                letterSpacing: "-0.03em",
+                color: scoreColor(weighted_average),
+              }}
             >
               {weighted_average.toFixed(1)}
             </p>
-            <p className="text-caption mt-1">{scoreLabel(weighted_average)} · 5점 만점</p>
+            <p className="text-caption" style={{ marginTop: 4 }}>
+              {scoreLabel(weighted_average)} · 5점 만점
+            </p>
           </div>
         </div>
       </div>
 
-      {/* 레이더 차트 */}
+      {/* Radar Chart */}
       <div className="card card-padded">
-        <h2 className="text-section mb-6">카테고리별 점수</h2>
-        <div className="h-[340px]">
+        <h2 className="text-section" style={{ marginBottom: 24 }}>카테고리별 점수</h2>
+        <div style={{ height: 340 }}>
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="72%">
               <PolarGrid stroke="var(--border)" />
@@ -130,9 +166,20 @@ export default function LectureDetailPage() {
                   if (!payload?.[0]) return null;
                   const d = payload[0].payload;
                   return (
-                    <div className="card" style={{ padding: "12px 16px", boxShadow: "var(--shadow-hover)" }}>
-                      <p className="font-semibold text-foreground text-[13px]">{d.fullName}</p>
-                      <p className="text-[18px] font-bold mt-1" style={{ color: scoreColor(d.score) }}>
+                    <div
+                      className="card"
+                      style={{ padding: "12px 16px", boxShadow: "var(--shadow-hover)" }}
+                    >
+                      <p
+                        className="font-semibold"
+                        style={{ fontSize: 13, color: "var(--text-primary)" }}
+                      >
+                        {d.fullName}
+                      </p>
+                      <p
+                        className="font-bold"
+                        style={{ fontSize: 18, marginTop: 4, color: scoreColor(d.score) }}
+                      >
                         {d.score.toFixed(2)}
                       </p>
                     </div>
@@ -152,74 +199,71 @@ export default function LectureDetailPage() {
         </div>
       </div>
 
-      {/* 카테고리별 상세 평가 */}
+      {/* Category Detail */}
       <div>
-        <h2 className="text-section mb-5">카테고리별 상세 평가</h2>
-        <div className="space-y-4">
+        <h2 className="text-section" style={{ marginBottom: 20 }}>카테고리별 상세 평가</h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           {category_results.map((cat) => (
             <CategorySection key={cat.category_name} category={cat} />
           ))}
         </div>
       </div>
 
-      {/* 종합 피드백 */}
+      {/* Feedback */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
         <FeedbackCard
-          title="잘하고 있는 부분"
-          subtitle="이 강의에서 효과적이었던 점입니다"
+          title={feedbackConfig.strengthTitle}
+          subtitle={feedbackConfig.strengthSubtitle}
           items={strengths}
           color="var(--primary)"
         />
         <FeedbackCard
-          title="더 나아질 수 있는 부분"
-          subtitle="다음 수업에서 시도해볼 수 있는 변화입니다"
+          title={feedbackConfig.improvementTitle}
+          subtitle={feedbackConfig.improvementSubtitle}
           items={improvements}
-          color="rgba(255, 107, 0, 0.5)"
+          color="var(--score-3)"
         />
         <FeedbackCard
-          title="구체적 제안"
-          subtitle="실행 가능한 다음 단계를 정리했습니다"
+          title={feedbackConfig.recommendationTitle}
+          subtitle={feedbackConfig.recommendationSubtitle}
           items={recommendations}
-          color="#3182F6"
+          color="var(--grey-500)"
         />
       </div>
     </div>
   );
 }
 
+/* ─── Category Accordion ─── */
+
 function CategorySection({ category }: { category: CategoryResult }) {
   const [open, setOpen] = useState(false);
 
   return (
     <div className="card overflow-hidden">
-      {/* 카테고리 헤더 — 시각적으로 강하게 */}
       <button
         onClick={() => setOpen(!open)}
         aria-expanded={open}
-        className="w-full flex items-center justify-between px-7 py-5 text-left hover:bg-background transition-colors"
+        className="w-full flex items-center justify-between text-left transition-colors"
+        style={{ padding: "20px 28px" }}
       >
         <div className="flex items-center gap-5">
-          {/* 큰 점수 배지 */}
-          <div
-            className="score-badge score-badge-lg shrink-0 font-extrabold"
-            style={{
-              backgroundColor: scoreColor(category.weighted_average),
-              color: scoreBadgeTextColor(category.weighted_average),
-            }}
-          >
-            {category.weighted_average.toFixed(1)}
-          </div>
+          <ScoreBadge score={category.weighted_average} size="lg" className="shrink-0 font-extrabold" />
           <div>
-            <p className="text-[15px] font-bold text-foreground">
+            <p
+              className="font-bold"
+              style={{ fontSize: 15, color: "var(--text-primary)" }}
+            >
               {category.category_name}
             </p>
-            <p className="text-caption mt-1">
+            <p className="text-caption" style={{ marginTop: 4 }}>
               {category.items.length}개 항목 · {scoreLabel(category.weighted_average)}
             </p>
           </div>
         </div>
         <svg
-          className={`w-5 h-5 text-text-muted transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-5 h-5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          style={{ color: "var(--text-muted)" }}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -229,9 +273,8 @@ function CategorySection({ category }: { category: CategoryResult }) {
         </svg>
       </button>
 
-      {/* 항목 목록 */}
       {open && (
-        <div className="px-7 pb-6 pt-2 space-y-3">
+        <div style={{ padding: "8px 28px 24px", display: "flex", flexDirection: "column", gap: 12 }}>
           {category.items.map((item) => (
             <ItemScoreCard key={item.item_id} item={item} />
           ))}
@@ -241,85 +284,54 @@ function CategorySection({ category }: { category: CategoryResult }) {
   );
 }
 
+/* ─── Item Score Card ─── */
+
 function ItemScoreCard({ item }: { item: ItemScore }) {
   return (
     <div className="inner-card">
-      {/* 항목 헤더 */}
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between" style={{ marginBottom: 12 }}>
         <div className="flex items-center gap-3 min-w-0">
-          <span className="text-[12px] text-text-muted font-mono shrink-0">{item.item_id}</span>
-          <span className="text-[14px] font-semibold text-foreground truncate">{item.item_name}</span>
-          <span className="text-[12px] text-text-muted bg-surface rounded-md px-2 py-0.5 shrink-0">
+          <span
+            className="shrink-0 font-mono"
+            style={{ fontSize: 12, color: "var(--text-muted)" }}
+          >
+            {item.item_id}
+          </span>
+          <span
+            className="truncate font-semibold"
+            style={{ fontSize: 14, color: "var(--text-primary)" }}
+          >
+            {item.item_name}
+          </span>
+          <span
+            className="shrink-0"
+            style={{
+              fontSize: 12,
+              color: "var(--text-muted)",
+              background: "var(--surface)",
+              borderRadius: 6,
+              padding: "2px 8px",
+            }}
+          >
             {weightLabel(item.weight)}
           </span>
         </div>
-        <div
-          className="score-badge score-badge-sm shrink-0 ml-4"
-          style={{
-            backgroundColor: scoreColor(item.score),
-            color: scoreBadgeTextColor(item.score),
-          }}
-        >
-          {item.score}
-        </div>
+        <ScoreBadge score={item.score} size="sm" className="shrink-0 ml-4" />
       </div>
 
-      {/* 추론 */}
-      <p className="text-body leading-[1.7]">{item.reasoning}</p>
+      <p className="text-body" style={{ lineHeight: 1.7 }}>{item.reasoning}</p>
 
-      {/* 근거 */}
       {item.evidence.length > 0 && (
-        <div className="mt-4 space-y-2">
-          <p className="text-label mb-2">
-            근거
-          </p>
+        <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 8 }}>
+          <p className="text-label" style={{ marginBottom: 8 }}>근거</p>
           {item.evidence.map((e, i) => (
-            <div
-              key={i}
-              className="evidence-card"
-            >
-              <p className="text-body leading-[1.7] italic">
-                "{e}"
+            <div key={i} className="evidence-card">
+              <p className="text-body italic" style={{ lineHeight: 1.7 }}>
+                &ldquo;{e}&rdquo;
               </p>
             </div>
           ))}
         </div>
-      )}
-    </div>
-  );
-}
-
-function FeedbackCard({
-  title,
-  subtitle,
-  items,
-  color,
-}: {
-  title: string;
-  subtitle: string;
-  items?: string[];
-  color: string;
-}) {
-  return (
-    <div className="card card-padded">
-      <div className="flex items-center gap-2.5 mb-2">
-        <span
-          className="w-2.5 h-2.5 rounded-full shrink-0"
-          style={{ backgroundColor: color }}
-        />
-        <h3 className="text-[15px] font-bold text-foreground">{title}</h3>
-      </div>
-      <p className="text-caption mb-5">{subtitle}</p>
-      {items && items.length > 0 ? (
-        <ul className="space-y-4">
-          {items.map((s, i) => (
-            <li key={i} className="text-body leading-[1.8]">
-              {s}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-caption">아직 분석 결과가 없습니다</p>
       )}
     </div>
   );

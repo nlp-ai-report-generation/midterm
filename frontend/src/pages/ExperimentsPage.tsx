@@ -21,7 +21,7 @@ export default function ExperimentsPage() {
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/data/experiments/index.json")
+    fetch("http://localhost:8000/api/experiments")
       .then((res) => {
         if (!res.ok) throw new Error("not found");
         return res.json();
@@ -44,7 +44,7 @@ export default function ExperimentsPage() {
       <div>
         <h1 className="text-title">실험 기록</h1>
         <p className="text-caption mt-1">
-          같은 강의를 다른 AI 모델이나 설정으로 평가한 결과를 비교합니다
+          같은 강의를 다른 설정으로 평가한 결과를 비교합니다
         </p>
       </div>
 
@@ -54,7 +54,7 @@ export default function ExperimentsPage() {
             아직 실험 기록이 없습니다.
           </p>
           <p className="text-caption" style={{ marginBottom: 24 }}>
-            설정 페이지에서 평가를 실행하면 결과가 여기에 기록됩니다
+            설정에서 평가를 실행하면 결과가 여기에 기록됩니다
           </p>
           <Link to="/settings" className="btn-primary" style={{ display: "inline-flex" }}>
             설정으로 이동
@@ -165,9 +165,9 @@ export default function ExperimentsPage() {
         </div>
       )}
 
-      {/* 신뢰도 지표 가이드 */}
+      {/* 신뢰도 지표 안내 */}
       <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 16 }}>신뢰도 지표 가이드</h2>
+        <h2 className="text-section" style={{ marginBottom: 16 }}>신뢰도 지표 안내</h2>
         <p className="text-caption" style={{ marginBottom: 20 }}>
           평가 결과를 얼마나 믿을 수 있는지 판단하는 기준입니다
         </p>

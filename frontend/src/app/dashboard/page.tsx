@@ -9,8 +9,12 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useRole } from "@/contexts/RoleContext";
 import { getAllEvaluations } from "@/lib/data";
 import { scoreColor, scoreBadgeTextColor, formatDateShort } from "@/lib/utils";
+import InsightCard from "@/components/shared/InsightCard";
+import ScoreBadge from "@/components/shared/ScoreBadge";
+import FeedbackCard from "@/components/shared/FeedbackCard";
 import type { EvaluationResult } from "@/types/evaluation";
 
 const CATEGORY_NAMES = [
@@ -22,6 +26,7 @@ const CATEGORY_NAMES = [
 ];
 
 export default function DashboardPage() {
+  const { isOperator } = useRole();
   const [evaluations, setEvaluations] = useState<EvaluationResult[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -41,6 +46,13 @@ export default function DashboardPage() {
     );
   }
 
+  if (isOperator) return <OperatorDashboard evaluations={evaluations} />;
+  return <InstructorDashboard evaluations={evaluations} />;
+}
+
+/* ─── Operator Dashboard ─── */
+
+function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] }) {
   const totalLectures = evaluations.length;
   const avgScore =
     totalLectures > 0
@@ -65,7 +77,6 @@ export default function DashboardPage() {
     score: e.weighted_average,
   }));
 
-  // Build heatmap: rows = categories, cols = dates
   const heatmapRows = CATEGORY_NAMES.map((catName) => {
     const scores = evaluations.map((e) => ({
       date: e.lecture_date,
@@ -74,7 +85,6 @@ export default function DashboardPage() {
     return { name: catName, scores };
   });
 
-  // Sort by score ascending so lowest-scoring lectures come first
   const sortedByScore = [...evaluations].sort((a, b) => a.weighted_average - b.weighted_average);
   const attentionLectures = sortedByScore.slice(0, 3);
   const otherLectures = sortedByScore.slice(3);
@@ -84,116 +94,52 @@ export default function DashboardPage() {
       {/* Page Header */}
       <div>
         <h1 className="text-title">강의 평가 현황</h1>
-        <p className="text-caption mt-1">{totalLectures}개 강의의 전체 품질 현황입니다</p>
+        <p className="text-caption" style={{ marginTop: 4 }}>
+          전체 강의의 품질 현황을 한눈에 확인합니다
+        </p>
       </div>
 
       {/* KPI Cards */}
-      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
-        {[
-          {
-            label: "분석 완료",
-            value: totalLectures,
-            subtitle: analysisRange,
-          },
-          {
-            label: "전체 평균",
-            value: avgScore.toFixed(2),
-            subtitle: "5점 만점",
-            accent: true,
-          },
-          {
-            label: "가장 높은 점수",
-            value: bestLecture ? bestLecture.weighted_average.toFixed(2) : "-",
-            subtitle: bestLecture ? formatDateShort(bestLecture.lecture_date) : "-",
-          },
-          {
-            label: "가장 낮은 점수",
-            value: worstLecture ? worstLecture.weighted_average.toFixed(2) : "-",
-            subtitle: worstLecture ? formatDateShort(worstLecture.lecture_date) : "-",
-          },
-        ].map((card) => (
-          <div
-            key={card.label}
-            className="card card-padded"
-          >
-            <p className="text-label">
-              {card.label}
-            </p>
-            <p
-              className="text-number mt-3"
-              style={{ color: card.accent ? "var(--primary)" : "var(--text-primary)" }}
-            >
-              {card.value}
-            </p>
-            <p className="text-caption mt-2">{card.subtitle}</p>
-          </div>
-        ))}
+      <div
+        className="card-grid"
+        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
+      >
+        <InsightCard label="분석 완료" value={totalLectures} subtitle={analysisRange} />
+        <InsightCard label="전체 평균" value={avgScore.toFixed(2)} subtitle="5점 만점" accent />
+        <InsightCard
+          label="가장 높은 점수"
+          value={bestLecture ? bestLecture.weighted_average.toFixed(2) : "-"}
+          subtitle={bestLecture ? formatDateShort(bestLecture.lecture_date) : "-"}
+        />
+        <InsightCard
+          label="가장 낮은 점수"
+          value={worstLecture ? worstLecture.weighted_average.toFixed(2) : "-"}
+          subtitle={worstLecture ? formatDateShort(worstLecture.lecture_date) : "-"}
+        />
       </div>
 
       {/* Score Trend */}
-      <div className="card card-padded">
-        <h2 className="text-section mb-1">점수 추이</h2>
-        <p className="text-caption mb-6">{totalLectures}개 강의 가중 평균</p>
-        <ResponsiveContainer width="100%" height={280}>
-          <AreaChart data={trendData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-            <defs>
-              <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.15} />
-                <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickFormatter={formatDateShort}
-              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
-              axisLine={{ stroke: "var(--border)" }}
-              tickLine={false}
-            />
-            <YAxis
-              domain={[1, 5]}
-              tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
-              axisLine={false}
-              tickLine={false}
-              width={30}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "var(--surface)",
-                border: "1px solid var(--border)",
-                borderRadius: "var(--radius-inner)",
-                fontSize: 13,
-              }}
-              labelFormatter={(l) => formatDateShort(l as string)}
-            />
-            <Area
-              type="monotone"
-              dataKey="score"
-              stroke="var(--primary)"
-              strokeWidth={2}
-              fill="url(#scoreGrad)"
-              dot={{ r: 3, fill: "var(--surface)", stroke: "var(--primary)", strokeWidth: 2 }}
-              activeDot={{ r: 5, fill: "var(--primary)" }}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
+      <ScoreTrendChart data={trendData} count={evaluations.length} />
 
       {/* Category Heatmap */}
       <div className="card card-padded">
-        <h2 className="text-section mb-1">카테고리 히트맵</h2>
-        <p className="text-caption mb-6">카테고리 × 강의 날짜별 점수</p>
+        <h2 className="text-section" style={{ marginBottom: 4 }}>카테고리 히트맵</h2>
+        <p className="text-caption" style={{ marginBottom: 24 }}>카테고리 x 강의 날짜별 점수</p>
         <div className="overflow-x-auto">
           <table className="w-full text-xs" aria-label="카테고리별 점수 히트맵">
             <thead>
               <tr>
-                <th className="text-left py-2 pr-4 font-medium text-text-tertiary whitespace-nowrap">
+                <th
+                  className="text-left py-2 pr-4 font-medium whitespace-nowrap"
+                  style={{ color: "var(--text-tertiary)" }}
+                >
                   카테고리
                 </th>
                 {evaluations.map((e) => (
                   <th
                     key={e.lecture_date}
-                    className="px-1 py-2 font-medium text-text-muted text-center"
+                    className="px-1 py-2 font-medium text-center"
+                    style={{ color: "var(--text-muted)" }}
                   >
                     {formatDateShort(e.lecture_date)}
                   </th>
@@ -203,7 +149,10 @@ export default function DashboardPage() {
             <tbody>
               {heatmapRows.map((row) => (
                 <tr key={row.name}>
-                  <td className="py-1.5 pr-4 text-text-secondary whitespace-nowrap">
+                  <td
+                    className="py-1.5 pr-4 whitespace-nowrap"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
                     {row.name.replace(/^\d+\.\s*/, "")}
                   </td>
                   {row.scores.map((cell) => (
@@ -228,73 +177,241 @@ export default function DashboardPage() {
 
       {/* Attention-needed Lectures */}
       <div>
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between" style={{ marginBottom: 20 }}>
           <h2 className="text-section">주의가 필요한 강의</h2>
           <Link
             to="/lectures"
-            className="text-sm font-medium text-text-tertiary hover:text-primary"
+            className="text-sm font-medium hover:text-primary"
+            style={{ color: "var(--text-tertiary)" }}
           >
             전체 보기
           </Link>
         </div>
-        <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
+        <div
+          className="card-grid"
+          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}
+        >
           {attentionLectures.map((item) => (
-            <Link
-              key={item.lecture_date}
-              to={`/lectures/${item.lecture_date}`}
-              className="card card-padded card-hover transition-shadow"
-              style={{ borderLeft: "3px solid var(--primary)" }}
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-caption">
-                    {formatDateShort(item.lecture_date)}
-                  </p>
-                  <p className="mt-1.5 text-[14px] font-semibold text-foreground">
-                    {item.metadata.subjects?.[0] ?? "강의"}
-                  </p>
-                </div>
-                <span
-                  className="score-badge score-badge-sm"
-                  style={{
-                    backgroundColor: scoreColor(item.weighted_average),
-                    color: scoreBadgeTextColor(item.weighted_average),
-                  }}
-                >
-                  {item.weighted_average.toFixed(1)}
-                </span>
-              </div>
-            </Link>
+            <LectureCard key={item.lecture_date} evaluation={item} />
           ))}
-          {otherLectures.map((item) => (
-            <Link
-              key={item.lecture_date}
-              to={`/lectures/${item.lecture_date}`}
-              className="card card-padded card-hover transition-shadow"
-            >
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-caption">
-                    {formatDateShort(item.lecture_date)}
-                  </p>
-                  <p className="mt-1.5 text-[14px] font-semibold text-foreground">
-                    {item.metadata.subjects?.[0] ?? "강의"}
-                  </p>
-                </div>
-                <span
-                  className="score-badge score-badge-sm"
-                  style={{
-                    backgroundColor: scoreColor(item.weighted_average),
-                    color: scoreBadgeTextColor(item.weighted_average),
-                  }}
-                >
-                  {item.weighted_average.toFixed(1)}
-                </span>
-              </div>
-            </Link>
+        </div>
+      </div>
+
+      {/* Other Lectures */}
+      {otherLectures.length > 0 && (
+        <div>
+          <h2 className="text-section" style={{ marginBottom: 20 }}>기타 강의</h2>
+          <div
+            className="card-grid"
+            style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}
+          >
+            {otherLectures.map((item) => (
+              <LectureCard key={item.lecture_date} evaluation={item} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Instructor Dashboard ─── */
+
+function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] }) {
+  const totalLectures = evaluations.length;
+  const avgScore =
+    totalLectures > 0
+      ? evaluations.reduce((sum, e) => sum + e.weighted_average, 0) / totalLectures
+      : 0;
+  const bestLecture = evaluations.reduce(
+    (best, e) => (e.weighted_average > (best?.weighted_average ?? 0) ? e : best),
+    evaluations[0]
+  );
+  const worstLecture = evaluations.reduce(
+    (worst, e) => (e.weighted_average < (worst?.weighted_average ?? 5) ? e : worst),
+    evaluations[0]
+  );
+
+  const trendData = evaluations.map((e) => ({
+    date: e.lecture_date,
+    score: e.weighted_average,
+  }));
+
+  // Aggregate top strengths and improvements across all lectures
+  const strengthCounts = new Map<string, number>();
+  const improvementCounts = new Map<string, number>();
+  for (const e of evaluations) {
+    for (const s of e.strengths ?? []) {
+      strengthCounts.set(s, (strengthCounts.get(s) ?? 0) + 1);
+    }
+    for (const imp of e.improvements ?? []) {
+      improvementCounts.set(imp, (improvementCounts.get(imp) ?? 0) + 1);
+    }
+  }
+  const topStrengths = [...strengthCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([s]) => s);
+  const topImprovements = [...improvementCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([s]) => s);
+
+  // Recent lectures (latest 6)
+  const recentLectures = [...evaluations]
+    .sort((a, b) => b.lecture_date.localeCompare(a.lecture_date))
+    .slice(0, 6);
+
+  return (
+    <div className="page-content">
+      {/* Page Header */}
+      <div>
+        <h1 className="text-title">내 강의 돌아보기</h1>
+        <p className="text-caption" style={{ marginTop: 4 }}>
+          수업을 돌아보고 다음 강의를 준비하세요
+        </p>
+      </div>
+
+      {/* KPI Cards */}
+      <div
+        className="card-grid"
+        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
+      >
+        <InsightCard label="총 강의" value={totalLectures} />
+        <InsightCard label="평균 점수" value={avgScore.toFixed(2)} subtitle="5점 만점" accent />
+        <InsightCard
+          label="가장 잘한 강의"
+          value={bestLecture ? bestLecture.weighted_average.toFixed(2) : "-"}
+          subtitle={bestLecture ? (bestLecture.metadata.subjects?.[0] ?? formatDateShort(bestLecture.lecture_date)) : "-"}
+        />
+        <InsightCard
+          label="개선이 필요한 강의"
+          value={worstLecture ? worstLecture.weighted_average.toFixed(2) : "-"}
+          subtitle={worstLecture ? (worstLecture.metadata.subjects?.[0] ?? formatDateShort(worstLecture.lecture_date)) : "-"}
+        />
+      </div>
+
+      {/* Score Trend */}
+      <ScoreTrendChart data={trendData} count={evaluations.length} />
+
+      {/* Strengths & Improvements */}
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <FeedbackCard
+          title="이런 점이 좋았어요"
+          subtitle="여러 강의에서 반복적으로 나타난 강점입니다"
+          items={topStrengths}
+          color="var(--primary)"
+        />
+        <FeedbackCard
+          title="이런 점을 바꿔보면 좋겠어요"
+          subtitle="조금만 바꿔도 큰 차이를 만들 수 있어요"
+          items={topImprovements}
+          color="var(--score-3)"
+        />
+      </div>
+
+      {/* Recent Lectures */}
+      <div>
+        <div className="flex items-center justify-between" style={{ marginBottom: 20 }}>
+          <h2 className="text-section">최근 강의</h2>
+          <Link
+            to="/lectures"
+            className="text-sm font-medium hover:text-primary"
+            style={{ color: "var(--text-tertiary)" }}
+          >
+            전체 보기
+          </Link>
+        </div>
+        <div
+          className="card-grid"
+          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}
+        >
+          {recentLectures.map((item) => (
+            <LectureCard key={item.lecture_date} evaluation={item} />
           ))}
         </div>
       </div>
     </div>
+  );
+}
+
+/* ─── Shared Components ─── */
+
+function ScoreTrendChart({ data, count }: { data: { date: string; score: number }[]; count: number }) {
+  return (
+    <div className="card card-padded">
+      <h2 className="text-section" style={{ marginBottom: 4 }}>점수 추이</h2>
+      <p className="text-caption" style={{ marginBottom: 24 }}>{count}개 강의 가중 평균</p>
+      <ResponsiveContainer width="100%" height={280}>
+        <AreaChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+          <defs>
+            <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.15} />
+              <stop offset="100%" stopColor="var(--primary)" stopOpacity={0} />
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+          <XAxis
+            dataKey="date"
+            tickFormatter={formatDateShort}
+            tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
+            axisLine={{ stroke: "var(--border)" }}
+            tickLine={false}
+          />
+          <YAxis
+            domain={[1, 5]}
+            tick={{ fontSize: 11, fill: "var(--text-tertiary)" }}
+            axisLine={false}
+            tickLine={false}
+            width={30}
+          />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "var(--surface)",
+              border: "1px solid var(--border)",
+              borderRadius: "var(--radius-inner)",
+              fontSize: 13,
+            }}
+            labelFormatter={(l) => formatDateShort(l as string)}
+          />
+          <Area
+            type="monotone"
+            dataKey="score"
+            stroke="var(--primary)"
+            strokeWidth={2}
+            fill="url(#scoreGrad)"
+            dot={{ r: 3, fill: "var(--surface)", stroke: "var(--primary)", strokeWidth: 2 }}
+            activeDot={{ r: 5, fill: "var(--primary)" }}
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+
+function LectureCard({ evaluation }: { evaluation: EvaluationResult }) {
+  return (
+    <Link
+      to={`/lectures/${evaluation.lecture_date}`}
+      className="card card-padded card-hover transition-shadow"
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1 min-w-0">
+          <p className="text-caption">{formatDateShort(evaluation.lecture_date)}</p>
+          <p
+            className="truncate"
+            style={{
+              marginTop: 6,
+              fontSize: 14,
+              fontWeight: 600,
+              color: "var(--text-primary)",
+            }}
+          >
+            {evaluation.metadata.subjects?.[0] ?? "강의"}
+          </p>
+        </div>
+        <ScoreBadge score={evaluation.weighted_average} size="sm" className="ml-3 shrink-0" />
+      </div>
+    </Link>
   );
 }

@@ -17,7 +17,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { to: "/dashboard", label: "대시보드", icon: LayoutDashboard },
   { to: "/lectures", label: "강의 평가", icon: BookOpen },
-  { to: "/eda", label: "EDA 분석", icon: Search },
+  { to: "/eda", label: "데이터 분석", icon: Search },
   { to: "/experiments", label: "실험 기록", icon: FlaskConical },
   { to: "/settings", label: "설정", icon: Settings },
 ];
@@ -31,9 +31,9 @@ export default function Sidebar() {
         top: 0,
         left: 0,
         bottom: 0,
-        width: 240,
+        width: "var(--sidebar-width)",
         background: "var(--surface)",
-        borderRight: "1px solid var(--border)",
+        boxShadow: "var(--shadow-card)",
         display: "flex",
         flexDirection: "column",
         zIndex: 30,
@@ -110,7 +110,6 @@ export default function Sidebar() {
       <div
         style={{
           padding: "20px 24px",
-          borderTop: "1px solid var(--border)",
           fontSize: 12,
           color: "var(--text-tertiary)",
           letterSpacing: "-0.02em",

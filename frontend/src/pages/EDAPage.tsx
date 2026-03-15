@@ -8,6 +8,8 @@ import {
   getTranscriptStats, getSpeakerDistribution, getFillerWords,
   getInteractionMetrics, getCurriculumFlow,
 } from "@/lib/data";
+import AiSummary from "@/components/shared/AiSummary";
+import InsightCard from "@/components/shared/InsightCard";
 import type {
   TranscriptStats, SpeakerDistribution, FillerWordStats,
   InteractionMetrics, CurriculumEntry,
@@ -36,8 +38,6 @@ const CHART_TOOLTIP = {
   fontSize: 13,
 };
 
-const AI_MODEL = "Claude Opus 4.6";
-
 export default function EDAPage() {
   const [activeTab, setActiveTab] = useState<TabKey>("overview");
   const [stats, setStats] = useState<TranscriptStats[]>([]);
@@ -46,7 +46,7 @@ export default function EDAPage() {
   const [interactions, setInteractions] = useState<InteractionMetrics[]>([]);
   const [curriculum, setCurriculum] = useState<CurriculumEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showAiLabel, setShowAiLabel] = useState(true);
+  const [showAi, setShowAi] = useState(true);
 
   useEffect(() => {
     Promise.all([
@@ -80,8 +80,8 @@ export default function EDAPage() {
           <button
             type="button"
             role="switch"
-            aria-checked={showAiLabel}
-            onClick={() => setShowAiLabel(!showAiLabel)}
+            aria-checked={showAi}
+            onClick={() => setShowAi(!showAi)}
             className="toggle"
           >
             <span className="toggle-knob" />
@@ -104,38 +104,17 @@ export default function EDAPage() {
       </div>
 
       <div role="tabpanel">
-        {activeTab === "overview" && <OverviewTab data={stats} showAi={showAiLabel} />}
-        {activeTab === "speakers" && <SpeakersTab data={speakers} showAi={showAiLabel} />}
-        {activeTab === "interaction" && <InteractionTab data={interactions} showAi={showAiLabel} />}
-        {activeTab === "filler" && <FillerTab data={fillerWords} showAi={showAiLabel} />}
-        {activeTab === "curriculum" && <CurriculumTab data={curriculum} showAi={showAiLabel} />}
+        {activeTab === "overview" && <OverviewTab data={stats} showAi={showAi} />}
+        {activeTab === "speakers" && <SpeakersTab data={speakers} showAi={showAi} />}
+        {activeTab === "interaction" && <InteractionTab data={interactions} showAi={showAi} />}
+        {activeTab === "filler" && <FillerTab data={fillerWords} showAi={showAi} />}
+        {activeTab === "curriculum" && <CurriculumTab data={curriculum} showAi={showAi} />}
       </div>
     </div>
   );
 }
 
-/* ─── 요약 카드 ─── */
-function InsightCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="card card-padded">
-      <p className="text-label">{label}</p>
-      <p className="text-number mt-3">{value}</p>
-    </div>
-  );
-}
-
-/* ─── AI 한줄 해석 블록 ─── */
-function AiSummary({ text, show }: { text: string; show: boolean }) {
-  if (!show) return null;
-  return (
-    <div className="ai-insight">
-      {text}
-      <p className="ai-insight-source">{AI_MODEL} 해석</p>
-    </div>
-  );
-}
-
-/* ─── 수업 규모 ─── */
+/* ─── 발화량 분석 ─── */
 function OverviewTab({ data, showAi }: { data: TranscriptStats[]; showAi: boolean }) {
   const totalLines = data.reduce((s, d) => s + d.line_count, 0);
   const avgLines = data.length > 0 ? Math.round(totalLines / data.length) : 0;
@@ -172,7 +151,7 @@ function OverviewTab({ data, showAi }: { data: TranscriptStats[]; showAi: boolea
             <Bar dataKey="line_count" name="라인 수" radius={[6, 6, 0, 0]}>
               {data.map((entry) => (
                 <Cell key={entry.date}
-                  fill={entry.line_count < 1200 ? "#FF9500" : "var(--primary)"} />
+                  fill={entry.line_count < 1200 ? "var(--score-3)" : "var(--primary)"} />
               ))}
             </Bar>
           </BarChart>
@@ -182,7 +161,7 @@ function OverviewTab({ data, showAi }: { data: TranscriptStats[]; showAi: boolea
   );
 }
 
-/* ─── 누가 말했나 ─── */
+/* ─── 화자 구성 ─── */
 function SpeakersTab({ data, showAi }: { data: SpeakerDistribution[]; showAi: boolean }) {
   const totalLines = data.reduce(
     (sum, d) => sum + Object.values(d.speakers).reduce((s, v) => s + v, 0), 0
@@ -202,7 +181,7 @@ function SpeakersTab({ data, showAi }: { data: SpeakerDistribution[]; showAi: bo
   return (
     <div className="space-y-6">
       <AiSummary
-        text="전체 강의의 67%가 단독 수업이며, 주강사 발화 비율이 매우 높은 편입니다."
+        text="전체 강의의 67%가 단독 수업이며, 주강사 발화 비율이 높은 편입니다."
         show={showAi}
       />
 
@@ -226,7 +205,7 @@ function SpeakersTab({ data, showAi }: { data: SpeakerDistribution[]; showAi: bo
               labelFormatter={(l) => formatDateShort(l as string)} />
             <Legend />
             <Bar dataKey="주강사" stackId="a" fill="var(--primary)" />
-            <Bar dataKey="보조강사" stackId="a" fill="#FF9F5A" />
+            <Bar dataKey="보조강사" stackId="a" fill="var(--score-3)" />
             <Bar dataKey="기타" stackId="a" fill="var(--grey-300)" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
@@ -235,7 +214,7 @@ function SpeakersTab({ data, showAi }: { data: SpeakerDistribution[]; showAi: bo
   );
 }
 
-/* ─── 얼마나 소통했나 ─── */
+/* ─── 소통 빈도 ─── */
 function InteractionTab({ data, showAi }: { data: InteractionMetrics[]; showAi: boolean }) {
   const totalQ = data.reduce((s, d) => s + d.question_count, 0);
   const totalCheck = data.reduce((s, d) => s + d.understanding_check_count, 0);
@@ -268,8 +247,8 @@ function InteractionTab({ data, showAi }: { data: InteractionMetrics[]; showAi: 
               labelFormatter={(l) => formatDateShort(l as string)} />
             <Legend />
             <Bar dataKey="question_count" name="질문" fill="var(--primary)" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="understanding_check_count" name="이해도 확인" fill="#3182F6" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="participation_prompts" name="참여 유도" fill="#34C759" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="understanding_check_count" name="이해도 확인" fill="var(--score-2)" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="participation_prompts" name="참여 유도" fill="var(--grey-400)" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -277,7 +256,7 @@ function InteractionTab({ data, showAi }: { data: InteractionMetrics[]; showAi: 
   );
 }
 
-/* ─── 반복 표현 ─── */
+/* ─── 습관 표현 ─── */
 function FillerTab({ data, showAi }: { data: FillerWordStats[]; showAi: boolean }) {
   const totalByWord = data.reduce((acc, d) => {
     Object.entries(d.words).forEach(([word, count]) => {
@@ -288,13 +267,13 @@ function FillerTab({ data, showAi }: { data: FillerWordStats[]; showAi: boolean 
 
   const sorted = Object.entries(totalByWord).sort((a, b) => b[1] - a[1]);
   const pieData = sorted.map(([name, value]) => ({ name, value }));
-  const COLORS = ["var(--primary)", "#3182F6", "#FF9500", "#34C759", "#8B5CF6"];
+  const COLORS = ["var(--primary)", "var(--score-3)", "var(--score-2)", "var(--score-1)", "var(--grey-400)"];
   const totalAll = sorted.reduce((s, [, c]) => s + c, 0);
 
   return (
     <div className="space-y-6">
       <AiSummary
-        text="'자', '그래서', '이제' 순으로 습관 표현이 빈번합니다. 논리 연결과 전환 표시가 주를 이룹니다."
+        text="'자', '그래서', '이제' 순으로 습관 표현이 빈번합니다."
         show={showAi}
       />
 
@@ -343,7 +322,7 @@ function FillerTab({ data, showAi }: { data: FillerWordStats[]; showAi: boolean 
   );
 }
 
-/* ─── 무엇을 배웠나 ─── */
+/* ─── 수업 흐름 ─── */
 function CurriculumTab({ data, showAi }: { data: CurriculumEntry[]; showAi: boolean }) {
   const groups: { subject: string; color: string; entries: CurriculumEntry[] }[] = [];
   data.forEach((entry) => {

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
+import { useRole } from "@/contexts/RoleContext";
 import {
   getSettings,
   saveSettings,
@@ -8,13 +9,15 @@ import {
 } from "@/lib/api";
 import type { AppSettings } from "@/lib/api";
 import { getAllLectures } from "@/lib/data";
+import { formatDateShort } from "@/lib/utils";
 import type { LectureMetadata } from "@/types/evaluation";
 
 export default function SettingsPage() {
+  const { role, setRole } = useRole();
   const [settings, setSettings] = useState<AppSettings>({
     apiKey: "",
     model: "gpt-4o-mini",
-    temperature: 0.1,
+    temperature: 0.0,
     chunkMinutes: 30,
     overlapMinutes: 5,
     useCalibrator: true,
@@ -152,6 +155,18 @@ export default function SettingsPage() {
         <p className="text-caption mt-1">API 연결, 모델 선택, 평가 실행을 한 곳에서 관리합니다.</p>
       </div>
 
+      {/* 현재 역할 표시 */}
+      <div className="card card-padded">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-label">현재 역할</p>
+            <p className="text-section mt-1">
+              {role === "operator" ? "운영자" : role === "instructor" ? "강사" : "미설정"}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* API Connection */}
       <div className="card card-padded">
         <div className="flex items-center justify-between mb-4">
@@ -161,12 +176,12 @@ export default function SettingsPage() {
               <span
                 className="w-2 h-2 rounded-full"
                 style={{
-                  backgroundColor: apiStatus === "valid" ? "#34C759" : "#FF3B30",
+                  backgroundColor: apiStatus === "valid" ? "var(--primary)" : "var(--grey-400)",
                 }}
               />
               <span
                 style={{
-                  color: apiStatus === "valid" ? "#34C759" : "#FF3B30",
+                  color: apiStatus === "valid" ? "var(--primary)" : "var(--text-tertiary)",
                 }}
               >
                 {apiStatus === "valid" ? "연결됨" : "미연결"}
@@ -185,7 +200,6 @@ export default function SettingsPage() {
               onChange={(e) => update("apiKey", e.target.value)}
               placeholder="sk-proj-..."
               className="input-field pr-10"
-              style={{ border: "1px solid var(--border)" }}
             />
             <button
               type="button"
@@ -247,12 +261,13 @@ export default function SettingsPage() {
       </div>
 
       {/* Lecture Selection */}
-      <div className="card card-padded mt-8">
+      <div className="card card-padded">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-section">강의 선택</h2>
           <button
             onClick={selectAll}
             className="text-xs font-medium text-primary hover:opacity-80"
+            style={{ background: "none", border: "none", cursor: "pointer" }}
           >
             {selectedDates.length === lectures.length ? "전체 해제" : "전체 선택"}
           </button>
@@ -265,16 +280,22 @@ export default function SettingsPage() {
             ) * selectedDates.length
           ).toFixed(2)}
         </p>
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-3 max-h-[260px] overflow-y-auto p-2">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: 12, maxHeight: 260, overflowY: "auto", padding: 2 }}>
           {lectures.map((l) => {
             const isSelected = selectedDates.includes(l.date);
             return (
               <button
                 key={l.date}
                 onClick={() => toggleDate(l.date)}
-                className={`px-3.5 py-3 rounded-xl text-left transition-all ${
-                  isSelected ? "bg-[var(--primary-light)]" : "bg-[var(--grey-100)]"
-                }`}
+                style={{
+                  padding: "12px 16px",
+                  borderRadius: "var(--radius-inner)",
+                  textAlign: "left",
+                  transition: "all 0.15s ease",
+                  background: isSelected ? "var(--primary-light)" : "var(--grey-100)",
+                  border: "none",
+                  cursor: "pointer",
+                }}
               >
                 <p
                   className="text-xs font-bold"
@@ -282,7 +303,7 @@ export default function SettingsPage() {
                 >
                   {l.date.slice(5)}
                 </p>
-                <p className="text-[10px] text-text-muted mt-0.5 line-clamp-1">
+                <p className="text-[10px] text-text-muted mt-0.5" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {l.subjects?.[0] ?? "강의"}
                 </p>
               </button>
@@ -295,7 +316,8 @@ export default function SettingsPage() {
       <button
         onClick={handleRunEvaluation}
         disabled={evaluating || selectedDates.length === 0 || apiStatus !== "valid"}
-        className="btn-primary w-full py-3.5 mt-8"
+        className="btn-primary w-full"
+        style={{ paddingTop: 14, paddingBottom: 14 }}
       >
         {evaluating ? (
           <>
@@ -337,11 +359,12 @@ export default function SettingsPage() {
       )}
 
       {/* Advanced Settings */}
-      <div className="card overflow-hidden mt-8">
+      <div className="card overflow-hidden">
         <button
           onClick={() => setShowAdvanced(!showAdvanced)}
           aria-expanded={showAdvanced}
-          className="w-full flex items-center justify-between px-7 py-6 text-left hover:bg-background transition-colors"
+          className="w-full flex items-center justify-between text-left hover:bg-background transition-colors"
+          style={{ padding: "24px 28px", background: "none", border: "none", cursor: "pointer" }}
         >
           <div>
             <h2 className="text-section">고급 설정</h2>
@@ -364,92 +387,108 @@ export default function SettingsPage() {
         </button>
 
         {showAdvanced && (
-          <div className="px-7 pb-7 space-y-6 border-t border-border pt-6">
-            {/* Temperature */}
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <label htmlFor="temperature-range" className="text-sm font-semibold text-foreground">
-                  Temperature
-                </label>
-                <span className="text-xs font-bold text-primary bg-primary-light px-2 py-0.5 rounded-md">
-                  {settings.temperature.toFixed(1)}
-                </span>
-              </div>
-              <input
-                id="temperature-range"
-                type="range"
-                min="0"
-                max="1"
-                step="0.1"
-                value={settings.temperature}
-                onChange={(e) => update("temperature", parseFloat(e.target.value))}
-                className="w-full h-1.5 bg-border rounded-full appearance-none cursor-pointer accent-primary"
-              />
-            </div>
-
-            {/* Chunk / Overlap */}
-            <div className="grid grid-cols-2 gap-4">
+          <div style={{ padding: "24px 28px", paddingTop: 0 }}>
+            <div style={{ borderTop: "1px solid var(--border)", paddingTop: 24, display: "flex", flexDirection: "column", gap: 24 }}>
+              {/* Temperature */}
               <div>
-                <label htmlFor="chunk-minutes" className="block text-sm font-semibold text-foreground mb-2">
-                  청크 윈도우 (분)
-                </label>
+                <div className="flex items-center justify-between mb-2">
+                  <label htmlFor="temperature-range" className="text-sm font-semibold text-foreground">
+                    Temperature
+                  </label>
+                  <span className="text-xs font-bold text-primary" style={{ background: "var(--primary-light)", padding: "2px 8px", borderRadius: "var(--radius-sm)" }}>
+                    {settings.temperature.toFixed(1)}
+                  </span>
+                </div>
                 <input
-                  id="chunk-minutes"
-                  type="number"
-                  min="5"
-                  max="120"
-                  value={settings.chunkMinutes}
-                  onChange={(e) =>
-                    update("chunkMinutes", parseInt(e.target.value) || 30)
-                  }
-                  className="input-field"
-                  style={{ border: "1px solid var(--border)" }}
-                />
-              </div>
-              <div>
-                <label htmlFor="overlap-minutes" className="block text-sm font-semibold text-foreground mb-2">
-                  오버랩 (분)
-                </label>
-                <input
-                  id="overlap-minutes"
-                  type="number"
+                  id="temperature-range"
+                  type="range"
                   min="0"
-                  max="30"
-                  value={settings.overlapMinutes}
-                  onChange={(e) =>
-                    update("overlapMinutes", parseInt(e.target.value) || 5)
-                  }
-                  className="input-field"
-                  style={{ border: "1px solid var(--border)" }}
+                  max="1"
+                  step="0.1"
+                  value={settings.temperature}
+                  onChange={(e) => update("temperature", parseFloat(e.target.value))}
+                  className="w-full"
+                  style={{ height: 6, borderRadius: 999, appearance: "none", cursor: "pointer", accentColor: "var(--primary)" }}
                 />
               </div>
-            </div>
 
-            {/* Calibrator Toggle */}
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-semibold text-foreground">Calibrator</p>
-                <p className="text-caption mt-0.5">점수 보정 및 일관성 검증</p>
+              {/* Chunk / Overlap */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <div>
+                  <label htmlFor="chunk-minutes" className="block text-sm font-semibold text-foreground mb-2">
+                    청크 윈도우 (분)
+                  </label>
+                  <input
+                    id="chunk-minutes"
+                    type="number"
+                    min="5"
+                    max="120"
+                    value={settings.chunkMinutes}
+                    onChange={(e) =>
+                      update("chunkMinutes", parseInt(e.target.value) || 30)
+                    }
+                    className="input-field"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="overlap-minutes" className="block text-sm font-semibold text-foreground mb-2">
+                    오버랩 (분)
+                  </label>
+                  <input
+                    id="overlap-minutes"
+                    type="number"
+                    min="0"
+                    max="30"
+                    value={settings.overlapMinutes}
+                    onChange={(e) =>
+                      update("overlapMinutes", parseInt(e.target.value) || 5)
+                    }
+                    className="input-field"
+                  />
+                </div>
               </div>
+
+              {/* Calibrator Toggle */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-foreground">Calibrator</p>
+                  <p className="text-caption mt-0.5">점수 보정 및 일관성 검증</p>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={settings.useCalibrator}
+                  onClick={() => update("useCalibrator", !settings.useCalibrator)}
+                  className="toggle"
+                >
+                  <span className="toggle-knob" />
+                </button>
+              </div>
+
               <button
-                type="button"
-                role="switch"
-                aria-checked={settings.useCalibrator}
-                onClick={() => update("useCalibrator", !settings.useCalibrator)}
-                className="toggle"
+                onClick={handleSave}
+                className="btn-secondary w-full"
+                style={{ paddingTop: 12, paddingBottom: 12 }}
               >
-                <span className="toggle-knob" />
+                설정 저장
               </button>
             </div>
-
-            <button
-              onClick={handleSave}
-              className="btn-secondary w-full py-3"
-            >
-              설정 저장
-            </button>
           </div>
         )}
+      </div>
+
+      {/* Role Change */}
+      <div className="card card-padded">
+        <h2 className="text-section" style={{ marginBottom: 8 }}>역할 변경</h2>
+        <p className="text-caption" style={{ marginBottom: 16 }}>
+          현재 역할: {role === "operator" ? "운영자" : role === "instructor" ? "강사" : "미설정"}
+        </p>
+        <button
+          onClick={() => setRole(null)}
+          className="btn-secondary"
+        >
+          역할 다시 선택
+        </button>
       </div>
 
       {/* Toast */}

@@ -30,7 +30,9 @@
       "Bash(rm -rf components/cards components/charts)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:developers-apps-in-toss.toss.im)",
-      "WebFetch(domain:toss.tech)"
+      "WebFetch(domain:toss.tech)",
+      "Read(//Users/youngjinson/멋사-인턴/**)",
+      "Bash(kill 71686 71684)"
     ],
     "additionalDirectories": [
       "/Users/youngjinson/멋사-인턴"

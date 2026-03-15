@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAllEvaluations } from "@/lib/data";
-import { scoreColor, scoreBadgeTextColor, formatDateShort } from "@/lib/utils";
+import { formatDateShort } from "@/lib/utils";
+import ScoreBadge from "@/components/shared/ScoreBadge";
 import type { EvaluationResult } from "@/types/evaluation";
 
 type SortKey = "latest" | "highest" | "lowest";
@@ -40,7 +41,7 @@ export default function LecturesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-title">강의 목록</h1>
-          <p className="text-caption mt-0.5">{evaluations.length}개 강의</p>
+          <p className="text-caption" style={{ marginTop: 2 }}>{evaluations.length}개 강의</p>
         </div>
         <div className="tab-bar" role="tablist">
           {(
@@ -65,46 +66,51 @@ export default function LecturesPage() {
 
       {/* Grid */}
       {displayed.length === 0 ? (
-        <div className="card py-16 text-center">
-          <p className="text-text-tertiary">강의 데이터가 없습니다.</p>
+        <div className="card" style={{ padding: "64px 0", textAlign: "center" }}>
+          <p style={{ color: "var(--text-tertiary)" }}>강의 데이터가 없습니다.</p>
         </div>
       ) : (
-        <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
+        <div
+          className="card-grid"
+          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}
+        >
           {displayed.map((evaluation) => (
             <Link
               key={evaluation.lecture_date}
               to={`/lectures/${evaluation.lecture_date}`}
               className="card card-padded card-hover transition-shadow"
             >
-              <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start justify-between" style={{ marginBottom: 12 }}>
                 <div className="flex-1 min-w-0">
-                  <p className="text-caption">
-                    {formatDateShort(evaluation.lecture_date)}
-                  </p>
-                  <p className="mt-1 text-base font-semibold text-foreground truncate">
+                  <p className="text-caption">{formatDateShort(evaluation.lecture_date)}</p>
+                  <p
+                    className="truncate"
+                    style={{
+                      marginTop: 4,
+                      fontSize: 15,
+                      fontWeight: 600,
+                      color: "var(--text-primary)",
+                    }}
+                  >
                     {evaluation.metadata.subjects?.[0] ?? "강의"}
                   </p>
                 </div>
-                <span
-                  className="score-badge score-badge-md rounded-full ml-3 shrink-0"
-                  style={{
-                    backgroundColor: scoreColor(evaluation.weighted_average),
-                    color: scoreBadgeTextColor(evaluation.weighted_average),
-                  }}
-                >
-                  {evaluation.weighted_average.toFixed(1)}
-                </span>
+                <ScoreBadge
+                  score={evaluation.weighted_average}
+                  size="sm"
+                  className="ml-3 shrink-0"
+                />
               </div>
-              <div className="space-y-1.5">
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {evaluation.strengths?.[0] && (
-                  <p className="text-xs text-text-tertiary line-clamp-1">
-                    <span className="text-success font-medium">+</span>{" "}
+                  <p className="text-xs line-clamp-1" style={{ color: "var(--text-tertiary)" }}>
+                    <span className="font-medium" style={{ color: "var(--primary)" }}>+</span>{" "}
                     {evaluation.strengths[0]}
                   </p>
                 )}
                 {evaluation.improvements?.[0] && (
-                  <p className="text-xs text-text-tertiary line-clamp-1">
-                    <span className="text-warning font-medium">-</span>{" "}
+                  <p className="text-xs line-clamp-1" style={{ color: "var(--text-tertiary)" }}>
+                    <span className="font-medium" style={{ color: "var(--score-3)" }}>-</span>{" "}
                     {evaluation.improvements[0]}
                   </p>
                 )}

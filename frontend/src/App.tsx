@@ -1,15 +1,17 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
+import RoleSelectPage from "@/pages/RoleSelectPage";
 import DashboardPage from "@/app/dashboard/page";
 import LecturesPage from "@/app/lectures/page";
 import LectureDetailPage from "@/app/lectures/[date]/page";
-import EDAPage from "@/app/eda/page";
-import SettingsPage from "@/app/settings/page";
-import ExperimentsPage from "@/app/experiments/page";
+import EDAPage from "@/pages/EDAPage";
+import ExperimentsPage from "@/pages/ExperimentsPage";
+import SettingsPage from "@/pages/SettingsPage";
 
 export default function App() {
   return (
     <Routes>
+      <Route path="/select-role" element={<RoleSelectPage />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<DashboardPage />} />

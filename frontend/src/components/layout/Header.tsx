@@ -4,7 +4,7 @@ import { Settings } from "lucide-react";
 const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "대시보드",
   "/lectures": "강의 평가",
-  "/eda": "EDA 분석",
+  "/eda": "데이터 분석",
   "/experiments": "실험 기록",
   "/settings": "설정",
 };
@@ -14,7 +14,11 @@ function getPageTitle(pathname: string): string {
   return PAGE_TITLES[pathname] ?? "대시보드";
 }
 
-export default function Header() {
+interface HeaderProps {
+  isMobile?: boolean;
+}
+
+export default function Header({ isMobile }: HeaderProps) {
   const { pathname } = useLocation();
   const title = getPageTitle(pathname);
 
@@ -26,16 +30,16 @@ export default function Header() {
         zIndex: 20,
         height: 60,
         background: "var(--surface)",
-        borderBottom: "1px solid var(--border)",
+        boxShadow: "var(--shadow-card)",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "0 40px",
+        padding: isMobile ? "0 16px" : "0 40px",
       }}
     >
       <h1
         style={{
-          fontSize: 20,
+          fontSize: isMobile ? 18 : 20,
           fontWeight: 700,
           color: "var(--text-primary)",
           letterSpacing: "-0.02em",
@@ -43,22 +47,24 @@ export default function Header() {
       >
         {title}
       </h1>
-      <Link
-        to="/settings"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: 36,
-          height: 36,
-          borderRadius: "var(--radius-sm)",
-          color: "var(--text-tertiary)",
-          transition: "color 0.15s",
-        }}
-        aria-label="설정"
-      >
-        <Settings size={20} />
-      </Link>
+      {!isMobile && (
+        <Link
+          to="/settings"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 36,
+            height: 36,
+            borderRadius: "var(--radius-sm)",
+            color: "var(--text-tertiary)",
+            transition: "color 0.15s",
+          }}
+          aria-label="설정"
+        >
+          <Settings size={20} />
+        </Link>
+      )}
     </header>
   );
 }
