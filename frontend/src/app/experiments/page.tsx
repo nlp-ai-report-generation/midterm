@@ -44,14 +44,17 @@ export default function ExperimentsPage() {
       <div>
         <h1 className="text-title">실험 기록</h1>
         <p className="text-caption mt-1">
-          모델과 파라미터 조합별 평가 결과를 비교합니다
+          같은 강의를 다른 AI 모델이나 설정으로 평가한 결과를 비교합니다
         </p>
       </div>
 
       {experiments.length === 0 ? (
-        <div className="card card-padded" style={{ textAlign: "center", padding: "48px 24px" }}>
-          <p className="text-body" style={{ marginBottom: 16 }}>
-            아직 실험 기록이 없습니다. 설정에서 평가를 실행하면 여기에 기록됩니다.
+        <div className="card card-padded" style={{ textAlign: "center", padding: "48px 32px" }}>
+          <p className="text-body" style={{ marginBottom: 8 }}>
+            아직 실험 기록이 없습니다.
+          </p>
+          <p className="text-caption" style={{ marginBottom: 24 }}>
+            설정 페이지에서 평가를 실행하면 결과가 여기에 기록됩니다
           </p>
           <Link to="/settings" className="btn-primary" style={{ display: "inline-flex" }}>
             설정으로 이동
@@ -72,18 +75,29 @@ export default function ExperimentsPage() {
                   <div>
                     <p className="text-section">{exp.experiment_id}</p>
                     <p className="text-caption mt-1">
-                      {exp.model} · {formatDateShort(exp.date)}
+                      {exp.model} · {formatDateShort(exp.date)} · {exp.lectures.length}개 강의 평가
                     </p>
                   </div>
-                  <span
-                    className="score-badge"
-                    style={{
-                      backgroundColor: scoreColor(exp.avg_score),
-                      color: scoreBadgeTextColor(exp.avg_score),
-                    }}
-                  >
-                    {exp.avg_score.toFixed(1)}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="score-badge score-badge-sm"
+                      style={{
+                        backgroundColor: scoreColor(exp.avg_score),
+                        color: scoreBadgeTextColor(exp.avg_score),
+                      }}
+                    >
+                      {exp.avg_score.toFixed(1)}
+                    </span>
+                    <svg
+                      className={`w-5 h-5 text-text-muted transition-transform duration-200 ${expandedId === exp.experiment_id ? "rotate-180" : ""}`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
                 </div>
               </button>
 
@@ -108,7 +122,7 @@ export default function ExperimentsPage() {
                           </td>
                           <td style={{ textAlign: "right", padding: "6px 12px" }}>
                             <span
-                              className="score-badge-sm"
+                              className="score-badge score-badge-sm"
                               style={{
                                 backgroundColor: scoreColor(lec.score),
                                 color: scoreBadgeTextColor(lec.score),
@@ -128,12 +142,12 @@ export default function ExperimentsPage() {
                       <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                         {exp.reliability.kappa != null && (
                           <span className="text-caption">
-                            Cohen's kappa: <strong className="text-body">{exp.reliability.kappa.toFixed(3)}</strong>
+                            Cohen&apos;s kappa: <strong className="text-body">{exp.reliability.kappa.toFixed(3)}</strong>
                           </span>
                         )}
                         {exp.reliability.alpha != null && (
                           <span className="text-caption">
-                            Krippendorff's alpha: <strong className="text-body">{exp.reliability.alpha.toFixed(3)}</strong>
+                            Krippendorff&apos;s alpha: <strong className="text-body">{exp.reliability.alpha.toFixed(3)}</strong>
                           </span>
                         )}
                         {exp.reliability.icc != null && (
@@ -151,21 +165,45 @@ export default function ExperimentsPage() {
         </div>
       )}
 
-      {/* 신뢰도 지표 안내 */}
+      {/* 신뢰도 지표 가이드 */}
       <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 16 }}>신뢰도 지표 안내</h2>
+        <h2 className="text-section" style={{ marginBottom: 16 }}>신뢰도 지표 가이드</h2>
+        <p className="text-caption" style={{ marginBottom: 20 }}>
+          평가 결과를 얼마나 믿을 수 있는지 판단하는 기준입니다
+        </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           <div className="inner-card">
-            <p className="text-label" style={{ marginBottom: 4 }}>Cohen's kappa &ge; 0.61</p>
-            <p className="text-body">평가자 간 판단이 상당히 일치합니다</p>
+            <p className="text-label" style={{ marginBottom: 6 }}>
+              <span style={{ fontFamily: "serif", fontSize: 14 }}>&kappa;</span> (카파) &mdash; 일치도
+            </p>
+            <p className="text-body">
+              두 번 평가했을 때 결과가 얼마나 같은지를 나타냅니다.
+            </p>
+            <p className="text-caption" style={{ marginTop: 4 }}>
+              0.61 이상이면 양호한 수준입니다
+            </p>
           </div>
           <div className="inner-card">
-            <p className="text-label" style={{ marginBottom: 4 }}>Krippendorff's alpha &ge; 0.667</p>
-            <p className="text-body">잠정적으로 신뢰할 수 있는 수준입니다</p>
+            <p className="text-label" style={{ marginBottom: 6 }}>
+              <span style={{ fontFamily: "serif", fontSize: 14 }}>&alpha;</span> (알파) &mdash; 동의도
+            </p>
+            <p className="text-body">
+              여러 평가자가 동의하는 정도를 측정합니다.
+            </p>
+            <p className="text-caption" style={{ marginTop: 4 }}>
+              0.667 이상이면 신뢰할 수 있는 수준입니다
+            </p>
           </div>
           <div className="inner-card">
-            <p className="text-label" style={{ marginBottom: 4 }}>ICC &ge; 0.75</p>
-            <p className="text-body">평가 점수의 재현성이 양호합니다</p>
+            <p className="text-label" style={{ marginBottom: 6 }}>
+              ICC &mdash; 재현성
+            </p>
+            <p className="text-body">
+              점수의 재현 가능성을 나타냅니다. 같은 조건에서 다시 평가해도 비슷한 결과가 나오는지 확인합니다.
+            </p>
+            <p className="text-caption" style={{ marginTop: 4 }}>
+              0.75 이상이면 안정적인 수준입니다
+            </p>
           </div>
         </div>
       </div>

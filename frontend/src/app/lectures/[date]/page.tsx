@@ -168,13 +168,13 @@ export default function LectureDetailPage() {
           title="잘하고 있는 부분"
           subtitle="이 강의에서 효과적이었던 점입니다"
           items={strengths}
-          color="var(--score-5)"
+          color="var(--primary)"
         />
         <FeedbackCard
           title="더 나아질 수 있는 부분"
           subtitle="다음 수업에서 시도해볼 수 있는 변화입니다"
           items={improvements}
-          color="var(--score-2)"
+          color="rgba(255, 107, 0, 0.5)"
         />
         <FeedbackCard
           title="구체적 제안"

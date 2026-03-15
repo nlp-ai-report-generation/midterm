@@ -26,11 +26,11 @@
   --text-muted: var(--grey-400);
   --border: var(--grey-200);
 
-  --score-1: #F04452;
-  --score-2: #FF8A00;
-  --score-3: #FFB331;
-  --score-4: #4DABF7;
-  --score-5: #00A86B;
+  --score-1: rgba(255, 107, 0, 0.2);   /* 1점: 매우 연한 주황 */
+  --score-2: rgba(255, 107, 0, 0.4);   /* 2점 */
+  --score-3: rgba(255, 107, 0, 0.6);   /* 3점 */
+  --score-4: rgba(255, 107, 0, 0.8);   /* 4점 */
+  --score-5: rgba(255, 107, 0, 1.0);   /* 5점: 완전한 주황 */
 
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06);
   --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -50,9 +50,9 @@
   --color-text-tertiary: var(--text-tertiary);
   --color-text-muted: var(--text-muted);
   --color-border: var(--border);
-  --color-success: var(--score-5);
-  --color-warning: var(--score-2);
-  --color-error: var(--score-1);
+  --color-success: #00A86B;
+  --color-warning: #FF8A00;
+  --color-error: #F04452;
   --font-sans: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }
 
@@ -82,6 +82,9 @@ body {
 .card-padded {
   padding: 28px 32px;
 }
+
+.card-padded > .text-section { margin-bottom: 4px; }
+.card-padded > .text-caption { margin-bottom: 24px; }
 
 /* 페이지 레이아웃 */
 .page-content {
@@ -113,13 +116,13 @@ body {
 
 /* AI 해석 블록 */
 .ai-insight {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-secondary);
-  line-height: 1.7;
-  padding: 16px 20px;
+  line-height: 1.8;
+  padding: 20px 24px;
   background: var(--grey-50);
   border-radius: var(--radius-inner);
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 .ai-insight-source {

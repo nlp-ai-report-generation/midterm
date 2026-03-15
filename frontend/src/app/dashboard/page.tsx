@@ -21,10 +21,6 @@ const CATEGORY_NAMES = [
   "5. 수강생 상호작용",
 ];
 
-function formatCompactDate(date?: string) {
-  return date ? date.slice(5).replace("-", ".") : "-";
-}
-
 export default function DashboardPage() {
   const [evaluations, setEvaluations] = useState<EvaluationResult[]>([]);
   const [loading, setLoading] = useState(true);
@@ -61,7 +57,7 @@ export default function DashboardPage() {
 
   const analysisRange =
     totalLectures > 0
-      ? `2026.${formatCompactDate(evaluations[0]?.lecture_date)} ~ ${formatCompactDate(evaluations[totalLectures - 1]?.lecture_date)}`
+      ? `${evaluations[0]?.lecture_date.slice(5).replace("-", ".")} ~ ${evaluations[totalLectures - 1]?.lecture_date.slice(5).replace("-", ".")}`
       : "-";
 
   const trendData = evaluations.map((e) => ({
@@ -78,33 +74,42 @@ export default function DashboardPage() {
     return { name: catName, scores };
   });
 
-  const recentLectures = [...evaluations].reverse().slice(0, 6);
+  // Sort by score ascending so lowest-scoring lectures come first
+  const sortedByScore = [...evaluations].sort((a, b) => a.weighted_average - b.weighted_average);
+  const attentionLectures = sortedByScore.slice(0, 3);
+  const otherLectures = sortedByScore.slice(3);
 
   return (
     <div className="page-content">
+      {/* Page Header */}
+      <div>
+        <h1 className="text-title">강의 평가 현황</h1>
+        <p className="text-caption mt-1">{totalLectures}개 강의의 전체 품질 현황입니다</p>
+      </div>
+
       {/* KPI Cards */}
       <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
         {[
           {
-            label: "총 강의",
+            label: "분석 완료",
             value: totalLectures,
             subtitle: analysisRange,
           },
           {
-            label: "평균 점수",
+            label: "전체 평균",
             value: avgScore.toFixed(2),
             subtitle: "5점 만점",
             accent: true,
           },
           {
-            label: "최고",
+            label: "가장 높은 점수",
             value: bestLecture ? bestLecture.weighted_average.toFixed(2) : "-",
-            subtitle: bestLecture ? formatCompactDate(bestLecture.lecture_date) : "-",
+            subtitle: bestLecture ? formatDateShort(bestLecture.lecture_date) : "-",
           },
           {
-            label: "최저",
+            label: "가장 낮은 점수",
             value: worstLecture ? worstLecture.weighted_average.toFixed(2) : "-",
-            subtitle: worstLecture ? formatCompactDate(worstLecture.lecture_date) : "-",
+            subtitle: worstLecture ? formatDateShort(worstLecture.lecture_date) : "-",
           },
         ].map((card) => (
           <div
@@ -221,10 +226,10 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Recent Lectures */}
+      {/* Attention-needed Lectures */}
       <div>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-section">최근 평가 결과</h2>
+          <h2 className="text-section">주의가 필요한 강의</h2>
           <Link
             to="/lectures"
             className="text-sm font-medium text-text-tertiary hover:text-primary"
@@ -233,7 +238,35 @@ export default function DashboardPage() {
           </Link>
         </div>
         <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
-          {recentLectures.map((item) => (
+          {attentionLectures.map((item) => (
+            <Link
+              key={item.lecture_date}
+              to={`/lectures/${item.lecture_date}`}
+              className="card card-padded card-hover transition-shadow"
+              style={{ borderLeft: "3px solid var(--primary)" }}
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-caption">
+                    {formatDateShort(item.lecture_date)}
+                  </p>
+                  <p className="mt-1.5 text-[14px] font-semibold text-foreground">
+                    {item.metadata.subjects?.[0] ?? "강의"}
+                  </p>
+                </div>
+                <span
+                  className="score-badge score-badge-sm"
+                  style={{
+                    backgroundColor: scoreColor(item.weighted_average),
+                    color: scoreBadgeTextColor(item.weighted_average),
+                  }}
+                >
+                  {item.weighted_average.toFixed(1)}
+                </span>
+              </div>
+            </Link>
+          ))}
+          {otherLectures.map((item) => (
             <Link
               key={item.lecture_date}
               to={`/lectures/${item.lecture_date}`}
