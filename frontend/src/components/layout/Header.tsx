@@ -58,28 +58,26 @@ export default function Header({ isMobile }: HeaderProps) {
       >
         {title}
       </h1>
-      {!isMobile && (
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          {roleBadgeText && (
-            <button
-              onClick={() => navigate("/select-role")}
-              className="text-caption"
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                transition: "color 0.15s",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "var(--primary)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "";
-              }}
-            >
-              {roleBadgeText}
-            </button>
-          )}
+      <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 8 : 16 }}>
+        {roleBadgeText && (
+          <button
+            onClick={() => navigate("/")}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: isMobile ? 12 : 13,
+              color: "var(--text-muted)",
+              fontWeight: 600,
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--primary)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; }}
+          >
+            {roleBadgeText}
+          </button>
+        )}
+        {!isMobile && (
           <Link
             to="/settings"
             style={{
@@ -96,8 +94,8 @@ export default function Header({ isMobile }: HeaderProps) {
           >
             <Settings size={20} />
           </Link>
-        </div>
-      )}
+        )}
+      </div>
     </header>
   );
 }
