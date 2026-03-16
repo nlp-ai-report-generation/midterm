@@ -1,240 +1,204 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 
 const STATS = [
-  { label: "강의 수", value: "15" },
-  { label: "평가 항목", value: "18" },
-  { label: "AI 모델", value: "3" },
-  { label: "평가 결과", value: "45" },
+  { value: "15", desc: "개 강의를 분석했습니다" },
+  { value: "5", desc: "개 카테고리, 18개 항목으로 평가합니다" },
+  { value: "3", desc: "개 AI 모델로 교차 검증합니다" },
 ];
 
-const PIPELINE_NODES = [
-  { id: "preprocessor", label: "Preprocessor", sub: "STT 파싱 + 청킹", active: false },
-];
-
-const EVALUATORS = [
-  { id: "lang", label: "언어 품질" },
-  { id: "struct", label: "강의 구조" },
-  { id: "concept", label: "개념 명확성" },
-  { id: "example", label: "예시/실습" },
-  { id: "interact", label: "상호작용" },
-];
-
-const POST_NODES = [
-  { id: "aggregator", label: "Aggregator", sub: "가중 평균 계산", active: true },
-  { id: "calibrator", label: "Calibrator", sub: "교차 보정", active: false },
-  { id: "report", label: "Report Generator", sub: "마크다운 리포트", active: false },
+const PIPELINE_STEPS = [
+  {
+    title: "트랜스크립트 전처리",
+    desc: "STT 텍스트를 시간 단위로 분할합니다.",
+  },
+  {
+    title: "5개 카테고리 병렬 평가",
+    desc: "언어 품질, 강의 구조, 개념 명확성, 예시/실습, 상호작용",
+  },
+  {
+    title: "점수 집계 및 보정",
+    desc: "가중 평균을 계산하고 카테고리 간 일관성을 확인합니다.",
+  },
+  {
+    title: "리포트 생성",
+    desc: "강점, 개선점, 구체적 제안을 정리합니다.",
+  },
 ];
 
 const TECH_STACK = [
-  { category: "프론트엔드", items: "React 19, Vite, TypeScript, Tailwind CSS v4, Recharts" },
-  { category: "백엔드", items: "Python 3.11, LangGraph, FastAPI" },
-  { category: "LLM", items: "GPT-4o mini, Claude Opus, Claude Sonnet" },
-  { category: "배포", items: "GitHub Pages, GitHub Actions" },
-  { category: "데이터", items: "정적 JSON (DB 불필요)" },
+  { key: "프론트엔드", value: "React, Vite, TypeScript, Tailwind CSS" },
+  { key: "백엔드", value: "Python, LangGraph, FastAPI" },
+  { key: "LLM", value: "GPT-4o mini, Claude Opus, Claude Sonnet" },
+  { key: "배포", value: "GitHub Pages" },
 ];
-
-function ArrowDown() {
-  return (
-    <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
-      <div
-        style={{
-          width: 2,
-          height: 24,
-          background: "var(--grey-300)",
-          position: "relative",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: 0,
-            height: 0,
-            borderLeft: "5px solid transparent",
-            borderRight: "5px solid transparent",
-            borderTop: "6px solid var(--grey-300)",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
 
 export default function AboutPage() {
   return (
-    <div className="page-content" style={{ padding: "40px 24px 80px" }}>
-      {/* Hero */}
-      <div className="card card-padded" style={{ textAlign: "center" }}>
+    <div
+      style={{
+        background: "var(--surface)",
+        minHeight: "100vh",
+      }}
+    >
+      <div
+        className="page-content"
+        style={{
+          padding: "60px 24px 80px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 48,
+        }}
+      >
+        {/* Intro */}
+        <div>
+          <h1
+            className="text-title"
+            style={{ fontSize: 26, marginBottom: 12 }}
+          >
+            AI 강의 분석 리포트
+          </h1>
+          <p
+            className="text-body"
+            style={{ maxWidth: 460, lineHeight: 1.8 }}
+          >
+            STT 트랜스크립트를 분석해서 강의 품질을
+            항목별로 평가하고 근거를 정리합니다.
+          </p>
+        </div>
+
+        {/* Stats */}
         <div
           style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 48,
-            height: 48,
-            borderRadius: 14,
-            background: "var(--primary)",
-            color: "var(--surface)",
-            fontSize: 20,
-            fontWeight: 800,
-            marginBottom: 20,
+            display: "flex",
+            flexDirection: "column",
+            gap: 20,
           }}
         >
-          L
-        </div>
-        <h1 className="text-title" style={{ fontSize: 26, marginBottom: 12 }}>
-          AI 강의 분석 리포트
-        </h1>
-        <p className="text-body" style={{ maxWidth: 520, margin: "0 auto", lineHeight: 1.8 }}>
-          STT 트랜스크립트를 AI가 분석하여 5개 카테고리 × 18개 항목으로 강의 품질을 평가하고,
-          교육 운영자와 강사에게 근거 기반 피드백을 제공합니다.
-        </p>
-      </div>
-
-      {/* Stats */}
-      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))" }}>
-        {STATS.map((stat) => (
-          <div key={stat.label} className="card card-padded" style={{ textAlign: "center" }}>
-            <div className="text-number" style={{ color: "var(--primary)", marginBottom: 6 }}>
-              {stat.value}
+          {STATS.map((stat) => (
+            <div key={stat.value} style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+              <span
+                className="text-number"
+                style={{ color: "var(--primary)" }}
+              >
+                {stat.value}
+              </span>
+              <span
+                className="text-body"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                {stat.desc}
+              </span>
             </div>
-            <div className="text-caption">{stat.label}</div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* Architecture */}
-      <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 24 }}>평가 파이프라인</h2>
-
-        {/* Preprocessor */}
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        {/* Pipeline */}
+        <div>
+          <h2
+            className="text-section"
+            style={{ marginBottom: 24 }}
+          >
+            평가 과정
+          </h2>
           <div
-            className="inner-card"
             style={{
-              textAlign: "center",
-              minWidth: 200,
-              padding: "16px 24px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 24,
             }}
           >
-            <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text-primary)" }}>
-              {PIPELINE_NODES[0].label}
-            </div>
-            <div className="text-caption" style={{ fontSize: 12, marginTop: 4 }}>
-              {PIPELINE_NODES[0].sub}
-            </div>
+            {PIPELINE_STEPS.map((step, i) => (
+              <div key={i} style={{ display: "flex", gap: 16 }}>
+                <span
+                  style={{
+                    flexShrink: 0,
+                    width: 28,
+                    height: 28,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "var(--primary)",
+                    background: "var(--primary-light)",
+                    borderRadius: "var(--radius-sm)",
+                  }}
+                >
+                  {i + 1}
+                </span>
+                <div style={{ paddingTop: 2 }}>
+                  <p
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 600,
+                      color: "var(--text-primary)",
+                      marginBottom: 4,
+                      lineHeight: 1.5,
+                    }}
+                  >
+                    {step.title}
+                  </p>
+                  <p className="text-body">{step.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        <ArrowDown />
-
-        {/* 5 Parallel Evaluators */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-            gap: 10,
-          }}
-        >
-          {EVALUATORS.map((ev) => (
-            <div
-              key={ev.id}
-              className="inner-card"
-              style={{
-                textAlign: "center",
-                padding: "14px 12px",
-                background: "var(--primary-light)",
-              }}
-            >
+        {/* Tech Stack */}
+        <div>
+          <h2
+            className="text-section"
+            style={{ marginBottom: 20 }}
+          >
+            기술 스택
+          </h2>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 12,
+            }}
+          >
+            {TECH_STACK.map((row) => (
               <div
+                key={row.key}
                 style={{
-                  fontSize: 13,
-                  fontWeight: 700,
-                  color: "var(--primary)",
+                  display: "flex",
+                  gap: 16,
+                  alignItems: "baseline",
                 }}
               >
-                {ev.label}
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="text-caption" style={{ textAlign: "center", marginTop: 6 }}>
-          5개 카테고리 병렬 평가
-        </div>
-
-        <ArrowDown />
-
-        {/* Post-processing nodes */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
-          {POST_NODES.map((node, i) => (
-            <div key={node.id}>
-              <div
-                className="inner-card"
-                style={{
-                  textAlign: "center",
-                  minWidth: 200,
-                  padding: "16px 24px",
-                  background: node.active ? "var(--primary)" : undefined,
-                }}
-              >
-                <div
+                <span
                   style={{
-                    fontSize: 14,
-                    fontWeight: 700,
-                    color: node.active ? "var(--surface)" : "var(--text-primary)",
+                    flexShrink: 0,
+                    width: 80,
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: "var(--text-tertiary)",
                   }}
                 >
-                  {node.label}
-                </div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    marginTop: 4,
-                    color: node.active ? "rgba(255,255,255,0.75)" : "var(--text-muted)",
-                  }}
-                >
-                  {node.sub}
-                </div>
+                  {row.key}
+                </span>
+                <span className="text-body">{row.value}</span>
               </div>
-              {i < POST_NODES.length - 1 && <ArrowDown />}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Tech Stack */}
-      <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 20 }}>기술 스택</h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {TECH_STACK.map((row) => (
-            <div key={row.category} className="inner-card" style={{ padding: "16px 20px" }}>
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: "var(--primary)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                  marginBottom: 4,
-                }}
-              >
-                {row.category}
-              </div>
-              <div className="text-body">{row.items}</div>
-            </div>
-          ))}
+        {/* CTA */}
+        <div>
+          <Link
+            to="/dashboard"
+            className="btn-primary"
+            style={{
+              fontSize: 15,
+              padding: "14px 32px",
+            }}
+          >
+            시작하기 →
+          </Link>
         </div>
-      </div>
-
-      {/* CTA */}
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <Link to="/dashboard" className="btn-primary" style={{ gap: 8, fontSize: 15, padding: "14px 32px" }}>
-          시작하기
-          <ArrowRight size={18} />
-        </Link>
       </div>
     </div>
   );

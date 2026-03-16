@@ -49,6 +49,13 @@ export default function ComparePage() {
     [evaluations, dateB]
   );
 
+  const labelA = evalA
+    ? `${formatDateShort(evalA.lecture_date)} · ${evalA.metadata?.subjects?.[0] ?? "강의"}`
+    : "강의 A";
+  const labelB = evalB
+    ? `${formatDateShort(evalB.lecture_date)} · ${evalB.metadata?.subjects?.[0] ?? "강의"}`
+    : "강의 B";
+
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -70,11 +77,11 @@ export default function ComparePage() {
         </p>
       </div>
 
-      {/* Date Selectors */}
+      {/* Date Selectors — responsive single column on mobile */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
+          gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
           gap: 16,
         }}
       >
@@ -138,14 +145,14 @@ export default function ComparePage() {
         </div>
       </div>
 
-      {/* Side-by-side comparison */}
+      {/* Comparison */}
       {evalA && evalB && (
         <>
-          {/* Overall Score */}
+          {/* Overall Score — responsive */}
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
               gap: 16,
             }}
           >
@@ -154,8 +161,7 @@ export default function ComparePage() {
               style={{ textAlign: "center" }}
             >
               <p className="text-caption" style={{ marginBottom: 8 }}>
-                {formatDateShort(evalA.lecture_date)} ·{" "}
-                {evalA.metadata?.subjects?.[0] ?? "강의"}
+                {labelA}
               </p>
               <ScoreBadge score={evalA.weighted_average} size="lg" />
               <p className="text-body" style={{ marginTop: 8 }}>
@@ -167,8 +173,7 @@ export default function ComparePage() {
               style={{ textAlign: "center" }}
             >
               <p className="text-caption" style={{ marginBottom: 8 }}>
-                {formatDateShort(evalB.lecture_date)} ·{" "}
-                {evalB.metadata?.subjects?.[0] ?? "강의"}
+                {labelB}
               </p>
               <ScoreBadge score={evalB.weighted_average} size="lg" />
               <p className="text-body" style={{ marginTop: 8 }}>
@@ -177,219 +182,223 @@ export default function ComparePage() {
             </div>
           </div>
 
-          {/* Category Comparison */}
+          {/* Category Comparison — simple table */}
           <div className="card card-padded">
             <h2 className="text-section" style={{ marginBottom: 20 }}>
               카테고리별 비교
             </h2>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: 12 }}
-            >
-              {CATEGORY_NAMES.map((cat) => {
-                const scoreA = evalA.category_averages[cat] ?? 0;
-                const scoreB = evalB.category_averages[cat] ?? 0;
-                const diff = scoreB - scoreA;
-                const aHigher = scoreA > scoreB;
-                const bHigher = scoreB > scoreA;
-
-                return (
-                  <div key={cat} className="inner-card">
-                    <p
+            <div style={{ overflowX: "auto" }}>
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  fontSize: 14,
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th
                       className="text-label"
-                      style={{ marginBottom: 12 }}
-                    >
-                      {cat.replace(/^\d+\.\s*/, "")}
-                    </p>
-                    <div
                       style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr auto 1fr",
-                        alignItems: "center",
-                        gap: 12,
+                        textAlign: "left",
+                        padding: "10px 12px",
+                        borderBottom: "1px solid var(--grey-200)",
                       }}
                     >
-                      {/* Score A */}
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 8,
-                        }}
-                      >
-                        <span
-                          className="score-badge score-badge-sm"
+                      카테고리
+                    </th>
+                    <th
+                      className="text-label"
+                      style={{
+                        textAlign: "center",
+                        padding: "10px 12px",
+                        borderBottom: "1px solid var(--grey-200)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      A 점수
+                    </th>
+                    <th
+                      className="text-label"
+                      style={{
+                        textAlign: "center",
+                        padding: "10px 12px",
+                        borderBottom: "1px solid var(--grey-200)",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      B 점수
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {CATEGORY_NAMES.map((cat) => {
+                    const scoreA = evalA.category_averages[cat] ?? 0;
+                    const scoreB = evalB.category_averages[cat] ?? 0;
+                    const aHigher = scoreA > scoreB;
+                    const bHigher = scoreB > scoreA;
+
+                    return (
+                      <tr key={cat}>
+                        <td
                           style={{
-                            backgroundColor: scoreColor(scoreA),
-                            color: scoreBadgeTextColor(scoreA),
-                            opacity: aHigher ? 1 : 0.6,
-                            fontWeight: aHigher ? 800 : 600,
+                            padding: "12px",
+                            color: "var(--text-primary)",
+                            fontWeight: 500,
+                            borderBottom: "1px solid var(--grey-100)",
                           }}
                         >
-                          {scoreA.toFixed(1)}
-                        </span>
-                        {aHigher && (
-                          <span
-                            style={{
-                              fontSize: 11,
-                              fontWeight: 700,
-                              color: "var(--primary)",
-                            }}
-                          >
-                            HIGH
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Diff indicator */}
-                      <span
-                        style={{
-                          fontSize: 12,
-                          fontWeight: 700,
-                          color:
-                            diff > 0
-                              ? "var(--score-4)"
-                              : diff < 0
-                                ? "var(--score-2)"
-                                : "var(--text-muted)",
-                          minWidth: 48,
-                          textAlign: "center",
-                        }}
-                      >
-                        {diff > 0 ? "+" : ""}
-                        {diff.toFixed(1)}
-                      </span>
-
-                      {/* Score B */}
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "flex-end",
-                          gap: 8,
-                        }}
-                      >
-                        {bHigher && (
-                          <span
-                            style={{
-                              fontSize: 11,
-                              fontWeight: 700,
-                              color: "var(--primary)",
-                            }}
-                          >
-                            HIGH
-                          </span>
-                        )}
-                        <span
-                          className="score-badge score-badge-sm"
+                          {cat.replace(/^\d+\.\s*/, "")}
+                        </td>
+                        <td
                           style={{
-                            backgroundColor: scoreColor(scoreB),
-                            color: scoreBadgeTextColor(scoreB),
-                            opacity: bHigher ? 1 : 0.6,
-                            fontWeight: bHigher ? 800 : 600,
+                            padding: "12px",
+                            textAlign: "center",
+                            borderBottom: "1px solid var(--grey-100)",
                           }}
                         >
-                          {scoreB.toFixed(1)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+                          <span
+                            className="score-badge score-badge-sm"
+                            style={{
+                              backgroundColor: scoreColor(scoreA),
+                              color: scoreBadgeTextColor(scoreA),
+                              opacity: aHigher ? 1 : 0.6,
+                              fontWeight: aHigher ? 800 : 600,
+                            }}
+                          >
+                            {scoreA.toFixed(1)}
+                          </span>
+                        </td>
+                        <td
+                          style={{
+                            padding: "12px",
+                            textAlign: "center",
+                            borderBottom: "1px solid var(--grey-100)",
+                          }}
+                        >
+                          <span
+                            className="score-badge score-badge-sm"
+                            style={{
+                              backgroundColor: scoreColor(scoreB),
+                              color: scoreBadgeTextColor(scoreB),
+                              opacity: bHigher ? 1 : 0.6,
+                              fontWeight: bHigher ? 800 : 600,
+                            }}
+                          >
+                            {scoreB.toFixed(1)}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
 
-          {/* Strengths / Improvements Diff */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 16,
-            }}
-          >
-            {/* Strengths */}
-            <div className="card card-padded">
-              <h2 className="text-section" style={{ marginBottom: 16 }}>
-                강점
-              </h2>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 12,
-                }}
-              >
-                <div>
-                  <p className="text-label" style={{ marginBottom: 8 }}>
-                    강의 A
-                  </p>
-                  {(evalA.strengths ?? []).map((s, i) => (
-                    <div
-                      key={i}
-                      className="inner-card"
-                      style={{ marginBottom: 8 }}
+          {/* Strengths — single list with [A]/[B] labels */}
+          <div className="card card-padded">
+            <h2 className="text-section" style={{ marginBottom: 16 }}>
+              잘하고 있는 부분
+            </h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {(evalA.strengths ?? []).map((s, i) => (
+                <div key={`a-${i}`} className="inner-card" style={{ padding: "14px 20px" }}>
+                  <p className="text-body">
+                    <span
+                      style={{
+                        display: "inline-block",
+                        fontWeight: 700,
+                        fontSize: 12,
+                        color: "var(--primary)",
+                        background: "var(--primary-light)",
+                        borderRadius: "var(--radius-sm)",
+                        padding: "2px 8px",
+                        marginRight: 10,
+                        verticalAlign: "middle",
+                      }}
                     >
-                      <p className="text-body">{s}</p>
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <p className="text-label" style={{ marginBottom: 8 }}>
-                    강의 B
+                      A
+                    </span>
+                    {s}
                   </p>
-                  {(evalB.strengths ?? []).map((s, i) => (
-                    <div
-                      key={i}
-                      className="inner-card"
-                      style={{ marginBottom: 8 }}
-                    >
-                      <p className="text-body">{s}</p>
-                    </div>
-                  ))}
                 </div>
-              </div>
+              ))}
+              {(evalB.strengths ?? []).map((s, i) => (
+                <div key={`b-${i}`} className="inner-card" style={{ padding: "14px 20px" }}>
+                  <p className="text-body">
+                    <span
+                      style={{
+                        display: "inline-block",
+                        fontWeight: 700,
+                        fontSize: 12,
+                        color: "var(--text-primary)",
+                        background: "var(--grey-200)",
+                        borderRadius: "var(--radius-sm)",
+                        padding: "2px 8px",
+                        marginRight: 10,
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      B
+                    </span>
+                    {s}
+                  </p>
+                </div>
+              ))}
             </div>
+          </div>
 
-            {/* Improvements */}
-            <div className="card card-padded">
-              <h2 className="text-section" style={{ marginBottom: 16 }}>
-                개선점
-              </h2>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 12,
-                }}
-              >
-                <div>
-                  <p className="text-label" style={{ marginBottom: 8 }}>
-                    강의 A
-                  </p>
-                  {(evalA.improvements ?? []).map((s, i) => (
-                    <div
-                      key={i}
-                      className="inner-card"
-                      style={{ marginBottom: 8 }}
+          {/* Improvements — single list with [A]/[B] labels */}
+          <div className="card card-padded">
+            <h2 className="text-section" style={{ marginBottom: 16 }}>
+              더 나아질 수 있는 부분
+            </h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {(evalA.improvements ?? []).map((s, i) => (
+                <div key={`a-${i}`} className="inner-card" style={{ padding: "14px 20px" }}>
+                  <p className="text-body">
+                    <span
+                      style={{
+                        display: "inline-block",
+                        fontWeight: 700,
+                        fontSize: 12,
+                        color: "var(--primary)",
+                        background: "var(--primary-light)",
+                        borderRadius: "var(--radius-sm)",
+                        padding: "2px 8px",
+                        marginRight: 10,
+                        verticalAlign: "middle",
+                      }}
                     >
-                      <p className="text-body">{s}</p>
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  <p className="text-label" style={{ marginBottom: 8 }}>
-                    강의 B
+                      A
+                    </span>
+                    {s}
                   </p>
-                  {(evalB.improvements ?? []).map((s, i) => (
-                    <div
-                      key={i}
-                      className="inner-card"
-                      style={{ marginBottom: 8 }}
-                    >
-                      <p className="text-body">{s}</p>
-                    </div>
-                  ))}
                 </div>
-              </div>
+              ))}
+              {(evalB.improvements ?? []).map((s, i) => (
+                <div key={`b-${i}`} className="inner-card" style={{ padding: "14px 20px" }}>
+                  <p className="text-body">
+                    <span
+                      style={{
+                        display: "inline-block",
+                        fontWeight: 700,
+                        fontSize: 12,
+                        color: "var(--text-primary)",
+                        background: "var(--grey-200)",
+                        borderRadius: "var(--radius-sm)",
+                        padding: "2px 8px",
+                        marginRight: 10,
+                        verticalAlign: "middle",
+                      }}
+                    >
+                      B
+                    </span>
+                    {s}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </>
