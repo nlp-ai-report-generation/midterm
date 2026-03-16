@@ -6,10 +6,7 @@ export default function RoleSelectPage() {
   const { role, setRole, setInstructorName } = useRole();
   const navigate = useNavigate();
 
-  // 이미 역할이 설정되어 있으면 대시보드로
-  useEffect(() => {
-    if (role) navigate("/dashboard", { replace: true });
-  }, [role, navigate]);
+  // /select-role 경로에서만 자동 리다이렉트 (/ 메인에서는 항상 표시)
   const [showNameInput, setShowNameInput] = useState(false);
   const [name, setName] = useState("김영아");
 
