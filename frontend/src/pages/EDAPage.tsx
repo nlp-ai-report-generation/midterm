@@ -58,9 +58,14 @@ export default function EDAPage() {
 
   useEffect(() => {
     Promise.all([
-      getTranscriptStats(), getSpeakerDistribution(), getFillerWords(),
-      getInteractionMetrics(), getCurriculumFlow(),
-      getOpusAnalysis(), getOpusFillerAnalysis(), getOpusInteractionAnalysis(),
+      getTranscriptStats().catch(() => []),
+      getSpeakerDistribution().catch(() => []),
+      getFillerWords().catch(() => []),
+      getInteractionMetrics().catch(() => []),
+      getCurriculumFlow().catch(() => []),
+      getOpusAnalysis().catch(() => null),
+      getOpusFillerAnalysis().catch(() => []),
+      getOpusInteractionAnalysis().catch(() => []),
     ])
       .then(([s, sp, f, i, c, oa, of_, oi]) => {
         setStats(s); setSpeakers(sp); setFillerWords(f);
