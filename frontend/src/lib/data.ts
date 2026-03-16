@@ -10,7 +10,7 @@ import type {
   ChecklistItem,
 } from "@/types/evaluation";
 
-const DATA_BASE = "/data";
+const DATA_BASE = `${import.meta.env.BASE_URL}data`;
 
 async function fetchJSON<T>(path: string): Promise<T> {
   const res = await fetch(`${DATA_BASE}/${path}`);
