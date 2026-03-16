@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useRole } from "@/contexts/RoleContext";
+import { useAuth } from "@/contexts/AuthContext";
 import Layout from "@/components/layout/Layout";
 import RoleSelectPage from "@/pages/RoleSelectPage";
 import DashboardPage from "@/app/dashboard/page";
@@ -17,7 +18,12 @@ import AboutPage from "@/pages/AboutPage";
 
 function RequireRole({ children }: { children: React.ReactNode }) {
   const { role } = useRole();
-  if (!role) return <Navigate to="/" replace />;
+  const { user, loading } = useAuth();
+
+  if (loading) return null;
+
+  // Allow access if user is logged in OR has a guest role set
+  if (!role && !user) return <Navigate to="/" replace />;
   return <>{children}</>;
 }
 

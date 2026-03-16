@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Settings } from "lucide-react";
 import { useRole } from "@/contexts/RoleContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "대시보드",
@@ -21,6 +22,14 @@ function getPageTitle(pathname: string): string {
   return PAGE_TITLES[pathname] ?? "대시보드";
 }
 
+function truncateEmail(email: string, max = 20): string {
+  if (email.length <= max) return email;
+  const [local, domain] = email.split("@");
+  if (!domain) return email.slice(0, max) + "...";
+  const keep = Math.max(3, max - domain.length - 4);
+  return local.slice(0, keep) + "...@" + domain;
+}
+
 interface HeaderProps {
   isMobile?: boolean;
 }
@@ -29,14 +38,31 @@ export default function Header({ isMobile }: HeaderProps) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { role, instructorName } = useRole();
+  const { user, signOut } = useAuth();
   const title = getPageTitle(pathname);
 
-  const roleBadgeText =
-    role === "operator"
+  const isLoggedIn = !!user;
+
+  const badgeText = isLoggedIn
+    ? truncateEmail(user.email ?? "사용자")
+    : role === "operator"
       ? "운영자"
       : role === "instructor"
         ? `강사: ${instructorName || "미설정"}`
         : null;
+
+  const handleBadgeClick = () => {
+    if (isLoggedIn) {
+      navigate("/settings");
+    } else {
+      navigate("/");
+    }
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <header
@@ -64,9 +90,9 @@ export default function Header({ isMobile }: HeaderProps) {
         {title}
       </h1>
       <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 8 : 16 }}>
-        {roleBadgeText && (
+        {badgeText && (
           <button
-            onClick={() => navigate("/")}
+            onClick={handleBadgeClick}
             style={{
               background: "none",
               border: "none",
@@ -79,7 +105,25 @@ export default function Header({ isMobile }: HeaderProps) {
             onMouseEnter={(e) => { e.currentTarget.style.color = "var(--primary)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; }}
           >
-            {roleBadgeText}
+            {badgeText}
+          </button>
+        )}
+        {isLoggedIn && (
+          <button
+            onClick={handleLogout}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: isMobile ? 12 : 13,
+              color: "var(--text-tertiary)",
+              fontWeight: 500,
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--danger, #e53e3e)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-tertiary)"; }}
+          >
+            로그아웃
           </button>
         )}
         {!isMobile && (

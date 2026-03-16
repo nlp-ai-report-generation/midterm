@@ -1,27 +1,21 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { useRole } from "@/contexts/RoleContext";
 
 export default function RoleSelectPage() {
-  const { role, setRole, setInstructorName } = useRole();
+  const { user, loading, signInWithGoogle, signInWithNotion } = useAuth();
+  const { setRole } = useRole();
   const navigate = useNavigate();
 
-  // /select-role 경로에서만 자동 리다이렉트 (/ 메인에서는 항상 표시)
-  const [showNameInput, setShowNameInput] = useState(false);
-  const [name, setName] = useState("김영아");
+  useEffect(() => {
+    if (!loading && user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, loading, navigate]);
 
-  const pickOperator = () => {
+  const handleGuest = () => {
     setRole("operator");
-    navigate("/dashboard");
-  };
-
-  const pickInstructor = () => {
-    setShowNameInput(true);
-  };
-
-  const submitInstructor = () => {
-    setRole("instructor");
-    setInstructorName(name.trim() || "김영아");
     navigate("/dashboard");
   };
 
@@ -39,7 +33,7 @@ export default function RoleSelectPage() {
       }}
     >
       <div style={{ width: "100%", maxWidth: 460 }}>
-        {/* 헤드라인 */}
+        {/* Logo + headline */}
         <div style={{ marginBottom: 40 }}>
           <div
             style={{
@@ -59,141 +53,102 @@ export default function RoleSelectPage() {
               letterSpacing: "-0.03em",
             }}
           >
-            강의가 어땠는지,
-            <br />
-            데이터로 확인하세요.
+            AI 강의 분석 리포트
           </h1>
           <p
             className="text-body"
             style={{ marginTop: 12, maxWidth: 360 }}
           >
-            15개 강의의 STT 트랜스크립트를 AI가 분석해서
+            STT 트랜스크립트를 AI가 분석해서
+            <br />
             항목별 점수와 근거를 정리해드립니다.
           </p>
         </div>
 
-        {!showNameInput ? (
-          <>
-            {/* 역할 선택 */}
-            <p
-              style={{
-                fontSize: 13,
-                fontWeight: 600,
-                color: "var(--text-muted)",
-                marginBottom: 12,
-              }}
-            >
-              어떤 관점에서 보시겠어요?
-            </p>
+        {/* Auth buttons */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <button
+            onClick={signInWithGoogle}
+            className="btn-primary"
+            style={{
+              width: "100%",
+              padding: "14px 24px",
+              fontSize: 15,
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            구글로 시작하기
+          </button>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              <button
-                onClick={pickOperator}
-                className="card card-hover"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "20px 24px",
-                  cursor: "pointer",
-                  border: "none",
-                  textAlign: "left",
-                  transition: "box-shadow 0.2s, transform 0.15s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}
-              >
-                <div>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)" }}>
-                    운영 담당자
-                  </p>
-                  <p className="text-caption" style={{ marginTop: 4 }}>
-                    전체 강의 품질을 비교하고 관리합니다
-                  </p>
-                </div>
-                <span style={{ fontSize: 20, color: "var(--text-muted)" }}>→</span>
-              </button>
+          <button
+            onClick={signInWithNotion}
+            className="btn-secondary"
+            style={{
+              width: "100%",
+              padding: "14px 24px",
+              fontSize: 15,
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            노션으로 시작하기
+          </button>
+        </div>
 
-              <button
-                onClick={pickInstructor}
-                className="card card-hover"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "20px 24px",
-                  cursor: "pointer",
-                  border: "none",
-                  textAlign: "left",
-                  transition: "box-shadow 0.2s, transform 0.15s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}
-              >
-                <div>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)" }}>
-                    강사
-                  </p>
-                  <p className="text-caption" style={{ marginTop: 4 }}>
-                    내 강의를 돌아보고 다음 수업을 준비합니다
-                  </p>
-                </div>
-                <span style={{ fontSize: 20, color: "var(--text-muted)" }}>→</span>
-              </button>
-            </div>
+        {/* Divider */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            margin: "24px 0",
+          }}
+        >
+          <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+          <span
+            style={{
+              fontSize: 13,
+              color: "var(--text-muted)",
+              fontWeight: 500,
+              whiteSpace: "nowrap",
+            }}
+          >
+            또는
+          </span>
+          <div style={{ flex: 1, height: 1, background: "var(--border)" }} />
+        </div>
 
-            <p
-              className="text-caption"
-              style={{ marginTop: 24 }}
-            >
-              언제든 설정에서 바꿀 수 있어요.
-            </p>
-          </>
-        ) : (
-          <>
-            {/* 강사 이름 입력 */}
-            <p
-              style={{
-                fontSize: 13,
-                fontWeight: 600,
-                color: "var(--text-muted)",
-                marginBottom: 12,
-              }}
-            >
-              이름을 입력해주세요
-            </p>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="input-field"
-                placeholder="강사 이름"
-                autoFocus
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") submitInstructor();
-                }}
-              />
-              <div style={{ display: "flex", gap: 12 }}>
-                <button
-                  onClick={() => setShowNameInput(false)}
-                  className="btn-secondary"
-                  style={{ flex: 1 }}
-                >
-                  뒤로
-                </button>
-                <button
-                  onClick={submitInstructor}
-                  className="btn-primary"
-                  style={{ flex: 1 }}
-                >
-                  시작하기
-                </button>
-              </div>
-            </div>
-          </>
-        )}
+        {/* Guest link */}
+        <div style={{ textAlign: "center" }}>
+          <button
+            onClick={handleGuest}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: 15,
+              fontWeight: 600,
+              color: "var(--text-secondary)",
+              padding: "8px 0",
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "var(--primary)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "var(--text-secondary)";
+            }}
+          >
+            둘러보기
+          </button>
+          <p
+            className="text-caption"
+            style={{ marginTop: 8 }}
+          >
+            로그인 없이도 샘플 데이터를 확인할 수 있습니다
+          </p>
+        </div>
       </div>
     </div>
   );
