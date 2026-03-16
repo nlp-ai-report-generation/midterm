@@ -122,13 +122,13 @@ function OverviewTab({ data, showAi }: { data: TranscriptStats[]; showAi: boolea
   const minEntry = data.reduce((m, d) => (d.line_count < m.line_count ? d : m), data[0]);
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
       <AiSummary
         text="15일간 약 2.3만 줄이 기록되었으며, 일 평균 1,500줄 수준으로 안정적인 분석 표본입니다."
         show={showAi}
       />
 
-      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
         <InsightCard label="총 발화량" value={`${totalLines.toLocaleString()}줄`} />
         <InsightCard label="일 평균" value={`${avgLines.toLocaleString()}줄`} />
         <InsightCard label="가장 많은 날" value={`${maxEntry?.line_count.toLocaleString()}줄`} />
@@ -179,13 +179,13 @@ function SpeakersTab({ data, showAi }: { data: SpeakerDistribution[]; showAi: bo
   }));
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
       <AiSummary
         text="전체 강의의 67%가 단독 수업이며, 주강사 발화 비율이 높은 편입니다."
         show={showAi}
       />
 
-      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
         <InsightCard label="주강사 비율" value={`${mainRatio}%`} />
         <InsightCard label="공동 수업" value={`${multiCount}개`} />
         <InsightCard label="단독 강의" value={`${soloCount}개`} />
@@ -221,13 +221,13 @@ function InteractionTab({ data, showAi }: { data: InteractionMetrics[]; showAi: 
   const avgQ = data.length > 0 ? (totalQ / data.length).toFixed(1) : "0";
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
       <AiSummary
         text="질문과 이해도 확인이 활발하여, 강사가 적극적으로 소통하고 있습니다."
         show={showAi}
       />
 
-      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
         <InsightCard label="질문 총 횟수" value={`${totalQ}회`} />
         <InsightCard label="이해도 확인" value={`${totalCheck}회`} />
         <InsightCard label="강의당 평균 질문" value={`${avgQ}회`} />
@@ -271,13 +271,13 @@ function FillerTab({ data, showAi }: { data: FillerWordStats[]; showAi: boolean 
   const totalAll = sorted.reduce((s, [, c]) => s + c, 0);
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
       <AiSummary
         text="'자', '그래서', '이제' 순으로 습관 표현이 빈번합니다."
         show={showAi}
       />
 
-      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
         {sorted.map(([word, count]) => (
           <InsightCard key={word} label={`"${word}"`} value={count.toLocaleString()} />
         ))}
@@ -339,14 +339,14 @@ function CurriculumTab({ data, showAi }: { data: CurriculumEntry[]; showAi: bool
   });
 
   return (
-    <div className="space-y-6">
+    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
       <AiSummary
         text="프론트엔드 중심의 9일 과정 후 백엔드로 전환되는 구조입니다."
         show={showAi}
       />
 
       {/* 상단 요약 카드 */}
-      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+      <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))" }}>
         {groups.map((g) => (
           <InsightCard key={g.subject} label={g.subject} value={`${g.entries.length}일`} />
         ))}

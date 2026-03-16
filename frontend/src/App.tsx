@@ -6,6 +6,7 @@ import DashboardPage from "@/app/dashboard/page";
 import LecturesPage from "@/app/lectures/page";
 import LectureDetailPage from "@/app/lectures/[date]/page";
 import EDAPage from "@/pages/EDAPage";
+import ChecklistPage from "@/pages/ChecklistPage";
 import ExperimentsPage from "@/pages/ExperimentsPage";
 import SettingsPage from "@/pages/SettingsPage";
 
@@ -31,6 +32,7 @@ export default function App() {
         <Route path="/lectures" element={<LecturesPage />} />
         <Route path="/lectures/:date" element={<LectureDetailPage />} />
         <Route path="/eda" element={<EDAPage />} />
+        <Route path="/checklist" element={<ChecklistPage />} />
         <Route path="/experiments" element={<ExperimentsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />

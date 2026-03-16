@@ -6,6 +6,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "대시보드",
   "/lectures": "강의 평가",
   "/eda": "데이터 분석",
+  "/checklist": "평가 기준",
   "/experiments": "실험 기록",
   "/settings": "설정",
 };
