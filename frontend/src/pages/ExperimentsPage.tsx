@@ -502,6 +502,54 @@ export default function ExperimentsPage() {
           ))}
         </div>
       </div>
+
+      {/* Section 6: 신뢰도 지표 안내 */}
+      <div className="card card-padded">
+        <h2 className="text-section" style={{ marginBottom: 4 }}>
+          평가 신뢰도 지표
+        </h2>
+        <p className="text-caption" style={{ marginBottom: 24 }}>
+          여러 모델의 평가가 얼마나 일관되는지 측정하는 통계 지표입니다
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          {[
+            {
+              name: "Cohen's κ (카파)",
+              threshold: "≥ 0.61",
+              level: "양호",
+              desc: "두 번 평가했을 때 결과가 얼마나 같은지를 측정합니다. 0.61 이상이면 평가자 간 판단이 상당히 일치합니다.",
+            },
+            {
+              name: "Krippendorff's α (알파)",
+              threshold: "≥ 0.667",
+              level: "신뢰 가능",
+              desc: "여러 평가자가 동의하는 정도를 측정합니다. 0.667 이상이면 잠정적으로 신뢰할 수 있는 수준입니다.",
+            },
+            {
+              name: "ICC (급내상관계수)",
+              threshold: "≥ 0.75",
+              level: "안정적",
+              desc: "점수의 재현 가능성을 측정합니다. 0.75 이상이면 동일 강의를 다시 평가해도 비슷한 점수가 나옵니다.",
+            },
+          ].map((metric) => (
+            <div key={metric.name} className="inner-card">
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 8 }}>
+                <span style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)" }}>
+                  {metric.name}
+                </span>
+                <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: "var(--primary)" }}>
+                    {metric.threshold}
+                  </span>
+                  <span className="text-caption">{metric.level}</span>
+                </span>
+              </div>
+              <p className="text-body">{metric.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
