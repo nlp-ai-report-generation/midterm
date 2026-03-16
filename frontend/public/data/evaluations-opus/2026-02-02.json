@@ -1,0 +1,78 @@
+{
+  "lecture_date": "2026-02-02",
+  "transcript_path": "2026-02-02_kdt-backendj-21th.txt",
+  "metadata": {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-02",
+    "subjects": ["객체지향 프로그래밍"],
+    "contents": ["데코레이터 패턴, 옵저버 패턴", "파사드 패턴, 전략 패턴"],
+    "instructor": "김영아",
+    "sub_instructors": ["김다은", "정석현"]
+  },
+  "category_results": [
+    {
+      "category_name": "1. 언어 표현 품질",
+      "items": [
+        {"item_id": "1.1", "item_name": "불필요한 반복 표현", "category": "1. 언어 표현 품질", "score": 2, "weight": "HIGH", "evidence": ["'그래서 이렇게 해서 일단은 섹션 카테고리를 살짝 정리를 하십시오.'", "'이렇게 해서 일단은...이렇게 해서...사부작사부작'"], "reasoning": "동일 표현('이렇게 해서', '사부작', '일단은')이 매우 빈번하게 반복됨. 발화 습관적 반복이 심함.", "confidence": 0.9, "caveats": []},
+        {"item_id": "1.2", "item_name": "발화 완결성", "category": "1. 언어 표현 품질", "score": 2, "weight": "MEDIUM", "evidence": ["'아이O하고 왜냐하면, 기본 튜토리얼이 얘니까 얘는 버저라고 상관없는 튜토리얼이야 그래서 아이오랑 그 다음에'", "'그래서 생각하시면 되고 IO는 단독으로 I이O 객체를 이용을 해서 보통 컬렉션이나'"], "reasoning": "문장이 중간에 끊기거나 주어-서술어 관계가 불완전한 경우 다수. 구어체 특성이지만 완결성이 낮음.", "confidence": 0.85, "caveats": []},
+        {"item_id": "1.3", "item_name": "언어 일관성", "category": "1. 언어 표현 품질", "score": 3, "weight": "MEDIUM", "evidence": ["'됐을까요?'", "'선택하시는 것이다'", "'이렇게 해서 보시면 될 것 같고'"], "reasoning": "전반적으로 존댓말(-요체)을 사용하나 간헐적으로 반말('이런 거야', '없어')이 혼재. 대체로 일관성 유지.", "confidence": 0.8, "caveats": []}
+      ],
+      "weighted_average": 2.29
+    },
+    {
+      "category_name": "2. 강의 도입 및 구조",
+      "items": [
+        {"item_id": "2.1", "item_name": "학습 목표 안내", "category": "2. 강의 도입 및 구조", "score": 4, "weight": "HIGH", "evidence": ["'오늘 이제 수업할 내용은 자바 아이오 패키지가 이렇게 구현이 되어 있고'", "'저희가 오늘 이제 NIO NIO2를 이렇게 할 건데'"], "reasoning": "수업 초반에 오늘 다룰 내용(IO/NIO/NIO2)을 명확히 안내. 학습 목표 명시가 비교적 잘 되어 있음.", "confidence": 0.85, "caveats": []},
+        {"item_id": "2.2", "item_name": "전날 복습 연계", "category": "2. 강의 도입 및 구조", "score": 4, "weight": "HIGH", "evidence": ["'지난 시간에 제너릭 타입을 이용을 해서 커스텀 컬렉션을 활용한 크루드 방법을 학습 이해를 하고'", "'저희가 했던 컬렉션 프레임워크 카테고리가 여기 들어와 있어'"], "reasoning": "이전 수업(제너릭, 컬렉션)과 연결하여 오늘 내용을 자연스럽게 전개함.", "confidence": 0.85, "caveats": []},
+        {"item_id": "2.3", "item_name": "설명 순서", "category": "2. 강의 도입 및 구조", "score": 3, "weight": "MEDIUM", "evidence": ["패키지 구조(IO->NIO->NIO2) 순서로 설명 진행", "코어 라이브러리 -> 튜토리얼 -> 실습 순서"], "reasoning": "전반적 설명 순서는 논리적이나 중간에 도움말 사이트 탐색 등으로 흐름이 산만해지는 구간 존재.", "confidence": 0.75, "caveats": []},
+        {"item_id": "2.4", "item_name": "핵심 내용 강조", "category": "2. 강의 도입 및 구조", "score": 3, "weight": "MEDIUM", "evidence": ["'자바 아이오는 뭐 할 때 써 스트림에 블로킹을 쓴다라고 정확하게 알고 계시면 돼'", "'NIO는 일단은 버퍼가 뭡니까? 임시기억장소 중에 하나지'"], "reasoning": "핵심 구분점(블로킹/논블로킹, 스트림/버퍼)을 강조하지만 반복적 설명 속에서 핵심이 묻히는 경향.", "confidence": 0.75, "caveats": []},
+        {"item_id": "2.5", "item_name": "마무리 요약", "category": "2. 강의 도입 및 구조", "score": 2, "weight": "LOW", "evidence": ["'여기까지가 이제 기본 루트고요'", "'일단은 바이트 단위 HL 단위 IO하고 NIO 섹션 이렇게 해서 두 가지 형태를 네 가지 타입으로'"], "reasoning": "체계적 마무리 요약 없이 자연스럽게 다음 내용으로 넘어감. 명시적 정리 부족.", "confidence": 0.8, "caveats": []}
+      ],
+      "weighted_average": 3.36
+    },
+    {
+      "category_name": "3. 개념 설명 명확성",
+      "items": [
+        {"item_id": "3.1", "item_name": "개념 정의", "category": "3. 개념 설명 명확성", "score": 3, "weight": "HIGH", "evidence": ["'버퍼가 뭡니까? 임시기억장소 중에 하나지'", "'스트림이라고 하면 그 안에 바이트 단위로 데이터가 가고 있다는 걸 생각하시면 된다'"], "reasoning": "개념 정의를 시도하나 정확한 형식적 정의보다는 비유적/구어적 설명에 치중.", "confidence": 0.75, "caveats": []},
+        {"item_id": "3.2", "item_name": "비유 및 예시 활용", "category": "3. 개념 설명 명확성", "score": 3, "weight": "HIGH", "evidence": ["'버퍼링을 생각하면 된다'", "'채팅할 때 좋다. 네트워크 통신할 때 좋다'"], "reasoning": "일상적 비유(버퍼링, 채팅)를 사용하나 체계적 예시 제시보다 단편적.", "confidence": 0.75, "caveats": []},
+        {"item_id": "3.3", "item_name": "선행 개념 확인", "category": "3. 개념 설명 명확성", "score": 4, "weight": "MEDIUM", "evidence": ["'저희가 이제 기본으로 입출력을 그냥 순수하게 대상이 있어 읽고 쓰는'", "'제너릭 타입을 이용을 해서 커스텀 컬렉션을 활용한'"], "reasoning": "이전 학습 내용(컬렉션, 스트림 API)과 연결하여 선행 개념 확인.", "confidence": 0.8, "caveats": []},
+        {"item_id": "3.4", "item_name": "발화 속도 적절성", "category": "3. 개념 설명 명확성", "score": 2, "weight": "MEDIUM", "evidence": ["전체 스크립트에서 빠른 발화 속도와 생략이 빈번", "문장 중간 끊김이 다수"], "reasoning": "발화 속도가 빨라 내용 전달이 산만한 구간이 많음. 음성 인식 전사 품질로 보아 빠른 말투.", "confidence": 0.7, "caveats": []}
+      ],
+      "weighted_average": 3.0
+    },
+    {
+      "category_name": "4. 예시 및 실습 연계",
+      "items": [
+        {"item_id": "4.1", "item_name": "예시 적절성", "category": "4. 예시 및 실습 연계", "score": 3, "weight": "HIGH", "evidence": ["JShell을 통한 실습 코드 시연", "바이트 배열 병합 예시 코드 설명"], "reasoning": "Java API 도큐멘테이션을 활용한 예시, JShell 데모 등 적절한 예시를 보여주나 학생 체감 난이도 대비 예시 수준이 높음.", "confidence": 0.75, "caveats": []},
+        {"item_id": "4.2", "item_name": "실습 연계", "category": "4. 예시 및 실습 연계", "score": 3, "weight": "HIGH", "evidence": ["'복사해서 한번 붙여보십시오'", "'아시는 분들은 하십시오'"], "reasoning": "실습 기회를 제공하지만 시간 부족으로 간략히 진행되는 경향.", "confidence": 0.7, "caveats": []}
+      ],
+      "weighted_average": 3.0
+    },
+    {
+      "category_name": "5. 수강생 상호작용",
+      "items": [
+        {"item_id": "5.1", "item_name": "오류 대응", "category": "5. 수강생 상호작용", "score": 2, "weight": "MEDIUM", "evidence": ["명시적 오류 대응 사례 미발견", "'오류 있으면 오류 잡으면 되고요' 정도의 간략한 대응"], "reasoning": "트랜스크립트 내에서 학생 오류에 대응하는 장면이 거의 관찰되지 않음.", "confidence": 0.6, "caveats": ["전체 강의 중 일부만 확인"]},
+        {"item_id": "5.2", "item_name": "이해 확인 질문", "category": "5. 수강생 상호작용", "score": 3, "weight": "HIGH", "evidence": ["'됐을까요?'", "'되셨어요?'", "'아셨어요?'"], "reasoning": "이해 확인 질문을 자주 던지나 학생 응답 확인 없이 바로 진행하는 패턴.", "confidence": 0.85, "caveats": []},
+        {"item_id": "5.3", "item_name": "참여 유도", "category": "5. 수강생 상호작용", "score": 2, "weight": "HIGH", "evidence": ["'은지님 진수님 혜미님 고마워요 공유 다 하셨어요'", "수강생 이름 호명 외 적극적 참여 유도 부족"], "reasoning": "특정 수강생 호명은 있으나 적극적 참여 유도 활동(토론, 질문 요청 등)은 미흡.", "confidence": 0.75, "caveats": []},
+        {"item_id": "5.4", "item_name": "질문 응답 충분성", "category": "5. 수강생 상호작용", "score": 2, "weight": "HIGH", "evidence": ["학생 질문에 대한 직접적 응답 장면 미발견", "강사 주도 일방향 강의 위주"], "reasoning": "트랜스크립트에서 학생 질의에 대한 구체적 응답 사례가 관찰되지 않음.", "confidence": 0.6, "caveats": ["전체 강의 중 일부만 확인"]}
+      ],
+      "weighted_average": 2.36
+    }
+  ],
+  "weighted_average": 2.78,
+  "weighted_total": 117.0,
+  "category_averages": {
+    "1. 언어 표현 품질": 2.29,
+    "2. 강의 도입 및 구조": 3.36,
+    "3. 개념 설명 명확성": 3.0,
+    "4. 예시 및 실습 연계": 3.0,
+    "5. 수강생 상호작용": 2.36
+  },
+  "report_markdown": "# 종합 평가\n\n## 강의 개요\n- 날짜: 2026-02-02\n- 주제: 객체지향 프로그래밍\n- 내용: 데코레이터 패턴, 옵저버 패턴 / 파사드 패턴, 전략 패턴\n\n## 종합 점수: 2.78/5.0\n\n## 카테고리별 점수\n- 1. 언어 표현 품질: 2.29\n- 2. 강의 도입 및 구조: 3.36\n- 3. 개념 설명 명확성: 3.0\n- 4. 예시 및 실습 연계: 3.0\n- 5. 수강생 상호작용: 2.36\n\n## 강점\n- 매 수업 시작 시 학습 목표를 명확하게 안내함\n- 이전 수업 내용과의 연계가 체계적으로 이루어짐\n- 선행 개념과의 자연스러운 연결\n\n## 개선 필요 사항\n- '이렇게', '사부작', '일단은' 등 습관적 반복 표현 감소 필요\n- 발화 완결성 향상 필요\n- 발화 속도 조절 필요\n- 마무리 요약 강화 필요\n\n## 권장 사항\n- 핵심 개념별 1-2문장 정의를 사전에 준비하여 명확히 전달\n- 수업 종료 전 3-5분 핵심 정리 시간 확보\n- 학생 이해 확인 질문 후 실제 응답을 기다리는 시간(wait time) 확보",
+  "strengths": ["매 수업 시작 시 학습 목표를 명확하게 안내함", "이전 수업 내용과의 연계가 체계적으로 이루어짐", "선행 개념과의 자연스러운 연결"],
+  "improvements": ["'이렇게', '사부작', '일단은' 등 습관적 반복 표현 감소 필요", "발화 완결성 향상 필요", "발화 속도 조절 필요", "마무리 요약 강화 필요"],
+  "recommendations": ["핵심 개념별 1-2문장 정의를 사전에 준비하여 명확히 전달", "수업 종료 전 3-5분 핵심 정리 시간 확보", "학생 이해 확인 질문 후 실제 응답을 기다리는 시간(wait time) 확보"],
+  "token_usage": {},
+  "cost_usd": 0
+}

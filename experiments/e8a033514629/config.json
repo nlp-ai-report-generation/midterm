@@ -1,0 +1,17 @@
+{
+  "experiment_id": "e8a033514629",
+  "name": "single_2026-02-27",
+  "description": "단일 강의 평가: 2026-02-27",
+  "model": "gpt-4o-mini",
+  "temperature": 0.1,
+  "chunk_duration_minutes": 30,
+  "chunk_overlap_minutes": 5,
+  "harness_dir": "",
+  "num_passes": 1,
+  "use_calibrator": true,
+  "weight_scheme": "default",
+  "target_transcripts": [
+    "2026-02-27_kdt-backendj-21th.txt"
+  ],
+  "created_at": "2026-03-16T10:20:50.287852"
+}

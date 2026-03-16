@@ -42,6 +42,34 @@ export async function getAllEvaluations(): Promise<EvaluationResult[]> {
   return results.filter((r): r is EvaluationResult => r !== null);
 }
 
+/* ── 멀티 모델 비교 ── */
+
+export type ModelKey = "gpt4o-mini" | "opus" | "sonnet";
+
+export const MODEL_LABELS: Record<ModelKey, string> = {
+  "gpt4o-mini": "GPT-4o mini",
+  "opus": "Claude Opus",
+  "sonnet": "Claude Sonnet",
+};
+
+const MODEL_DIRS: Record<ModelKey, string> = {
+  "gpt4o-mini": "evaluations",
+  "opus": "evaluations-opus",
+  "sonnet": "evaluations-sonnet",
+};
+
+export async function getEvaluationByModel(date: string, model: ModelKey): Promise<EvaluationResult> {
+  return fetchJSON<EvaluationResult>(`${MODEL_DIRS[model]}/${date}.json`);
+}
+
+export async function getAllEvaluationsByModel(model: ModelKey): Promise<EvaluationResult[]> {
+  const lectures = await getAllLectures();
+  const results = await Promise.all(
+    lectures.map((l) => getEvaluationByModel(l.date, model).catch(() => null))
+  );
+  return results.filter((r): r is EvaluationResult => r !== null);
+}
+
 /** EDA: 스크립트 통계 */
 export async function getTranscriptStats(): Promise<TranscriptStats[]> {
   return fetchJSON<TranscriptStats[]>("eda/transcript_stats.json");

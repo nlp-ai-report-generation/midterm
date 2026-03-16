@@ -1,0 +1,210 @@
+{
+  "date": "2026-02-23",
+  "course_id": "kdt-backendj-21th",
+  "course_name": "백엔드 부트캠프 21기: Java",
+  "evaluator": "Claude Sonnet 4.6",
+  "instructor": "김영아",
+  "subjects": ["Front-End Programming"],
+  "contents": ["React.js 기반의 웹 사이트 구현"],
+  "category_results": [
+    {
+      "category_id": "1",
+      "category_name": "언어 표현 품질",
+      "items": [
+        {
+          "item_id": "1.1",
+          "item_name": "불필요한 반복 표현",
+          "weight": "HIGH",
+          "score": 2,
+          "evidence": "\"이렇게\", \"살짝\", \"그 다음에\", \"사부작\" 등의 표현이 강의 전반에 걸쳐 반복됨",
+          "reasoning": "명절 연휴 이후 첫 수업임에도 이전과 동일한 반복 표현 패턴이 지속됨. 구어체 특성을 고려해도 과도한 반복",
+          "confidence": 0.8
+        },
+        {
+          "item_id": "1.2",
+          "item_name": "발화 완결성",
+          "weight": "MEDIUM",
+          "score": 3,
+          "evidence": "\"여분 안녕하세요. 이번주 수업도 진행하도록 하겠습니다.\" - 완결된 인사로 주초 시작",
+          "reasoning": "도입부가 명확하게 완결된 인사로 시작되며, View 개념 설명 시 발화의 완결성이 전반적으로 유지됨",
+          "confidence": 0.7
+        },
+        {
+          "item_id": "1.3",
+          "item_name": "언어 일관성",
+          "weight": "MEDIUM",
+          "score": 3,
+          "evidence": "CREATE VIEW, ALTER VIEW, DROP VIEW, 가상 테이블 등 View 관련 용어가 일관되게 사용됨",
+          "reasoning": "View 관련 DDL 용어와 개념 설명에서 언어 일관성이 유지됨. 보안/접근제어 관련 용어도 통일된 방식으로 사용됨",
+          "confidence": 0.75
+        }
+      ],
+      "category_score": 2.6
+    },
+    {
+      "category_id": "2",
+      "category_name": "강의 도입 및 구조",
+      "items": [
+        {
+          "item_id": "2.1",
+          "item_name": "학습 목표 안내",
+          "weight": "HIGH",
+          "score": 3,
+          "evidence": "\"이번주 수업도 진행하도록 하겠습니다.\" + 이번 주 다룰 내용(View, Procedure, Function, Trigger, 관리자 객체) 안내",
+          "reasoning": "이번 주 전체 커리큘럼 안내가 이루어지나, 오늘 하루 구체적으로 달성할 학습 목표의 명시적 제시는 부족함",
+          "confidence": 0.7
+        },
+        {
+          "item_id": "2.2",
+          "item_name": "전날 복습 연계",
+          "weight": "HIGH",
+          "score": 3,
+          "evidence": "명절 연휴 이후 첫 수업으로 이전 주 CRUD/트랜잭션 내용을 요약하며 이번 주 내용과 연결",
+          "reasoning": "명절 연휴 후 복귀 첫날이라는 상황에서 이전 학습 내용 요약을 통한 연계가 이루어짐. 직접적 복습 구조보다는 개요 수준",
+          "confidence": 0.7
+        },
+        {
+          "item_id": "2.3",
+          "item_name": "설명 순서",
+          "weight": "MEDIUM",
+          "score": 3,
+          "evidence": "이전 주 복습 → View 개념(가상 테이블, 보안, 쿼리 단순화) → CREATE/ALTER/DROP VIEW → View 활용 → Procedure(커서/루프)",
+          "reasoning": "View에서 Procedure로 전환하는 흐름이 이루어지나, 각 주제 간 전환의 연결고리 설명이 다소 부족함",
+          "confidence": 0.7
+        },
+        {
+          "item_id": "2.4",
+          "item_name": "핵심 내용 강조",
+          "weight": "MEDIUM",
+          "score": 3,
+          "evidence": "View의 세 가지 목적(쿼리 단순화, 데이터 보안, 접근 제어)을 명시적으로 강조",
+          "reasoning": "View의 핵심 목적이 명시적으로 제시되며, 각 목적에 대한 설명이 이루어짐. 체계적인 강조 구조가 있는 편",
+          "confidence": 0.75
+        },
+        {
+          "item_id": "2.5",
+          "item_name": "마무리 요약",
+          "weight": "LOW",
+          "score": 2,
+          "evidence": "커서/루프 실습 도중에 강의가 종료되어 당일 내용 전체에 대한 마무리 요약이 없음",
+          "reasoning": "View 설명 완료 후 Procedure 커서 튜토리얼 중간에 강의가 끝나며, 당일 학습 내용 정리가 이루어지지 않음",
+          "confidence": 0.8
+        }
+      ],
+      "category_score": 2.91
+    },
+    {
+      "category_id": "3",
+      "category_name": "개념 설명 명확성",
+      "items": [
+        {
+          "item_id": "3.1",
+          "item_name": "개념 정의",
+          "weight": "HIGH",
+          "score": 4,
+          "evidence": "View의 개념(가상 테이블), CREATE/ALTER/DROP VIEW 문법, View 보안(컬럼 제한), View와 실제 테이블의 차이",
+          "reasoning": "View의 개념과 목적이 명확하게 정의되며, 가상 테이블 특성과 실제 테이블과의 차이점 설명이 체계적으로 이루어짐",
+          "confidence": 0.8
+        },
+        {
+          "item_id": "3.2",
+          "item_name": "비유 및 예시 활용",
+          "weight": "HIGH",
+          "score": 3,
+          "evidence": "View를 \"창문(window)\" 또는 \"필터\" 개념으로 비유, 민감한 데이터(급여 정보) 보호를 위한 View 활용 예시",
+          "reasoning": "View의 목적을 일상적 비유로 설명하는 구간이 있으며, 실무적 활용 사례(보안 적용)를 통한 예시가 효과적임",
+          "confidence": 0.75
+        },
+        {
+          "item_id": "3.3",
+          "item_name": "선행 개념 확인",
+          "weight": "MEDIUM",
+          "score": 3,
+          "evidence": "View 설명 전 SELECT 쿼리와 테이블 개념 확인, DDL 개념 연계",
+          "reasoning": "View 이해를 위한 선행 개념(SELECT, 테이블 구조)이 자연스럽게 확인되며, 이전 주 내용과의 연계도 이루어짐",
+          "confidence": 0.7
+        },
+        {
+          "item_id": "3.4",
+          "item_name": "발화 속도 적절성",
+          "weight": "MEDIUM",
+          "score": 3,
+          "evidence": "STT 전사 결과 기준으로 적절한 속도가 유지된 것으로 추정됨",
+          "reasoning": "특별히 빠르거나 느린 속도의 징후가 관찰되지 않음",
+          "confidence": 0.5
+        }
+      ],
+      "category_score": 3.38
+    },
+    {
+      "category_id": "4",
+      "category_name": "예시 및 실습 연계",
+      "items": [
+        {
+          "item_id": "4.1",
+          "item_name": "예시 적절성",
+          "weight": "HIGH",
+          "score": 3,
+          "evidence": "실제 테이블을 활용한 View 생성 예시, 민감 컬럼 제외 View 보안 예시, CREATE VIEW 구문 실습",
+          "reasoning": "View 개념에 적합한 실제 예시가 제시되며 보안 관점의 활용 사례가 효과적임. 다만 예시의 다양성이 더 풍부할 수 있었음",
+          "confidence": 0.7
+        },
+        {
+          "item_id": "4.2",
+          "item_name": "실습 연계",
+          "weight": "HIGH",
+          "score": 3,
+          "evidence": "CREATE VIEW 구문 직접 실행, ALTER VIEW 수정 실습, 커서/루프 실습으로의 연계",
+          "reasoning": "이론 설명 후 즉각적인 실습이 이루어지나, Procedure 커서 실습이 완료되지 않고 중단되어 실습 연계의 완결성이 부족함",
+          "confidence": 0.65
+        }
+      ],
+      "category_score": 3.0
+    },
+    {
+      "category_id": "5",
+      "category_name": "수강생 상호작용",
+      "items": [
+        {
+          "item_id": "5.1",
+          "item_name": "오류 대응",
+          "weight": "MEDIUM",
+          "score": 2,
+          "evidence": "View 생성 시 발생할 수 있는 제약 사항에 대한 안내가 일부 있으나 체계적이지 않음",
+          "reasoning": "실습 중 오류 상황에 대한 사전 안내나 대응이 충분하지 않음",
+          "confidence": 0.65
+        },
+        {
+          "item_id": "5.2",
+          "item_name": "이해 확인 질문",
+          "weight": "HIGH",
+          "score": 2,
+          "evidence": "View 개념 설명 후 이해 확인 질문이 제한적으로 이루어짐",
+          "reasoning": "명절 연휴 복귀 첫날로 분위기 형성에 집중하는 측면이 있으나, 체계적인 이해 확인은 부족함",
+          "confidence": 0.7
+        },
+        {
+          "item_id": "5.3",
+          "item_name": "참여 유도",
+          "weight": "HIGH",
+          "score": 2,
+          "evidence": "강사 중심의 View 개념 설명이 주를 이루며 수강생 능동적 참여 유도가 제한적",
+          "reasoning": "명절 이후 복귀 첫날로 강사 중심 설명이 많으며, 수강생 참여 활동이 제한적임",
+          "confidence": 0.7
+        },
+        {
+          "item_id": "5.4",
+          "item_name": "질문 응답 충분성",
+          "weight": "HIGH",
+          "score": 2,
+          "evidence": "단일 화자 발화 구조로 평가에 한계가 있음",
+          "reasoning": "질의응답 상호작용의 충분성을 정확히 평가하기 어려우나, 강사 일방향 구조가 지배적임",
+          "confidence": 0.55
+        }
+      ],
+      "category_score": 2.0
+    }
+  ],
+  "weighted_average": 2.84,
+  "summary": "2026-02-23 강의는 명절 연휴 이후 첫 수업으로 이번 주 커리큘럼을 안내하며 View 개념을 명확하게 설명합니다. View의 세 가지 목적(쿼리 단순화, 데이터 보안, 접근 제어)이 체계적으로 제시된 점이 강점입니다. 강의가 커서/루프 실습 도중 종료되어 마무리 요약이 없었으며, 수강생 상호작용 강화가 필요합니다."
+}

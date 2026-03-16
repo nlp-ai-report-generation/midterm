@@ -1,0 +1,167 @@
+[
+  {
+    "date": "2026-02-02",
+    "habitual_phrases": [
+      {"phrase": "사부작사부작", "estimated_frequency": "많음", "context": "문서를 탐색하거나 코드를 내려보면서 '사부작사부작 내려서', '사부작 보시면' 등으로 사용. 강사의 가장 고유한 습관적 표현"},
+      {"phrase": "됐을까요?", "estimated_frequency": "많음", "context": "하나의 설명 블록이 끝날 때마다 이해 확인용으로 사용. 실제 응답을 기다리지 않고 바로 다음으로 넘어가는 형식적 확인"},
+      {"phrase": "이렇게 해서", "estimated_frequency": "많음", "context": "문장의 시작이나 설명의 전환점에서 접속 부사처럼 사용. 거의 모든 문장 연결에 등장"},
+      {"phrase": "그래서", "estimated_frequency": "많음", "context": "인과관계 설명 시 반복적으로 사용하나 실제 인과가 없는 경우에도 습관적으로 삽입"},
+      {"phrase": "되셨어요", "estimated_frequency": "보통", "context": "특정 작업을 완료했는지 확인할 때 사용. '됐을까요?'와 함께 강사의 양대 확인 표현"}
+    ],
+    "speech_characteristics": "설명이 길어질수록 문장이 불완전해지며, '~하는 거고', '~있는 거예요' 등 종결 없이 연결되는 구어체가 두드러짐"
+  },
+  {
+    "date": "2026-02-03",
+    "habitual_phrases": [
+      {"phrase": "이렇게 해서", "estimated_frequency": "많음", "context": "설명 흐름 전환 시 습관적으로 삽입"},
+      {"phrase": "그래서", "estimated_frequency": "많음", "context": "문장 연결의 기본 접속사로 과다 사용"},
+      {"phrase": "되셨어요", "estimated_frequency": "보통", "context": "작업 완료 확인"},
+      {"phrase": "기본적으로", "estimated_frequency": "보통", "context": "개념 설명 시작 시 빈번하게 사용. '기본적으로 클로드 작업이 먼저 돼야 돼' 등"},
+      {"phrase": "반드시", "estimated_frequency": "보통", "context": "CRUD, 인코딩 등 중요 사항 강조 시 사용. '반드시 정리를 해 놓으셔야 돼요'"}
+    ],
+    "speech_characteristics": "실무 경험과 업계 맥락을 길게 풀어내는 스토리텔링 스타일로, 하나의 개념에서 여러 방향으로 확장되다 원래 주제로 돌아오는 나선형 설명 구조"
+  },
+  {
+    "date": "2026-02-04",
+    "habitual_phrases": [
+      {"phrase": "이렇게 해서", "estimated_frequency": "많음", "context": "화면 전환이나 조작 시 습관적 삽입"},
+      {"phrase": "보이시나요?", "estimated_frequency": "보통", "context": "비대면 화면 공유 시 화면 확인용"},
+      {"phrase": "알겠죠", "estimated_frequency": "보통", "context": "간단한 개념 설명 후 확인용으로 사용"},
+      {"phrase": "뭐 별거 없으니까", "estimated_frequency": "보통", "context": "새로운 내용의 난이도를 낮추어 불안감을 줄이려는 의도로 사용"},
+      {"phrase": "그 다음에", "estimated_frequency": "많음", "context": "나열형 설명 시 거의 모든 항목 연결에 사용"}
+    ],
+    "speech_characteristics": "워크벤치 UI를 탐색하며 실시간으로 설명하다 보니 '여기', '여기 보시면', '여기가' 등 지시대명사가 매우 빈번하게 등장"
+  },
+  {
+    "date": "2026-02-05",
+    "habitual_phrases": [
+      {"phrase": "이렇게 생각하시면 돼요", "estimated_frequency": "많음", "context": "개념 정의를 내린 후 마무리 표현으로 사용"},
+      {"phrase": "사부작사부작", "estimated_frequency": "보통", "context": "화면을 내리거나 내용을 훑어볼 때 사용"},
+      {"phrase": "되셨을까요?", "estimated_frequency": "많음", "context": "설명 블록 종료 시 습관적 확인"},
+      {"phrase": "보셨습니까?", "estimated_frequency": "보통", "context": "코드나 화면 공유 후 시각적 확인"},
+      {"phrase": "도저히 안 돼", "estimated_frequency": "적음", "context": "강사 자신이 직접 타이핑해야 할 때의 자연스러운 독백"}
+    ],
+    "speech_characteristics": "정형/반정형/비정형 같은 분류 체계를 설명할 때 직접 타이핑하며 정리하는 습관이 있으며, 학생들에게 '메모장에 붙여놓으세요'라고 자주 권유"
+  },
+  {
+    "date": "2026-02-06",
+    "habitual_phrases": [
+      {"phrase": "이렇게", "estimated_frequency": "많음", "context": "문장의 모든 위치(시작, 중간, 끝)에서 범용적으로 사용"},
+      {"phrase": "됐을까요?", "estimated_frequency": "많음", "context": "문제 풀이 완료 확인용"},
+      {"phrase": "정리 좀 하세요", "estimated_frequency": "보통", "context": "설명 블록 종료 후 학생들에게 정리 시간을 주는 표현"},
+      {"phrase": "왠만하면", "estimated_frequency": "보통", "context": "'왠만하면 케이스 웬덴 씁니다'처럼 추천 사항을 제시할 때 사용"},
+      {"phrase": "살짝", "estimated_frequency": "많음", "context": "'살짝 보고', '살짝 정리' 등 부담을 줄이는 완충어로 빈번하게 사용"}
+    ],
+    "speech_characteristics": "금요일 수업답게 '좀 쉬어가는 타입'이라는 언급과 함께 문제 풀이 속도를 조절하며, 어제 내용 복습에 많은 시간을 할애하는 여유로운 진행"
+  },
+  {
+    "date": "2026-02-09",
+    "habitual_phrases": [
+      {"phrase": "사부작", "estimated_frequency": "보통", "context": "'사부작 보시면' 등 내용 탐색 시 사용"},
+      {"phrase": "되셨어요", "estimated_frequency": "많음", "context": "작업 완료 및 이해 확인"},
+      {"phrase": "이렇게 해서", "estimated_frequency": "많음", "context": "문장 연결의 기본 패턴"},
+      {"phrase": "뭐 별거 없어", "estimated_frequency": "보통", "context": "문자열 함수가 쉬운 내용임을 반복 강조"},
+      {"phrase": "공통함수", "estimated_frequency": "보통", "context": "벤더 공통 함수를 강조할 때 일관되게 사용하는 키워드"}
+    ],
+    "speech_characteristics": "수강생들의 DM 인사에 대한 감사 표현이 자연스럽게 삽입되며, '힘 좀 내서 이번 주 화이팅 할게요'처럼 감정적 소통이 가장 두드러지는 날"
+  },
+  {
+    "date": "2026-02-10",
+    "habitual_phrases": [
+      {"phrase": "이해 가죠", "estimated_frequency": "많음", "context": "조인 개념 설명 후 반복적으로 확인"},
+      {"phrase": "천천히 하세요", "estimated_frequency": "보통", "context": "테이블 생성과 데이터 입력 시 학습 속도를 배려하는 표현"},
+      {"phrase": "이렇게 해서", "estimated_frequency": "많음", "context": "설명 흐름 전환"},
+      {"phrase": "사부작사부작", "estimated_frequency": "보통", "context": "조인 개념을 하나씩 훑어볼 때 사용"},
+      {"phrase": "됐습니까?", "estimated_frequency": "보통", "context": "테이블 생성 완료 확인용 - '되셨어요'의 변형"}
+    ],
+    "speech_characteristics": "직접 그림판으로 그린 조인 다이어그램에 대해 '잘 만든 건 아니지만'이라고 겸손하게 표현하면서도 성의를 보이는 모습이 특징적"
+  },
+  {
+    "date": "2026-02-11",
+    "habitual_phrases": [
+      {"phrase": "이렇게 가는 거지", "estimated_frequency": "많음", "context": "논리적 흐름을 정리할 때 마무리 표현으로 사용"},
+      {"phrase": "됐을까요?", "estimated_frequency": "많음", "context": "고밀도 이론 설명 후 확인용"},
+      {"phrase": "관계 기반 데이터 결합", "estimated_frequency": "보통", "context": "조인의 공식 용어를 반복적으로 사용하여 학생들에게 각인시키는 의도"},
+      {"phrase": "이해 가죠", "estimated_frequency": "보통", "context": "개념 비교 설명 후 확인"},
+      {"phrase": "약간 이런 느낌", "estimated_frequency": "보통", "context": "추상적 개념을 직관적으로 전달하려 할 때 사용하는 완충 표현"}
+    ],
+    "speech_characteristics": "조인/SET/서브쿼리 3가지를 비교하며 반복적으로 대조하는 패턴으로, '얘는 ~고, 얘는 ~' 식의 대비 구문이 매우 빈번"
+  },
+  {
+    "date": "2026-02-12",
+    "habitual_phrases": [
+      {"phrase": "사부작", "estimated_frequency": "보통", "context": "'사부작 내려서' 등 문서 탐색 시"},
+      {"phrase": "되셨을까요?", "estimated_frequency": "많음", "context": "설명 단위 종료 확인"},
+      {"phrase": "이렇게 해서", "estimated_frequency": "많음", "context": "표준 전환 표현"},
+      {"phrase": "어제 저희가", "estimated_frequency": "보통", "context": "전날 수업 내용 참조 시 반복 사용"},
+      {"phrase": "이렇게 나와요", "estimated_frequency": "보통", "context": "코드 실행 결과를 안내할 때 사용"}
+    ],
+    "speech_characteristics": "도움말 문서를 직접 읽으며 해석하는 스타일로, '제가 봤을 때도 어 이게...'처럼 강사 자신도 처음 보는 듯한 솔직한 반응을 보여줌"
+  },
+  {
+    "date": "2026-02-13",
+    "habitual_phrases": [
+      {"phrase": "되셨을까요?", "estimated_frequency": "많음", "context": "설명 블록 종료 확인"},
+      {"phrase": "이렇게 해서", "estimated_frequency": "많음", "context": "문장 연결"},
+      {"phrase": "됐습니까?", "estimated_frequency": "보통", "context": "워크벤치 작업 완료 확인"},
+      {"phrase": "살짝", "estimated_frequency": "많음", "context": "'살짝 보고', '살짝 내려서', '살짝 적어놓고' 등 부담감 완화"},
+      {"phrase": "이렇게 가는 거지", "estimated_frequency": "보통", "context": "부모-자식 테이블 관계 설명 흐름 마무리"}
+    ],
+    "speech_characteristics": "연휴 전 마지막 수업이라 '행복하게 수업하자'는 분위기로, 출석 이모지에 대한 리액션('예쁜 하트는 어디 있는 거지')이 가장 인간적인 발화"
+  },
+  {
+    "date": "2026-02-23",
+    "habitual_phrases": [
+      {"phrase": "이렇게 해서", "estimated_frequency": "많음", "context": "문장 연결 표준 패턴"},
+      {"phrase": "되셨을까요?", "estimated_frequency": "많음", "context": "개념 설명 후 확인"},
+      {"phrase": "이해가죠", "estimated_frequency": "보통", "context": "VIEW 개념의 논리적 흐름 확인"},
+      {"phrase": "약간 이런 느낌", "estimated_frequency": "보통", "context": "가상 테이블의 추상적 개념을 직관적으로 설명할 때"},
+      {"phrase": "자분자분", "estimated_frequency": "적음", "context": "MySQL 버전 업그레이드를 설명할 때 사용 - '사부작사부작'의 변형"}
+    ],
+    "speech_characteristics": "VIEW의 장단점을 균형 있게 설명하면서 '이게 뷰의 한계야'처럼 솔직하게 단점을 지적하는 비판적 분석 스타일이 두드러짐"
+  },
+  {
+    "date": "2026-02-24",
+    "habitual_phrases": [
+      {"phrase": "이렇게 해서", "estimated_frequency": "많음", "context": "프로시저/커서 개념 연결"},
+      {"phrase": "되셨어요", "estimated_frequency": "많음", "context": "작업 확인"},
+      {"phrase": "이렇게 가는 거지", "estimated_frequency": "보통", "context": "커서 4단계 설명 마무리"},
+      {"phrase": "내가 그럴 줄 알았어", "estimated_frequency": "적음", "context": "CONTINUE HANDLER의 동작을 설명하며 자바 예외처리 비유에 사용한 독특한 표현"},
+      {"phrase": "어제 저희가", "estimated_frequency": "보통", "context": "전날 수업 참조"}
+    ],
+    "speech_characteristics": "자바의 Scanner.next(), NIO의 next() 등 이전 학습 내용과의 연결고리를 지속적으로 만들어주는 횡단적 참조 스타일"
+  },
+  {
+    "date": "2026-02-25",
+    "habitual_phrases": [
+      {"phrase": "이렇게", "estimated_frequency": "많음", "context": "범용 연결어"},
+      {"phrase": "이해 가시죠", "estimated_frequency": "보통", "context": "파티션 개념 확인"},
+      {"phrase": "뜯어보면 별건 없는데", "estimated_frequency": "보통", "context": "파티션 개념의 난이도를 낮추려는 표현"},
+      {"phrase": "살짝", "estimated_frequency": "많음", "context": "부담감 완화 표현"},
+      {"phrase": "되셨어요", "estimated_frequency": "많음", "context": "표준 확인 표현"}
+    ],
+    "speech_characteristics": "정보통신법, 문서보존법, 369 파쇄 규정 등 법규 맥락을 구체적으로 풀어내는 실무형 설명이 이 날 특히 두드러짐"
+  },
+  {
+    "date": "2026-02-26",
+    "habitual_phrases": [
+      {"phrase": "이렇게 해서", "estimated_frequency": "많음", "context": "계정 관리 설명 연결"},
+      {"phrase": "이해 가죠", "estimated_frequency": "보통", "context": "localhost vs % 차이 설명 후 확인"},
+      {"phrase": "되셨어요", "estimated_frequency": "많음", "context": "표준 확인"},
+      {"phrase": "좋습니다", "estimated_frequency": "보통", "context": "학생 작업 완료 시 긍정적 반응"},
+      {"phrase": "확인하시고", "estimated_frequency": "보통", "context": "워크벤치 패널 탐색 후 마무리 표현"}
+    ],
+    "speech_characteristics": "DB 아키텍처(독립 서버 개념)를 자바 애플리케이션 연동 관점에서 설명하며, 포트/IP/세션 등 네트워크 용어를 자연스럽게 혼용"
+  },
+  {
+    "date": "2026-02-27",
+    "habitual_phrases": [
+      {"phrase": "이렇게 해서", "estimated_frequency": "많음", "context": "CMD 명령어 설명 연결"},
+      {"phrase": "되셨어요", "estimated_frequency": "많음", "context": "덤프 실행 완료 확인"},
+      {"phrase": "살짝", "estimated_frequency": "많음", "context": "'살짝 열어서', '살짝 내려서' 등 부담감 완화"},
+      {"phrase": "뚜덕뚜덕", "estimated_frequency": "적음", "context": "붙여넣기 작업을 묘사할 때 사용한 독특한 의성어"},
+      {"phrase": "오케이", "estimated_frequency": "보통", "context": "CMD 명령 실행 성공 시 사용. '오케이 떨어져요'"}
+    ],
+    "speech_characteristics": "마지막 DB 수업답게 전체 커리큘럼(JDBC/스레드/네트워크/웹)의 로드맵을 제시하며, CMD 실습 위주의 간결한 진행"
+  }
+]

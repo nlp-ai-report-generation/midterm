@@ -20,7 +20,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: "/lectures", label: "강의 평가", icon: BookOpen },
   { to: "/eda", label: "데이터 분석", icon: Search },
   { to: "/checklist", label: "평가 기준", icon: ClipboardList },
-  { to: "/experiments", label: "실험 기록", icon: FlaskConical },
+  { to: "/experiments", label: "모델 비교", icon: FlaskConical },
   { to: "/settings", label: "설정", icon: Settings },
 ];
 
