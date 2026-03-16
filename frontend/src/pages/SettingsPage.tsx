@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { useRole } from "@/contexts/RoleContext";
 import {
   getSettings,
   saveSettings,
@@ -11,9 +10,9 @@ import type { AppSettings } from "@/lib/api";
 import { getAllLectures } from "@/lib/data";
 import { formatDateShort } from "@/lib/utils";
 import type { LectureMetadata } from "@/types/evaluation";
+import OperatorToolsSection from "@/pages/OperatorToolsSection";
 
 export default function SettingsPage() {
-  const { role, setRole } = useRole();
   const [settings, setSettings] = useState<AppSettings>({
     apiKey: "",
     model: "gpt-4o-mini",
@@ -21,6 +20,7 @@ export default function SettingsPage() {
     chunkMinutes: 30,
     overlapMinutes: 5,
     useCalibrator: true,
+    customPrompt: "",
   });
   const [showKey, setShowKey] = useState(false);
   const [apiStatus, setApiStatus] = useState<"idle" | "valid" | "invalid">("idle");
@@ -153,18 +153,6 @@ export default function SettingsPage() {
       <div>
         <h1 className="text-title">설정</h1>
         <p className="text-caption mt-1">API 연결, 모델 선택, 평가 실행을 한 곳에서 관리합니다.</p>
-      </div>
-
-      {/* 현재 역할 표시 */}
-      <div className="card card-padded">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-label">현재 역할</p>
-            <p className="text-section mt-1">
-              {role === "operator" ? "운영자" : role === "instructor" ? "강사" : "미설정"}
-            </p>
-          </div>
-        </div>
       </div>
 
       {/* API Connection */}
@@ -407,9 +395,11 @@ export default function SettingsPage() {
                   step="0.1"
                   value={settings.temperature}
                   onChange={(e) => update("temperature", parseFloat(e.target.value))}
-                  className="w-full"
-                  style={{ height: 6, borderRadius: 999, appearance: "none", cursor: "pointer", accentColor: "var(--primary)" }}
+                  className="progress-bar"
                 />
+                <p className="text-caption" style={{ marginTop: 6 }}>
+                  낮을수록 일관된 결과, 높을수록 다양한 관점
+                </p>
               </div>
 
               {/* Chunk / Overlap */}
@@ -429,6 +419,9 @@ export default function SettingsPage() {
                     }
                     className="input-field"
                   />
+                  <p className="text-caption" style={{ marginTop: 6 }}>
+                    한 번에 분석하는 시간 단위 (기본 30분)
+                  </p>
                 </div>
                 <div>
                   <label htmlFor="overlap-minutes" className="block text-sm font-semibold text-foreground mb-2">
@@ -445,24 +438,47 @@ export default function SettingsPage() {
                     }
                     className="input-field"
                   />
+                  <p className="text-caption" style={{ marginTop: 6 }}>
+                    청크 간 겹치는 시간 (맥락 유지용)
+                  </p>
                 </div>
               </div>
 
               {/* Calibrator Toggle */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-foreground">Calibrator</p>
-                  <p className="text-caption mt-0.5">점수 보정 및 일관성 검증</p>
+              <div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground">Calibrator</p>
+                    <p className="text-caption mt-0.5">점수 보정 및 일관성 검증</p>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={settings.useCalibrator}
+                    onClick={() => update("useCalibrator", !settings.useCalibrator)}
+                    className="toggle"
+                  >
+                    <span className="toggle-knob" />
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={settings.useCalibrator}
-                  onClick={() => update("useCalibrator", !settings.useCalibrator)}
-                  className="toggle"
-                >
-                  <span className="toggle-knob" />
-                </button>
+                <p className="text-caption" style={{ marginTop: 6 }}>
+                  카테고리 간 점수 일관성을 자동 보정합니다
+                </p>
+              </div>
+
+              {/* Custom Prompt */}
+              <div>
+                <label htmlFor="custom-prompt" className="block text-sm font-semibold text-foreground mb-2">
+                  추가 지시사항 (선택)
+                </label>
+                <textarea
+                  id="custom-prompt"
+                  value={settings.customPrompt}
+                  onChange={(e) => update("customPrompt", e.target.value)}
+                  placeholder="평가 시 추가로 고려할 사항을 입력하세요..."
+                  className="input-field"
+                  style={{ minHeight: 80, resize: "vertical" }}
+                />
               </div>
 
               <button
@@ -477,19 +493,8 @@ export default function SettingsPage() {
         )}
       </div>
 
-      {/* Role Change */}
-      <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 8 }}>역할 변경</h2>
-        <p className="text-caption" style={{ marginBottom: 16 }}>
-          현재 역할: {role === "operator" ? "운영자" : role === "instructor" ? "강사" : "미설정"}
-        </p>
-        <button
-          onClick={() => setRole(null)}
-          className="btn-secondary"
-        >
-          역할 다시 선택
-        </button>
-      </div>
+      {/* Operator Tools */}
+      <OperatorToolsSection />
 
       {/* Toast */}
       {toast && (

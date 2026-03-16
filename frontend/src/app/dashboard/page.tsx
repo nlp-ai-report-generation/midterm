@@ -157,15 +157,15 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
             </thead>
             <tbody>
               {heatmapRows.map((row) => (
-                <tr key={row.name}>
+                <tr key={row.name} style={{ marginBottom: 2 }}>
                   <td
                     className="py-1.5 pr-4 whitespace-nowrap"
-                    style={{ color: "var(--text-secondary)" }}
+                    style={{ color: "var(--text-secondary)", paddingBottom: 4 }}
                   >
                     {row.name.replace(/^\d+\.\s*/, "")}
                   </td>
                   {row.scores.map((cell) => (
-                    <td key={cell.date} className="px-1 py-1.5 text-center">
+                    <td key={cell.date} className="px-1 py-1.5 text-center" style={{ paddingBottom: 4 }}>
                       <span
                         className="inline-flex h-7 w-9 items-center justify-center rounded-lg text-[11px] font-bold"
                         style={{
@@ -247,21 +247,32 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
 /* ─── Instructor Dashboard ─── */
 
 function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] }) {
-  const totalLectures = evaluations.length;
+  const { instructorName } = useRole();
+
+  // Filter evaluations by instructor name
+  const filtered = instructorName
+    ? evaluations.filter(
+        (e) =>
+          e.metadata?.instructor === instructorName ||
+          e.metadata?.sub_instructors?.includes(instructorName)
+      )
+    : evaluations;
+
+  const totalLectures = filtered.length;
   const avgScore =
     totalLectures > 0
-      ? evaluations.reduce((sum, e) => sum + e.weighted_average, 0) / totalLectures
+      ? filtered.reduce((sum, e) => sum + e.weighted_average, 0) / totalLectures
       : 0;
-  const bestLecture = evaluations.reduce(
+  const bestLecture = filtered.reduce(
     (best, e) => (e.weighted_average > (best?.weighted_average ?? 0) ? e : best),
-    evaluations[0]
+    filtered[0]
   );
-  const worstLecture = evaluations.reduce(
+  const worstLecture = filtered.reduce(
     (worst, e) => (e.weighted_average < (worst?.weighted_average ?? 5) ? e : worst),
-    evaluations[0]
+    filtered[0]
   );
 
-  const trendData = evaluations.map((e) => ({
+  const trendData = filtered.map((e) => ({
     date: e.lecture_date,
     score: e.weighted_average,
   }));
@@ -269,7 +280,7 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
   // Aggregate top strengths and improvements across all lectures
   const strengthCounts = new Map<string, number>();
   const improvementCounts = new Map<string, number>();
-  for (const e of evaluations) {
+  for (const e of filtered) {
     for (const s of e.strengths ?? []) {
       strengthCounts.set(s, (strengthCounts.get(s) ?? 0) + 1);
     }
@@ -287,15 +298,17 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
     .map(([s]) => s);
 
   // Recent lectures (latest 6)
-  const recentLectures = [...evaluations]
+  const recentLectures = [...filtered]
     .sort((a, b) => b.lecture_date.localeCompare(a.lecture_date))
     .slice(0, 6);
+
+  const displayTitle = instructorName ? `${instructorName}님의 강의` : "내 강의 돌아보기";
 
   return (
     <div className="page-content">
       {/* Page Header */}
       <div>
-        <h1 className="text-title">내 강의 돌아보기</h1>
+        <h1 className="text-title">{displayTitle}</h1>
         <p className="text-caption" style={{ marginTop: 4 }}>
           수업을 돌아보고 다음 강의를 준비하세요
         </p>
@@ -321,7 +334,7 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
       </div>
 
       {/* Score Trend */}
-      <ScoreTrendChart data={trendData} count={evaluations.length} />
+      <ScoreTrendChart data={trendData} count={filtered.length} />
 
       {/* Strengths & Improvements */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">

@@ -1,12 +1,25 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "@/contexts/RoleContext";
 
 export default function RoleSelectPage() {
-  const { setRole } = useRole();
+  const { setRole, setInstructorName } = useRole();
   const navigate = useNavigate();
+  const [showNameInput, setShowNameInput] = useState(false);
+  const [name, setName] = useState("김영아");
 
-  const pick = (role: "operator" | "instructor") => {
-    setRole(role);
+  const pickOperator = () => {
+    setRole("operator");
+    navigate("/dashboard");
+  };
+
+  const pickInstructor = () => {
+    setShowNameInput(true);
+  };
+
+  const submitInstructor = () => {
+    setRole("instructor");
+    setInstructorName(name.trim() || "김영아");
     navigate("/dashboard");
   };
 
@@ -55,80 +68,128 @@ export default function RoleSelectPage() {
           </p>
         </div>
 
-        {/* 역할 선택 */}
-        <p
-          style={{
-            fontSize: 13,
-            fontWeight: 600,
-            color: "var(--text-muted)",
-            marginBottom: 12,
-          }}
-        >
-          어떤 관점에서 보시겠어요?
-        </p>
+        {!showNameInput ? (
+          <>
+            {/* 역할 선택 */}
+            <p
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: "var(--text-muted)",
+                marginBottom: 12,
+              }}
+            >
+              어떤 관점에서 보시겠어요?
+            </p>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <button
-            onClick={() => pick("operator")}
-            className="card card-hover"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "20px 24px",
-              cursor: "pointer",
-              border: "none",
-              textAlign: "left",
-              transition: "box-shadow 0.2s, transform 0.15s",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}
-          >
-            <div>
-              <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)" }}>
-                운영 담당자
-              </p>
-              <p className="text-caption" style={{ marginTop: 4 }}>
-                전체 강의 품질을 비교하고 관리합니다
-              </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <button
+                onClick={pickOperator}
+                className="card card-hover"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "20px 24px",
+                  cursor: "pointer",
+                  border: "none",
+                  textAlign: "left",
+                  transition: "box-shadow 0.2s, transform 0.15s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}
+              >
+                <div>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)" }}>
+                    운영 담당자
+                  </p>
+                  <p className="text-caption" style={{ marginTop: 4 }}>
+                    전체 강의 품질을 비교하고 관리합니다
+                  </p>
+                </div>
+                <span style={{ fontSize: 20, color: "var(--text-muted)" }}>→</span>
+              </button>
+
+              <button
+                onClick={pickInstructor}
+                className="card card-hover"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "20px 24px",
+                  cursor: "pointer",
+                  border: "none",
+                  textAlign: "left",
+                  transition: "box-shadow 0.2s, transform 0.15s",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}
+              >
+                <div>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)" }}>
+                    강사
+                  </p>
+                  <p className="text-caption" style={{ marginTop: 4 }}>
+                    내 강의를 돌아보고 다음 수업을 준비합니다
+                  </p>
+                </div>
+                <span style={{ fontSize: 20, color: "var(--text-muted)" }}>→</span>
+              </button>
             </div>
-            <span style={{ fontSize: 20, color: "var(--text-muted)" }}>→</span>
-          </button>
 
-          <button
-            onClick={() => pick("instructor")}
-            className="card card-hover"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "20px 24px",
-              cursor: "pointer",
-              border: "none",
-              textAlign: "left",
-              transition: "box-shadow 0.2s, transform 0.15s",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = ""; }}
-          >
-            <div>
-              <p style={{ fontSize: 15, fontWeight: 700, color: "var(--text-primary)" }}>
-                강사
-              </p>
-              <p className="text-caption" style={{ marginTop: 4 }}>
-                내 강의를 돌아보고 다음 수업을 준비합니다
-              </p>
+            <p
+              className="text-caption"
+              style={{ marginTop: 24 }}
+            >
+              언제든 설정에서 바꿀 수 있어요.
+            </p>
+          </>
+        ) : (
+          <>
+            {/* 강사 이름 입력 */}
+            <p
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: "var(--text-muted)",
+                marginBottom: 12,
+              }}
+            >
+              이름을 입력해주세요
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="input-field"
+                placeholder="강사 이름"
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") submitInstructor();
+                }}
+              />
+              <div style={{ display: "flex", gap: 12 }}>
+                <button
+                  onClick={() => setShowNameInput(false)}
+                  className="btn-secondary"
+                  style={{ flex: 1 }}
+                >
+                  뒤로
+                </button>
+                <button
+                  onClick={submitInstructor}
+                  className="btn-primary"
+                  style={{ flex: 1 }}
+                >
+                  시작하기
+                </button>
+              </div>
             </div>
-            <span style={{ fontSize: 20, color: "var(--text-muted)" }}>→</span>
-          </button>
-        </div>
-
-        <p
-          className="text-caption"
-          style={{ marginTop: 24 }}
-        >
-          언제든 설정에서 바꿀 수 있어요.
-        </p>
+          </>
+        )}
       </div>
     </div>
   );

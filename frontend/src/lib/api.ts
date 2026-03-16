@@ -7,6 +7,7 @@ export interface AppSettings {
   chunkMinutes: number;
   overlapMinutes: number;
   useCalibrator: boolean;
+  customPrompt: string;
 }
 
 const SETTINGS_KEY = "lecture-analysis-settings";
@@ -20,6 +21,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   chunkMinutes: 30,
   overlapMinutes: 5,
   useCalibrator: true,
+  customPrompt: "",
 };
 
 /** Load settings from localStorage, falling back to defaults */

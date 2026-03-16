@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
 type Role = "operator" | "instructor" | null;
 
@@ -7,9 +7,12 @@ interface RoleContextType {
   setRole: (role: Role) => void;
   isOperator: boolean;
   isInstructor: boolean;
+  instructorName: string;
+  setInstructorName: (name: string) => void;
 }
 
 const STORAGE_KEY = "lecture-analysis-role";
+const INSTRUCTOR_KEY = "lecture-analysis-instructor";
 
 const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
@@ -18,6 +21,10 @@ export function RoleProvider({ children }: { children: ReactNode }) {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === "operator" || stored === "instructor") return stored;
     return null;
+  });
+
+  const [instructorName, setInstructorNameState] = useState<string>(() => {
+    return localStorage.getItem(INSTRUCTOR_KEY) ?? "";
   });
 
   const setRole = (newRole: Role) => {
@@ -29,6 +36,15 @@ export function RoleProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const setInstructorName = (name: string) => {
+    setInstructorNameState(name);
+    if (name) {
+      localStorage.setItem(INSTRUCTOR_KEY, name);
+    } else {
+      localStorage.removeItem(INSTRUCTOR_KEY);
+    }
+  };
+
   return (
     <RoleContext.Provider
       value={{
@@ -36,6 +52,8 @@ export function RoleProvider({ children }: { children: ReactNode }) {
         setRole,
         isOperator: role === "operator",
         isInstructor: role === "instructor",
+        instructorName,
+        setInstructorName,
       }}
     >
       {children}

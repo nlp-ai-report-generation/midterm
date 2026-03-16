@@ -1,5 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Settings } from "lucide-react";
+import { useRole } from "@/contexts/RoleContext";
 
 const PAGE_TITLES: Record<string, string> = {
   "/dashboard": "대시보드",
@@ -20,7 +21,16 @@ interface HeaderProps {
 
 export default function Header({ isMobile }: HeaderProps) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { role, instructorName } = useRole();
   const title = getPageTitle(pathname);
+
+  const roleBadgeText =
+    role === "operator"
+      ? "운영자"
+      : role === "instructor"
+        ? `강사: ${instructorName || "미설정"}`
+        : null;
 
   return (
     <header
@@ -48,22 +58,44 @@ export default function Header({ isMobile }: HeaderProps) {
         {title}
       </h1>
       {!isMobile && (
-        <Link
-          to="/settings"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 36,
-            height: 36,
-            borderRadius: "var(--radius-sm)",
-            color: "var(--text-tertiary)",
-            transition: "color 0.15s",
-          }}
-          aria-label="설정"
-        >
-          <Settings size={20} />
-        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          {roleBadgeText && (
+            <button
+              onClick={() => navigate("/select-role")}
+              className="text-caption"
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                transition: "color 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "var(--primary)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "";
+              }}
+            >
+              {roleBadgeText}
+            </button>
+          )}
+          <Link
+            to="/settings"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 36,
+              height: 36,
+              borderRadius: "var(--radius-sm)",
+              color: "var(--text-tertiary)",
+              transition: "color 0.15s",
+            }}
+            aria-label="설정"
+          >
+            <Settings size={20} />
+          </Link>
+        </div>
       )}
     </header>
   );
