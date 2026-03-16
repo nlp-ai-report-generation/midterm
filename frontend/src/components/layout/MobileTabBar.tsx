@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
 import {
-  LayoutDashboard,
-  BookOpen,
-  Search,
-  FlaskConical,
+  Home,
+  FileText,
+  BarChart2,
+  GitCompare,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -15,10 +15,10 @@ interface TabItem {
 }
 
 const TAB_ITEMS: TabItem[] = [
-  { to: "/dashboard", label: "대시보드", icon: LayoutDashboard },
-  { to: "/lectures", label: "강의 평가", icon: BookOpen },
-  { to: "/eda", label: "분석", icon: Search },
-  { to: "/experiments", label: "실험", icon: FlaskConical },
+  { to: "/dashboard", label: "대시보드", icon: Home },
+  { to: "/lectures", label: "강의", icon: FileText },
+  { to: "/eda", label: "분석", icon: BarChart2 },
+  { to: "/experiments", label: "비교", icon: GitCompare },
   { to: "/settings", label: "설정", icon: Settings },
 ];
 

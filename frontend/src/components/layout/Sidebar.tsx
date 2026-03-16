@@ -1,10 +1,10 @@
 import { NavLink } from "react-router-dom";
 import {
-  LayoutDashboard,
-  BookOpen,
-  Search,
-  ClipboardList,
-  FlaskConical,
+  Home,
+  FileText,
+  BarChart2,
+  List,
+  GitCompare,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -16,11 +16,11 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { to: "/dashboard", label: "대시보드", icon: LayoutDashboard },
-  { to: "/lectures", label: "강의 평가", icon: BookOpen },
-  { to: "/eda", label: "데이터 분석", icon: Search },
-  { to: "/checklist", label: "평가 기준", icon: ClipboardList },
-  { to: "/experiments", label: "모델 비교", icon: FlaskConical },
+  { to: "/dashboard", label: "대시보드", icon: Home },
+  { to: "/lectures", label: "강의 평가", icon: FileText },
+  { to: "/eda", label: "데이터 분석", icon: BarChart2 },
+  { to: "/checklist", label: "평가 기준", icon: List },
+  { to: "/experiments", label: "모델 비교", icon: GitCompare },
   { to: "/settings", label: "설정", icon: Settings },
 ];
 
