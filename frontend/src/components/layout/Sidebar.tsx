@@ -5,7 +5,11 @@ import {
   BarChart2,
   List,
   GitCompare,
+  GitCompareArrows,
+  TrendingUp,
+  Layers,
   Settings,
+  Info,
   type LucideIcon,
 } from "lucide-react";
 
@@ -21,7 +25,11 @@ const NAV_ITEMS: NavItem[] = [
   { to: "/eda", label: "데이터 분석", icon: BarChart2 },
   { to: "/checklist", label: "평가 기준", icon: List },
   { to: "/experiments", label: "모델 비교", icon: GitCompare },
+  { to: "/compare", label: "강의 비교", icon: GitCompareArrows },
+  { to: "/trends", label: "점수 추이", icon: TrendingUp },
+  { to: "/items", label: "항목별 분석", icon: Layers },
   { to: "/settings", label: "설정", icon: Settings },
+  { to: "/about", label: "프로젝트 소개", icon: Info },
 ];
 
 export default function Sidebar() {

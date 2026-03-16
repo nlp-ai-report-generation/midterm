@@ -8,7 +8,11 @@ const PAGE_TITLES: Record<string, string> = {
   "/eda": "데이터 분석",
   "/checklist": "평가 기준",
   "/experiments": "모델 비교",
+  "/compare": "강의 비교",
+  "/trends": "점수 추이",
+  "/items": "항목별 분석",
   "/settings": "설정",
+  "/about": "프로젝트 소개",
 };
 
 function getPageTitle(pathname: string): string {

@@ -8,7 +8,11 @@ import LectureDetailPage from "@/app/lectures/[date]/page";
 import EDAPage from "@/pages/EDAPage";
 import ChecklistPage from "@/pages/ChecklistPage";
 import ExperimentsPage from "@/pages/ExperimentsPage";
+import ComparePage from "@/pages/ComparePage";
+import TrendsPage from "@/pages/TrendsPage";
+import ItemAnalysisPage from "@/pages/ItemAnalysisPage";
 import SettingsPage from "@/pages/SettingsPage";
+import AboutPage from "@/pages/AboutPage";
 
 function RequireRole({ children }: { children: React.ReactNode }) {
   const { role } = useRole();
@@ -33,7 +37,11 @@ export default function App() {
         <Route path="/eda" element={<EDAPage />} />
         <Route path="/checklist" element={<ChecklistPage />} />
         <Route path="/experiments" element={<ExperimentsPage />} />
+        <Route path="/compare" element={<ComparePage />} />
+        <Route path="/trends" element={<TrendsPage />} />
+        <Route path="/items" element={<ItemAnalysisPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/about" element={<AboutPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
