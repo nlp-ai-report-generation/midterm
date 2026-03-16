@@ -1,438 +1,226 @@
-import { useState, useEffect, useCallback } from "react";
-
-const API_BASE = "http://localhost:8000";
-
-interface DriveFile {
-  id: string;
-  name: string;
-  modifiedTime: string;
-}
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function IntegrationsPage() {
-  const [googleToken, setGoogleToken] = useState<string>(
-    () => localStorage.getItem("google_drive_token") || ""
-  );
-  const [notionToken, setNotionToken] = useState<string>(
-    () => localStorage.getItem("notion_token") || ""
-  );
-  const [notionDatabaseId, setNotionDatabaseId] = useState<string>(
-    () => localStorage.getItem("notion_database_id") || ""
-  );
-
-  const [driveFiles, setDriveFiles] = useState<DriveFile[]>([]);
-  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
-  const [loadingFiles, setLoadingFiles] = useState(false);
-  const [exportingNotion, setExportingNotion] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [googleConnected, setGoogleConnected] = useState(false);
+  const [notionConnected, setNotionConnected] = useState(false);
+  const [notionDbId, setNotionDbId] = useState("");
+  const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState("");
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+      if (data.session?.user) loadIntegrations(data.session.user.id);
+      setLoading(false);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session?.user) loadIntegrations(session.user.id);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  const loadIntegrations = async (userId: string) => {
+    const { data } = await supabase
+      .from("integrations")
+      .select("provider, extra")
+      .eq("user_id", userId);
+    if (data) {
+      setGoogleConnected(data.some((d) => d.provider === "google_drive"));
+      const notion = data.find((d) => d.provider === "notion");
+      setNotionConnected(!!notion);
+      setNotionDbId(notion?.extra?.database_id ?? "");
+    }
+  };
 
   const showToast = (msg: string) => {
     setToast(msg);
     setTimeout(() => setToast(""), 2500);
   };
 
-  // Google Drive: fetch files when connected
-  const fetchDriveFiles = useCallback(async () => {
-    if (!googleToken) return;
-    setLoadingFiles(true);
-    try {
-      const resp = await fetch(
-        `${API_BASE}/api/drive/files?token=${encodeURIComponent(googleToken)}`
-      );
-      const data = await resp.json();
-      setDriveFiles(data.files || []);
-    } catch {
-      showToast("드라이브 파일 목록을 가져올 수 없습니다");
-    } finally {
-      setLoadingFiles(false);
-    }
-  }, [googleToken]);
-
-  useEffect(() => {
-    if (googleToken) fetchDriveFiles();
-  }, [googleToken, fetchDriveFiles]);
-
-  // Google Drive: initiate OAuth
-  const connectGoogle = async () => {
-    try {
-      const resp = await fetch(`${API_BASE}/api/auth/google`);
-      const data = await resp.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch {
-      showToast("구글 인증 요청에 실패했습니다");
-    }
-  };
-
-  const disconnectGoogle = () => {
-    localStorage.removeItem("google_drive_token");
-    setGoogleToken("");
-    setDriveFiles([]);
-    setSelectedFiles(new Set());
-    showToast("구글 드라이브 연결이 해제되었습니다");
-  };
-
-  // Notion: initiate OAuth
-  const connectNotion = async () => {
-    try {
-      const resp = await fetch(`${API_BASE}/api/auth/notion`);
-      const data = await resp.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch {
-      showToast("노션 인증 요청에 실패했습니다");
-    }
-  };
-
-  const disconnectNotion = () => {
-    localStorage.removeItem("notion_token");
-    localStorage.removeItem("notion_database_id");
-    setNotionToken("");
-    setNotionDatabaseId("");
-    showToast("노션 연결이 해제되었습니다");
-  };
-
-  const handleDatabaseIdChange = (value: string) => {
-    setNotionDatabaseId(value);
-    localStorage.setItem("notion_database_id", value);
-  };
-
-  // Toggle file selection
-  const toggleFile = (fileId: string) => {
-    setSelectedFiles((prev) => {
-      const next = new Set(prev);
-      if (next.has(fileId)) {
-        next.delete(fileId);
-      } else {
-        next.add(fileId);
-      }
-      return next;
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        scopes: "https://www.googleapis.com/auth/drive.readonly",
+        redirectTo: window.location.origin + window.location.pathname,
+      },
     });
+    if (error) showToast("구글 로그인 실패: " + error.message);
   };
 
-  // Import selected files from Google Drive
-  const importSelectedFiles = async () => {
-    if (selectedFiles.size === 0) {
-      showToast("파일을 선택해주세요");
-      return;
-    }
-    let imported = 0;
-    for (const fileId of selectedFiles) {
-      try {
-        const resp = await fetch(
-          `${API_BASE}/api/drive/download/${fileId}?token=${encodeURIComponent(googleToken)}`
-        );
-        const data = await resp.json();
-        if (data.content) imported++;
-      } catch {
-        // skip failed files
-      }
-    }
-    showToast(`${imported}개 파일을 가져왔습니다`);
+  const connectNotion = async () => {
+    // Notion OAuth는 Supabase에서 직접 지원하지 않으므로
+    // 별도 팝업으로 처리하거나 Notion API 토큰을 직접 입력
+    showToast("노션은 Internal Integration 토큰을 직접 입력해주세요");
   };
 
-  // Export evaluation results to Notion
-  const exportToNotion = async () => {
-    if (!notionToken || !notionDatabaseId) {
-      showToast("노션 토큰과 데이터베이스 ID를 설정해주세요");
-      return;
-    }
-    setExportingNotion(true);
-    try {
-      const params = new URLSearchParams({
-        token: notionToken,
-        database_id: notionDatabaseId,
-        lecture_date: new Date().toISOString().split("T")[0],
-        score: "0",
-        model: "gpt-4o-mini",
-      });
-      const resp = await fetch(`${API_BASE}/api/notion/create-page?${params}`, {
-        method: "POST",
-      });
-      const data = await resp.json();
-      if (data.id) {
-        showToast("노션에 평가 결과를 내보냈습니다");
-      } else {
-        showToast("내보내기에 실패했습니다");
-      }
-    } catch {
-      showToast("노션 내보내기 요청에 실패했습니다");
-    } finally {
-      setExportingNotion(false);
+  const saveNotionConfig = async () => {
+    if (!user || !notionDbId.trim()) return;
+    const { error } = await supabase.from("integrations").upsert({
+      user_id: user.id,
+      provider: "notion",
+      extra: { database_id: notionDbId.trim() },
+      connected_at: new Date().toISOString(),
+    });
+    if (error) {
+      showToast("저장 실패: " + error.message);
+    } else {
+      setNotionConnected(true);
+      showToast("노션 설정이 저장되었습니다");
     }
   };
 
-  // Handle OAuth callback tokens from URL params
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const accessToken = params.get("access_token");
-    const notionAccessToken = params.get("access_token");
-
-    // Check if returning from Google OAuth
-    if (accessToken && window.location.pathname.includes("google")) {
-      localStorage.setItem("google_drive_token", accessToken);
-      setGoogleToken(accessToken);
-      window.history.replaceState({}, "", "/integrations");
+  const disconnect = async (provider: string) => {
+    if (!user) return;
+    await supabase.from("integrations").delete().eq("user_id", user.id).eq("provider", provider);
+    if (provider === "google_drive") {
+      setGoogleConnected(false);
+      await supabase.auth.signOut();
+      setUser(null);
+    } else {
+      setNotionConnected(false);
+      setNotionDbId("");
     }
+    showToast("연결이 해제되었습니다");
+  };
 
-    // Check if returning from Notion OAuth
-    if (notionAccessToken && window.location.pathname.includes("notion")) {
-      localStorage.setItem("notion_token", notionAccessToken);
-      setNotionToken(notionAccessToken);
-      window.history.replaceState({}, "", "/integrations");
-    }
-  }, []);
-
-  const googleConnected = !!googleToken;
-  const notionConnected = !!notionToken;
+  if (loading) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: "32px 40px", maxWidth: 800 }}>
-      <h2 className="text-title" style={{ marginBottom: 4 }}>
-        연동 설정
-      </h2>
-      <p
-        className="text-body"
-        style={{ color: "var(--text-secondary)", marginBottom: 32 }}
-      >
-        외부 서비스와 연결하여 데이터를 가져오거나 결과를 내보냅니다
-      </p>
+    <div className="page-content" style={{ maxWidth: 640 }}>
+      <div>
+        <h1 className="text-title">연동 설정</h1>
+        <p className="text-caption" style={{ marginTop: 4 }}>
+          외부 서비스와 연결하여 데이터를 가져오거나 결과를 내보냅니다
+        </p>
+      </div>
+
+      {/* 로그인 상태 */}
+      {user && (
+        <div className="card card-padded">
+          <p className="text-label" style={{ marginBottom: 8 }}>계정</p>
+          <p className="text-body">{user.email}</p>
+        </div>
+      )}
+
+      {/* 구글 드라이브 */}
+      <div className="card card-padded">
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+          <div>
+            <h2 className="text-section">구글 드라이브</h2>
+            <p className="text-caption" style={{ marginTop: 2 }}>
+              드라이브에서 트랜스크립트 파일을 가져옵니다
+            </p>
+          </div>
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 600,
+              color: googleConnected || user ? "var(--primary)" : "var(--text-muted)",
+            }}
+          >
+            {googleConnected || user ? "연결됨" : "미연결"}
+          </span>
+        </div>
+
+        {!user ? (
+          <button onClick={signInWithGoogle} className="btn-primary" style={{ width: "100%" }}>
+            구글 계정으로 연결
+          </button>
+        ) : (
+          <button
+            onClick={() => disconnect("google_drive")}
+            className="btn-secondary"
+            style={{ width: "100%" }}
+          >
+            연결 해제
+          </button>
+        )}
+      </div>
+
+      {/* 노션 */}
+      <div className="card card-padded">
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+          <div>
+            <h2 className="text-section">노션</h2>
+            <p className="text-caption" style={{ marginTop: 2 }}>
+              평가 결과를 노션 데이터베이스에 기록합니다
+            </p>
+          </div>
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 600,
+              color: notionConnected ? "var(--primary)" : "var(--text-muted)",
+            }}
+          >
+            {notionConnected ? "연결됨" : "미연결"}
+          </span>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div>
+            <label htmlFor="notion-db" className="text-caption" style={{ display: "block", marginBottom: 6 }}>
+              데이터베이스 ID
+            </label>
+            <input
+              id="notion-db"
+              type="text"
+              value={notionDbId}
+              onChange={(e) => setNotionDbId(e.target.value)}
+              placeholder="노션 데이터베이스 ID를 입력하세요"
+              className="input-field"
+            />
+            <p className="text-caption" style={{ marginTop: 4, fontSize: 11 }}>
+              노션 데이터베이스 URL에서 마지막 32자리가 ID입니다
+            </p>
+          </div>
+          <button onClick={saveNotionConfig} className="btn-primary" style={{ width: "100%" }}>
+            {notionConnected ? "설정 업데이트" : "노션 연결"}
+          </button>
+          {notionConnected && (
+            <button
+              onClick={() => disconnect("notion")}
+              className="btn-secondary"
+              style={{ width: "100%" }}
+            >
+              연결 해제
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* 안내 */}
+      <div className="inner-card">
+        <p className="text-body" style={{ lineHeight: 1.8 }}>
+          구글 드라이브 연동은 Supabase OAuth를 통해 처리됩니다.
+          노션은 Internal Integration 토큰과 데이터베이스 ID를 입력하면 연결됩니다.
+          연동 정보는 Supabase에 안전하게 저장됩니다.
+        </p>
+      </div>
 
       {/* Toast */}
       {toast && (
         <div
-          style={{
-            position: "fixed",
-            bottom: 32,
-            left: "50%",
-            transform: "translateX(-50%)",
-            background: "var(--text-primary)",
-            color: "var(--surface)",
-            padding: "10px 24px",
-            borderRadius: "var(--radius-sm)",
-            fontSize: 14,
-            fontWeight: 600,
-            zIndex: 100,
-          }}
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-5 py-3 rounded-xl shadow-lg text-sm font-medium"
+          style={{ background: "var(--text-primary)", color: "var(--surface)" }}
         >
           {toast}
         </div>
       )}
-
-      {/* Google Drive Card */}
-      <div
-        className="card card-padded"
-        style={{ marginBottom: 24, padding: 28 }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 20,
-          }}
-        >
-          <div>
-            <h3
-              className="text-section"
-              style={{ marginBottom: 4 }}
-            >
-              구글 드라이브
-            </h3>
-            <span
-              className="text-caption"
-              style={{
-                color: googleConnected
-                  ? "var(--success, #22c55e)"
-                  : "var(--text-tertiary)",
-              }}
-            >
-              {googleConnected ? "연결됨" : "미연결"}
-            </span>
-          </div>
-          {googleConnected ? (
-            <button className="btn-secondary" onClick={disconnectGoogle}>
-              연결 해제
-            </button>
-          ) : (
-            <button className="btn-primary" onClick={connectGoogle}>
-              구글 드라이브 연결
-            </button>
-          )}
-        </div>
-
-        {googleConnected && (
-          <div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                marginBottom: 12,
-              }}
-            >
-              <span
-                className="text-body"
-                style={{ fontWeight: 600, color: "var(--text-secondary)" }}
-              >
-                .txt 파일 목록
-              </span>
-              <button
-                className="btn-primary"
-                onClick={importSelectedFiles}
-                disabled={selectedFiles.size === 0}
-                style={{
-                  opacity: selectedFiles.size === 0 ? 0.5 : 1,
-                }}
-              >
-                선택한 파일 가져오기
-              </button>
-            </div>
-
-            {loadingFiles ? (
-              <p
-                className="text-caption"
-                style={{ color: "var(--text-tertiary)", padding: "12px 0" }}
-              >
-                파일 목록을 불러오는 중...
-              </p>
-            ) : driveFiles.length === 0 ? (
-              <p
-                className="text-caption"
-                style={{ color: "var(--text-tertiary)", padding: "12px 0" }}
-              >
-                .txt 파일이 없습니다
-              </p>
-            ) : (
-              <ul
-                style={{
-                  listStyle: "none",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 6,
-                }}
-              >
-                {driveFiles.map((file) => (
-                  <li
-                    key={file.id}
-                    onClick={() => toggleFile(file.id)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 12,
-                      padding: "10px 12px",
-                      borderRadius: "var(--radius-sm)",
-                      background: selectedFiles.has(file.id)
-                        ? "var(--primary-light)"
-                        : "var(--background)",
-                      cursor: "pointer",
-                      transition: "background 0.15s",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedFiles.has(file.id)}
-                      readOnly
-                      style={{ accentColor: "var(--primary)" }}
-                    />
-                    <span className="text-body" style={{ flex: 1 }}>
-                      {file.name}
-                    </span>
-                    <span
-                      className="text-caption"
-                      style={{ color: "var(--text-tertiary)" }}
-                    >
-                      {file.modifiedTime
-                        ? new Date(file.modifiedTime).toLocaleDateString("ko-KR")
-                        : ""}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Notion Card */}
-      <div
-        className="card card-padded"
-        style={{ padding: 28 }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 20,
-          }}
-        >
-          <div>
-            <h3
-              className="text-section"
-              style={{ marginBottom: 4 }}
-            >
-              노션
-            </h3>
-            <span
-              className="text-caption"
-              style={{
-                color: notionConnected
-                  ? "var(--success, #22c55e)"
-                  : "var(--text-tertiary)",
-              }}
-            >
-              {notionConnected ? "연결됨" : "미연결"}
-            </span>
-          </div>
-          {notionConnected ? (
-            <button className="btn-secondary" onClick={disconnectNotion}>
-              연결 해제
-            </button>
-          ) : (
-            <button className="btn-primary" onClick={connectNotion}>
-              노션 연결
-            </button>
-          )}
-        </div>
-
-        {notionConnected && (
-          <div>
-            <div style={{ marginBottom: 16 }}>
-              <label
-                className="text-caption"
-                style={{
-                  display: "block",
-                  marginBottom: 6,
-                  color: "var(--text-secondary)",
-                  fontWeight: 600,
-                }}
-              >
-                데이터베이스 ID
-              </label>
-              <input
-                className="input-field"
-                type="text"
-                value={notionDatabaseId}
-                onChange={(e) => handleDatabaseIdChange(e.target.value)}
-                placeholder="노션 데이터베이스 ID를 입력하세요"
-                style={{ width: "100%" }}
-              />
-            </div>
-            <button
-              className="btn-primary"
-              onClick={exportToNotion}
-              disabled={exportingNotion || !notionDatabaseId}
-              style={{
-                opacity: exportingNotion || !notionDatabaseId ? 0.5 : 1,
-              }}
-            >
-              {exportingNotion ? "내보내는 중..." : "평가 결과 내보내기"}
-            </button>
-          </div>
-        )}
-      </div>
     </div>
   );
 }
