@@ -19,6 +19,7 @@ function RequireRole({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <Routes>
+      <Route path="/" element={<RoleSelectPage />} />
       <Route path="/select-role" element={<RoleSelectPage />} />
       <Route
         element={
@@ -27,7 +28,7 @@ export default function App() {
           </RequireRole>
         }
       >
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/lectures" element={<LecturesPage />} />
         <Route path="/lectures/:date" element={<LectureDetailPage />} />

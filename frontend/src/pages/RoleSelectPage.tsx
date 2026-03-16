@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRole } from "@/contexts/RoleContext";
 
 export default function RoleSelectPage() {
-  const { setRole, setInstructorName } = useRole();
+  const { role, setRole, setInstructorName } = useRole();
   const navigate = useNavigate();
+
+  // 이미 역할이 설정되어 있으면 대시보드로
+  useEffect(() => {
+    if (role) navigate("/dashboard", { replace: true });
+  }, [role, navigate]);
   const [showNameInput, setShowNameInput] = useState(false);
   const [name, setName] = useState("김영아");
 
