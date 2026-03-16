@@ -10,7 +10,7 @@ import {
   Tooltip,
 } from "recharts";
 import { useRole } from "@/contexts/RoleContext";
-import { getEvaluation } from "@/lib/data";
+import { getEvaluationByModel, MODEL_LABELS, type ModelKey } from "@/lib/data";
 import { formatDate, scoreColor, scoreBadgeTextColor, scoreLabel, weightLabel } from "@/lib/utils";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import FeedbackCard from "@/components/shared/FeedbackCard";
@@ -20,17 +20,20 @@ export default function LectureDetailPage() {
   const params = useParams();
   const date = params.date ?? "";
   const { isOperator } = useRole();
+  const [model, setModel] = useState<ModelKey>("gpt4o-mini");
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     if (!date) return;
-    getEvaluation(date)
+    setLoading(true);
+    setError(false);
+    getEvaluationByModel(date, model)
       .then(setEvaluation)
       .catch(() => setError(true))
       .finally(() => setLoading(false));
-  }, [date]);
+  }, [date, model]);
 
   if (loading) {
     return (
@@ -95,6 +98,21 @@ export default function LectureDetailPage() {
 
   return (
     <div style={{ maxWidth: 1080, margin: "0 auto", display: "flex", flexDirection: "column", gap: 32 }}>
+      {/* Model Selector */}
+      <div className="tab-bar" role="tablist" style={{ marginBottom: 16 }}>
+        {(["gpt4o-mini", "opus", "sonnet"] as const).map((m) => (
+          <button
+            key={m}
+            role="tab"
+            aria-selected={model === m}
+            onClick={() => setModel(m)}
+            className="tab-item"
+          >
+            {MODEL_LABELS[m]}
+          </button>
+        ))}
+      </div>
+
       {/* Header */}
       <div className="card card-padded">
         <Link
@@ -122,6 +140,8 @@ export default function LectureDetailPage() {
                   <span>{metadata.instructor}</span>
                 </>
               )}
+              <span style={{ color: "var(--text-muted)" }}>·</span>
+              <span>{MODEL_LABELS[model]}</span>
             </div>
           </div>
 

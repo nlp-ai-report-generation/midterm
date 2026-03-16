@@ -7,6 +7,7 @@ import { formatDateShort } from "@/lib/utils";
 import {
   getTranscriptStats, getSpeakerDistribution, getFillerWords,
   getInteractionMetrics, getCurriculumFlow,
+  getOpusAnalysis, getOpusFillerAnalysis, getOpusInteractionAnalysis,
 } from "@/lib/data";
 import AiSummary from "@/components/shared/AiSummary";
 import InsightCard from "@/components/shared/InsightCard";
@@ -15,7 +16,7 @@ import type {
   InteractionMetrics, CurriculumEntry,
 } from "@/types/evaluation";
 
-type TabKey = "overview" | "speakers" | "interaction" | "filler" | "curriculum";
+type TabKey = "overview" | "speakers" | "interaction" | "filler" | "curriculum" | "ai";
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "overview", label: "발화량 분석" },
@@ -23,6 +24,7 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "interaction", label: "소통 빈도" },
   { key: "filler", label: "습관 표현" },
   { key: "curriculum", label: "수업 흐름" },
+  { key: "ai", label: "AI 심층 분석" },
 ];
 
 const SUBJECT_COLORS: Record<string, string> = {
@@ -45,6 +47,12 @@ export default function EDAPage() {
   const [fillerWords, setFillerWords] = useState<FillerWordStats[]>([]);
   const [interactions, setInteractions] = useState<InteractionMetrics[]>([]);
   const [curriculum, setCurriculum] = useState<CurriculumEntry[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [opusAnalysis, setOpusAnalysis] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [opusFiller, setOpusFiller] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [opusInteraction, setOpusInteraction] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAi, setShowAi] = useState(true);
 
@@ -52,10 +60,12 @@ export default function EDAPage() {
     Promise.all([
       getTranscriptStats(), getSpeakerDistribution(), getFillerWords(),
       getInteractionMetrics(), getCurriculumFlow(),
+      getOpusAnalysis(), getOpusFillerAnalysis(), getOpusInteractionAnalysis(),
     ])
-      .then(([s, sp, f, i, c]) => {
+      .then(([s, sp, f, i, c, oa, of_, oi]) => {
         setStats(s); setSpeakers(sp); setFillerWords(f);
         setInteractions(i); setCurriculum(c);
+        setOpusAnalysis(oa); setOpusFiller(of_); setOpusInteraction(oi);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -109,6 +119,13 @@ export default function EDAPage() {
         {activeTab === "interaction" && <InteractionTab data={interactions} showAi={showAi} />}
         {activeTab === "filler" && <FillerTab data={fillerWords} showAi={showAi} />}
         {activeTab === "curriculum" && <CurriculumTab data={curriculum} showAi={showAi} />}
+        {activeTab === "ai" && (
+          <AiDeepTab
+            analysis={opusAnalysis}
+            fillerData={opusFiller}
+            interactionData={opusInteraction}
+          />
+        )}
       </div>
     </div>
   );
@@ -383,6 +400,254 @@ function CurriculumTab({ data, showAi }: { data: CurriculumEntry[]; showAi: bool
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ─── AI 심층 분석 ─── */
+function AiDeepTab({
+  analysis,
+  fillerData,
+  interactionData,
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  analysis: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fillerData: any[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  interactionData: any[];
+}) {
+  const [expandedLecture, setExpandedLecture] = useState<string | null>(null);
+
+  if (!analysis) {
+    return (
+      <div className="card card-padded" style={{ textAlign: "center", padding: "64px 0" }}>
+        <p className="text-body">AI 심층 분석 데이터를 불러올 수 없습니다.</p>
+      </div>
+    );
+  }
+
+  const lectures = analysis.lectures ?? [];
+  const priorities = analysis.improvement_priorities ?? [];
+  const strongest = analysis.strongest_lecture;
+  const weakest = analysis.weakest_lecture;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+      {/* 1. 전체 요약 */}
+      <div className="ai-insight">
+        <p className="text-label" style={{ marginBottom: 8 }}>전체 요약</p>
+        <p className="text-body" style={{ lineHeight: 1.8 }}>{analysis.overall_summary}</p>
+      </div>
+
+      {/* 2. 강의별 분석 */}
+      <div>
+        <h3 className="text-section" style={{ marginBottom: 16 }}>강의별 분석</h3>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {lectures.map((lec: any) => {
+            const isOpen = expandedLecture === lec.date;
+            return (
+              <div key={lec.date} className="card overflow-hidden">
+                <button
+                  onClick={() => setExpandedLecture(isOpen ? null : lec.date)}
+                  aria-expanded={isOpen}
+                  className="w-full flex items-center justify-between text-left transition-colors"
+                  style={{ padding: "16px 24px" }}
+                >
+                  <div>
+                    <p className="font-bold" style={{ fontSize: 14, color: "var(--text-primary)" }}>
+                      {lec.date} &middot; {lec.subject}
+                    </p>
+                    <p className="text-caption" style={{ marginTop: 4 }}>
+                      {lec.content_summary?.slice(0, 80)}...
+                    </p>
+                  </div>
+                  <svg
+                    className={`w-5 h-5 shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                    style={{ color: "var(--text-muted)", marginLeft: 16 }}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {isOpen && (
+                  <div style={{ padding: "0 24px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
+                    <div className="inner-card">
+                      <p className="text-label" style={{ marginBottom: 6 }}>내용 요약</p>
+                      <p className="text-body" style={{ lineHeight: 1.7 }}>{lec.content_summary}</p>
+                    </div>
+
+                    <div className="inner-card">
+                      <p className="text-label" style={{ marginBottom: 6 }}>강의 스타일</p>
+                      <p className="text-body" style={{ lineHeight: 1.7 }}>{lec.teaching_style}</p>
+                    </div>
+
+                    {lec.notable_patterns?.length > 0 && (
+                      <div className="inner-card">
+                        <p className="text-label" style={{ marginBottom: 8 }}>주요 패턴</p>
+                        <ul style={{ margin: 0, paddingLeft: 20, display: "flex", flexDirection: "column", gap: 4 }}>
+                          {lec.notable_patterns.map((p: string, i: number) => (
+                            <li key={i} className="text-body">{p}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}>
+                      <div className="inner-card">
+                        <p className="text-label" style={{ marginBottom: 6 }}>도입 품질</p>
+                        <p className="text-body" style={{ lineHeight: 1.7 }}>{lec.opening_quality}</p>
+                      </div>
+                      <div className="inner-card">
+                        <p className="text-label" style={{ marginBottom: 6 }}>마무리 품질</p>
+                        <p className="text-body" style={{ lineHeight: 1.7 }}>{lec.closing_quality}</p>
+                      </div>
+                      <div className="inner-card">
+                        <p className="text-label" style={{ marginBottom: 6 }}>소통 품질</p>
+                        <p className="text-body" style={{ lineHeight: 1.7 }}>{lec.interaction_quality}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 3. 습관 표현 심층 분석 */}
+      <div>
+        <h3 className="text-section" style={{ marginBottom: 16 }}>습관 표현 심층 분석</h3>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {fillerData.map((entry: any) => (
+            <div key={entry.date} className="card card-padded">
+              <p className="font-bold" style={{ fontSize: 14, color: "var(--text-primary)", marginBottom: 12 }}>
+                {entry.date}
+              </p>
+
+              {entry.habitual_phrases?.length > 0 && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 16 }}>
+                  {entry.habitual_phrases.map((hp: any, i: number) => (
+                    <div key={i} className="inner-card">
+                      <div className="flex items-center gap-3" style={{ marginBottom: 4 }}>
+                        <span className="font-semibold" style={{ fontSize: 13, color: "var(--primary)" }}>
+                          &ldquo;{hp.phrase}&rdquo;
+                        </span>
+                        <span className="text-caption">{hp.estimated_frequency}</span>
+                      </div>
+                      <p className="text-body" style={{ lineHeight: 1.6 }}>{hp.context}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {entry.speech_characteristics && (
+                <div className="ai-insight">
+                  <p className="text-label" style={{ marginBottom: 4 }}>발화 특성</p>
+                  <p className="text-body" style={{ lineHeight: 1.7 }}>{entry.speech_characteristics}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. 소통 품질 분석 */}
+      <div>
+        <h3 className="text-section" style={{ marginBottom: 16 }}>소통 품질 분석</h3>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {interactionData.map((entry: any) => (
+            <div key={entry.date} className="card card-padded">
+              <div className="flex items-center gap-3" style={{ marginBottom: 12 }}>
+                <p className="font-bold" style={{ fontSize: 14, color: "var(--text-primary)" }}>
+                  {entry.date}
+                </p>
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: "var(--text-muted)",
+                    background: "var(--surface)",
+                    borderRadius: 6,
+                    padding: "2px 10px",
+                  }}
+                >
+                  {entry.interaction_type}
+                </span>
+              </div>
+
+              <p className="text-body" style={{ lineHeight: 1.7, marginBottom: 12 }}>{entry.assessment}</p>
+
+              {entry.check_phrases_found?.length > 0 && (
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {entry.check_phrases_found.map((phrase: string, i: number) => (
+                    <span
+                      key={i}
+                      style={{
+                        fontSize: 12,
+                        color: "var(--text-secondary)",
+                        background: "var(--surface)",
+                        borderRadius: 6,
+                        padding: "3px 10px",
+                      }}
+                    >
+                      {phrase}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 5. 개선 우선순위 */}
+      {priorities.length > 0 && (
+        <div>
+          <h3 className="text-section" style={{ marginBottom: 16 }}>개선 우선순위</h3>
+          <div className="card card-padded">
+            <ol style={{ margin: 0, paddingLeft: 20, display: "flex", flexDirection: "column", gap: 12 }}>
+              {priorities.map((item: string, i: number) => (
+                <li key={i} className="text-body" style={{ lineHeight: 1.7 }}>{item}</li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      )}
+
+      {/* 6. 최고 / 최저 강의 */}
+      {(strongest || weakest) && (
+        <div>
+          <h3 className="text-section" style={{ marginBottom: 16 }}>최고 / 최저 강의</h3>
+          <div className="card-grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
+            {strongest && (
+              <div className="card card-padded">
+                <p className="text-label" style={{ marginBottom: 8, color: "var(--primary)" }}>
+                  최고 강의
+                </p>
+                <p className="font-bold" style={{ fontSize: 15, color: "var(--text-primary)", marginBottom: 8 }}>
+                  {strongest.date}
+                </p>
+                <p className="text-body" style={{ lineHeight: 1.7 }}>{strongest.reason}</p>
+              </div>
+            )}
+            {weakest && (
+              <div className="card card-padded">
+                <p className="text-label" style={{ marginBottom: 8, color: "var(--score-3)" }}>
+                  최저 강의
+                </p>
+                <p className="font-bold" style={{ fontSize: 15, color: "var(--text-primary)", marginBottom: 8 }}>
+                  {weakest.date}
+                </p>
+                <p className="text-body" style={{ lineHeight: 1.7 }}>{weakest.reason}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

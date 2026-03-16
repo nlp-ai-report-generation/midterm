@@ -16,7 +16,6 @@ import {
   type ModelKey,
 } from "@/lib/data";
 import { formatDateShort } from "@/lib/utils";
-import InsightCard from "@/components/shared/InsightCard";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import AiSummary from "@/components/shared/AiSummary";
 import type { EvaluationResult, LectureMetadata } from "@/types/evaluation";
@@ -28,6 +27,14 @@ const MODEL_COLORS_HEX: Record<ModelKey, string> = {
   "gpt4o-mini": "#2563EB", // fallback; overridden in useEffect
   opus: "#8B5CF6",
   sonnet: "#3182F6",
+};
+
+const MODEL_DESCRIPTIONS: Record<ModelKey, string> = {
+  "gpt4o-mini":
+    "LangGraph 파이프라인을 통해 구조화된 프롬프트로 평가. 가장 관대한 채점 경향.",
+  opus: "트랜스크립트를 직접 읽고 18개 항목을 종합 평가. 가장 엄격한 채점.",
+  sonnet:
+    "빠른 응답 속도로 전체 강의를 순회 평가. 중간 수준의 채점 경향.",
 };
 
 interface ModelData {
@@ -124,9 +131,12 @@ export default function ExperimentsPage() {
         const scores = data[model].evaluations
           .map((e) => e.category_averages[cat])
           .filter((v) => v != null);
-        row[model] = scores.length > 0
-          ? parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2))
-          : 0;
+        row[model] =
+          scores.length > 0
+            ? parseFloat(
+                (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2)
+              )
+            : 0;
       }
       return row;
     });
@@ -143,29 +153,56 @@ export default function ExperimentsPage() {
     })).sort((a, b) => a.avg - b.avg);
 
     const strictest = ranked[0];
-    const most_lenient = ranked[ranked.length - 1];
+    const mostLenient = ranked[ranked.length - 1];
 
-    // Find categories with lowest and highest scores across all models
-    const catScores = new Map<string, number[]>();
+    // Compute per-category per-model averages
+    const catModelAvg = new Map<string, Record<ModelKey, number[]>>();
     for (const model of MODELS) {
       for (const ev of data[model].evaluations) {
         for (const [cat, score] of Object.entries(ev.category_averages)) {
-          if (!catScores.has(cat)) catScores.set(cat, []);
-          catScores.get(cat)!.push(score);
+          if (!catModelAvg.has(cat)) {
+            catModelAvg.set(cat, {
+              "gpt4o-mini": [],
+              opus: [],
+              sonnet: [],
+            });
+          }
+          catModelAvg.get(cat)![model].push(score);
         }
       }
     }
 
-    const catAvgs = Array.from(catScores.entries()).map(([cat, scores]) => ({
-      cat,
-      avg: scores.reduce((a, b) => a + b, 0) / scores.length,
-    }));
-    catAvgs.sort((a, b) => a.avg - b.avg);
+    // Find categories where all models agree are weak (all below average)
+    const catAverages = Array.from(catModelAvg.entries()).map(
+      ([cat, modelScores]) => {
+        const allScores = MODELS.flatMap((m) => modelScores[m]);
+        const avg =
+          allScores.length > 0
+            ? allScores.reduce((a, b) => a + b, 0) / allScores.length
+            : 0;
 
-    const lowCats = catAvgs.slice(0, 2).map((c) => `'${c.cat}'`).join("과 ");
-    const highCats = catAvgs.slice(-2).map((c) => `'${c.cat}'`).join("과 ");
+        // Compute per-model avg for disagreement
+        const perModelAvg = MODELS.map((m) => {
+          const s = modelScores[m];
+          return s.length > 0 ? s.reduce((a, b) => a + b, 0) / s.length : 0;
+        });
+        const maxDiff =
+          perModelAvg.length > 0
+            ? Math.max(...perModelAvg) - Math.min(...perModelAvg)
+            : 0;
 
-    return `${strictest.label}가 가장 엄격하게 평가했으며(평균 ${strictest.avg.toFixed(2)}), ${most_lenient.label}가 가장 관대합니다(평균 ${most_lenient.avg.toFixed(2)}). 세 모델 모두 ${lowCats}에서 낮은 점수를 주었으나, ${highCats}에서는 비교적 높은 점수를 주었습니다.`;
+        return { cat, avg, maxDiff };
+      }
+    );
+
+    catAverages.sort((a, b) => a.avg - b.avg);
+    const weakestCat = catAverages[0]?.cat ?? "";
+
+    // Find category with most disagreement
+    const sortedByDiff = [...catAverages].sort((a, b) => b.maxDiff - a.maxDiff);
+    const mostDisagreed = sortedByDiff[0];
+
+    return `${mostLenient.label}가 평균 ${mostLenient.avg.toFixed(2)}로 가장 관대하게 평가했고, ${strictest.label}가 ${strictest.avg.toFixed(2)}로 가장 엄격합니다. 세 모델 모두 '${weakestCat}'에서 낮은 점수를 주었습니다. '${mostDisagreed?.cat ?? ""}'에서는 모델 간 점수 차이가 가장 큽니다 (최대 ${mostDisagreed?.maxDiff.toFixed(1) ?? "0.0"}점 차이).`;
   }, [data]);
 
   if (loading) {
@@ -185,45 +222,99 @@ export default function ExperimentsPage() {
   }
 
   return (
-    <div className="page-content">
+    <div
+      className="page-content"
+      style={{ display: "flex", flexDirection: "column", gap: 36 }}
+    >
       {/* Title */}
       <div>
         <h1 className="text-title">모델 비교</h1>
-        <p className="text-caption mt-1">
+        <p className="text-caption" style={{ marginTop: 4 }}>
           같은 강의를 3개 AI 모델이 평가한 결과를 비교합니다
         </p>
       </div>
 
-      {/* Section 1: 모델 평균 비교 */}
-      <div className="card-grid" style={{ gridTemplateColumns: "repeat(3, 1fr)" }}>
+      {/* Section 1: Model overview cards */}
+      <div
+        className="card-grid"
+        style={{ gridTemplateColumns: "repeat(3, 1fr)" }}
+      >
         {MODELS.map((model) => (
-          <InsightCard
-            key={model}
-            label={MODEL_LABELS[model]}
-            value={data[model].avg.toFixed(2)}
-            subtitle={`${data[model].evaluations.length}개 강의 평가`}
-          />
+          <div key={model} className="card card-padded">
+            <div
+              style={{ display: "flex", alignItems: "center", gap: 8 }}
+            >
+              <span
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  backgroundColor:
+                    model === "gpt4o-mini"
+                      ? "var(--primary)"
+                      : MODEL_COLORS_HEX[model],
+                  flexShrink: 0,
+                }}
+              />
+              <span className="text-label">{MODEL_LABELS[model]}</span>
+            </div>
+            <p className="text-number" style={{ marginTop: 12 }}>
+              {data[model].avg.toFixed(2)}
+            </p>
+            <p className="text-caption" style={{ marginTop: 8 }}>
+              {data[model].evaluations.length}개 강의 평가
+            </p>
+          </div>
         ))}
       </div>
 
-      {/* Section 2: 강의별 점수 비교 */}
+      {/* Section 2: Score comparison table */}
       <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 16 }}>강의별 점수 비교</h2>
+        <h2 className="text-section" style={{ marginBottom: 16 }}>
+          강의별 점수 비교
+        </h2>
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr>
-                <th className="text-label" style={{ textAlign: "left", padding: "8px 12px" }}>
+                <th
+                  className="text-label"
+                  style={{
+                    textAlign: "left",
+                    padding: "12px 8px",
+                    position: "sticky",
+                    top: 0,
+                    background: "var(--surface)",
+                    zIndex: 1,
+                  }}
+                >
                   날짜
                 </th>
-                <th className="text-label" style={{ textAlign: "left", padding: "8px 12px" }}>
+                <th
+                  className="text-label"
+                  style={{
+                    textAlign: "left",
+                    padding: "12px 8px",
+                    position: "sticky",
+                    top: 0,
+                    background: "var(--surface)",
+                    zIndex: 1,
+                  }}
+                >
                   과목
                 </th>
                 {MODELS.map((m) => (
                   <th
                     key={m}
                     className="text-label"
-                    style={{ textAlign: "center", padding: "8px 12px" }}
+                    style={{
+                      textAlign: "center",
+                      padding: "12px 8px",
+                      position: "sticky",
+                      top: 0,
+                      background: "var(--surface)",
+                      zIndex: 1,
+                    }}
                   >
                     {MODEL_LABELS[m]}
                   </th>
@@ -231,23 +322,56 @@ export default function ExperimentsPage() {
               </tr>
             </thead>
             <tbody>
-              {sortedDates.map((date) => {
+              {sortedDates.map((date, idx) => {
                 const row = dateMap.get(date)!;
                 const meta = lectureLookup.get(date);
                 return (
-                  <tr key={date}>
-                    <td className="text-body" style={{ padding: "6px 12px", whiteSpace: "nowrap" }}>
+                  <tr
+                    key={date}
+                    style={{
+                      background:
+                        idx % 2 === 1 ? "var(--grey-50)" : "transparent",
+                    }}
+                  >
+                    <td
+                      className="text-caption"
+                      style={{
+                        padding: "12px 8px",
+                        whiteSpace: "nowrap",
+                        fontFamily: "monospace",
+                      }}
+                    >
                       {formatDateShort(date)}
                     </td>
-                    <td className="text-body" style={{ padding: "6px 12px" }}>
-                      {meta?.subjects?.join(", ") ?? "-"}
+                    <td
+                      className="text-body"
+                      style={{
+                        padding: "12px 8px",
+                        maxWidth: 200,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {meta?.subjects?.join(", ") ?? "—"}
                     </td>
                     {MODELS.map((m) => (
-                      <td key={m} style={{ textAlign: "center", padding: "6px 12px" }}>
+                      <td
+                        key={m}
+                        style={{
+                          textAlign: "center",
+                          padding: "12px 8px",
+                        }}
+                      >
                         {row[m] ? (
                           <ScoreBadge score={row[m]!.weighted_average} />
                         ) : (
-                          <span className="text-caption">-</span>
+                          <span
+                            className="text-caption"
+                            style={{ color: "var(--text-muted)" }}
+                          >
+                            —
+                          </span>
                         )}
                       </td>
                     ))}
@@ -259,17 +383,29 @@ export default function ExperimentsPage() {
         </div>
       </div>
 
-      {/* Section 3: 카테고리별 모델 차이 */}
+      {/* Section 3: Category bar chart */}
       <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 16 }}>카테고리별 모델 차이</h2>
+        <h2 className="text-section" style={{ marginBottom: 16 }}>
+          카테고리별 모델 차이
+        </h2>
         <ResponsiveContainer width="100%" height={360}>
-          <BarChart data={categoryData} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+          <BarChart
+            data={categoryData}
+            margin={{ top: 8, right: 16, bottom: 8, left: 0 }}
+          >
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke="var(--border)"
+              vertical={false}
+            />
             <XAxis
               dataKey="category"
               tick={{ fontSize: 12, fill: "var(--text-secondary)" }}
               axisLine={{ stroke: "var(--border)" }}
               tickLine={false}
+              tickFormatter={(v: string) =>
+                v.length > 6 ? v.slice(0, 6) + "…" : v
+              }
             />
             <YAxis
               domain={[0, 5]}
@@ -280,12 +416,19 @@ export default function ExperimentsPage() {
             <Tooltip
               contentStyle={{
                 background: "var(--surface)",
-                border: "1px solid var(--border)",
-                borderRadius: 8,
+                border: "none",
+                borderRadius: 12,
                 fontSize: 13,
+                boxShadow:
+                  "0 4px 16px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.06)",
+                padding: "12px 16px",
               }}
             />
-            <Legend wrapperStyle={{ fontSize: 13 }} />
+            <Legend
+              wrapperStyle={{ fontSize: 13, paddingTop: 12 }}
+              iconType="circle"
+              iconSize={8}
+            />
             <Bar
               dataKey="gpt4o-mini"
               name={MODEL_LABELS["gpt4o-mini"]}
@@ -308,10 +451,56 @@ export default function ExperimentsPage() {
         </ResponsiveContainer>
       </div>
 
-      {/* Section 4: 채점 경향 분석 */}
+      {/* Section 4: AI scoring tendency analysis */}
       <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 16 }}>채점 경향 분석</h2>
+        <h2 className="text-section" style={{ marginBottom: 16 }}>
+          채점 경향 분석
+        </h2>
         <AiSummary text={insightText} show={true} />
+      </div>
+
+      {/* Section 5: Model characteristics */}
+      <div>
+        <h2 className="text-section" style={{ marginBottom: 16 }}>
+          모델별 특징
+        </h2>
+        <div
+          className="card-grid"
+          style={{ gridTemplateColumns: "repeat(3, 1fr)" }}
+        >
+          {MODELS.map((model) => (
+            <div key={model} className="card card-padded">
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  marginBottom: 12,
+                }}
+              >
+                <span
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: "50%",
+                    backgroundColor:
+                      model === "gpt4o-mini"
+                        ? "var(--primary)"
+                        : MODEL_COLORS_HEX[model],
+                    flexShrink: 0,
+                  }}
+                />
+                <span
+                  className="text-label"
+                  style={{ fontSize: 13, color: "var(--text-primary)" }}
+                >
+                  {MODEL_LABELS[model]}
+                </span>
+              </div>
+              <p className="text-body">{MODEL_DESCRIPTIONS[model]}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

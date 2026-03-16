@@ -118,3 +118,18 @@ export async function getCurriculumFlow(): Promise<CurriculumEntry[]> {
 export async function getChunks(date: string): Promise<ChunkInfo[]> {
   return fetchJSON<ChunkInfo[]>(`preprocessing/${date}_chunks.json`);
 }
+
+/* ── Opus 심층 분석 ── */
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getOpusAnalysis(): Promise<any> {
+  return fetchJSON("eda-opus/analysis_summary.json");
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getOpusFillerAnalysis(): Promise<any> {
+  return fetchJSON("eda-opus/filler_analysis.json");
+}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function getOpusInteractionAnalysis(): Promise<any> {
+  return fetchJSON("eda-opus/interaction_analysis.json");
+}
