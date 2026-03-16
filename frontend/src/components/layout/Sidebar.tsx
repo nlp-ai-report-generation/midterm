@@ -9,6 +9,7 @@ import {
   TrendingUp,
   Layers,
   Settings,
+  Link2,
   Info,
   type LucideIcon,
 } from "lucide-react";
@@ -29,6 +30,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: "/trends", label: "점수 추이", icon: TrendingUp },
   { to: "/items", label: "항목별 분석", icon: Layers },
   { to: "/settings", label: "설정", icon: Settings },
+  { to: "/integrations", label: "연동 설정", icon: Link2 },
   { to: "/about", label: "프로젝트 소개", icon: Info },
 ];
 

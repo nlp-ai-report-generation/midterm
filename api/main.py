@@ -5,13 +5,16 @@
 
 from __future__ import annotations
 
+import base64
 import json
 import logging
 import os
 import sys
 from pathlib import Path
 from typing import Optional
+from urllib.parse import urlencode
 
+import httpx
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -40,6 +43,16 @@ app.add_middleware(
 )
 
 EXPERIMENTS_DIR = PROJECT_ROOT / "experiments"
+
+# --- OAuth Configuration ---
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
+GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:8000/api/auth/google/callback")
+
+NOTION_CLIENT_ID = os.getenv("NOTION_CLIENT_ID", "")
+NOTION_CLIENT_SECRET = os.getenv("NOTION_CLIENT_SECRET", "")
+NOTION_REDIRECT_URI = os.getenv("NOTION_REDIRECT_URI", "http://localhost:8000/api/auth/notion/callback")
 
 
 # --- Request/Response Models ---
@@ -247,3 +260,112 @@ async def get_experiment(experiment_id: str):
                 result["results"].append(json.load(f))
 
     return result
+
+
+# --- Google Drive OAuth ---
+
+
+@app.get("/api/auth/google")
+async def google_auth():
+    """Redirect to Google OAuth consent screen."""
+    params = {
+        "client_id": GOOGLE_CLIENT_ID,
+        "redirect_uri": GOOGLE_REDIRECT_URI,
+        "response_type": "code",
+        "scope": "https://www.googleapis.com/auth/drive.readonly",
+        "access_type": "offline",
+        "prompt": "consent",
+    }
+    return {"url": f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}"}
+
+
+@app.get("/api/auth/google/callback")
+async def google_callback(code: str):
+    """Exchange code for token, store in session."""
+    async with httpx.AsyncClient() as client:
+        resp = await client.post("https://oauth2.googleapis.com/token", data={
+            "client_id": GOOGLE_CLIENT_ID,
+            "client_secret": GOOGLE_CLIENT_SECRET,
+            "code": code,
+            "grant_type": "authorization_code",
+            "redirect_uri": GOOGLE_REDIRECT_URI,
+        })
+        tokens = resp.json()
+    # Return token to frontend (frontend stores in localStorage)
+    # In production, use httpOnly cookies
+    return {"access_token": tokens.get("access_token"), "refresh_token": tokens.get("refresh_token")}
+
+
+@app.get("/api/drive/files")
+async def list_drive_files(token: str):
+    """List .txt files from Google Drive."""
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(
+            "https://www.googleapis.com/drive/v3/files",
+            headers={"Authorization": f"Bearer {token}"},
+            params={"q": "mimeType='text/plain'", "fields": "files(id,name,modifiedTime)"},
+        )
+        return resp.json()
+
+
+@app.get("/api/drive/download/{file_id}")
+async def download_drive_file(file_id: str, token: str):
+    """Download a file from Google Drive."""
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(
+            f"https://www.googleapis.com/drive/v3/files/{file_id}",
+            headers={"Authorization": f"Bearer {token}"},
+            params={"alt": "media"},
+        )
+        return {"content": resp.text, "filename": file_id}
+
+
+# --- Notion OAuth ---
+
+
+@app.get("/api/auth/notion")
+async def notion_auth():
+    """Redirect to Notion OAuth consent screen."""
+    params = {
+        "client_id": NOTION_CLIENT_ID,
+        "redirect_uri": NOTION_REDIRECT_URI,
+        "response_type": "code",
+        "owner": "user",
+    }
+    return {"url": f"https://api.notion.com/v1/oauth/authorize?{urlencode(params)}"}
+
+
+@app.get("/api/auth/notion/callback")
+async def notion_callback(code: str):
+    """Exchange Notion auth code for access token."""
+    auth = base64.b64encode(f"{NOTION_CLIENT_ID}:{NOTION_CLIENT_SECRET}".encode()).decode()
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            "https://api.notion.com/v1/oauth/token",
+            headers={"Authorization": f"Basic {auth}", "Content-Type": "application/json"},
+            json={"grant_type": "authorization_code", "code": code, "redirect_uri": NOTION_REDIRECT_URI},
+        )
+        return resp.json()
+
+
+@app.post("/api/notion/create-page")
+async def create_notion_page(token: str, database_id: str, lecture_date: str, score: float, model: str):
+    """Create a page in a Notion database with evaluation results."""
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            "https://api.notion.com/v1/pages",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+                "Notion-Version": "2022-06-28",
+            },
+            json={
+                "parent": {"database_id": database_id},
+                "properties": {
+                    "강의 날짜": {"date": {"start": lecture_date}},
+                    "점수": {"number": score},
+                    "모델": {"rich_text": [{"text": {"content": model}}]},
+                },
+            },
+        )
+        return resp.json()

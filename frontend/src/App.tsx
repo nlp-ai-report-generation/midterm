@@ -12,6 +12,7 @@ import ComparePage from "@/pages/ComparePage";
 import TrendsPage from "@/pages/TrendsPage";
 import ItemAnalysisPage from "@/pages/ItemAnalysisPage";
 import SettingsPage from "@/pages/SettingsPage";
+import IntegrationsPage from "@/pages/IntegrationsPage";
 import AboutPage from "@/pages/AboutPage";
 
 function RequireRole({ children }: { children: React.ReactNode }) {
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="/trends" element={<TrendsPage />} />
         <Route path="/items" element={<ItemAnalysisPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/integrations" element={<IntegrationsPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
