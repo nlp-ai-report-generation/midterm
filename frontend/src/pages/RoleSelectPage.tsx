@@ -28,29 +28,31 @@ export default function RoleSelectPage() {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        minHeight: "100dvh",
         background: "var(--surface)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: "40px 24px",
+        padding: "32px 20px",
+        boxSizing: "border-box",
+        overflow: "hidden",
       }}
     >
-      <div style={{ width: "100%", maxWidth: 520 }}>
+      <div style={{ width: "100%", maxWidth: 460 }}>
         {/* 헤드라인 */}
-        <div style={{ marginBottom: 56 }}>
+        <div style={{ marginBottom: 40 }}>
           <div
             style={{
-              width: 36,
-              height: 36,
-              borderRadius: 10,
+              width: 32,
+              height: 32,
+              borderRadius: 8,
               background: "var(--primary)",
-              marginBottom: 28,
+              marginBottom: 24,
             }}
           />
           <h1
             style={{
-              fontSize: 32,
+              fontSize: "clamp(24px, 6vw, 32px)",
               fontWeight: 800,
               color: "var(--text-primary)",
               lineHeight: 1.3,
