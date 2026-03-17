@@ -15,6 +15,7 @@ import ItemAnalysisPage from "@/pages/ItemAnalysisPage";
 import SettingsPage from "@/pages/SettingsPage";
 import IntegrationsPage from "@/pages/IntegrationsPage";
 import AboutPage from "@/pages/AboutPage";
+import ValidationPage from "@/pages/ValidationPage";
 
 function RequireRole({ children }: { children: React.ReactNode }) {
   const { role } = useRole();
@@ -49,6 +50,7 @@ export default function App() {
         <Route path="/items" element={<ItemAnalysisPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/integrations" element={<IntegrationsPage />} />
+        <Route path="/validation" element={<ValidationPage />} />
         <Route path="/about" element={<AboutPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
