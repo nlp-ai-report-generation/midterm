@@ -10,6 +10,11 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   Cell,
+  ScatterChart,
+  Scatter,
+  ZAxis,
+  AreaChart,
+  Area,
 } from "recharts";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 
@@ -252,6 +257,147 @@ function ConsistencyTab() {
         </ResponsiveContainer>
       </div>
 
+      {/* ICC Distribution Strip Plot */}
+      <div className="card card-padded">
+        <h2 className="text-section" style={{ marginBottom: 4 }}>
+          ICC 분포
+        </h2>
+        <p className="text-caption" style={{ marginBottom: 20 }}>
+          15개 강의의 ICC가 어디에 몰려 있는지 한눈에 볼 수 있어요
+        </p>
+        <ResponsiveContainer width="100%" height={200}>
+          <ScatterChart margin={{ top: 16, right: 32, bottom: 16, left: 32 }}>
+            <XAxis
+              type="number"
+              dataKey="icc"
+              domain={[0.6, 1.0]}
+              tick={{ fontSize: 12, fill: "var(--text-secondary)" }}
+              axisLine={{ stroke: "var(--border)" }}
+              tickLine={false}
+              label={{ value: "ICC", position: "right", offset: 8, fontSize: 12, fill: "var(--text-tertiary)" }}
+            />
+            <YAxis
+              type="number"
+              dataKey="jitter"
+              domain={[0, 2]}
+              hide
+            />
+            <ZAxis type="number" dataKey="size" range={[80, 240]} />
+            <Tooltip
+              contentStyle={{
+                background: "var(--surface)",
+                border: "none",
+                borderRadius: 12,
+                fontSize: 13,
+                boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+                padding: "12px 16px",
+              }}
+              formatter={(value, name) => {
+                if (name === "jitter") return null;
+                return [Number(value).toFixed(3), "ICC"];
+              }}
+              labelFormatter={(label) => `ICC: ${Number(label).toFixed(3)}`}
+            />
+            <ReferenceLine
+              x={0.75}
+              stroke="#F59E0B"
+              strokeDasharray="6 4"
+              label={{ value: "Good", fill: "#F59E0B", fontSize: 11, position: "top" }}
+            />
+            <ReferenceLine
+              x={0.9}
+              stroke="#22C55E"
+              strokeDasharray="6 4"
+              label={{ value: "Excellent", fill: "#22C55E", fontSize: 11, position: "top" }}
+            />
+            <ReferenceLine
+              x={OVERALL_METRICS.icc}
+              stroke="var(--primary)"
+              strokeWidth={2}
+              label={{ value: `평균 ${OVERALL_METRICS.icc.toFixed(3)}`, fill: "var(--primary)", fontSize: 11, position: "bottom" }}
+            />
+            <Scatter
+              data={RELIABILITY_DATA.map((d, i) => ({
+                icc: d.icc,
+                jitter: 0.8 + Math.sin(i * 2.1) * 0.5,
+                size: 1,
+                date: d.date,
+              }))}
+              fill="#3B82F6"
+            >
+              {RELIABILITY_DATA.map((entry, idx) => (
+                <Cell key={idx} fill={iccColor(entry.icc)} fillOpacity={0.85} />
+              ))}
+            </Scatter>
+          </ScatterChart>
+        </ResponsiveContainer>
+        {/* Distribution summary */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 24,
+            marginTop: 8,
+          }}
+        >
+          {[
+            { label: "Excellent (≥0.9)", count: RELIABILITY_DATA.filter(d => d.icc >= 0.9).length, color: "#22C55E" },
+            { label: "Good (0.75–0.9)", count: RELIABILITY_DATA.filter(d => d.icc >= 0.75 && d.icc < 0.9).length, color: "#3B82F6" },
+            { label: "Moderate (<0.75)", count: RELIABILITY_DATA.filter(d => d.icc < 0.75).length, color: "#F59E0B" },
+          ].map((item) => (
+            <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ width: 8, height: 8, borderRadius: "50%", background: item.color, flexShrink: 0 }} />
+              <span className="text-caption">{item.label}</span>
+              <span style={{ fontWeight: 700, fontSize: 14, color: item.color }}>{item.count}개</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 4-Metric Radar-style comparison */}
+      <div className="card card-padded">
+        <h2 className="text-section" style={{ marginBottom: 4 }}>
+          메트릭 비교
+        </h2>
+        <p className="text-caption" style={{ marginBottom: 20 }}>
+          4가지 신뢰도 메트릭의 강의별 분포를 비교해요
+        </p>
+        <ResponsiveContainer width="100%" height={280}>
+          <BarChart
+            data={RELIABILITY_DATA}
+            margin={{ top: 8, right: 16, bottom: 8, left: 0 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+            <XAxis
+              dataKey="date"
+              tick={{ fontSize: 11, fill: "var(--text-secondary)" }}
+              axisLine={{ stroke: "var(--border)" }}
+              tickLine={false}
+            />
+            <YAxis
+              domain={[0.6, 1.0]}
+              tick={{ fontSize: 12, fill: "var(--text-secondary)" }}
+              axisLine={{ stroke: "var(--border)" }}
+              tickLine={false}
+            />
+            <Tooltip
+              contentStyle={{
+                background: "var(--surface)",
+                border: "none",
+                borderRadius: 12,
+                fontSize: 13,
+                boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+                padding: "12px 16px",
+              }}
+            />
+            <Legend wrapperStyle={{ fontSize: 12, paddingTop: 12 }} iconType="circle" iconSize={8} />
+            <Bar dataKey="icc" name="ICC" fill="#3B82F6" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="kappa" name="Kappa" fill="#8B5CF6" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="alpha" name="Alpha" fill="#06B6D4" radius={[3, 3, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
       {/* Detail Table */}
       <div className="card card-padded">
         <h2 className="text-section" style={{ marginBottom: 16 }}>
@@ -478,6 +624,145 @@ function ChunkTab() {
               radius={[4, 4, 0, 0]}
             />
           </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Score Difference Distribution */}
+      <div className="card card-padded">
+        <h2 className="text-section" style={{ marginBottom: 4 }}>
+          점수 차이 분포
+        </h2>
+        <p className="text-caption" style={{ marginBottom: 20 }}>
+          각 강의에서 (30분 점수 - 15분 점수)의 분포예요.
+          0보다 오른쪽이면 30분 청크가 더 높게 평가한 거예요.
+        </p>
+        <ResponsiveContainer width="100%" height={220}>
+          <ScatterChart margin={{ top: 16, right: 32, bottom: 24, left: 32 }}>
+            <XAxis
+              type="number"
+              dataKey="diff"
+              domain={[-0.3, 0.6]}
+              tick={{ fontSize: 12, fill: "var(--text-secondary)" }}
+              axisLine={{ stroke: "var(--border)" }}
+              tickLine={false}
+              label={{ value: "점수 차이 (30분 - 15분)", position: "bottom", offset: 8, fontSize: 12, fill: "var(--text-tertiary)" }}
+            />
+            <YAxis type="number" dataKey="jitter" domain={[0, 2]} hide />
+            <ZAxis type="number" dataKey="size" range={[100, 280]} />
+            <Tooltip
+              contentStyle={{
+                background: "var(--surface)",
+                border: "none",
+                borderRadius: 12,
+                fontSize: 13,
+                boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+                padding: "12px 16px",
+              }}
+              formatter={(value, name) => {
+                if (name === "jitter") return null;
+                const v = Number(value);
+                return [v > 0 ? `+${v.toFixed(3)}` : v.toFixed(3), "차이"];
+              }}
+              labelFormatter={(label) => {
+                const v = Number(label);
+                return v > 0 ? `+${v.toFixed(3)}` : v.toFixed(3);
+              }}
+            />
+            <ReferenceLine
+              x={0}
+              stroke="var(--border)"
+              strokeWidth={2}
+              label={{ value: "차이 없음", fill: "var(--text-tertiary)", fontSize: 11, position: "top" }}
+            />
+            <ReferenceLine
+              x={TTEST_RESULTS.diff}
+              stroke="var(--primary)"
+              strokeWidth={2}
+              strokeDasharray="6 4"
+              label={{ value: `평균 +${TTEST_RESULTS.diff.toFixed(3)}`, fill: "var(--primary)", fontSize: 11, position: "top" }}
+            />
+            <Scatter
+              data={CHUNK_COMPARISON.map((d, i) => ({
+                diff: +(d.chunk30 - d.chunk15).toFixed(3),
+                jitter: 0.8 + Math.cos(i * 1.7) * 0.5,
+                size: Math.abs(d.chunk30 - d.chunk15) * 3 + 0.5,
+                date: d.date,
+              }))}
+            >
+              {CHUNK_COMPARISON.map((d, idx) => {
+                const diff = d.chunk30 - d.chunk15;
+                return (
+                  <Cell
+                    key={idx}
+                    fill={diff > 0 ? "#3B82F6" : "#EF4444"}
+                    fillOpacity={0.8}
+                  />
+                );
+              })}
+            </Scatter>
+          </ScatterChart>
+        </ResponsiveContainer>
+        <div style={{ display: "flex", justifyContent: "center", gap: 24, marginTop: 4 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#3B82F6" }} />
+            <span className="text-caption">30분이 더 높음 ({CHUNK_COMPARISON.filter(d => d.chunk30 > d.chunk15).length}개)</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#EF4444" }} />
+            <span className="text-caption">15분이 더 높음 ({CHUNK_COMPARISON.filter(d => d.chunk30 <= d.chunk15).length}개)</span>
+          </div>
+        </div>
+      </div>
+
+      {/* 30min vs 15min Scatter */}
+      <div className="card card-padded">
+        <h2 className="text-section" style={{ marginBottom: 4 }}>
+          30분 vs 15분 산점도
+        </h2>
+        <p className="text-caption" style={{ marginBottom: 20 }}>
+          대각선 위에 있으면 30분 청크 점수가 더 높아요
+        </p>
+        <ResponsiveContainer width="100%" height={320}>
+          <ScatterChart margin={{ top: 16, right: 32, bottom: 32, left: 32 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+            <XAxis
+              type="number"
+              dataKey="chunk15"
+              domain={[2.6, 3.6]}
+              tick={{ fontSize: 12, fill: "var(--text-secondary)" }}
+              axisLine={{ stroke: "var(--border)" }}
+              tickLine={false}
+              label={{ value: "15분 청크 점수", position: "bottom", offset: 12, fontSize: 12, fill: "var(--text-tertiary)" }}
+            />
+            <YAxis
+              type="number"
+              dataKey="chunk30"
+              domain={[2.6, 3.6]}
+              tick={{ fontSize: 12, fill: "var(--text-secondary)" }}
+              axisLine={{ stroke: "var(--border)" }}
+              tickLine={false}
+              label={{ value: "30분 청크 점수", angle: -90, position: "left", offset: 12, fontSize: 12, fill: "var(--text-tertiary)" }}
+            />
+            <ZAxis range={[80, 80]} />
+            <Tooltip
+              contentStyle={{
+                background: "var(--surface)",
+                border: "none",
+                borderRadius: 12,
+                fontSize: 13,
+                boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+                padding: "12px 16px",
+              }}
+              formatter={(value) => [Number(value).toFixed(3)]}
+            />
+            <ReferenceLine
+              segment={[{ x: 2.6, y: 2.6 }, { x: 3.6, y: 3.6 }]}
+              stroke="var(--text-tertiary)"
+              strokeDasharray="6 4"
+              strokeOpacity={0.5}
+            />
+            <Scatter data={CHUNK_COMPARISON} fill="#3B82F6" fillOpacity={0.8} />
+          </ScatterChart>
         </ResponsiveContainer>
       </div>
 
