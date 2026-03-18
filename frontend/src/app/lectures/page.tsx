@@ -174,6 +174,33 @@ export default function LecturesPage() {
                     드라이브의 텍스트 파일을 불러와요
                   </span>
                 </button>
+                <div style={{ height: 1, background: "var(--grey-100)" }} />
+                <button
+                  onClick={() => {
+                    setShowImportMenu(false);
+                    showToastMsg("노션에서 가져오기는 준비 중이에요");
+                  }}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    padding: "14px 20px",
+                    border: "none",
+                    background: "none",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: "var(--text-primary)",
+                    transition: "background 0.12s",
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = "var(--grey-50)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+                >
+                  <span style={{ display: "block" }}>노션에서 가져오기</span>
+                  <span style={{ display: "block", fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>
+                    노션 데이터베이스에서 강의 데이터를 불러와요
+                  </span>
+                </button>
               </div>
             )}
 

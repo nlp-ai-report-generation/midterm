@@ -24,6 +24,7 @@ interface NavItem {
 
 interface NavGroup {
   label?: string;
+  labelTo?: string;
   items: NavItem[];
 }
 
@@ -36,6 +37,7 @@ const OPERATOR_NAV: NavGroup[] = [
   },
   {
     label: "분석",
+    labelTo: "/analysis",
     items: [
       { to: "/eda", label: "데이터 분석", icon: BarChart2 },
       { to: "/trends", label: "점수 추이", icon: TrendingUp },
@@ -45,6 +47,7 @@ const OPERATOR_NAV: NavGroup[] = [
   },
   {
     label: "검증",
+    labelTo: "/verification",
     items: [
       { to: "/experiments", label: "모델 비교", icon: GitCompare },
       { to: "/validation", label: "신뢰성 검증", icon: ShieldCheck },
@@ -151,18 +154,37 @@ export default function Sidebar() {
         {navGroups.map((group, gIdx) => (
           <div key={gIdx} style={{ marginBottom: 8 }}>
             {group.label && (
-              <div
-                style={{
-                  padding: "16px 12px 6px",
-                  fontSize: 11,
-                  fontWeight: 600,
-                  color: "var(--text-muted)",
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {group.label}
-              </div>
+              group.labelTo ? (
+                <NavLink
+                  to={group.labelTo}
+                  style={({ isActive }) => ({
+                    display: "block",
+                    padding: "16px 12px 6px",
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: isActive ? "var(--primary)" : "var(--text-muted)",
+                    letterSpacing: "0.04em",
+                    textTransform: "uppercase",
+                    textDecoration: "none",
+                    transition: "color 0.15s",
+                  })}
+                >
+                  {group.label}
+                </NavLink>
+              ) : (
+                <div
+                  style={{
+                    padding: "16px 12px 6px",
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: "var(--text-muted)",
+                    letterSpacing: "0.04em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {group.label}
+                </div>
+              )
             )}
             <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 2 }}>
               {group.items.map((item) => (
