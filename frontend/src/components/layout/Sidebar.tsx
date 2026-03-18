@@ -47,7 +47,7 @@ export default function Sidebar() {
         bottom: 0,
         width: "var(--sidebar-width)",
         background: "var(--surface)",
-        boxShadow: "var(--shadow-card)",
+        borderRight: "1px solid var(--border)",
         display: "flex",
         flexDirection: "column",
         zIndex: 30,
@@ -56,38 +56,51 @@ export default function Sidebar() {
       {/* Logo */}
       <div
         style={{
-          padding: "28px 24px 24px",
+          padding: "32px 28px 28px",
           display: "flex",
           alignItems: "center",
-          gap: 10,
+          gap: 12,
         }}
       >
         <div
           style={{
-            width: 32,
-            height: 32,
+            width: 36,
+            height: 36,
             borderRadius: 10,
-            background: "var(--primary)",
+            background: "var(--grey-900)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             color: "var(--surface)",
-            fontSize: 14,
+            fontSize: 15,
             fontWeight: 800,
+            letterSpacing: "-0.04em",
           }}
         >
-          L
+          LA
         </div>
-        <span
-          style={{
-            fontSize: 17,
-            fontWeight: 700,
-            color: "var(--text-primary)",
-            letterSpacing: "-0.02em",
-          }}
-        >
-          강의 분석
-        </span>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <span
+            style={{
+              fontSize: 16,
+              fontWeight: 800,
+              color: "var(--text-primary)",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.2,
+            }}
+          >
+            Lecture Analytics
+          </span>
+          <span
+            style={{
+              fontSize: 11,
+              color: "var(--text-muted)",
+              letterSpacing: "0.02em",
+            }}
+          >
+            AI-powered evaluation
+          </span>
+        </div>
       </div>
 
       {/* Navigation */}
