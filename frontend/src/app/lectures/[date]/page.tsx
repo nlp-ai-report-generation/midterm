@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   RadarChart,
   PolarGrid,
@@ -390,15 +390,17 @@ function NotionExportButton({
   improvements: string[];
   recommendations: string[];
 }) {
+  const navigate = useNavigate();
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [notionUrl, setNotionUrl] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
+  const isConnected = !!localStorage.getItem("notion-integration");
+
   const handleExport = useCallback(async () => {
     const stored = localStorage.getItem("notion-integration");
     if (!stored) {
-      setErrorMsg("먼저 연동 설정에서 노션을 연결해주세요");
-      setStatus("error");
+      navigate("/integrations");
       return;
     }
 
@@ -492,12 +494,16 @@ function NotionExportButton({
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 20 }}>
       <button
-        onClick={handleExport}
+        onClick={isConnected ? handleExport : () => navigate("/integrations")}
         disabled={status === "loading"}
         className="btn-primary"
         style={{ fontSize: 13, padding: "10px 18px" }}
       >
-        {status === "loading" ? "저장 중..." : "노션에 저장하기"}
+        {status === "loading"
+          ? "저장 중..."
+          : isConnected
+          ? "노션에 저장하기"
+          : "노션 연결하기"}
       </button>
       {status === "error" && (
         <span className="text-caption" style={{ color: "var(--primary)" }}>
