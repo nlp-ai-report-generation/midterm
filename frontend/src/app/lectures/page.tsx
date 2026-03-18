@@ -74,10 +74,14 @@ export default function LecturesPage() {
     setDriveLoading(true);
     try {
       const result = await listDriveFiles(token);
-      setDriveFiles(result.files ?? []);
-      if (!result.files?.length) showToastMsg("드라이브에 .txt 파일이 없어요");
+      if (result.files) {
+        setDriveFiles(result.files);
+        if (!result.files.length) showToastMsg("드라이브에 .txt 파일이 없어요");
+      } else {
+        showToastMsg("구글 드라이브 접근 권한을 확인해주세요. Google Cloud Console에서 테스트 사용자를 추가하거나 앱을 게시해야 해요");
+      }
     } catch {
-      showToastMsg("파일 목록을 가져오지 못했어요");
+      showToastMsg("구글 드라이브에 연결할 수 없어요. 다시 로그인해주세요");
     } finally {
       setDriveLoading(false);
     }
