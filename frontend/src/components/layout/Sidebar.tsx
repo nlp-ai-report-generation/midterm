@@ -67,7 +67,7 @@ export default function Sidebar() {
             width: 36,
             height: 36,
             borderRadius: 10,
-            background: "var(--grey-900)",
+            background: "var(--primary)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

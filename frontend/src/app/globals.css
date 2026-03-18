@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
-/* ─── Design Tokens (taste-skill calibrated) ─── */
+/* ─── Design Tokens ─── */
 :root {
-  /* Accent — singular, not AI-purple, saturation < 80% */
-  --primary: #0066FF;
-  --primary-light: rgba(0, 102, 255, 0.06);
-  --primary-hover: #0052CC;
-  --primary-muted: rgba(0, 102, 255, 0.12);
+  /* Accent — 오렌지/흰/검정만 */
+  --primary: #FF6B00;
+  --primary-light: #FFF4EB;
+  --primary-hover: #E55F00;
+  --primary-muted: rgba(255, 107, 0, 0.08);
 
   /* Neutral scale — Slate base, cool & professional */
   --grey-50: #F8FAFC;
@@ -35,7 +35,7 @@
   --score-2: #F97316;
   --score-3: #EAB308;
   --score-4: #22C55E;
-  --score-5: #0066FF;
+  --score-5: #FF6B00;
 
   /* Elevation — tinted shadows for depth */
   --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
@@ -87,13 +87,11 @@ body {
   background: var(--surface);
   border-radius: var(--radius);
   box-shadow: var(--shadow-card);
-  border: 1px solid var(--grey-100);
-  transition: box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+  transition: box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .card-padded { padding: 28px 32px; }
 .card-hover:hover {
   box-shadow: var(--shadow-hover);
-  border-color: var(--grey-200);
 }
 
 /* ─── Page Layout ─── */
@@ -128,7 +126,7 @@ body {
   border-radius: var(--radius-inner); padding: 12px 24px; border: none; cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 102, 255, 0.2); }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2); }
 .btn-primary:active { transform: translateY(0) scale(0.98); }
 .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
 
@@ -165,7 +163,7 @@ body {
 }
 .tab-item:hover { color: var(--text-primary); background: var(--grey-50); }
 .tab-item.active,
-.tab-item[aria-selected="true"] { background: var(--grey-900); color: white; }
+.tab-item[aria-selected="true"] { background: var(--primary); color: white; }
 
 .toggle {
   position: relative; width: 44px; height: 24px; border-radius: 999px;
@@ -204,7 +202,7 @@ body {
 }
 
 /* ─── Global ─── */
-::selection { background: rgba(0, 102, 255, 0.1); color: var(--foreground); }
+::selection { background: rgba(255, 107, 0, 0.12); color: var(--foreground); }
 :focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

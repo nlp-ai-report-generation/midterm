@@ -41,7 +41,9 @@ export default function LecturesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-title">강의 목록</h1>
-          <p className="text-caption" style={{ marginTop: 2 }}>{evaluations.length}개 강의</p>
+          <p className="text-caption" style={{ marginTop: 2 }}>
+            {evaluations.length}개 강의를 평가했어요
+          </p>
         </div>
         <div className="tab-bar" role="tablist">
           {(
@@ -56,7 +58,7 @@ export default function LecturesPage() {
               role="tab"
               aria-selected={sortBy === item.key}
               onClick={() => setSortBy(item.key)}
-              className="tab-item"
+              className={`tab-item ${sortBy === item.key ? "active" : ""}`}
             >
               {item.label}
             </button>
@@ -64,56 +66,88 @@ export default function LecturesPage() {
         </div>
       </div>
 
-      {/* Grid */}
+      {/* List View */}
       {displayed.length === 0 ? (
-        <div className="card" style={{ padding: "64px 0", textAlign: "center" }}>
-          <p style={{ color: "var(--text-tertiary)" }}>강의 데이터가 없습니다.</p>
+        <div className="card card-padded" style={{ textAlign: "center", padding: "64px 32px" }}>
+          <p className="text-body">아직 평가된 강의가 없어요</p>
         </div>
       ) : (
-        <div
-          className="card-grid"
-          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}
-        >
+        <div className="card" style={{ overflow: "hidden" }}>
+          {/* Table Header */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "100px 1fr 160px 80px",
+              padding: "14px 32px",
+              borderBottom: "1px solid var(--grey-100)",
+              background: "var(--grey-50)",
+            }}
+          >
+            <span className="text-label">날짜</span>
+            <span className="text-label">과목</span>
+            <span className="text-label">강사</span>
+            <span className="text-label" style={{ textAlign: "right" }}>점수</span>
+          </div>
+
+          {/* Table Rows */}
           {displayed.map((evaluation) => (
             <Link
               key={evaluation.lecture_date}
               to={`/lectures/${evaluation.lecture_date}`}
-              className="card card-padded card-hover transition-shadow"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "100px 1fr 160px 80px",
+                padding: "18px 32px",
+                alignItems: "center",
+                borderBottom: "1px solid var(--grey-50)",
+                textDecoration: "none",
+                transition: "background 0.15s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "var(--grey-50)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+              }}
             >
-              <div className="flex items-start justify-between" style={{ marginBottom: 12 }}>
-                <div className="flex-1 min-w-0">
-                  <p className="text-caption">{formatDateShort(evaluation.lecture_date)}</p>
-                  <p
-                    className="truncate"
-                    style={{
-                      marginTop: 4,
-                      fontSize: 15,
-                      fontWeight: 600,
-                      color: "var(--text-primary)",
-                    }}
-                  >
-                    {evaluation.metadata.subjects?.[0] ?? "강의"}
-                  </p>
-                </div>
-                <ScoreBadge
-                  score={evaluation.weighted_average}
-                  size="sm"
-                  className="ml-3 shrink-0"
-                />
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {evaluation.strengths?.[0] && (
-                  <p className="text-xs line-clamp-1" style={{ color: "var(--text-tertiary)" }}>
-                    <span className="font-medium" style={{ color: "var(--primary)" }}>+</span>{" "}
-                    {evaluation.strengths[0]}
-                  </p>
-                )}
-                {evaluation.improvements?.[0] && (
-                  <p className="text-xs line-clamp-1" style={{ color: "var(--text-tertiary)" }}>
-                    <span className="font-medium" style={{ color: "var(--score-3)" }}>-</span>{" "}
-                    {evaluation.improvements[0]}
-                  </p>
-                )}
+              <span
+                style={{
+                  fontFamily: "var(--font-mono, monospace)",
+                  fontSize: 14,
+                  color: "var(--text-tertiary)",
+                  fontWeight: 500,
+                }}
+              >
+                {formatDateShort(evaluation.lecture_date)}
+              </span>
+
+              <span
+                style={{
+                  fontSize: 15,
+                  fontWeight: 600,
+                  color: "var(--text-primary)",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  paddingRight: 16,
+                }}
+              >
+                {evaluation.metadata.subjects?.[0] ?? "강의"}
+              </span>
+
+              <span
+                className="text-body"
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {evaluation.metadata.instructor ?? "-"}
+              </span>
+
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <ScoreBadge score={evaluation.weighted_average} size="sm" />
               </div>
             </Link>
           ))}
