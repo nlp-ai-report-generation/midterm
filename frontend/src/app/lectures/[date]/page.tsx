@@ -47,7 +47,7 @@ export default function LectureDetailPage() {
     return (
       <div style={{ maxWidth: 1080, margin: "0 auto" }}>
         <div className="card" style={{ padding: "80px 0", textAlign: "center" }}>
-          <p className="text-body">평가 데이터를 불러올 수 없습니다.</p>
+          <p className="text-body">평가 데이터를 불러오지 못했어요</p>
           <Link
             to="/lectures"
             className="inline-block font-semibold"
@@ -80,20 +80,20 @@ export default function LectureDetailPage() {
   // Role-dependent feedback config
   const feedbackConfig = isOperator
     ? {
-        strengthTitle: "강점",
-        strengthSubtitle: "이 강의에서 높은 평가를 받은 영역입니다",
-        improvementTitle: "개선 필요",
-        improvementSubtitle: "추가적인 보완이 필요한 영역입니다",
-        recommendationTitle: "권장 사항",
-        recommendationSubtitle: "품질 향상을 위한 조치 사항입니다",
+        strengthTitle: "잘한 점",
+        strengthSubtitle: "이 강의에서 높은 평가를 받은 영역이에요",
+        improvementTitle: "개선할 점",
+        improvementSubtitle: "보완하면 더 좋아질 수 있어요",
+        recommendationTitle: "추천 액션",
+        recommendationSubtitle: "품질을 높이기 위해 해볼 수 있는 것들이에요",
       }
     : {
         strengthTitle: "잘하고 있는 부분",
-        strengthSubtitle: "이 강의에서 효과적이었던 점입니다",
+        strengthSubtitle: "이 강의에서 효과적이었던 점이에요",
         improvementTitle: "더 나아질 수 있는 부분",
-        improvementSubtitle: "다음 수업에서 시도해볼 수 있는 변화입니다",
+        improvementSubtitle: "다음 수업에서 시도해볼 수 있는 변화예요",
         recommendationTitle: "구체적 제안",
-        recommendationSubtitle: "실행 가능한 다음 단계를 정리했습니다",
+        recommendationSubtitle: "바로 실행할 수 있는 다음 단계를 정리했어요",
       };
 
   return (

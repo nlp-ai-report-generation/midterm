@@ -108,79 +108,68 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
         <InsightCard label="전체 평균" value={avgScore.toFixed(2)} subtitle="5점 만점 기준이에요" accent />
       </div>
 
-      {/* Category Heatmap */}
+      {/* 카테고리별 평균 점수 */}
       <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 4 }}>카테고리 히트맵</h2>
-        <p className="text-caption" style={{ marginBottom: 24 }}>색이 진할수록 높은 점수예요. 어떤 영역이 강하고 약한지 한눈에 볼 수 있어요</p>
-        <div className="overflow-x-auto">
-          <table className="w-full text-xs" aria-label="카테고리별 점수 히트맵">
-            <thead>
-              <tr>
-                <th
-                  className="text-left pr-4 font-medium whitespace-nowrap"
-                  style={{ color: "var(--text-tertiary)", paddingBottom: 4 }}
+        <h2 className="text-section" style={{ marginBottom: 4 }}>카테고리별 평균</h2>
+        <p className="text-caption" style={{ marginBottom: 24 }}>
+          5개 영역별 전체 강의 평균이에요. 바가 긴 영역이 잘하고 있는 부분이에요
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {heatmapRows
+            .map((row) => {
+              const avg = row.scores.length > 0
+                ? row.scores.reduce((s, c) => s + c.score, 0) / row.scores.length
+                : 0;
+              return { name: row.name.replace(/^\d+\.\s*/, ""), avg };
+            })
+            .sort((a, b) => b.avg - a.avg)
+            .map((cat) => (
+              <div key={cat.name} style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                <span
+                  style={{
+                    width: 120,
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: "var(--text-primary)",
+                    flexShrink: 0,
+                  }}
                 >
-                  카테고리
-                </th>
-                {evaluations.map((e) => (
-                  <th
-                    key={e.lecture_date}
-                    className="px-1 font-medium text-center"
-                    style={{ color: "var(--text-muted)", paddingBottom: 4 }}
-                  >
-                    {formatDateShort(e.lecture_date)}
-                  </th>
-                ))}
-              </tr>
-              <tr>
-                <th />
-                {evaluations.map((e) => (
-                  <th
-                    key={`subj-${e.lecture_date}`}
-                    className="px-1 text-center"
+                  {cat.name}
+                </span>
+                <div
+                  style={{
+                    flex: 1,
+                    height: 28,
+                    background: "var(--grey-100)",
+                    borderRadius: 8,
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
                     style={{
-                      color: "var(--text-muted)",
-                      fontSize: 10,
-                      fontWeight: 500,
-                      paddingBottom: 8,
-                      maxWidth: 60,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
+                      width: `${(cat.avg / 5) * 100}%`,
+                      height: "100%",
+                      background: "var(--primary)",
+                      borderRadius: 8,
+                      opacity: 0.3 + (cat.avg / 5) * 0.7,
+                      transition: "width 0.5s ease",
                     }}
-                    title={e.metadata?.subjects?.[0] ?? ""}
-                  >
-                    {(e.metadata?.subjects?.[0] ?? "").slice(0, 6)}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {heatmapRows.map((row) => (
-                <tr key={row.name} style={{ marginBottom: 2 }}>
-                  <td
-                    className="py-1.5 pr-4 whitespace-nowrap"
-                    style={{ color: "var(--text-secondary)", paddingBottom: 4 }}
-                  >
-                    {row.name.replace(/^\d+\.\s*/, "")}
-                  </td>
-                  {row.scores.map((cell) => (
-                    <td key={cell.date} className="px-1 py-1.5 text-center" style={{ paddingBottom: 4 }}>
-                      <span
-                        className="inline-flex h-7 w-9 items-center justify-center rounded-lg text-[11px] font-bold"
-                        style={{
-                          backgroundColor: scoreColor(cell.score),
-                          color: scoreBadgeTextColor(cell.score),
-                        }}
-                      >
-                        {cell.score.toFixed(1)}
-                      </span>
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  />
+                </div>
+                <span
+                  style={{
+                    width: 40,
+                    textAlign: "right",
+                    fontSize: 15,
+                    fontWeight: 700,
+                    color: "var(--text-primary)",
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  {cat.avg.toFixed(1)}
+                </span>
+              </div>
+            ))}
         </div>
       </div>
 
@@ -340,7 +329,7 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <FeedbackCard
           title="이런 점이 좋았어요"
-          subtitle="여러 강의에서 반복적으로 나타난 강점입니다"
+          subtitle="여러 강의에서 반복적으로 나타난 강점이에요"
           items={topStrengths}
           color="var(--primary)"
         />

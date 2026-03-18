@@ -146,7 +146,7 @@ function OverviewTab({ data, showAi }: { data: TranscriptStats[]; showAi: boolea
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
       <AiSummary
-        text="15일간 약 2.3만 줄이 기록되었으며, 일 평균 1,500줄 수준으로 안정적인 분석 표본입니다."
+        text="15일간 약 2.3만 줄이 기록됐어요. 일 평균 1,500줄 수준으로 분석하기에 충분한 양이에요."
         show={showAi}
       />
 
@@ -203,7 +203,7 @@ function SpeakersTab({ data, showAi }: { data: SpeakerDistribution[]; showAi: bo
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
       <AiSummary
-        text="전체 강의의 67%가 단독 수업이며, 주강사 발화 비율이 높은 편입니다."
+        text="전체 강의의 67%가 단독 수업이에요. 주강사가 대부분의 시간을 이끌고 있어요."
         show={showAi}
       />
 
@@ -245,7 +245,7 @@ function InteractionTab({ data, showAi }: { data: InteractionMetrics[]; showAi: 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
       <AiSummary
-        text="질문과 이해도 확인이 활발하여, 강사가 적극적으로 소통하고 있습니다."
+        text="질문과 이해도 확인이 활발해요. 강사가 적극적으로 소통하고 있어요."
         show={showAi}
       />
 
@@ -295,7 +295,7 @@ function FillerTab({ data, showAi }: { data: FillerWordStats[]; showAi: boolean 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
       <AiSummary
-        text="'자', '그래서', '이제' 순으로 습관 표현이 빈번합니다."
+        text="'자', '그래서', '이제' 순으로 습관 표현이 자주 나타나요."
         show={showAi}
       />
 
@@ -363,7 +363,7 @@ function CurriculumTab({ data, showAi }: { data: CurriculumEntry[]; showAi: bool
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
       <AiSummary
-        text="프론트엔드 중심의 9일 과정 후 백엔드로 전환되는 구조입니다."
+        text="프론트엔드 중심의 9일 과정 후 백엔드로 전환되는 구조예요."
         show={showAi}
       />
 
@@ -427,7 +427,7 @@ function AiDeepTab({
   if (!analysis) {
     return (
       <div className="card card-padded" style={{ textAlign: "center", padding: "64px 0" }}>
-        <p className="text-body">AI 심층 분석 데이터를 불러올 수 없습니다.</p>
+        <p className="text-body">심층 분석 데이터를 불러오지 못했어요</p>
       </div>
     );
   }

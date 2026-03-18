@@ -216,7 +216,7 @@ export default function ExperimentsPage() {
   if (!data) {
     return (
       <div className="page-content">
-        <p className="text-body">데이터를 불러올 수 없습니다.</p>
+        <p className="text-body">데이터를 불러오지 못했어요</p>
       </div>
     );
   }
@@ -518,19 +518,19 @@ export default function ExperimentsPage() {
               name: "Cohen's κ (카파)",
               threshold: "≥ 0.61",
               level: "양호",
-              desc: "두 번 평가했을 때 결과가 얼마나 같은지를 측정합니다. 0.61 이상이면 평가자 간 판단이 상당히 일치합니다.",
+              desc: "두 번 평가했을 때 결과가 얼마나 같은지 측정해요. 0.61 이상이면 평가가 상당히 일치해요.",
             },
             {
               name: "Krippendorff's α (알파)",
               threshold: "≥ 0.667",
               level: "신뢰 가능",
-              desc: "여러 평가자가 동의하는 정도를 측정합니다. 0.667 이상이면 잠정적으로 신뢰할 수 있는 수준입니다.",
+              desc: "여러 평가자가 얼마나 동의하는지 측정해요. 0.667 이상이면 신뢰할 수 있어요.",
             },
             {
               name: "ICC (급내상관계수)",
               threshold: "≥ 0.75",
               level: "안정적",
-              desc: "점수의 재현 가능성을 측정합니다. 0.75 이상이면 동일 강의를 다시 평가해도 비슷한 점수가 나옵니다.",
+              desc: "같은 강의를 다시 평가해도 비슷한 점수가 나오는지 측정해요. 0.75 이상이면 안정적이에요.",
             },
           ].map((metric) => (
             <div key={metric.name} className="inner-card">

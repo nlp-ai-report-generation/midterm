@@ -8,33 +8,33 @@ const CATEGORIES = [
   {
     key: "language",
     label: "언어 품질",
-    description: "불필요한 반복 표현, 발화 완결성, 언어 일관성을 평가합니다.",
+    description: "불필요한 반복 표현, 발화 완결성, 언어 일관성을 평가해요",
     items: "3개 항목 (반복 표현, 완결성, 일관성)",
   },
   {
     key: "structure",
     label: "강의 구조",
     description:
-      "학습 목표 안내, 전날 복습, 설명 순서, 핵심 강조, 마무리를 평가합니다.",
+      "학습 목표 안내, 전날 복습, 설명 순서, 핵심 강조, 마무리를 평가해요",
     items: "5개 항목",
   },
   {
     key: "clarity",
     label: "개념 명확성",
     description:
-      "개념 정의, 비유/예시 활용, 선행 개념 확인, 발화 속도를 평가합니다.",
+      "개념 정의, 비유/예시 활용, 선행 개념 확인, 발화 속도를 평가해요",
     items: "4개 항목",
   },
   {
     key: "examples",
     label: "예시/실습",
-    description: "예시 적절성, 실습 연결, 오류 대응을 평가합니다.",
+    description: "예시 적절성, 실습 연결, 오류 대응을 평가해요",
     items: "3개 항목",
   },
   {
     key: "interaction",
     label: "상호작용",
-    description: "이해도 확인, 참여 유도, 응답 충분성을 평가합니다.",
+    description: "이해도 확인, 참여 유도, 응답 충분성을 평가해요",
     items: "3개 항목",
   },
 ];

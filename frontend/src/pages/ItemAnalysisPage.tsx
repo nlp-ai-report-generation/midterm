@@ -139,7 +139,7 @@ export default function ItemAnalysisPage() {
       <div>
         <h1 className="text-title">항목별 분석</h1>
         <p className="text-caption" style={{ marginTop: 4 }}>
-          개별 평가 항목의 점수와 근거를 강의별로 확인합니다
+          개별 평가 항목의 점수와 근거를 강의별로 확인할 수 있어요
         </p>
       </div>
 

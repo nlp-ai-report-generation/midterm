@@ -71,7 +71,7 @@ export default function IntegrationsPage() {
       showToast("저장 실패: " + error.message);
     } else {
       setNotionConnected(true);
-      showToast("노션 설정이 저장되었습니다");
+      showToast("노션 설정을 저장했어요");
     }
   };
 
@@ -86,7 +86,7 @@ export default function IntegrationsPage() {
       setNotionConnected(false);
       setNotionDbId("");
     }
-    showToast("연결이 해제되었습니다");
+    showToast("연결을 해제했어요");
   };
 
   if (loading) {
@@ -155,7 +155,7 @@ export default function IntegrationsPage() {
           <div>
             <h2 className="text-section">노션</h2>
             <p className="text-caption" style={{ marginTop: 2 }}>
-              평가 결과를 노션 데이터베이스에 기록합니다
+              평가 결과를 노션 데이터베이스에 기록할 수 있어요
             </p>
           </div>
           <span
@@ -183,7 +183,7 @@ export default function IntegrationsPage() {
               className="input-field"
             />
             <p className="text-caption" style={{ marginTop: 4, fontSize: 11 }}>
-              노션 데이터베이스 URL에서 마지막 32자리가 ID입니다
+              노션 데이터베이스 URL에서 마지막 32자리가 ID예요
             </p>
           </div>
           <button onClick={saveNotionConfig} className="btn-primary" style={{ width: "100%" }}>
@@ -204,9 +204,9 @@ export default function IntegrationsPage() {
       {/* 안내 */}
       <div className="inner-card">
         <p className="text-body" style={{ lineHeight: 1.8 }}>
-          구글 드라이브 연동은 Supabase OAuth를 통해 처리됩니다.
-          노션은 Internal Integration 토큰과 데이터베이스 ID를 입력하면 연결됩니다.
-          연동 정보는 Supabase에 안전하게 저장됩니다.
+          구글 드라이브 연동은 Supabase OAuth로 처리돼요.
+          노션은 Internal Integration 토큰과 데이터베이스 ID를 넣으면 연결돼요.
+          연동 정보는 Supabase에 안전하게 저장돼요.
         </p>
       </div>
 

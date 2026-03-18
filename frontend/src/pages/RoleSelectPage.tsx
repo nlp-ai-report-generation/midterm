@@ -76,14 +76,14 @@ export default function RoleSelectPage() {
               letterSpacing: "-0.03em",
             }}
           >
-            {step === "login" && "강의가 어땠는지,\n데이터로 확인하세요."}
+            {step === "login" && "강의가 어땠는지,\n데이터로 확인해보세요."}
             {step === "role" && "어떤 관점에서\n보시겠어요?"}
             {step === "instructor-name" && "이름을 알려주세요."}
           </h1>
           <p className="text-body" style={{ marginTop: 10, whiteSpace: "pre-line" }}>
-            {step === "login" && "AI가 항목별 점수와 근거를 정리해드립니다."}
-            {step === "role" && "역할에 따라 화면 구성이 달라집니다."}
-            {step === "instructor-name" && "해당 강사의 강의만 필터링해서 보여드립니다."}
+            {step === "login" && "항목별 점수와 근거를 정리해드려요."}
+            {step === "role" && "역할에 따라 화면 구성이 달라져요."}
+            {step === "instructor-name" && "해당 강사의 강의만 골라서 보여드려요."}
           </p>
         </div>
 
@@ -148,8 +148,8 @@ export default function RoleSelectPage() {
         {step === "role" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {[
-              { key: "operator" as const, title: "운영 담당자", desc: "전체 강의 품질을 비교하고 관리합니다" },
-              { key: "instructor" as const, title: "강사", desc: "내 강의를 돌아보고 다음 수업을 준비합니다" },
+              { key: "operator" as const, title: "운영 담당자", desc: "전체 강의 품질을 비교하고 관리해요" },
+              { key: "instructor" as const, title: "강사", desc: "내 강의를 돌아보고 다음 수업을 준비해요" },
             ].map((r) => (
               <button
                 key={r.key}

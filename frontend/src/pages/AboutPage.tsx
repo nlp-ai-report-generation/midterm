@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 
 const STATS = [
-  { value: "15", desc: "개 강의를 분석했습니다" },
-  { value: "5", desc: "개 카테고리, 18개 항목으로 평가합니다" },
-  { value: "3", desc: "개 AI 모델로 교차 검증합니다" },
+  { value: "15", desc: "개 강의를 분석했어요" },
+  { value: "5", desc: "개 카테고리, 18개 항목으로 평가해요" },
+  { value: "3", desc: "개 AI 모델로 교차 검증해요" },
 ];
 
 const PIPELINE_STEPS = [
   {
     title: "트랜스크립트 전처리",
-    desc: "STT 텍스트를 시간 단위로 분할합니다.",
+    desc: "강의 녹음 텍스트를 시간 단위로 나눠요",
   },
   {
     title: "5개 카테고리 병렬 평가",
@@ -17,11 +17,11 @@ const PIPELINE_STEPS = [
   },
   {
     title: "점수 집계 및 보정",
-    desc: "가중 평균을 계산하고 카테고리 간 일관성을 확인합니다.",
+    desc: "가중 평균을 계산하고 일관성을 확인해요",
   },
   {
     title: "리포트 생성",
-    desc: "강점, 개선점, 구체적 제안을 정리합니다.",
+    desc: "잘한 점, 개선할 점, 구체적 제안을 정리해요",
   },
 ];
 
@@ -61,8 +61,8 @@ export default function AboutPage() {
             className="text-body"
             style={{ maxWidth: 460, lineHeight: 1.8 }}
           >
-            STT 트랜스크립트를 분석해서 강의 품질을
-            항목별로 평가하고 근거를 정리합니다.
+            강의 녹음을 분석해서 품질을 항목별로 평가하고,
+            근거와 함께 개선 방향을 알려줘요.
           </p>
         </div>
 

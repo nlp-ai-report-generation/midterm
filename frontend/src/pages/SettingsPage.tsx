@@ -64,7 +64,7 @@ export default function SettingsPage() {
       setApiStatus(result.valid ? "valid" : "invalid");
       if (result.valid) {
         saveSettings(settings);
-        showToast("OpenAI API 키가 정상 동작합니다");
+        showToast("API 키가 정상 동작해요");
       } else {
         showToast(result.message);
       }
@@ -152,7 +152,7 @@ export default function SettingsPage() {
     <div className="page-content" style={{ maxWidth: 720 }}>
       <div>
         <h1 className="text-title">설정</h1>
-        <p className="text-caption mt-1">API 연결, 모델 선택, 평가 실행을 한 곳에서 관리합니다.</p>
+        <p className="text-caption mt-1">API 연결, 모델 선택, 평가 실행을 한 곳에서 관리해요</p>
       </div>
 
       {/* API Connection */}
@@ -357,7 +357,7 @@ export default function SettingsPage() {
           <div>
             <h2 className="text-section">고급 설정</h2>
             <p className="text-caption mt-0.5">
-              기본값으로 충분합니다. 필요한 경우에만 조정하세요.
+              기본값으로 충분해요. 필요한 경우에만 조정해주세요.
             </p>
           </div>
           <svg
@@ -462,7 +462,7 @@ export default function SettingsPage() {
                   </button>
                 </div>
                 <p className="text-caption" style={{ marginTop: 6 }}>
-                  카테고리 간 점수 일관성을 자동 보정합니다
+                  카테고리 간 점수 일관성을 자동으로 보정해요
                 </p>
               </div>
 
