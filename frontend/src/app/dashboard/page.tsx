@@ -417,60 +417,56 @@ function LectureCalendar({ evaluations }: { evaluations: EvaluationResult[] }) {
     scoreMap.set(day, e);
   }
 
-  // 2026년 2월: 1일=일요일, 28일
   const daysInMonth = 28;
-  const startDayOfWeek = 0;
+  const startDayOfWeek = 0; // 2026-02-01 = 일요일
   const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
 
   const cells: (number | null)[] = [];
   for (let i = 0; i < startDayOfWeek; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
   while (cells.length % 7 !== 0) cells.push(null);
+  const weeks: (number | null)[][] = [];
+  for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
 
   const today = new Date();
   const isCurrentMonth = today.getFullYear() === 2026 && today.getMonth() === 1;
   const todayDate = isCurrentMonth ? today.getDate() : -1;
 
   return (
-    <div>
-      {/* Month header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 20,
-        }}
-      >
+    <div style={{ overflow: "hidden" }}>
+      {/* Month title — 왼쪽 정렬, Apple 스타일 굵은 제목 */}
+      <div style={{ marginBottom: 16 }}>
         <span
           style={{
-            fontSize: 17,
-            fontWeight: 700,
+            fontSize: 22,
+            fontWeight: 800,
             color: "var(--text-primary)",
-            letterSpacing: "-0.02em",
+            letterSpacing: "-0.03em",
           }}
         >
           2026년 2월
         </span>
       </div>
 
-      {/* Weekday headers */}
+      {/* Weekday row */}
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(7, 1fr)",
+          borderBottom: "1px solid var(--grey-200)",
+          paddingBottom: 8,
+          marginBottom: 0,
         }}
       >
         {weekdays.map((wd, i) => (
           <div
             key={wd}
             style={{
-              textAlign: "center",
+              textAlign: "right",
+              paddingRight: 8,
               fontSize: 11,
-              fontWeight: 600,
+              fontWeight: 500,
               color: i === 0 ? "var(--primary)" : "var(--text-muted)",
-              padding: "0 0 12px",
-              letterSpacing: "0.02em",
             }}
           >
             {wd}
@@ -478,113 +474,114 @@ function LectureCalendar({ evaluations }: { evaluations: EvaluationResult[] }) {
         ))}
       </div>
 
-      {/* Day grid */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(7, 1fr)",
-          borderTop: "1px solid var(--grey-100)",
-        }}
-      >
-        {cells.map((day, idx) => {
-          const ev = day ? scoreMap.get(day) : null;
-          const isToday = day === todayDate;
-          const isSunday = idx % 7 === 0;
-          const isWeekend = idx % 7 === 0 || idx % 7 === 6;
+      {/* Week rows */}
+      {weeks.map((week, wIdx) => (
+        <div
+          key={wIdx}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(7, 1fr)",
+            borderBottom: wIdx < weeks.length - 1 ? "1px solid var(--grey-100)" : "none",
+          }}
+        >
+          {week.map((day, dIdx) => {
+            const ev = day ? scoreMap.get(day) : null;
+            const isToday = day === todayDate;
+            const isSunday = dIdx === 0;
 
-          return (
-            <div
-              key={idx}
-              onClick={() => {
-                if (ev) window.location.href = `/lectures/${ev.lecture_date}`;
-              }}
-              style={{
-                minHeight: 64,
-                padding: "8px 4px 6px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 4,
-                borderBottom: "1px solid var(--grey-100)",
-                borderRight: idx % 7 !== 6 ? "1px solid var(--grey-50)" : "none",
-                cursor: ev ? "pointer" : "default",
-                transition: "background 0.15s ease",
-                background: ev ? "rgba(255, 107, 0, 0.03)" : "transparent",
-              }}
-              onMouseEnter={(e) => {
-                if (ev) e.currentTarget.style.background = "rgba(255, 107, 0, 0.06)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = ev ? "rgba(255, 107, 0, 0.03)" : "transparent";
-              }}
-            >
-              {day && (
-                <>
-                  {/* Date number */}
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: 26,
-                      height: 26,
-                      borderRadius: "50%",
-                      fontSize: 13,
-                      fontWeight: isToday || ev ? 700 : 400,
-                      color: isToday
-                        ? "#FFFFFF"
-                        : isSunday
-                        ? "var(--primary)"
-                        : ev
-                        ? "var(--text-primary)"
-                        : isWeekend
-                        ? "var(--text-muted)"
-                        : "var(--text-secondary)",
-                      background: isToday ? "var(--primary)" : "transparent",
-                    }}
-                  >
-                    {day}
-                  </span>
-
-                  {/* Score dot + label */}
-                  {ev && (
-                    <div
+            return (
+              <div
+                key={dIdx}
+                onClick={() => {
+                  if (ev) window.location.href = `/lectures/${ev.lecture_date}`;
+                }}
+                style={{
+                  minHeight: 80,
+                  padding: "6px 8px 8px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  gap: 6,
+                  cursor: ev ? "pointer" : "default",
+                  transition: "background 0.12s ease",
+                }}
+                onMouseEnter={(e) => {
+                  if (ev) e.currentTarget.style.background = "var(--grey-50)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "transparent";
+                }}
+              >
+                {day != null && (
+                  <>
+                    {/* Date — 오른쪽 상단, 오늘이면 오렌지 원 */}
+                    <span
                       style={{
-                        display: "flex",
+                        display: "inline-flex",
                         alignItems: "center",
-                        gap: 3,
-                        padding: "2px 6px",
-                        borderRadius: 6,
-                        background: `rgba(255, 107, 0, ${0.08 + (ev.weighted_average / 5) * 0.15})`,
+                        justifyContent: "center",
+                        width: 24,
+                        height: 24,
+                        borderRadius: "50%",
+                        fontSize: 13,
+                        fontWeight: isToday ? 700 : 400,
+                        color: isToday
+                          ? "#FFFFFF"
+                          : isSunday
+                          ? "var(--primary)"
+                          : "var(--text-secondary)",
+                        background: isToday ? "var(--primary)" : "transparent",
+                        lineHeight: 1,
                       }}
                     >
-                      <span
+                      {day}
+                    </span>
+
+                    {/* Event bar — Apple Calendar 이벤트 바 스타일 */}
+                    {ev && (
+                      <div
                         style={{
-                          width: 5,
-                          height: 5,
-                          borderRadius: "50%",
+                          width: "100%",
+                          padding: "3px 6px",
+                          borderRadius: 4,
                           background: "var(--primary)",
-                          flexShrink: 0,
-                        }}
-                      />
-                      <span
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 700,
-                          color: "var(--primary)",
-                          fontVariantNumeric: "tabular-nums",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4,
                         }}
                       >
-                        {ev.weighted_average.toFixed(1)}
-                      </span>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          );
-        })}
-      </div>
+                        <span
+                          style={{
+                            fontSize: 10,
+                            fontWeight: 600,
+                            color: "#FFFFFF",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            flex: 1,
+                          }}
+                        >
+                          {ev.metadata.subjects?.[0]?.slice(0, 8) ?? "강의"}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: 10,
+                            fontWeight: 700,
+                            color: "rgba(255,255,255,0.85)",
+                            flexShrink: 0,
+                          }}
+                        >
+                          {ev.weighted_average.toFixed(1)}
+                        </span>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
 }
