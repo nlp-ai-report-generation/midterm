@@ -125,13 +125,22 @@ export default function LecturesPage() {
           {evaluations.length}개 강의의 AI 평가 결과를 볼 수 있어요.{"\n"}
           점수, 강점, 개선할 점을 확인하고 다음 강의를 준비해보세요.
         </p>
-        <button
-          onClick={() => setShowList(true)}
-          className="btn-primary"
-          style={{ fontSize: 15, padding: "14px 28px", marginTop: 8 }}
-        >
-          강의 목록 보기
-        </button>
+        <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
+          <button
+            onClick={() => setShowList(true)}
+            className="btn-primary"
+            style={{ fontSize: 15, padding: "14px 28px" }}
+          >
+            강의 목록 보기
+          </button>
+          <button
+            onClick={() => { setShowList(true); setTimeout(() => setShowImportMenu(true), 100); }}
+            className="btn-secondary"
+            style={{ fontSize: 15, padding: "14px 28px" }}
+          >
+            새 강의 분석하기
+          </button>
+        </div>
       </div>
     );
   }
