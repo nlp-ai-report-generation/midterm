@@ -13,6 +13,7 @@ export default function LecturesPage() {
   const [evaluations, setEvaluations] = useState<EvaluationResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState<SortKey>("latest");
+  const [showList, setShowList] = useState(false);
 
   // 업로드/가져오기
   const [showImportMenu, setShowImportMenu] = useState(false);
@@ -91,6 +92,46 @@ export default function LecturesPage() {
     return (
       <div className="flex h-64 items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!showList) {
+    return (
+      <div
+        className="page-content"
+        style={{
+          minHeight: "calc(100vh - 120px)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          gap: 24,
+        }}
+      >
+        <h1
+          style={{
+            fontSize: 28,
+            fontWeight: 800,
+            color: "var(--text-primary)",
+            lineHeight: 1.4,
+            letterSpacing: "-0.03em",
+          }}
+        >
+          강의를 평가하고{"\n"}
+          피드백을 확인해보세요
+        </h1>
+        <p className="text-body" style={{ fontSize: 16, lineHeight: 1.7, maxWidth: 400 }}>
+          {evaluations.length}개 강의의 AI 평가 결과를 볼 수 있어요.{"\n"}
+          점수, 강점, 개선할 점을 확인하고 다음 강의를 준비해보세요.
+        </p>
+        <button
+          onClick={() => setShowList(true)}
+          className="btn-primary"
+          style={{ fontSize: 15, padding: "14px 28px", marginTop: 8 }}
+        >
+          강의 목록 보기
+        </button>
       </div>
     );
   }
