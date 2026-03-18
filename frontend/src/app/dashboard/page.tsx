@@ -419,7 +419,7 @@ function LectureCalendar({ evaluations }: { evaluations: EvaluationResult[] }) {
 
   // 2026년 2월: 1일=일요일, 28일
   const daysInMonth = 28;
-  const startDayOfWeek = 0; // 일요일
+  const startDayOfWeek = 0;
   const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
 
   const cells: (number | null)[] = [];
@@ -427,76 +427,157 @@ function LectureCalendar({ evaluations }: { evaluations: EvaluationResult[] }) {
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
   while (cells.length % 7 !== 0) cells.push(null);
 
+  const today = new Date();
+  const isCurrentMonth = today.getFullYear() === 2026 && today.getMonth() === 1;
+  const todayDate = isCurrentMonth ? today.getDate() : -1;
+
   return (
-    <div style={{ overflowX: "auto" }}>
+    <div>
+      {/* Month header */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: 20,
+        }}
+      >
+        <span
+          style={{
+            fontSize: 17,
+            fontWeight: 700,
+            color: "var(--text-primary)",
+            letterSpacing: "-0.02em",
+          }}
+        >
+          2026년 2월
+        </span>
+      </div>
+
+      {/* Weekday headers */}
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(7, 1fr)",
-          gap: 4,
-          minWidth: 320,
         }}
       >
-        {weekdays.map((wd) => (
+        {weekdays.map((wd, i) => (
           <div
             key={wd}
             style={{
               textAlign: "center",
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: 600,
-              color: "var(--text-muted)",
-              padding: "8px 0",
+              color: i === 0 ? "var(--primary)" : "var(--text-muted)",
+              padding: "0 0 12px",
+              letterSpacing: "0.02em",
             }}
           >
             {wd}
           </div>
         ))}
+      </div>
+
+      {/* Day grid */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(7, 1fr)",
+          borderTop: "1px solid var(--grey-100)",
+        }}
+      >
         {cells.map((day, idx) => {
           const ev = day ? scoreMap.get(day) : null;
+          const isToday = day === todayDate;
+          const isSunday = idx % 7 === 0;
+          const isWeekend = idx % 7 === 0 || idx % 7 === 6;
+
           return (
             <div
               key={idx}
+              onClick={() => {
+                if (ev) window.location.href = `/lectures/${ev.lecture_date}`;
+              }}
               style={{
-                aspectRatio: "1",
+                minHeight: 64,
+                padding: "8px 4px 6px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 10,
-                background: ev
-                  ? `rgba(255, 107, 0, ${0.1 + (ev.weighted_average / 5) * 0.5})`
-                  : day
-                  ? "var(--grey-50)"
-                  : "transparent",
+                gap: 4,
+                borderBottom: "1px solid var(--grey-100)",
+                borderRight: idx % 7 !== 6 ? "1px solid var(--grey-50)" : "none",
                 cursor: ev ? "pointer" : "default",
                 transition: "background 0.15s ease",
-                gap: 2,
+                background: ev ? "rgba(255, 107, 0, 0.03)" : "transparent",
               }}
-              onClick={() => {
-                if (ev) window.location.href = `/lectures/${ev.lecture_date}`;
+              onMouseEnter={(e) => {
+                if (ev) e.currentTarget.style.background = "rgba(255, 107, 0, 0.06)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = ev ? "rgba(255, 107, 0, 0.03)" : "transparent";
               }}
             >
               {day && (
                 <>
+                  {/* Date number */}
                   <span
                     style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: 26,
+                      height: 26,
+                      borderRadius: "50%",
                       fontSize: 13,
-                      fontWeight: ev ? 700 : 400,
-                      color: ev ? "var(--text-primary)" : "var(--text-muted)",
+                      fontWeight: isToday || ev ? 700 : 400,
+                      color: isToday
+                        ? "#FFFFFF"
+                        : isSunday
+                        ? "var(--primary)"
+                        : ev
+                        ? "var(--text-primary)"
+                        : isWeekend
+                        ? "var(--text-muted)"
+                        : "var(--text-secondary)",
+                      background: isToday ? "var(--primary)" : "transparent",
                     }}
                   >
                     {day}
                   </span>
+
+                  {/* Score dot + label */}
                   {ev && (
-                    <span
+                    <div
                       style={{
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: "var(--primary)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 3,
+                        padding: "2px 6px",
+                        borderRadius: 6,
+                        background: `rgba(255, 107, 0, ${0.08 + (ev.weighted_average / 5) * 0.15})`,
                       }}
                     >
-                      {ev.weighted_average.toFixed(1)}
-                    </span>
+                      <span
+                        style={{
+                          width: 5,
+                          height: 5,
+                          borderRadius: "50%",
+                          background: "var(--primary)",
+                          flexShrink: 0,
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 700,
+                          color: "var(--primary)",
+                          fontVariantNumeric: "tabular-nums",
+                        }}
+                      >
+                        {ev.weighted_average.toFixed(1)}
+                      </span>
+                    </div>
                   )}
                 </>
               )}
