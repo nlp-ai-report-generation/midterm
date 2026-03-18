@@ -28,8 +28,8 @@ const TABS: { key: TabKey; label: string }[] = [
 ];
 
 const SUBJECT_COLORS: Record<string, string> = {
-  "객체지향 프로그래밍": "#8B5CF6",
-  "Front-End Programming": "#3182F6",
+  "객체지향 프로그래밍": "var(--grey-600)",
+  "Front-End Programming": "var(--grey-400)",
   "Back-End Programming": "var(--primary)",
 };
 
@@ -88,7 +88,7 @@ export default function EDAPage() {
       <div className="flex items-end justify-between">
         <div>
           <h1 className="text-title">강의 데이터 분석</h1>
-          <p className="text-caption mt-1">15개 강의 STT 트랜스크립트에서 추출한 정량 분석 결과</p>
+          <p className="text-caption mt-1">강의 녹음에서 자동으로 추출한 데이터예요</p>
         </div>
         <label className="flex items-center gap-2 cursor-pointer select-none">
           <span className="text-[12px] text-text-muted">AI 해석 표시</span>
@@ -159,7 +159,7 @@ function OverviewTab({ data, showAi }: { data: TranscriptStats[]; showAi: boolea
 
       <div className="card card-padded">
         <h3 className="text-section mb-1">날짜별 발화량</h3>
-        <p className="text-caption mb-6">STT 트랜스크립트 기준 라인 수</p>
+        <p className="text-caption mb-6">강의당 발화량이에요. 1,200줄 이상이면 충분한 분석량이에요</p>
         <ResponsiveContainer width="100%" height={320}>
           <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />

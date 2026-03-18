@@ -31,10 +31,10 @@ const MODEL_COLORS_HEX: Record<ModelKey, string> = {
 
 const MODEL_DESCRIPTIONS: Record<ModelKey, string> = {
   "gpt4o-mini":
-    "LangGraph 파이프라인을 통해 구조화된 프롬프트로 평가. 가장 관대한 채점 경향.",
-  opus: "트랜스크립트를 직접 읽고 18개 항목을 종합 평가. 가장 엄격한 채점.",
+    "빠르고 관대한 평가. 전체 흐름을 빨리 보고 싶을 때 추천해요",
+  opus: "꼼꼼하고 엄격한 평가. 가장 정확한 점수가 필요할 때 선택해요",
   sonnet:
-    "빠른 응답 속도로 전체 강의를 순회 평가. 중간 수준의 채점 경향.",
+    "속도와 정확성의 균형. 일반적으로 추천하는 모델이에요",
 };
 
 interface ModelData {

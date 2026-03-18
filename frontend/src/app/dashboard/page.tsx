@@ -95,23 +95,23 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
       <div>
         <h1 className="text-title">강의 평가 현황</h1>
         <p className="text-caption" style={{ marginTop: 4 }}>
-          전체 강의의 품질 현황을 한눈에 확인합니다
+          전체 강의의 품질 현황을 한눈에 볼 수 있어요
         </p>
       </div>
 
-      {/* 핵심 지표 — 총 강의 + 평균만 */}
+      {/* 핵심 지표 */}
       <div
         className="card-grid"
-        style={{ gridTemplateColumns: "repeat(2, 1fr)" }}
+        style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: 32 }}
       >
-        <InsightCard label="분석 완료" value={totalLectures} subtitle={analysisRange} />
-        <InsightCard label="전체 평균" value={avgScore.toFixed(2)} subtitle="5점 만점" accent />
+        <InsightCard label="분석 완료" value={totalLectures} subtitle={`${analysisRange} 기간의 강의를 분석했어요`} />
+        <InsightCard label="전체 평균" value={avgScore.toFixed(2)} subtitle="5점 만점 기준이에요" accent />
       </div>
 
       {/* Category Heatmap */}
       <div className="card card-padded">
         <h2 className="text-section" style={{ marginBottom: 4 }}>카테고리 히트맵</h2>
-        <p className="text-caption" style={{ marginBottom: 24 }}>카테고리 x 강의 날짜별 점수</p>
+        <p className="text-caption" style={{ marginBottom: 24 }}>색이 진할수록 높은 점수예요. 어떤 영역이 강하고 약한지 한눈에 볼 수 있어요</p>
         <div className="overflow-x-auto">
           <table className="w-full text-xs" aria-label="카테고리별 점수 히트맵">
             <thead>
@@ -187,17 +187,17 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
       {/* 최고 / 최저 + 점수 추이 */}
       <div
         className="card-grid"
-        style={{ gridTemplateColumns: "repeat(2, 1fr)" }}
+        style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: 32 }}
       >
         <InsightCard
           label="가장 높은 점수"
           value={bestLecture ? bestLecture.weighted_average.toFixed(2) : "-"}
-          subtitle={bestLecture ? formatDateShort(bestLecture.lecture_date) : "-"}
+          subtitle={bestLecture ? `${formatDateShort(bestLecture.lecture_date)} 강의가 가장 잘 나왔어요` : "-"}
         />
         <InsightCard
-          label="가장 낮은 점수"
+          label="개선 기회"
           value={worstLecture ? worstLecture.weighted_average.toFixed(2) : "-"}
-          subtitle={worstLecture ? formatDateShort(worstLecture.lecture_date) : "-"}
+          subtitle={worstLecture ? `${formatDateShort(worstLecture.lecture_date)} 강의를 더 살펴보면 좋아요` : "-"}
         />
       </div>
 
@@ -207,7 +207,7 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
       {/* Attention-needed Lectures */}
       <div>
         <div className="flex items-center justify-between" style={{ marginBottom: 20 }}>
-          <h2 className="text-section">주의가 필요한 강의</h2>
+          <h2 className="text-section">더 살펴볼 강의</h2>
           <Link
             to="/lectures"
             className="text-sm font-medium hover:text-primary"
@@ -310,7 +310,7 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
       <div>
         <h1 className="text-title">{displayTitle}</h1>
         <p className="text-caption" style={{ marginTop: 4 }}>
-          수업을 돌아보고 다음 강의를 준비하세요
+          수업을 돌아보고 다음 강의를 준비해보세요
         </p>
       </div>
 
@@ -319,15 +319,15 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
         className="card-grid"
         style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
       >
-        <InsightCard label="총 강의" value={totalLectures} />
-        <InsightCard label="평균 점수" value={avgScore.toFixed(2)} subtitle="5점 만점" accent />
+        <InsightCard label="총 강의" value={totalLectures} subtitle="내가 진행한 강의예요" />
+        <InsightCard label="내 평균" value={avgScore.toFixed(2)} subtitle="5점 만점 기준이에요" accent />
         <InsightCard
           label="가장 잘한 강의"
           value={bestLecture ? bestLecture.weighted_average.toFixed(2) : "-"}
           subtitle={bestLecture ? (bestLecture.metadata.subjects?.[0] ?? formatDateShort(bestLecture.lecture_date)) : "-"}
         />
         <InsightCard
-          label="개선이 필요한 강의"
+          label="개선 기회"
           value={worstLecture ? worstLecture.weighted_average.toFixed(2) : "-"}
           subtitle={worstLecture ? (worstLecture.metadata.subjects?.[0] ?? formatDateShort(worstLecture.lecture_date)) : "-"}
         />

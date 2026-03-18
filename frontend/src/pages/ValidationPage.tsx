@@ -145,27 +145,27 @@ function ConsistencyTab() {
       >
         {[
           {
-            label: "ICC",
+            label: "반복 평가 일치도",
             value: OVERALL_METRICS.icc,
-            desc: "급내상관계수",
+            desc: "0.75 이상이면 신뢰할 수 있어요",
             verdict: "Good",
           },
           {
-            label: "Cohen's κ",
+            label: "두 평가 일치도",
             value: OVERALL_METRICS.kappa,
-            desc: "가중 카파",
+            desc: "0.8 이상이면 거의 완벽해요",
             verdict: "Almost Perfect",
           },
           {
-            label: "Krippendorff's α",
+            label: "전체 합의도",
             value: OVERALL_METRICS.alpha,
-            desc: "다평가자 신뢰도",
+            desc: "0.8 이상이면 믿을 만해요",
             verdict: "Reliable",
           },
           {
-            label: "SSI",
+            label: "점수 안정성",
             value: OVERALL_METRICS.ssi,
-            desc: "점수 안정성",
+            desc: "0.85 이상이면 안정적이에요",
             verdict: "Very Stable",
           },
         ].map((m) => (
@@ -487,7 +487,7 @@ function ConsistencyTab() {
       </div>
 
       {/* Conclusion */}
-      <div className="card card-padded" style={{ borderLeft: "3px solid #22C55E" }}>
+      <div className="card card-padded">
         <h2 className="text-section" style={{ marginBottom: 8 }}>
           결론
         </h2>
@@ -880,7 +880,7 @@ function ChunkTab() {
       </div>
 
       {/* Conclusion */}
-      <div className="card card-padded" style={{ borderLeft: "3px solid #EF4444" }}>
+      <div className="card card-padded">
         <h2 className="text-section" style={{ marginBottom: 8 }}>
           결론
         </h2>

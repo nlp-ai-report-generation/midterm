@@ -167,7 +167,8 @@ export default function LectureDetailPage() {
 
       {/* Radar Chart */}
       <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 24 }}>카테고리별 점수</h2>
+        <h2 className="text-section" style={{ marginBottom: 4 }}>카테고리별 점수</h2>
+        <p className="text-caption" style={{ marginBottom: 24 }}>넓을수록 균형 잡힌 강의예요. 안쪽으로 들어간 영역이 개선 포인트예요</p>
         <div style={{ height: 340 }}>
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="72%">
