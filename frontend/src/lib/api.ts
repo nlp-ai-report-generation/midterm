@@ -101,6 +101,32 @@ export async function exportToNotion(params: {
   return res.json();
 }
 
+/** Get Notion OAuth URL */
+export async function getNotionAuthUrl(): Promise<{ url: string }> {
+  const res = await fetch(`${API_BASE_URL}/api/auth/notion`);
+  return res.json();
+}
+
+/** Exchange Notion auth code for token */
+export async function notionCallback(
+  code: string
+): Promise<{ access_token: string; workspace_name: string }> {
+  const res = await fetch(
+    `${API_BASE_URL}/api/auth/notion/callback?code=${encodeURIComponent(code)}`
+  );
+  return res.json();
+}
+
+/** List Notion databases */
+export async function listNotionDatabases(
+  token: string
+): Promise<{ databases: { id: string; title: string; url: string }[] }> {
+  const res = await fetch(
+    `${API_BASE_URL}/api/notion/databases?token=${encodeURIComponent(token)}`
+  );
+  return res.json();
+}
+
 /** List Google Drive text files */
 export async function listDriveFiles(
   token: string

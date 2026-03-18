@@ -345,7 +345,40 @@ async def notion_callback(code: str):
             headers={"Authorization": f"Basic {auth}", "Content-Type": "application/json"},
             json={"grant_type": "authorization_code", "code": code, "redirect_uri": NOTION_REDIRECT_URI},
         )
-        return resp.json()
+        data = resp.json()
+        return {
+            "access_token": data.get("access_token", ""),
+            "workspace_name": data.get("workspace_name", ""),
+            "workspace_id": data.get("workspace_id", ""),
+            "bot_id": data.get("bot_id", ""),
+            "duplicated_template_id": data.get("duplicated_template_id"),
+        }
+
+
+@app.get("/api/notion/databases")
+async def list_notion_databases(token: str):
+    """List databases the integration has access to."""
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            "https://api.notion.com/v1/search",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+                "Notion-Version": "2022-06-28",
+            },
+            json={"filter": {"value": "database", "property": "object"}},
+        )
+        data = resp.json()
+        databases = []
+        for db in data.get("results", []):
+            title_parts = db.get("title", [])
+            title = title_parts[0]["plain_text"] if title_parts else "제목 없음"
+            databases.append({
+                "id": db["id"],
+                "title": title,
+                "url": db.get("url", ""),
+            })
+        return {"databases": databases}
 
 
 class NotionExportRequest(BaseModel):

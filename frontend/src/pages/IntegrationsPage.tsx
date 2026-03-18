@@ -1,6 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
-import { listDriveFiles } from "@/lib/api";
+import {
+  listDriveFiles,
+  getNotionAuthUrl,
+  notionCallback,
+  listNotionDatabases,
+} from "@/lib/api";
 
 interface DriveFile {
   id: string;
@@ -8,29 +13,35 @@ interface DriveFile {
   modifiedTime: string;
 }
 
+interface NotionDb {
+  id: string;
+  title: string;
+  url: string;
+}
+
 export default function IntegrationsPage() {
   const [user, setUser] = useState<any>(null);
-  const [googleConnected, setGoogleConnected] = useState(false);
-  const [notionConnected, setNotionConnected] = useState(false);
-  const [notionDbId, setNotionDbId] = useState("");
-  const [notionToken, setNotionToken] = useState("");
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState("");
 
-  // 드라이브 파일 목록
+  // 구글 드라이브
   const [driveFiles, setDriveFiles] = useState<DriveFile[]>([]);
   const [driveLoading, setDriveLoading] = useState(false);
+
+  // 노션
+  const [notionToken, setNotionToken] = useState("");
+  const [notionWorkspace, setNotionWorkspace] = useState("");
+  const [notionDbs, setNotionDbs] = useState<NotionDb[]>([]);
+  const [selectedDb, setSelectedDb] = useState<NotionDb | null>(null);
+  const [notionLoading, setNotionLoading] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setUser(data.session?.user ?? null);
-      if (data.session?.user) loadIntegrations(data.session.user.id);
       setLoading(false);
     });
-
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      if (session?.user) loadIntegrations(session.user.id);
     });
 
     // localStorage에서 노션 설정 복원
@@ -39,28 +50,29 @@ export default function IntegrationsPage() {
       try {
         const parsed = JSON.parse(stored);
         setNotionToken(parsed.token ?? "");
-        setNotionDbId(parsed.database_id ?? "");
-        if (parsed.token && parsed.database_id) setNotionConnected(true);
+        setNotionWorkspace(parsed.workspace ?? "");
+        if (parsed.database) setSelectedDb(parsed.database);
       } catch { /* ignore */ }
+    }
+
+    // URL에서 Notion OAuth 콜백 코드 확인
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    if (code) {
+      handleNotionCallback(code);
+      // URL에서 code 파라미터 제거
+      window.history.replaceState({}, "", window.location.pathname);
     }
 
     return () => listener.subscription.unsubscribe();
   }, []);
 
-  const loadIntegrations = async (userId: string) => {
-    const { data } = await supabase
-      .from("integrations")
-      .select("provider, extra")
-      .eq("user_id", userId);
-    if (data) {
-      setGoogleConnected(data.some((d) => d.provider === "google_drive"));
-    }
-  };
-
   const showToast = (msg: string) => {
     setToast(msg);
-    setTimeout(() => setToast(""), 2500);
+    setTimeout(() => setToast(""), 3000);
   };
+
+  // ─── 구글 드라이브 ───
 
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
@@ -70,7 +82,7 @@ export default function IntegrationsPage() {
         redirectTo: window.location.origin + window.location.pathname,
       },
     });
-    if (error) showToast("구글 로그인에 실패했어요: " + error.message);
+    if (error) showToast("구글 로그인에 실패했어요");
   };
 
   const loadDriveFiles = async () => {
@@ -92,37 +104,65 @@ export default function IntegrationsPage() {
     }
   };
 
-  const saveNotionConfig = () => {
-    if (!notionToken.trim() || !notionDbId.trim()) {
-      showToast("토큰과 데이터베이스 ID를 모두 넣어주세요");
-      return;
+  // ─── 노션 OAuth ───
+
+  const startNotionAuth = async () => {
+    try {
+      const { url } = await getNotionAuthUrl();
+      // 현재 페이지 URL을 state로 전달 (콜백 후 돌아오기 위해)
+      window.location.href = url;
+    } catch {
+      showToast("노션 인증 URL을 가져오지 못했어요");
     }
+  };
+
+  const handleNotionCallback = useCallback(async (code: string) => {
+    setNotionLoading(true);
+    try {
+      const result = await notionCallback(code);
+      if (result.access_token) {
+        setNotionToken(result.access_token);
+        setNotionWorkspace(result.workspace_name ?? "");
+
+        // 접근 가능한 DB 목록 가져오기
+        const dbResult = await listNotionDatabases(result.access_token);
+        setNotionDbs(dbResult.databases ?? []);
+
+        showToast(`${result.workspace_name ?? "노션"} 워크스페이스에 연결했어요`);
+      } else {
+        showToast("노션 연결에 실패했어요");
+      }
+    } catch {
+      showToast("노션 인증 처리 중 오류가 발생했어요");
+    } finally {
+      setNotionLoading(false);
+    }
+  }, []);
+
+  const selectDatabase = (db: NotionDb) => {
+    setSelectedDb(db);
     localStorage.setItem(
       "notion-integration",
-      JSON.stringify({ token: notionToken.trim(), database_id: notionDbId.trim() })
+      JSON.stringify({
+        token: notionToken,
+        database_id: db.id,
+        workspace: notionWorkspace,
+        database: db,
+      })
     );
-    setNotionConnected(true);
-    showToast("노션 설정을 저장했어요");
+    showToast(`"${db.title}" 데이터베이스를 선택했어요`);
   };
 
   const disconnectNotion = () => {
     localStorage.removeItem("notion-integration");
-    setNotionConnected(false);
     setNotionToken("");
-    setNotionDbId("");
+    setNotionWorkspace("");
+    setNotionDbs([]);
+    setSelectedDb(null);
     showToast("노션 연결을 해제했어요");
   };
 
-  const disconnectGoogle = async () => {
-    if (user) {
-      await supabase.from("integrations").delete().eq("user_id", user.id).eq("provider", "google_drive");
-    }
-    setGoogleConnected(false);
-    setDriveFiles([]);
-    await supabase.auth.signOut();
-    setUser(null);
-    showToast("구글 드라이브 연결을 해제했어요");
-  };
+  const isNotionConnected = !!notionToken && !!selectedDb;
 
   if (loading) {
     return (
@@ -141,14 +181,6 @@ export default function IntegrationsPage() {
         </p>
       </div>
 
-      {/* 계정 */}
-      {user && (
-        <div className="card card-padded">
-          <p className="text-label" style={{ marginBottom: 8 }}>계정</p>
-          <p className="text-body">{user.email}</p>
-        </div>
-      )}
-
       {/* ─── 구글 드라이브 ─── */}
       <div className="card card-padded">
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
@@ -158,13 +190,7 @@ export default function IntegrationsPage() {
               드라이브에서 트랜스크립트 파일을 가져올 수 있어요
             </p>
           </div>
-          <span
-            style={{
-              fontSize: 12,
-              fontWeight: 600,
-              color: user ? "var(--primary)" : "var(--text-muted)",
-            }}
-          >
+          <span style={{ fontSize: 12, fontWeight: 600, color: user ? "var(--primary)" : "var(--text-muted)" }}>
             {user ? "연결됨" : "미연결"}
           </span>
         </div>
@@ -175,69 +201,30 @@ export default function IntegrationsPage() {
           </button>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <button
-              onClick={loadDriveFiles}
-              disabled={driveLoading}
-              className="btn-primary"
-              style={{ width: "100%" }}
-            >
+            <button onClick={loadDriveFiles} disabled={driveLoading} className="btn-primary" style={{ width: "100%" }}>
               {driveLoading ? "불러오는 중..." : "드라이브 파일 보기"}
             </button>
 
-            {/* 파일 목록 */}
             {driveFiles.length > 0 && (
-              <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 8 }}>
-                <p className="text-label" style={{ marginBottom: 4 }}>
-                  {driveFiles.length}개 파일을 찾았어요
-                </p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4, marginTop: 4 }}>
+                <p className="text-label">{driveFiles.length}개 파일</p>
                 {driveFiles.map((file) => (
-                  <div
-                    key={file.id}
-                    className="inner-card"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      padding: "12px 16px",
-                    }}
-                  >
+                  <div key={file.id} className="inner-card" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px" }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p
-                        className="text-body"
-                        style={{
-                          fontWeight: 600,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
+                      <p className="text-body" style={{ fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                         {file.name}
                       </p>
                       <p className="text-caption" style={{ fontSize: 11 }}>
                         {new Date(file.modifiedTime).toLocaleDateString("ko-KR")}
                       </p>
                     </div>
-                    <button
-                      className="btn-primary"
-                      style={{ fontSize: 12, padding: "6px 12px", flexShrink: 0 }}
-                      onClick={() => {
-                        showToast(`${file.name} 가져오기는 설정 페이지에서 평가를 실행해주세요`);
-                      }}
-                    >
+                    <button className="btn-primary" style={{ fontSize: 12, padding: "6px 12px", flexShrink: 0 }}>
                       가져오기
                     </button>
                   </div>
                 ))}
               </div>
             )}
-
-            <button
-              onClick={disconnectGoogle}
-              className="btn-secondary"
-              style={{ width: "100%" }}
-            >
-              연결 해제
-            </button>
           </div>
         )}
       </div>
@@ -248,80 +235,112 @@ export default function IntegrationsPage() {
           <div>
             <h2 className="text-section">노션</h2>
             <p className="text-caption" style={{ marginTop: 2 }}>
-              평가 결과를 노션 데이터베이스에 기록하고 링크로 확인할 수 있어요
+              평가 결과를 노션에 저장하고 링크로 바로 확인할 수 있어요
             </p>
           </div>
-          <span
-            style={{
-              fontSize: 12,
-              fontWeight: 600,
-              color: notionConnected ? "var(--primary)" : "var(--text-muted)",
-            }}
-          >
-            {notionConnected ? "연결됨" : "미연결"}
+          <span style={{ fontSize: 12, fontWeight: 600, color: isNotionConnected ? "var(--primary)" : "var(--text-muted)" }}>
+            {isNotionConnected ? "연결됨" : "미연결"}
           </span>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <div>
-            <label htmlFor="notion-token" className="text-caption" style={{ display: "block", marginBottom: 6 }}>
-              Internal Integration 토큰
-            </label>
-            <input
-              id="notion-token"
-              type="password"
-              value={notionToken}
-              onChange={(e) => setNotionToken(e.target.value)}
-              placeholder="secret_..."
-              className="input-field"
-            />
-          </div>
-          <div>
-            <label htmlFor="notion-db" className="text-caption" style={{ display: "block", marginBottom: 6 }}>
-              데이터베이스 ID
-            </label>
-            <input
-              id="notion-db"
-              type="text"
-              value={notionDbId}
-              onChange={(e) => setNotionDbId(e.target.value)}
-              placeholder="32자리 ID"
-              className="input-field"
-            />
-            <p className="text-caption" style={{ marginTop: 4, fontSize: 11 }}>
-              노션 데이터베이스 URL에서 마지막 32자리가 ID예요
-            </p>
-          </div>
-          <button onClick={saveNotionConfig} className="btn-primary" style={{ width: "100%" }}>
-            {notionConnected ? "설정 업데이트" : "노션 연결하기"}
+        {!notionToken ? (
+          /* Step 1: 노션 연결 */
+          <button
+            onClick={startNotionAuth}
+            disabled={notionLoading}
+            className="btn-primary"
+            style={{ width: "100%" }}
+          >
+            {notionLoading ? "연결 중..." : "노션 계정으로 연결하기"}
           </button>
-          {notionConnected && (
-            <>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "12px 16px",
-                  background: "var(--primary-light)",
-                  borderRadius: "var(--radius-sm)",
-                }}
-              >
+        ) : !selectedDb ? (
+          /* Step 2: 데이터베이스 선택 */
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {notionWorkspace && (
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--primary)" }} />
-                <span className="text-body" style={{ fontSize: 13 }}>
-                  강의 상세 페이지에서 "노션에 저장하기" 버튼으로 내보낼 수 있어요
-                </span>
+                <span className="text-body" style={{ fontWeight: 600 }}>{notionWorkspace}</span>
+                <span className="text-caption">워크스페이스에 연결됐어요</span>
               </div>
-              <button
-                onClick={disconnectNotion}
-                className="btn-secondary"
-                style={{ width: "100%" }}
-              >
-                연결 해제
-              </button>
-            </>
-          )}
-        </div>
+            )}
+
+            {notionDbs.length > 0 ? (
+              <>
+                <p className="text-label">어떤 데이터베이스에 저장할까요?</p>
+                {notionDbs.map((db) => (
+                  <button
+                    key={db.id}
+                    onClick={() => selectDatabase(db)}
+                    className="inner-card"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      padding: "14px 16px",
+                      border: "none",
+                      cursor: "pointer",
+                      textAlign: "left",
+                      width: "100%",
+                      transition: "background 0.15s",
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = "var(--grey-100)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = "var(--grey-50)"; }}
+                  >
+                    <span className="text-body" style={{ fontWeight: 600 }}>{db.title}</span>
+                    <span style={{ fontSize: 14, color: "var(--text-muted)" }}>&rarr;</span>
+                  </button>
+                ))}
+              </>
+            ) : (
+              <div>
+                <p className="text-body">접근 가능한 데이터베이스가 없어요</p>
+                <p className="text-caption" style={{ marginTop: 4 }}>
+                  노션에서 통합에 데이터베이스 접근 권한을 추가해주세요
+                </p>
+              </div>
+            )}
+
+            <button onClick={disconnectNotion} className="btn-secondary" style={{ width: "100%" }}>
+              다시 연결하기
+            </button>
+          </div>
+        ) : (
+          /* Step 3: 연결 완료 */
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div
+              style={{
+                padding: "16px 20px",
+                background: "var(--primary-light)",
+                borderRadius: "var(--radius-sm)",
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--primary)" }} />
+                <span className="text-body" style={{ fontWeight: 600 }}>{selectedDb.title}</span>
+              </div>
+              <p className="text-caption" style={{ fontSize: 12 }}>
+                강의 상세 페이지에서 "노션에 저장하기"를 누르면 이 데이터베이스에 기록돼요
+              </p>
+              {selectedDb.url && (
+                <a
+                  href={selectedDb.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: 13, fontWeight: 600, color: "var(--primary)", textDecoration: "none" }}
+                >
+                  노션에서 열기 &rarr;
+                </a>
+              )}
+            </div>
+
+            <button onClick={disconnectNotion} className="btn-secondary" style={{ width: "100%" }}>
+              연결 해제
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Toast */}
