@@ -37,8 +37,8 @@ export default function LecturesPage() {
 
   return (
     <div className="page-content">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+      {/* Header — 모바일에서는 세로 배치 */}
+      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
         <div>
           <h1 className="text-title">강의 목록</h1>
           <p className="text-caption" style={{ marginTop: 2 }}>
@@ -73,42 +73,20 @@ export default function LecturesPage() {
         </div>
       ) : (
         <div className="card" style={{ overflow: "hidden" }}>
-          {/* Table Header */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "100px 1fr 160px 80px",
-              padding: "14px 32px",
-              borderBottom: "1px solid var(--grey-100)",
-              background: "var(--grey-50)",
-            }}
-          >
+          {/* Desktop Table Header — 모바일에서 숨김 */}
+          <div className="lecture-list-header">
             <span className="text-label">날짜</span>
             <span className="text-label">과목</span>
-            <span className="text-label">강사</span>
+            <span className="text-label lecture-list-instructor">강사</span>
             <span className="text-label" style={{ textAlign: "right" }}>점수</span>
           </div>
 
-          {/* Table Rows */}
+          {/* Rows */}
           {displayed.map((evaluation) => (
             <Link
               key={evaluation.lecture_date}
               to={`/lectures/${evaluation.lecture_date}`}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "100px 1fr 160px 80px",
-                padding: "18px 32px",
-                alignItems: "center",
-                borderBottom: "1px solid var(--grey-50)",
-                textDecoration: "none",
-                transition: "background 0.15s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "var(--grey-50)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "transparent";
-              }}
+              className="lecture-list-row"
             >
               <span
                 style={{
@@ -129,14 +107,14 @@ export default function LecturesPage() {
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
-                  paddingRight: 16,
+                  paddingRight: 12,
                 }}
               >
                 {evaluation.metadata.subjects?.[0] ?? "강의"}
               </span>
 
               <span
-                className="text-body"
+                className="text-body lecture-list-instructor"
                 style={{
                   overflow: "hidden",
                   textOverflow: "ellipsis",

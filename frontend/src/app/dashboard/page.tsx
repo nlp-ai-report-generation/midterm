@@ -193,42 +193,25 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
       {/* Score Trend */}
       <ScoreTrendChart data={trendData} count={evaluations.length} />
 
-      {/* Attention-needed Lectures */}
-      <div>
-        <div className="flex items-center justify-between" style={{ marginBottom: 20 }}>
-          <h2 className="text-section">더 살펴볼 강의</h2>
-          <Link
-            to="/lectures"
-            className="text-sm font-medium hover:text-primary"
-            style={{ color: "var(--text-tertiary)" }}
-          >
-            전체 보기
-          </Link>
-        </div>
-        <div
-          className="card-grid"
-          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}
-        >
-          {attentionLectures.map((item) => (
-            <LectureCard key={item.lecture_date} evaluation={item} />
-          ))}
-        </div>
-      </div>
-
-      {/* Other Lectures */}
-      {otherLectures.length > 0 && (
+      {/* 강의 목록 바로가기 */}
+      <Link
+        to="/lectures"
+        className="card card-padded card-hover"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          textDecoration: "none",
+        }}
+      >
         <div>
-          <h2 className="text-section" style={{ marginBottom: 20 }}>기타 강의</h2>
-          <div
-            className="card-grid"
-            style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}
-          >
-            {otherLectures.map((item) => (
-              <LectureCard key={item.lecture_date} evaluation={item} />
-            ))}
-          </div>
+          <h2 className="text-section">강의 목록 보기</h2>
+          <p className="text-caption" style={{ marginTop: 4 }}>
+            {totalLectures}개 강의의 상세 평가를 확인할 수 있어요
+          </p>
         </div>
-      )}
+        <span style={{ fontSize: 20, color: "var(--text-muted)" }}>&rarr;</span>
+      </Link>
     </div>
   );
 }
@@ -325,6 +308,15 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
       {/* Score Trend */}
       <ScoreTrendChart data={trendData} count={filtered.length} />
 
+      {/* 캘린더 뷰 */}
+      <div className="card card-padded">
+        <h2 className="text-section" style={{ marginBottom: 4 }}>강의 캘린더</h2>
+        <p className="text-caption" style={{ marginBottom: 20 }}>
+          강의가 있었던 날에 점수가 표시돼요
+        </p>
+        <LectureCalendar evaluations={filtered} />
+      </div>
+
       {/* Strengths & Improvements */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <FeedbackCard
@@ -341,27 +333,25 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
         />
       </div>
 
-      {/* Recent Lectures */}
-      <div>
-        <div className="flex items-center justify-between" style={{ marginBottom: 20 }}>
-          <h2 className="text-section">최근 강의</h2>
-          <Link
-            to="/lectures"
-            className="text-sm font-medium hover:text-primary"
-            style={{ color: "var(--text-tertiary)" }}
-          >
-            전체 보기
-          </Link>
+      {/* 강의 목록 바로가기 */}
+      <Link
+        to="/lectures"
+        className="card card-padded card-hover"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          textDecoration: "none",
+        }}
+      >
+        <div>
+          <h2 className="text-section">내 강의 목록 보기</h2>
+          <p className="text-caption" style={{ marginTop: 4 }}>
+            {totalLectures}개 강의의 상세 평가를 확인할 수 있어요
+          </p>
         </div>
-        <div
-          className="card-grid"
-          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}
-        >
-          {recentLectures.map((item) => (
-            <LectureCard key={item.lecture_date} evaluation={item} />
-          ))}
-        </div>
-      </div>
+        <span style={{ fontSize: 20, color: "var(--text-muted)" }}>&rarr;</span>
+      </Link>
     </div>
   );
 }
@@ -420,29 +410,100 @@ function ScoreTrendChart({ data, count }: { data: { date: string; score: number 
   );
 }
 
-function LectureCard({ evaluation }: { evaluation: EvaluationResult }) {
+function LectureCalendar({ evaluations }: { evaluations: EvaluationResult[] }) {
+  const scoreMap = new Map<number, EvaluationResult>();
+  for (const e of evaluations) {
+    const day = parseInt(e.lecture_date.split("-")[2], 10);
+    scoreMap.set(day, e);
+  }
+
+  // 2026년 2월: 1일=일요일, 28일
+  const daysInMonth = 28;
+  const startDayOfWeek = 0; // 일요일
+  const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
+
+  const cells: (number | null)[] = [];
+  for (let i = 0; i < startDayOfWeek; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+  while (cells.length % 7 !== 0) cells.push(null);
+
   return (
-    <Link
-      to={`/lectures/${evaluation.lecture_date}`}
-      className="card card-padded card-hover transition-shadow"
-    >
-      <div className="flex items-start justify-between">
-        <div className="flex-1 min-w-0">
-          <p className="text-caption">{formatDateShort(evaluation.lecture_date)}</p>
-          <p
-            className="truncate"
+    <div style={{ overflowX: "auto" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(7, 1fr)",
+          gap: 4,
+          minWidth: 320,
+        }}
+      >
+        {weekdays.map((wd) => (
+          <div
+            key={wd}
             style={{
-              marginTop: 6,
-              fontSize: 14,
+              textAlign: "center",
+              fontSize: 12,
               fontWeight: 600,
-              color: "var(--text-primary)",
+              color: "var(--text-muted)",
+              padding: "8px 0",
             }}
           >
-            {evaluation.metadata.subjects?.[0] ?? "강의"}
-          </p>
-        </div>
-        <ScoreBadge score={evaluation.weighted_average} size="sm" className="ml-3 shrink-0" />
+            {wd}
+          </div>
+        ))}
+        {cells.map((day, idx) => {
+          const ev = day ? scoreMap.get(day) : null;
+          return (
+            <div
+              key={idx}
+              style={{
+                aspectRatio: "1",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 10,
+                background: ev
+                  ? `rgba(255, 107, 0, ${0.1 + (ev.weighted_average / 5) * 0.5})`
+                  : day
+                  ? "var(--grey-50)"
+                  : "transparent",
+                cursor: ev ? "pointer" : "default",
+                transition: "background 0.15s ease",
+                gap: 2,
+              }}
+              onClick={() => {
+                if (ev) window.location.href = `/lectures/${ev.lecture_date}`;
+              }}
+            >
+              {day && (
+                <>
+                  <span
+                    style={{
+                      fontSize: 13,
+                      fontWeight: ev ? 700 : 400,
+                      color: ev ? "var(--text-primary)" : "var(--text-muted)",
+                    }}
+                  >
+                    {day}
+                  </span>
+                  {ev && (
+                    <span
+                      style={{
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: "var(--primary)",
+                      }}
+                    >
+                      {ev.weighted_average.toFixed(1)}
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
+          );
+        })}
       </div>
-    </Link>
+    </div>
   );
 }

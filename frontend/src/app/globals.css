@@ -210,11 +210,44 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: rgba(107, 118, 132, 0.32); }
 * { scrollbar-width: thin; scrollbar-color: rgba(139, 149, 161, 0.2) transparent; }
 
+/* ─── Lecture List ─── */
+.lecture-list-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 140px 60px;
+  padding: 14px 32px;
+  border-bottom: 1px solid var(--grey-100);
+  background: var(--grey-50);
+}
+.lecture-list-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 140px 60px;
+  padding: 16px 32px;
+  align-items: center;
+  border-bottom: 1px solid var(--grey-50);
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+.lecture-list-row:hover { background: var(--grey-50); }
+
 /* ─── Responsive ─── */
 @media (max-width: 767px) {
-  .card-padded { padding: 20px 24px; }
+  .card-padded { padding: 20px 20px; }
   .page-content { gap: 24px; }
   .text-title { font-size: 20px; }
   .text-number { font-size: 24px; }
   .inner-card { padding: 16px 20px; }
+
+  /* 강의 리스트 모바일: 강사 열 숨김, 패딩 축소 */
+  .lecture-list-header {
+    grid-template-columns: 70px 1fr 50px;
+    padding: 12px 20px;
+  }
+  .lecture-list-row {
+    grid-template-columns: 70px 1fr 50px;
+    padding: 14px 20px;
+  }
+  .lecture-list-instructor { display: none; }
+
+  /* 카드 그리드 모바일: 1열 */
+  .card-grid { grid-template-columns: 1fr !important; }
 }
