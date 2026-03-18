@@ -80,3 +80,44 @@ export async function validateApiKeyRemotely(key: string): Promise<{
 
   return res.json() as Promise<{ valid: boolean; message: string }>;
 }
+
+/** Export evaluation to Notion */
+export async function exportToNotion(params: {
+  token: string;
+  database_id: string;
+  lecture_date: string;
+  score: number;
+  model?: string;
+  subject?: string;
+  strengths?: string[];
+  improvements?: string[];
+  recommendations?: string[];
+}): Promise<{ success: boolean; url: string; id: string; error: string }> {
+  const res = await fetch(`${API_BASE_URL}/api/notion/create-page`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
+  });
+  return res.json();
+}
+
+/** List Google Drive text files */
+export async function listDriveFiles(
+  token: string
+): Promise<{ files: { id: string; name: string; modifiedTime: string }[] }> {
+  const res = await fetch(
+    `${API_BASE_URL}/api/drive/files?token=${encodeURIComponent(token)}`
+  );
+  return res.json();
+}
+
+/** Download a file from Google Drive */
+export async function downloadDriveFile(
+  fileId: string,
+  token: string
+): Promise<{ content: string; filename: string }> {
+  const res = await fetch(
+    `${API_BASE_URL}/api/drive/download/${fileId}?token=${encodeURIComponent(token)}`
+  );
+  return res.json();
+}

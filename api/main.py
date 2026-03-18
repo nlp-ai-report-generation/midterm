@@ -348,24 +348,72 @@ async def notion_callback(code: str):
         return resp.json()
 
 
+class NotionExportRequest(BaseModel):
+    token: str
+    database_id: str
+    lecture_date: str
+    score: float
+    model: str = "gpt-4o-mini"
+    subject: str = ""
+    strengths: list[str] = []
+    improvements: list[str] = []
+    recommendations: list[str] = []
+
+
 @app.post("/api/notion/create-page")
-async def create_notion_page(token: str, database_id: str, lecture_date: str, score: float, model: str):
+async def create_notion_page(req: NotionExportRequest):
     """Create a page in a Notion database with evaluation results."""
+    # 본문 블록: 강점, 개선점, 추천 액션을 리포트로 구성
+    children: list[dict] = []
+
+    def add_heading(text: str) -> None:
+        children.append({
+            "object": "block",
+            "type": "heading_2",
+            "heading_2": {"rich_text": [{"type": "text", "text": {"content": text}}]},
+        })
+
+    def add_bullets(items: list[str]) -> None:
+        for item in items:
+            children.append({
+                "object": "block",
+                "type": "bulleted_list_item",
+                "bulleted_list_item": {"rich_text": [{"type": "text", "text": {"content": item}}]},
+            })
+
+    if req.strengths:
+        add_heading("잘한 점")
+        add_bullets(req.strengths)
+    if req.improvements:
+        add_heading("개선할 점")
+        add_bullets(req.improvements)
+    if req.recommendations:
+        add_heading("추천 액션")
+        add_bullets(req.recommendations)
+
     async with httpx.AsyncClient() as client:
         resp = await client.post(
             "https://api.notion.com/v1/pages",
             headers={
-                "Authorization": f"Bearer {token}",
+                "Authorization": f"Bearer {req.token}",
                 "Content-Type": "application/json",
                 "Notion-Version": "2022-06-28",
             },
             json={
-                "parent": {"database_id": database_id},
+                "parent": {"database_id": req.database_id},
                 "properties": {
-                    "강의 날짜": {"date": {"start": lecture_date}},
-                    "점수": {"number": score},
-                    "모델": {"rich_text": [{"text": {"content": model}}]},
+                    "강의 날짜": {"date": {"start": req.lecture_date}},
+                    "점수": {"number": req.score},
+                    "모델": {"rich_text": [{"text": {"content": req.model}}]},
+                    "과목": {"rich_text": [{"text": {"content": req.subject}}]},
                 },
+                "children": children,
             },
         )
-        return resp.json()
+        data = resp.json()
+        return {
+            "success": resp.status_code == 200,
+            "url": data.get("url", ""),
+            "id": data.get("id", ""),
+            "error": data.get("message", "") if resp.status_code != 200 else "",
+        }

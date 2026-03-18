@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   RadarChart,
@@ -12,6 +12,7 @@ import {
 import { useRole } from "@/contexts/RoleContext";
 import { getEvaluationByModel, MODEL_LABELS, type ModelKey } from "@/lib/data";
 import { formatDate, scoreColor, scoreBadgeTextColor, scoreLabel, weightLabel } from "@/lib/utils";
+import { exportToNotion } from "@/lib/api";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import FeedbackCard from "@/components/shared/FeedbackCard";
 import type { EvaluationResult, CategoryResult, ItemScore } from "@/types/evaluation";
@@ -163,6 +164,17 @@ export default function LectureDetailPage() {
             </p>
           </div>
         </div>
+
+        {/* 노션 내보내기 */}
+        <NotionExportButton
+          lectureDate={evaluation.lecture_date}
+          score={weighted_average}
+          model={model}
+          subject={metadata.subjects?.[0] ?? ""}
+          strengths={evaluation.strengths ?? []}
+          improvements={evaluation.improvements ?? []}
+          recommendations={evaluation.recommendations ?? []}
+        />
       </div>
 
       {/* Radar Chart */}
@@ -353,6 +365,144 @@ function ItemScoreCard({ item }: { item: ItemScore }) {
             </div>
           ))}
         </div>
+      )}
+    </div>
+  );
+}
+
+
+/* ─── 노션 내보내기 버튼 ─── */
+
+function NotionExportButton({
+  lectureDate,
+  score,
+  model,
+  subject,
+  strengths,
+  improvements,
+  recommendations,
+}: {
+  lectureDate: string;
+  score: number;
+  model: string;
+  subject: string;
+  strengths: string[];
+  improvements: string[];
+  recommendations: string[];
+}) {
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [notionUrl, setNotionUrl] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleExport = useCallback(async () => {
+    const stored = localStorage.getItem("notion-integration");
+    if (!stored) {
+      setErrorMsg("먼저 연동 설정에서 노션을 연결해주세요");
+      setStatus("error");
+      return;
+    }
+
+    let token = "";
+    let databaseId = "";
+    try {
+      const parsed = JSON.parse(stored);
+      token = parsed.token ?? "";
+      databaseId = parsed.database_id ?? "";
+    } catch {
+      setErrorMsg("노션 연동 정보가 올바르지 않아요");
+      setStatus("error");
+      return;
+    }
+
+    if (!token || !databaseId) {
+      setErrorMsg("노션 토큰 또는 데이터베이스 ID가 없어요");
+      setStatus("error");
+      return;
+    }
+
+    setStatus("loading");
+    try {
+      const result = await exportToNotion({
+        token,
+        database_id: databaseId,
+        lecture_date: lectureDate,
+        score,
+        model,
+        subject,
+        strengths,
+        improvements,
+        recommendations,
+      });
+
+      if (result.success && result.url) {
+        setNotionUrl(result.url);
+        setStatus("success");
+      } else {
+        setErrorMsg(result.error || "노션에 저장하지 못했어요");
+        setStatus("error");
+      }
+    } catch {
+      setErrorMsg("네트워크 오류가 발생했어요");
+      setStatus("error");
+    }
+  }, [lectureDate, score, model, subject, strengths, improvements, recommendations]);
+
+  if (status === "success" && notionUrl) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          marginTop: 20,
+          padding: "14px 20px",
+          background: "var(--primary-light)",
+          borderRadius: "var(--radius-inner)",
+        }}
+      >
+        <span
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: "50%",
+            background: "var(--primary)",
+            flexShrink: 0,
+          }}
+        />
+        <span className="text-body" style={{ flex: 1, color: "var(--text-primary)", fontWeight: 600 }}>
+          노션에 저장했어요
+        </span>
+        <a
+          href={notionUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            fontSize: 14,
+            fontWeight: 600,
+            color: "var(--primary)",
+            textDecoration: "none",
+          }}
+        >
+          노션에서 보기 →
+        </a>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 20 }}>
+      <button
+        onClick={handleExport}
+        disabled={status === "loading"}
+        className="btn-primary"
+        style={{ fontSize: 13, padding: "10px 18px" }}
+      >
+        {status === "loading" ? "저장 중..." : "노션에 저장하기"}
+      </button>
+      {status === "error" && (
+        <span className="text-caption" style={{ color: "var(--primary)" }}>
+          {errorMsg}
+        </span>
       )}
     </div>
   );
