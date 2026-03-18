@@ -13,7 +13,7 @@ export default function LecturesPage() {
   const [evaluations, setEvaluations] = useState<EvaluationResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState<SortKey>("latest");
-  const [showList, setShowList] = useState(false);
+  const [view, setView] = useState<"intro" | "list" | "add">("intro");
 
   // 업로드/가져오기
   const [showImportMenu, setShowImportMenu] = useState(false);
@@ -96,7 +96,8 @@ export default function LecturesPage() {
     );
   }
 
-  if (!showList) {
+  // ─── 인트로 화면 ───
+  if (view === "intro") {
     return (
       <div
         className="page-content"
@@ -127,20 +128,201 @@ export default function LecturesPage() {
         </p>
         <div style={{ display: "flex", gap: 12, marginTop: 8 }}>
           <button
-            onClick={() => setShowList(true)}
+            onClick={() => setView("list")}
             className="btn-primary"
             style={{ fontSize: 15, padding: "14px 28px" }}
           >
             강의 목록 보기
           </button>
           <button
-            onClick={() => { setShowList(true); setTimeout(() => setShowImportMenu(true), 100); }}
+            onClick={() => setView("add")}
             className="btn-secondary"
             style={{ fontSize: 15, padding: "14px 28px" }}
           >
             새 강의 분석하기
           </button>
         </div>
+      </div>
+    );
+  }
+
+  // ─── 새 강의 분석하기 화면 ───
+  if (view === "add") {
+    return (
+      <div
+        className="page-content"
+        style={{
+          minHeight: "calc(100vh - 120px)",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: 32,
+          maxWidth: 560,
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h1 className="text-title">새 강의 분석하기</h1>
+          <button
+            onClick={() => setView("list")}
+            style={{
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+              fontSize: 14,
+              fontWeight: 600,
+              color: "var(--text-muted)",
+            }}
+          >
+            강의 목록 보기
+          </button>
+        </div>
+
+        <p className="text-body" style={{ fontSize: 15, lineHeight: 1.7 }}>
+          강의 녹음 텍스트 파일을 가져오면 AI가 18개 항목으로 평가해요
+        </p>
+
+        {/* 파일 업로드 영역 */}
+        <div
+          style={{
+            padding: "48px 32px",
+            textAlign: "center",
+            cursor: "pointer",
+            border: uploadDragOver ? "2px dashed var(--primary)" : "2px dashed var(--grey-300)",
+            borderRadius: "var(--radius)",
+            background: uploadDragOver ? "var(--primary-light)" : "var(--grey-50)",
+            transition: "all 0.15s ease",
+          }}
+          onDragOver={(e) => { e.preventDefault(); setUploadDragOver(true); }}
+          onDragLeave={() => setUploadDragOver(false)}
+          onDrop={(e) => { e.preventDefault(); setUploadDragOver(false); handleFileUpload(e.dataTransfer.files); }}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <p style={{ fontSize: 16, fontWeight: 700, color: "var(--text-primary)", marginBottom: 8 }}>
+            파일을 끌어다 놓거나 클릭해서 선택해요
+          </p>
+          <p className="text-caption">.txt 파일</p>
+        </div>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".txt"
+          style={{ display: "none" }}
+          onChange={(e) => handleFileUpload(e.target.files)}
+        />
+
+        {/* 또는 외부에서 가져오기 */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+          <p className="text-label" style={{ marginBottom: 12 }}>또는 외부에서 가져오기</p>
+
+          <button
+            onClick={handleDriveImport}
+            disabled={driveLoading}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+              padding: "16px 20px",
+              border: "none",
+              background: "var(--surface)",
+              borderRadius: "var(--radius-inner)",
+              cursor: "pointer",
+              transition: "background 0.12s",
+              boxShadow: "var(--shadow-card)",
+              marginBottom: 8,
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--grey-50)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "var(--surface)"; }}
+          >
+            <div style={{ textAlign: "left" }}>
+              <span style={{ display: "block", fontSize: 14, fontWeight: 600, color: "var(--text-primary)" }}>
+                {driveLoading ? "불러오는 중..." : "구글 드라이브"}
+              </span>
+              <span style={{ display: "block", fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>
+                드라이브의 텍스트 파일을 불러와요
+              </span>
+            </div>
+            <span style={{ color: "var(--text-muted)" }}>&rarr;</span>
+          </button>
+
+          <button
+            onClick={() => showToastMsg("노션에서 가져오기는 준비 중이에요")}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+              padding: "16px 20px",
+              border: "none",
+              background: "var(--surface)",
+              borderRadius: "var(--radius-inner)",
+              cursor: "pointer",
+              transition: "background 0.12s",
+              boxShadow: "var(--shadow-card)",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = "var(--grey-50)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "var(--surface)"; }}
+          >
+            <div style={{ textAlign: "left" }}>
+              <span style={{ display: "block", fontSize: 14, fontWeight: 600, color: "var(--text-primary)" }}>
+                노션
+              </span>
+              <span style={{ display: "block", fontSize: 12, color: "var(--text-muted)", marginTop: 2 }}>
+                노션 데이터베이스에서 가져와요
+              </span>
+            </div>
+            <span style={{ color: "var(--text-muted)" }}>&rarr;</span>
+          </button>
+        </div>
+
+        {/* 드라이브 파일 목록 */}
+        {driveFiles.length > 0 && (
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <p className="text-label">{driveFiles.length}개 파일</p>
+              <button
+                onClick={() => setDriveFiles([])}
+                style={{ border: "none", background: "none", cursor: "pointer", fontSize: 13, color: "var(--text-muted)" }}
+              >
+                닫기
+              </button>
+            </div>
+            {driveFiles.map((file) => (
+              <div
+                key={file.id}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "12px 16px",
+                  background: "var(--grey-50)",
+                  borderRadius: "var(--radius-sm)",
+                }}
+              >
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p className="text-body" style={{ fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {file.name}
+                  </p>
+                </div>
+                <button className="btn-primary" style={{ fontSize: 12, padding: "6px 14px", flexShrink: 0 }}>
+                  가져오기
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Toast */}
+        {toast && (
+          <div
+            role="status"
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-xl shadow-lg text-sm font-medium"
+            style={{ background: "var(--text-primary)", color: "var(--surface)" }}
+          >
+            {toast}
+          </div>
+        )}
       </div>
     );
   }
