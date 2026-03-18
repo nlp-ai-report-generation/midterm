@@ -20,8 +20,8 @@ export function scoreColor(score: number): string {
 /** 점수(1-5)에 대응하는 배지 텍스트 컬러 */
 export function scoreBadgeTextColor(score: number): string {
   const rounded = Math.round(score);
-  // score 3(노랑)은 밝은 배경이라 검정 텍스트
-  return rounded === 3 ? "var(--text-primary)" : "#FFFFFF";
+  // 연한 배경(1-3)은 검정, 진한 배경(4-5)은 흰색
+  return rounded <= 3 ? "var(--text-primary)" : "#FFFFFF";
 }
 
 /** 점수(1-5)에 대응하는 Tailwind 텍스트 클래스 */

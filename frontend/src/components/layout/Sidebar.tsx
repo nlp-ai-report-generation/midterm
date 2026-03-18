@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { useRole } from "@/contexts/RoleContext";
 import {
   Home,
   FileText,
@@ -21,22 +22,64 @@ interface NavItem {
   icon: LucideIcon;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { to: "/dashboard", label: "대시보드", icon: Home },
-  { to: "/lectures", label: "강의 평가", icon: FileText },
-  { to: "/eda", label: "데이터 분석", icon: BarChart2 },
-  { to: "/checklist", label: "평가 기준", icon: List },
-  { to: "/experiments", label: "모델 비교", icon: GitCompare },
-  { to: "/compare", label: "강의 비교", icon: GitCompareArrows },
-  { to: "/trends", label: "점수 추이", icon: TrendingUp },
-  { to: "/items", label: "항목별 분석", icon: Layers },
-  { to: "/validation", label: "신뢰성 검증", icon: ShieldCheck },
-  { to: "/settings", label: "설정", icon: Settings },
-  { to: "/integrations", label: "연동 설정", icon: Link2 },
-  { to: "/about", label: "프로젝트 소개", icon: Info },
+interface NavGroup {
+  label?: string;
+  items: NavItem[];
+}
+
+const OPERATOR_NAV: NavGroup[] = [
+  {
+    items: [
+      { to: "/dashboard", label: "홈", icon: Home },
+      { to: "/lectures", label: "강의 목록", icon: FileText },
+    ],
+  },
+  {
+    label: "분석",
+    items: [
+      { to: "/eda", label: "데이터 분석", icon: BarChart2 },
+      { to: "/trends", label: "점수 추이", icon: TrendingUp },
+      { to: "/compare", label: "강의 비교", icon: GitCompareArrows },
+      { to: "/items", label: "항목별 분석", icon: Layers },
+    ],
+  },
+  {
+    label: "검증",
+    items: [
+      { to: "/experiments", label: "모델 비교", icon: GitCompare },
+      { to: "/validation", label: "신뢰성 검증", icon: ShieldCheck },
+      { to: "/checklist", label: "평가 기준", icon: List },
+    ],
+  },
+  {
+    items: [
+      { to: "/settings", label: "설정", icon: Settings },
+      { to: "/integrations", label: "연동", icon: Link2 },
+      { to: "/about", label: "소개", icon: Info },
+    ],
+  },
+];
+
+const INSTRUCTOR_NAV: NavGroup[] = [
+  {
+    items: [
+      { to: "/dashboard", label: "홈", icon: Home },
+      { to: "/lectures", label: "내 강의", icon: FileText },
+      { to: "/trends", label: "점수 추이", icon: TrendingUp },
+    ],
+  },
+  {
+    items: [
+      { to: "/settings", label: "설정", icon: Settings },
+      { to: "/about", label: "소개", icon: Info },
+    ],
+  },
 ];
 
 export default function Sidebar() {
+  const { isOperator } = useRole();
+  const navGroups = isOperator ? OPERATOR_NAV : INSTRUCTOR_NAV;
+
   return (
     <aside
       aria-label="사이드바"
@@ -89,7 +132,7 @@ export default function Sidebar() {
               lineHeight: 1.2,
             }}
           >
-            Lecture Analytics
+            강의 분석
           </span>
           <span
             style={{
@@ -98,39 +141,57 @@ export default function Sidebar() {
               letterSpacing: "0.02em",
             }}
           >
-            AI-powered evaluation
+            {isOperator ? "운영자 모드" : "강사 모드"}
           </span>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav aria-label="메인 네비게이션" style={{ flex: 1, padding: "0 12px" }}>
-        <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 2 }}>
-          {NAV_ITEMS.map((item) => (
-            <li key={item.to}>
-              <NavLink
-                to={item.to}
-                style={({ isActive }) => ({
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 12,
-                  padding: "10px 12px",
-                  borderRadius: 10,
-                  fontSize: 14,
+      <nav aria-label="메인 네비게이션" style={{ flex: 1, padding: "0 12px", overflowY: "auto" }}>
+        {navGroups.map((group, gIdx) => (
+          <div key={gIdx} style={{ marginBottom: 8 }}>
+            {group.label && (
+              <div
+                style={{
+                  padding: "16px 12px 6px",
+                  fontSize: 11,
                   fontWeight: 600,
-                  letterSpacing: "-0.02em",
-                  color: isActive ? "var(--primary)" : "var(--text-secondary)",
-                  background: isActive ? "var(--primary-light)" : "transparent",
-                  textDecoration: "none",
-                  transition: "color 0.15s, background 0.15s",
-                })}
+                  color: "var(--text-muted)",
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                }}
               >
-                <item.icon size={18} />
-                {item.label}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
+                {group.label}
+              </div>
+            )}
+            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 2 }}>
+              {group.items.map((item) => (
+                <li key={item.to}>
+                  <NavLink
+                    to={item.to}
+                    style={({ isActive }) => ({
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      padding: "10px 12px",
+                      borderRadius: 10,
+                      fontSize: 14,
+                      fontWeight: 600,
+                      letterSpacing: "-0.02em",
+                      color: isActive ? "var(--primary)" : "var(--text-secondary)",
+                      background: isActive ? "var(--primary-light)" : "transparent",
+                      textDecoration: "none",
+                      transition: "color 0.15s, background 0.15s",
+                    })}
+                  >
+                    <item.icon size={18} />
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </nav>
 
       {/* Footer */}
