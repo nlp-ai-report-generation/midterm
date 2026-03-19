@@ -1,0 +1,7 @@
+﻿-r base.txt
+langchain>=0.3,<0.4
+langchain-openai>=0.2,<0.3
+langchain-anthropic>=0.2,<0.3
+openai>=1.55,<2.0
+anthropic>=0.39,<1.0
+tiktoken>=0.8,<1.0

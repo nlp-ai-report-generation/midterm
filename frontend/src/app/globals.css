@@ -1,0 +1,253 @@
+@import "tailwindcss";
+
+/* ─── Design Tokens ─── */
+:root {
+  /* Accent — 오렌지/흰/검정만 */
+  --primary: #FF6B00;
+  --primary-light: #FFF4EB;
+  --primary-hover: #E55F00;
+  --primary-muted: rgba(255, 107, 0, 0.08);
+
+  /* Neutral scale — Slate base, cool & professional */
+  --grey-50: #F8FAFC;
+  --grey-100: #F1F5F9;
+  --grey-200: #E2E8F0;
+  --grey-300: #CBD5E1;
+  --grey-400: #94A3B8;
+  --grey-500: #64748B;
+  --grey-600: #475569;
+  --grey-700: #334155;
+  --grey-800: #1E293B;
+  --grey-900: #0F172A;
+
+  /* Semantic */
+  --background: #F8FAFC;
+  --surface: #FFFFFF;
+  --foreground: var(--grey-900);
+  --text-primary: var(--grey-900);
+  --text-secondary: var(--grey-600);
+  --text-tertiary: var(--grey-500);
+  --text-muted: var(--grey-400);
+  --border: var(--grey-200);
+
+  /* Score spectrum — 오렌지 단색 채도 변화 (진할수록 높은 점수) */
+  --score-1: rgba(255, 107, 0, 0.15);
+  --score-2: rgba(255, 107, 0, 0.30);
+  --score-3: rgba(255, 107, 0, 0.50);
+  --score-4: rgba(255, 107, 0, 0.75);
+  --score-5: rgba(255, 107, 0, 1.00);
+
+  /* Elevation — tinted shadows for depth */
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+  --shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.06), 0 2px 8px rgba(15, 23, 42, 0.04);
+  --shadow-elevated: 0 20px 40px -15px rgba(15, 23, 42, 0.08);
+
+  /* Geometry */
+  --radius: 16px;
+  --radius-inner: 12px;
+  --radius-sm: 8px;
+  --sidebar-width: 260px;
+}
+
+/* ─── Theme mapping for Tailwind v4 ─── */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-surface: var(--surface);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-success: #22C55E;
+  --color-warning: #EAB308;
+  --color-error: #EF4444;
+  --font-sans: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "SF Mono", ui-monospace, monospace;
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+a { color: inherit; text-decoration: none; }
+
+body {
+  min-height: 100dvh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  line-height: 1.7;
+  letter-spacing: -0.01em;
+  font-feature-settings: "ss01", "ss02";
+}
+
+/* ─── Card ─── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-padded { padding: 28px 32px; }
+.card-hover:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+/* ─── Page Layout ─── */
+.page-content { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 36px; }
+.card-grid { display: grid; gap: 24px; }
+
+/* ─── Typography ─── */
+.text-title   { font-size: 24px; font-weight: 800; color: var(--text-primary); line-height: 1.3; letter-spacing: -0.025em; }
+.text-section { font-size: 16px; font-weight: 700; color: var(--text-primary); line-height: 1.5; letter-spacing: -0.01em; }
+.text-label   { font-size: 12px; font-weight: 600; color: var(--text-tertiary); letter-spacing: 0.02em; text-transform: uppercase; }
+.text-body    { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+.text-caption { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+.text-number  { font-size: 32px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.04em; line-height: 1.0; font-variant-numeric: tabular-nums; }
+
+/* ─── Score Badge ─── */
+.score-badge { display: inline-flex; align-items: center; justify-content: center; font-weight: 700; border-radius: var(--radius-inner); }
+.score-badge-sm { width: 36px; height: 36px; font-size: 14px; }
+.score-badge-lg { width: 56px; height: 56px; font-size: 18px; border-radius: var(--radius); }
+
+/* ─── Inner Elements ─── */
+.inner-card { background: var(--grey-50); border-radius: var(--radius-inner); padding: 24px 28px; }
+.evidence-card { background: var(--surface); border-radius: var(--radius-sm); padding: 16px 20px; }
+
+/* ─── AI Insight ─── */
+.ai-insight { font-size: 15px; font-weight: 500; color: var(--text-secondary); line-height: 1.8; padding: 24px 28px; background: var(--grey-50); border-radius: var(--radius-inner); }
+.ai-insight-source { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+/* ─── Buttons ─── */
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--primary); color: white; font-size: 14px; font-weight: 600;
+  border-radius: var(--radius-inner); padding: 12px 24px; border: none; cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2); }
+.btn-primary:active { transform: translateY(0) scale(0.98); }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-secondary {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--grey-900); color: var(--surface); font-size: 14px; font-weight: 600;
+  border-radius: var(--radius-inner); padding: 12px 24px; border: none; cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.btn-secondary:hover { opacity: 0.88; transform: translateY(-1px); }
+.btn-secondary:active { transform: translateY(0) scale(0.98); }
+
+/* ─── Form Elements ─── */
+.input-field {
+  width: 100%; padding: 12px 16px; background: var(--grey-50);
+  border: 1px solid transparent; border-radius: var(--radius-inner);
+  font-size: 14px; color: var(--text-primary); outline: none;
+  transition: border-color 0.15s ease;
+}
+.input-field::placeholder { color: var(--text-muted); }
+.input-field:focus { border-color: var(--primary); }
+
+.tab-bar {
+  display: flex; gap: 4px; background: var(--surface);
+  border-radius: var(--radius-inner); padding: 4px; box-shadow: var(--shadow-card);
+  overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-item {
+  padding: 8px 16px; font-size: 13px; font-weight: 600; color: var(--text-tertiary);
+  border-radius: var(--radius-sm); border: none; background: none; cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); flex-shrink: 0;
+}
+.tab-item:hover { color: var(--text-primary); background: var(--grey-50); }
+.tab-item.active,
+.tab-item[aria-selected="true"] { background: var(--primary); color: white; }
+
+.toggle {
+  position: relative; width: 44px; height: 24px; border-radius: 999px;
+  border: none; cursor: pointer; transition: background 0.2s ease;
+}
+.toggle[aria-checked="false"] { background: var(--grey-300); }
+.toggle[aria-checked="true"] { background: var(--primary); }
+.toggle-knob {
+  position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
+  border-radius: 999px; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease;
+}
+.toggle[aria-checked="true"] .toggle-knob { transform: translateX(20px); }
+
+/* ─── Progress Bar (range slider) ─── */
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--grey-200);
+  border-radius: 999px;
+  appearance: none;
+  cursor: pointer;
+}
+.progress-bar::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  cursor: pointer;
+}
+.progress-bar::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+}
+
+/* ─── Global ─── */
+::selection { background: rgba(255, 107, 0, 0.12); color: var(--foreground); }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(139, 149, 161, 0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(107, 118, 132, 0.32); }
+* { scrollbar-width: thin; scrollbar-color: rgba(139, 149, 161, 0.2) transparent; }
+
+/* ─── Lecture List ─── */
+.lecture-list-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 140px 60px;
+  padding: 14px 32px;
+  border-bottom: 1px solid var(--grey-100);
+  background: var(--grey-50);
+}
+.lecture-list-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 140px 60px;
+  padding: 16px 32px;
+  align-items: center;
+  border-bottom: 1px solid var(--grey-50);
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+.lecture-list-row:hover { background: var(--grey-50); }
+
+/* ─── Responsive ─── */
+@media (max-width: 767px) {
+  .card-padded { padding: 20px 20px; }
+  .page-content { gap: 24px; }
+  .text-title { font-size: 20px; }
+  .text-number { font-size: 24px; }
+  .inner-card { padding: 16px 20px; }
+
+  /* 강의 리스트 모바일: 강사 열 숨김, 패딩 축소 */
+  .lecture-list-header {
+    grid-template-columns: 70px 1fr 50px;
+    padding: 12px 20px;
+  }
+  .lecture-list-row {
+    grid-template-columns: 70px 1fr 50px;
+    padding: 14px 20px;
+  }
+  .lecture-list-instructor { display: none; }
+
+  /* 카드 그리드 모바일: 1열 */
+  .card-grid { grid-template-columns: 1fr !important; }
+}

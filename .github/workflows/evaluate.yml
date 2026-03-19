@@ -1,0 +1,68 @@
+name: Evaluate Lecture
+
+on:
+  workflow_dispatch:
+    inputs:
+      transcript_filename:
+        description: "트랜스크립트 파일명 (예: 2026-02-02_kdt-backendj-21th.txt)"
+        required: true
+      model:
+        description: "평가 모델"
+        required: false
+        default: "gpt-4o-mini"
+      date:
+        description: "강의 날짜 (YYYY-MM-DD)"
+        required: true
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run evaluation
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python scripts/run_single.py \
+            --date ${{ inputs.date }} \
+            --model ${{ inputs.model }}
+
+      - name: Export results to frontend
+        run: |
+          # 가장 최근 실험 ID 찾기
+          LATEST=$(ls -t experiments/ | head -1)
+          echo "Latest experiment: $LATEST"
+
+          # 결과 복사
+          for f in experiments/$LATEST/results/*.json; do
+            DATE=$(basename "$f" | cut -d_ -f1)
+            cp "$f" "frontend/public/data/evaluations/${DATE}.json"
+            echo "Exported: ${DATE}.json"
+          done
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add frontend/public/data/evaluations/
+          git add experiments/
+          git diff --cached --quiet || git commit -m "eval: ${{ inputs.date }} (${{ inputs.model }})"
+          git push
+
+  deploy:
+    needs: evaluate
+    uses: ./.github/workflows/deploy.yml

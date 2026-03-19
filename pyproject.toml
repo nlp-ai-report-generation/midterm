@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "lecture-quality-evaluator"
+version = "0.1.0"
+description = "AI 강의 품질 분석 리포트 생성기 - LangGraph 기반 에이전틱 평가 시스템"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.8",
+    "python-dotenv>=1.0.1",
+    "PyYAML>=6.0.1",
+    "langgraph>=0.2",
+    "langchain-openai>=0.2",
+    "langsmith",
+    "openai>=1.55",
+    "python-frontmatter>=1.1",
+    "pandas>=2.2",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=5.0",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.8",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

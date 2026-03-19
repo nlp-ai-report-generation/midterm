@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 강의 분석 리포트 생성기 - 중간발표</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="deck-stage">
+      <div id="presentation" class="presentation-container" aria-live="polite"></div>
+    </main>
+    <div class="nav-hint">좌우 화살표, 스페이스, 휠로 이동</div>
+    <div class="deck-corner">AI Lecture Analysis · Midterm Deck</div>
+
+    <template id="slide-template">
+      <section class="slide">
+        <div class="slide__inner">
+          <div class="slide__header">
+            <div>
+              <p class="slide__eyebrow">MIDTERM PRESENTATION</p>
+              <h1 class="slide__title"></h1>
+              <p class="slide__subtitle"></p>
+            </div>
+          </div>
+          <div class="slide__content">
+            <div class="slide__body"></div>
+            <div class="slide__visual"></div>
+          </div>
+          <div class="slide-footer">
+            <span class="slide-footer__logo">멋사 NLP</span>
+            <span class="slide-footer__page"></span>
+          </div>
+        </div>
+      </section>
+    </template>
+
+    <script src="./script.js" type="module"></script>
+  </body>
+</html>
