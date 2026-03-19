@@ -1,7 +1,7 @@
 import React from "react";
 import {
   AbsoluteFill,
-  Img,
+  Audio,
   Sequence,
   Series,
   interpolate,
@@ -12,39 +12,6 @@ import {
 } from "remotion";
 
 // ─── Types ─────────────────────────────────────────────
-
-type BodyBlock = { label: string; items: string[] };
-type HeroMetric = { label: string; value: string };
-
-type SlideVisual = {
-  type: string;
-  kicker?: string;
-  metrics?: Array<{ label: string; value: string; status?: string }>;
-  cards?: Array<{ title: string; text: string }>;
-  stats?: Array<{ label: string; value: string } | string>;
-  sources?: string[];
-  nodes?: string[];
-  detail?: string[];
-  reasons?: Array<{ title: string; text: string }>;
-  focusItems?: string[];
-  distribution?: Array<{ label: string; value: number }>;
-  callout?: string;
-  comparison?: Array<{ label: string; value: string }>;
-  steps?: Array<{ title: string; caption: string }>;
-  sample?: { fact: string; interpretation: string; action: string };
-  score?: string;
-  columns?: Array<{ title: string; items: string[] }>;
-};
-
-type Slide = {
-  id: string;
-  title: string;
-  subtitle: string;
-  body: BodyBlock[];
-  visual: SlideVisual;
-  assets: string[];
-  speakerNotes: string[];
-};
 
 type VideoScene = {
   id: string;
@@ -57,611 +24,472 @@ type VideoScene = {
 
 type OutlineData = {
   meta: { title: string; subtitle: string; version: string; authors: string[] };
-  slides: Slide[];
+  slides: any[];
   videoScenes: VideoScene[];
 };
 
-// ─── Colors (ADELIE-inspired, orange accent) ───────────
+// ─── Colors ────────────────────────────────────────────
 
 const C = {
-  bg: "#FFFFFF",
-  surface: "#F8FAFC",
+  bg: "#FAFAFA",
+  white: "#FFFFFF",
+  black: "#0F172A",
   accent: "#FF6B00",
-  accentSoft: "rgba(255, 107, 0, 0.06)",
-  accentMid: "rgba(255, 107, 0, 0.12)",
-  text: "#0F172A",
-  sub: "#475569",
+  sub: "#64748B",
   muted: "#94A3B8",
   line: "#E2E8F0",
-  dark: "#1E293B",
 };
 
-// ─── Animated Helpers ──────────────────────────────────
+const font = "'Pretendard Variable', 'Pretendard', -apple-system, sans-serif";
 
-const FadeUp: React.FC<{
-  children: React.ReactNode;
-  delay?: number;
-  style?: React.CSSProperties;
-}> = ({ children, delay = 0, style }) => {
+// ─── Animation Helpers ─────────────────────────────────
+
+const useFade = (delay = 0) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const progress = spring({ frame: frame - delay, fps, config: { damping: 18, stiffness: 80 } });
+  const s = spring({ frame: frame - delay, fps, config: { damping: 22, stiffness: 80 } });
+  return { opacity: s, y: interpolate(s, [0, 1], [40, 0]) };
+};
+
+const BigText: React.FC<{ children: string; delay?: number; size?: number; color?: string; align?: string }> = ({
+  children, delay = 0, size = 64, color = C.black, align = "left",
+}) => {
+  const { opacity, y } = useFade(delay);
   return (
-    <div
-      style={{
-        opacity: progress,
-        transform: `translateY(${interpolate(progress, [0, 1], [30, 0])}px)`,
-        ...style,
-      }}
-    >
+    <div style={{
+      fontSize: size, fontWeight: 800, lineHeight: 1.2, letterSpacing: "-0.04em",
+      color, whiteSpace: "pre-line", textAlign: align as any,
+      opacity, transform: `translateY(${y}px)`,
+    }}>
       {children}
     </div>
   );
 };
 
-const CountUp: React.FC<{ value: string; delay?: number }> = ({ value, delay = 0 }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const progress = spring({ frame: frame - delay, fps, config: { damping: 20, stiffness: 60 } });
-  const num = parseFloat(value.replace(/[^0-9.]/g, ""));
-  const suffix = value.replace(/[0-9.]/g, "");
-  if (isNaN(num)) return <span>{value}</span>;
-  const displayNum = Math.round(interpolate(progress, [0, 1], [0, num]));
-  return <span>{value.includes(".") ? (num * progress).toFixed(3) : displayNum}{suffix}</span>;
+const SubText: React.FC<{ children: string; delay?: number; size?: number }> = ({
+  children, delay = 8, size = 28,
+}) => {
+  const { opacity, y } = useFade(delay);
+  return (
+    <div style={{
+      fontSize: size, fontWeight: 500, lineHeight: 1.6, color: C.sub,
+      maxWidth: 900, opacity, transform: `translateY(${y}px)`,
+    }}>
+      {children}
+    </div>
+  );
 };
 
-// ─── Caption Bar ───────────────────────────────────────
-
-const CaptionBar: React.FC<{ text: string }> = ({ text }) => {
+const AccentLine: React.FC<{ delay?: number }> = ({ delay = 4 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const opacity = spring({ frame: frame - 10, fps, config: { damping: 20 } });
+  const w = spring({ frame: frame - delay, fps, config: { damping: 30, stiffness: 60 } });
   return (
-    <div
-      style={{
-        position: "absolute",
-        left: 80,
-        right: 80,
-        bottom: 48,
-        display: "flex",
-        justifyContent: "center",
-        opacity,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1200,
-          background: "rgba(15, 23, 42, 0.85)",
-          backdropFilter: "blur(12px)",
-          color: "white",
-          borderRadius: 16,
-          padding: "18px 32px",
-          fontSize: 26,
-          lineHeight: 1.5,
-          textAlign: "center",
-          letterSpacing: "-0.01em",
-          fontWeight: 500,
-        }}
-      >
+    <div style={{
+      width: `${w * 80}px`, height: 4, borderRadius: 2,
+      background: C.accent, marginTop: 16, marginBottom: 16,
+    }} />
+  );
+};
+
+const Caption: React.FC<{ text: string }> = ({ text }) => {
+  const { opacity } = useFade(12);
+  return (
+    <div style={{
+      position: "absolute", bottom: 52, left: 0, right: 0,
+      display: "flex", justifyContent: "center", opacity,
+    }}>
+      <div style={{
+        background: "rgba(15,23,42,0.88)", backdropFilter: "blur(12px)",
+        color: "white", borderRadius: 14, padding: "16px 36px",
+        fontSize: 24, fontWeight: 500, lineHeight: 1.5, textAlign: "center",
+        maxWidth: 1100, letterSpacing: "-0.01em",
+      }}>
         {text}
       </div>
     </div>
   );
 };
 
-// ─── Progress Bar ──────────────────────────────────────
-
-const ProgressBar: React.FC<{ current: number; total: number }> = ({ current, total }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const width = spring({ frame, fps, config: { damping: 30 } });
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        height: 4,
-        background: C.line,
-      }}
-    >
-      <div
-        style={{
-          width: `${((current + width) / total) * 100}%`,
-          height: "100%",
-          background: `linear-gradient(90deg, ${C.accent}, #FFB380)`,
-          borderRadius: "0 2px 2px 0",
-        }}
-      />
-    </div>
-  );
-};
-
-// ─── Metric Card ───────────────────────────────────────
-
-const MetricCard: React.FC<{
-  label: string;
-  value: string;
-  status?: string;
-  delay: number;
-  large?: boolean;
-}> = ({ label, value, status, delay, large }) => (
-  <FadeUp delay={delay}>
-    <div
-      style={{
-        padding: large ? "32px 28px" : "24px 22px",
-        borderRadius: 20,
-        background: C.bg,
-        border: `1px solid ${C.line}`,
-      }}
-    >
-      <div
-        style={{
-          fontSize: large ? 52 : 40,
-          fontWeight: 800,
-          letterSpacing: "-0.05em",
-          color: C.text,
-          fontVariantNumeric: "tabular-nums",
-        }}
-      >
-        <CountUp value={value} delay={delay} />
-      </div>
-      <div style={{ marginTop: 8, fontSize: large ? 18 : 16, color: C.muted }}>{label}</div>
-      {status && (
-        <div
-          style={{
-            marginTop: 12,
-            display: "inline-flex",
-            padding: "6px 12px",
-            borderRadius: 999,
-            background: C.accentMid,
-            color: C.accent,
-            fontSize: 13,
-            fontWeight: 700,
-          }}
-        >
-          {status}
-        </div>
-      )}
-    </div>
-  </FadeUp>
+const PageNum: React.FC<{ n: number; total: number }> = ({ n, total }) => (
+  <div style={{
+    position: "absolute", top: 40, right: 72,
+    fontSize: 14, fontWeight: 700, color: C.muted,
+    fontVariantNumeric: "tabular-nums",
+  }}>
+    {String(n).padStart(2, "0")} / {String(total).padStart(2, "0")}
+  </div>
 );
 
-// ─── Scene Layout ──────────────────────────────────────
+// ─── Scenes ────────────────────────────────────────────
 
-const SceneCard: React.FC<{
-  slide: Slide;
-  scene: VideoScene;
-  sceneIndex: number;
-  totalScenes: number;
-}> = ({ slide, scene, sceneIndex, totalScenes }) => {
+// Scene 1: Cover — 큰 타이틀 중앙
+const CoverScene: React.FC<{ scene: VideoScene }> = ({ scene }) => (
+  <AbsoluteFill style={{ background: C.white, fontFamily: font }}>
+    <div style={{
+      position: "absolute", inset: 0,
+      background: `radial-gradient(ellipse at 30% 40%, rgba(255,107,0,0.06), transparent 60%)`,
+    }} />
+    <div style={{
+      display: "flex", flexDirection: "column", alignItems: "center",
+      justifyContent: "center", height: "100%", textAlign: "center", gap: 20,
+    }}>
+      <BigText delay={6} size={80} align="center">AI 강의 분석</BigText>
+      <SubText delay={16} size={22}>Transforming lecture feedback from scores to evidence</SubText>
+      <div style={{ marginTop: 32 }}>
+        <SubText delay={24} size={16}>백엔드 부트캠프 21기 · 15개 강의 · 18개 평가 항목</SubText>
+      </div>
+    </div>
+    <Caption text={scene.caption} />
+  </AbsoluteFill>
+);
+
+// Scene 2: Problem — 텍스트만, 크게
+const ProblemScene: React.FC<{ scene: VideoScene }> = ({ scene }) => (
+  <AbsoluteFill style={{ background: C.white, fontFamily: font, padding: "0 120px" }}>
+    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", gap: 24 }}>
+      <BigText delay={4} size={56}>설문은 남지만,</BigText>
+      <BigText delay={10} size={56} color={C.accent}>다음 액션은 남지 않아요.</BigText>
+      <AccentLine delay={16} />
+      <SubText delay={20}>강의 스크립트는 길고 복잡해서 사람이 매번 다시 읽기엔 비용이 커요. 점수만 있으면 이유가 없고, 서술만 있으면 기준이 흔들려요.</SubText>
+    </div>
+    <PageNum n={1} total={8} />
+    <Caption text={scene.caption} />
+  </AbsoluteFill>
+);
+
+// Scene 3: Pipeline — 애니메이션 다이어그램
+const PipelineScene: React.FC<{ scene: VideoScene }> = ({ scene }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-
-  const cardSpring = spring({ frame, fps, config: { damping: 16, stiffness: 60 } });
-  const cardY = interpolate(cardSpring, [0, 1], [40, 0]);
-  const cardOpacity = interpolate(cardSpring, [0, 1], [0, 1]);
+  const nodes = ["STT\n트랜스크립트", "전처리\n+ 청킹", "5개 카테고리\n병렬 평가", "가중 평균\n집계", "리포트\n생성"];
 
   return (
-    <AbsoluteFill
-      style={{
-        background: C.surface,
-        fontFamily: "'Pretendard Variable', 'Pretendard', -apple-system, sans-serif",
-        color: C.text,
-      }}
-    >
-      {/* Progress bar */}
-      <ProgressBar current={sceneIndex} total={totalScenes} />
+    <AbsoluteFill style={{ background: C.white, fontFamily: font, padding: "0 100px" }}>
+      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", gap: 48 }}>
+        <BigText delay={4} size={48}>평가부터 리포트까지, 한 흐름</BigText>
 
-      {/* Background gradient */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background: `radial-gradient(ellipse at 0% 0%, ${C.accentSoft}, transparent 50%),
-                       radial-gradient(ellipse at 100% 100%, rgba(15,23,42,0.03), transparent 50%)`,
-        }}
-      />
-
-      {/* Main card */}
-      <div
-        style={{
-          position: "absolute",
-          top: 60,
-          left: 80,
-          right: 80,
-          bottom: 100,
-          borderRadius: 28,
-          background: C.bg,
-          border: `1px solid ${C.line}`,
-          boxShadow: "0 24px 60px rgba(15,23,42,0.06)",
-          padding: "48px 56px",
-          display: "grid",
-          gridTemplateRows: "auto 1fr",
-          gap: 32,
-          opacity: cardOpacity,
-          transform: `translateY(${cardY}px)`,
-        }}
-      >
-        {/* Header */}
-        <div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              borderBottom: `1px solid ${C.line}`,
-              paddingBottom: 24,
-            }}
-          >
-            <FadeUp delay={4}>
-              <div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 800,
-                    letterSpacing: "0.14em",
-                    textTransform: "uppercase",
-                    color: C.accent,
-                  }}
-                >
-                  AI Lecture Analysis
+        {/* Pipeline diagram */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 0, marginTop: 16 }}>
+          {nodes.map((node, i) => {
+            const nodeSpring = spring({ frame: frame - (12 + i * 8), fps, config: { damping: 18, stiffness: 70 } });
+            const arrowSpring = i < nodes.length - 1
+              ? spring({ frame: frame - (16 + i * 8), fps, config: { damping: 20 } })
+              : 0;
+            return (
+              <React.Fragment key={i}>
+                <div style={{
+                  width: 160, padding: "24px 16px", textAlign: "center",
+                  fontSize: 16, fontWeight: 700, lineHeight: 1.4,
+                  whiteSpace: "pre-line", borderRadius: 16,
+                  background: i === 2 ? C.accent : C.bg,
+                  color: i === 2 ? C.white : C.black,
+                  opacity: nodeSpring,
+                  transform: `translateY(${interpolate(nodeSpring, [0, 1], [20, 0])}px) scale(${interpolate(nodeSpring, [0, 1], [0.9, 1])})`,
+                }}>
+                  {node}
                 </div>
-                <h1
-                  style={{
-                    marginTop: 10,
-                    fontSize: 48,
-                    fontWeight: 800,
-                    lineHeight: 1.15,
-                    letterSpacing: "-0.04em",
-                    whiteSpace: "pre-line",
-                  }}
-                >
-                  {slide.title}
-                </h1>
-                <p
-                  style={{
-                    marginTop: 14,
-                    fontSize: 22,
-                    lineHeight: 1.6,
-                    color: C.sub,
-                    maxWidth: 900,
-                  }}
-                >
-                  {slide.subtitle}
-                </p>
-              </div>
-            </FadeUp>
-
-            <FadeUp delay={8}>
-              <div
-                style={{
-                  padding: "10px 18px",
-                  borderRadius: 999,
-                  background: C.accentSoft,
-                  color: C.accent,
-                  fontSize: 15,
-                  fontWeight: 800,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {String(sceneIndex + 1).padStart(2, "0")} / {String(totalScenes).padStart(2, "0")}
-              </div>
-            </FadeUp>
-          </div>
+                {i < nodes.length - 1 && (
+                  <div style={{
+                    width: 40, display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 24, fontWeight: 800, color: C.accent,
+                    opacity: arrowSpring as number,
+                  }}>
+                    →
+                  </div>
+                )}
+              </React.Fragment>
+            );
+          })}
         </div>
 
-        {/* Body: Left evidence + Right visual */}
-        <div style={{ display: "grid", gridTemplateColumns: "0.9fr 1.1fr", gap: 32, minHeight: 0, overflow: "hidden" }}>
-          {/* Left: Evidence blocks */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            {slide.body.map((block, bIdx) => (
-              <FadeUp key={block.label} delay={12 + bIdx * 6}>
-                <div
-                  style={{
-                    borderRadius: 18,
-                    border: `1px solid ${C.line}`,
-                    background: C.surface,
-                    padding: 20,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 800,
-                      letterSpacing: "0.1em",
-                      textTransform: "uppercase",
-                      color: C.accent,
-                      marginBottom: 10,
-                    }}
-                  >
-                    {block.label}
-                  </div>
-                  {block.items.map((item, iIdx) => (
-                    <div
-                      key={iIdx}
-                      style={{
-                        display: "flex",
-                        gap: 10,
-                        alignItems: "flex-start",
-                        marginTop: iIdx > 0 ? 8 : 0,
-                      }}
-                    >
-                      <span
-                        style={{
-                          width: 6,
-                          height: 6,
-                          borderRadius: 999,
-                          background: C.accent,
-                          marginTop: 10,
-                          flexShrink: 0,
-                        }}
-                      />
-                      <span style={{ fontSize: 18, lineHeight: 1.6, color: C.sub }}>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-
-          {/* Right: Visual */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-            <VisualRenderer slide={slide} scene={scene} />
-          </div>
+        {/* Detail text */}
+        <div style={{ display: "flex", gap: 40, justifyContent: "center" }}>
+          {["30분 윈도우 · 5분 오버랩", "하네스(MD) 기반 평가", "HIGH=3 · MED=2 · LOW=1"].map((t, i) => {
+            const s = spring({ frame: frame - (50 + i * 6), fps, config: { damping: 20 } });
+            return (
+              <div key={i} style={{
+                fontSize: 15, color: C.sub, fontWeight: 600,
+                opacity: s, transform: `translateY(${interpolate(s, [0, 1], [12, 0])}px)`,
+              }}>
+                {t}
+              </div>
+            );
+          })}
         </div>
       </div>
-
-      {/* Caption */}
-      <CaptionBar text={scene.caption} />
+      <PageNum n={2} total={8} />
+      <Caption text={scene.caption} />
     </AbsoluteFill>
   );
 };
 
-// ─── Visual Renderer ───────────────────────────────────
+// Scene 4: Reliability — 숫자가 크게 올라오는 장면
+const ReliabilityScene: React.FC<{ scene: VideoScene }> = ({ scene }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const iccSpring = spring({ frame: frame - 14, fps, config: { damping: 16, stiffness: 50 } });
+  const iccValue = interpolate(iccSpring, [0, 1], [0, 0.877]);
 
-const VisualRenderer: React.FC<{ slide: Slide; scene: VideoScene }> = ({ slide, scene }) => {
-  const v = slide.visual;
-
-  if (v.type === "heroMetrics" && v.metrics) {
-    return (
-      <>
-        <FadeUp delay={10}>
-          <div
-            style={{
-              borderRadius: 24,
-              background: `linear-gradient(135deg, ${C.accentSoft}, rgba(255,255,255,0.9))`,
-              border: `1px solid ${C.accentMid}`,
-              padding: 28,
-            }}
-          >
-            <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: "0.12em", color: C.accent, textTransform: "uppercase" }}>
-              {v.kicker ?? "Midterm Review"}
-            </div>
-            <div style={{ fontSize: 36, lineHeight: 1.2, fontWeight: 800, letterSpacing: "-0.04em", marginTop: 12 }}>
-              강의 개선에 바로 연결되는{"\n"}운영형 리포트 경험
-            </div>
-          </div>
-        </FadeUp>
-        <div style={{ display: "grid", gridTemplateColumns: `repeat(${v.metrics.length}, 1fr)`, gap: 14 }}>
-          {v.metrics.map((m, i) => (
-            <MetricCard key={m.label} label={m.label} value={m.value} delay={16 + i * 5} large />
-          ))}
-        </div>
-      </>
-    );
-  }
-
-  if (v.type === "reliability" && v.metrics) {
-    const maxVal = Math.max(...(v.distribution?.map((d) => d.value) ?? [1]), 1);
-    return (
-      <>
-        <div style={{ display: "grid", gridTemplateColumns: `repeat(${v.metrics.length}, 1fr)`, gap: 12 }}>
-          {v.metrics.map((m, i) => (
-            <MetricCard key={m.label} label={m.label} value={m.value} status={m.status} delay={14 + i * 4} />
-          ))}
-        </div>
-        {v.distribution && (
-          <FadeUp delay={30}>
-            <div style={{ borderRadius: 20, border: `1px solid ${C.line}`, background: C.bg, padding: 22 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 14 }}>강의별 ICC 분포</div>
-              {v.distribution.map((d) => (
-                <div key={d.label} style={{ display: "grid", gridTemplateColumns: "200px 1fr 50px", gap: 12, alignItems: "center", marginTop: 8 }}>
-                  <span style={{ fontSize: 16, color: C.sub }}>{d.label}</span>
-                  <div style={{ height: 14, borderRadius: 999, background: C.accentSoft, overflow: "hidden" }}>
-                    <div style={{ width: `${(d.value / maxVal) * 100}%`, height: "100%", borderRadius: 999, background: `linear-gradient(90deg, ${C.accent}, #FFB380)` }} />
-                  </div>
-                  <span style={{ fontSize: 16, color: C.sub, textAlign: "right" }}>{d.value}개</span>
-                </div>
-              ))}
-            </div>
-          </FadeUp>
-        )}
-        {v.callout && (
-          <FadeUp delay={38}>
-            <div style={{ borderRadius: 20, padding: 22, background: `linear-gradient(135deg, ${C.accentSoft}, rgba(255,255,255,0.9))`, border: `1px solid ${C.accentMid}` }}>
-              <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: C.accent }}>핵심 메시지</div>
-              <div style={{ marginTop: 10, fontSize: 28, lineHeight: 1.35, fontWeight: 700, letterSpacing: "-0.03em" }}>{v.callout}</div>
-            </div>
-          </FadeUp>
-        )}
-      </>
-    );
-  }
-
-  if (v.type === "chunking" && v.comparison) {
-    return (
-      <>
-        <div style={{ display: "grid", gridTemplateColumns: `repeat(${v.comparison.length}, 1fr)`, gap: 12 }}>
-          {v.comparison.map((c, i) => (
-            <MetricCard key={c.label} label={c.label} value={c.value} delay={14 + i * 5} />
-          ))}
-        </div>
-        {v.stats && (
-          <FadeUp delay={28}>
-            <div style={{ borderRadius: 20, border: `1px solid ${C.line}`, background: C.bg, padding: 22 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 12 }}>검정 결과</div>
-              {(v.stats as string[]).map((s, i) => (
-                <div key={i} style={{ display: "flex", gap: 10, alignItems: "start", marginTop: 8 }}>
-                  <span style={{ width: 6, height: 6, borderRadius: 999, background: C.accent, marginTop: 10, flexShrink: 0 }} />
-                  <span style={{ fontSize: 18, lineHeight: 1.55, color: C.sub }}>{s}</span>
-                </div>
-              ))}
-            </div>
-          </FadeUp>
-        )}
-      </>
-    );
-  }
-
-  if (v.type === "demoFlow" && v.steps) {
-    return (
-      <div style={{ display: "grid", gridTemplateColumns: `repeat(${v.steps.length}, 1fr)`, gap: 12 }}>
-        {v.steps.map((step, i) => (
-          <FadeUp key={step.title} delay={14 + i * 6}>
-            <div style={{ borderRadius: 18, border: `1px solid ${C.line}`, background: C.bg, padding: 12, height: "100%" }}>
-              <div style={{ overflow: "hidden", borderRadius: 14, border: `1px solid ${C.line}` }}>
-                {scene.assetRefs[i] ? (
-                  <Img src={staticFile(`assets/${scene.assetRefs[i]}`)} style={{ width: "100%", height: 200, objectFit: "cover" }} />
-                ) : (
-                  <div style={{ height: 200, background: `linear-gradient(180deg, ${C.surface}, ${C.line})` }} />
-                )}
-              </div>
-              <div style={{ marginTop: 12, fontSize: 16, fontWeight: 700 }}>{step.title}</div>
-              <div style={{ marginTop: 6, fontSize: 14, lineHeight: 1.55, color: C.sub }}>{step.caption}</div>
-            </div>
-          </FadeUp>
-        ))}
-      </div>
-    );
-  }
-
-  if (v.type === "reportSample" && v.sample) {
-    const sections: [string, string][] = [
-      ["관찰된 사실", v.sample.fact],
-      ["해석", v.sample.interpretation],
-      ["개선 제안", v.sample.action],
-    ];
-    return (
-      <>
-        <FadeUp delay={14}>
-          <div style={{ borderRadius: 20, border: `1px solid ${C.line}`, background: C.bg, padding: 24 }}>
-            <div style={{ fontSize: 18, fontWeight: 700 }}>리포트 구조</div>
-            <div style={{ marginTop: 12, fontSize: 48, fontWeight: 800, letterSpacing: "-0.05em" }}>{v.score}</div>
-            <div style={{ marginTop: 10, fontSize: 18, lineHeight: 1.6, color: C.sub }}>
-              숫자보다 근거와 액션으로 읽히는 결과물
-            </div>
-          </div>
-        </FadeUp>
-        {sections.map(([label, text], i) => (
-          <FadeUp key={label} delay={22 + i * 6}>
-            <div style={{ borderRadius: 16, background: C.surface, border: `1px solid ${C.line}`, padding: 16 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: C.accent }}>{label}</div>
-              <div style={{ marginTop: 8, fontSize: 17, lineHeight: 1.6, color: C.sub }}>{text}</div>
-            </div>
-          </FadeUp>
-        ))}
-      </>
-    );
-  }
-
-  if (v.type === "nextSteps" && v.columns) {
-    return (
-      <div style={{ display: "grid", gridTemplateColumns: `repeat(${v.columns.length}, 1fr)`, gap: 14 }}>
-        {v.columns.map((col, colIdx) => (
-          <FadeUp key={col.title} delay={14 + colIdx * 6}>
-            <div style={{ borderRadius: 20, border: `1px solid ${C.line}`, background: C.bg, padding: 22, height: "100%" }}>
-              <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 12 }}>{col.title}</div>
-              {col.items.map((item, i) => (
-                <div key={i} style={{ display: "flex", gap: 10, alignItems: "start", marginTop: 8 }}>
-                  <span style={{ width: 6, height: 6, borderRadius: 999, background: C.accent, marginTop: 10, flexShrink: 0 }} />
-                  <span style={{ fontSize: 17, lineHeight: 1.55, color: C.sub }}>{item}</span>
-                </div>
-              ))}
-            </div>
-          </FadeUp>
-        ))}
-      </div>
-    );
-  }
-
-  // Fallback for pipeline, triage, dataScope, whyHarness
-  if (v.type === "pipeline" && v.nodes) {
-    return (
-      <>
-        <FadeUp delay={14}>
-          <div style={{ display: "grid", gridTemplateColumns: `repeat(${v.nodes.length}, 1fr)`, gap: 10 }}>
-            {v.nodes.map((node, i) => (
-              <div key={i} style={{ borderRadius: 16, border: `1px solid ${C.line}`, padding: 16, textAlign: "center", fontSize: 16, fontWeight: 700, background: C.surface }}>
-                {node}
-              </div>
-            ))}
-          </div>
-        </FadeUp>
-        {v.detail && (
-          <FadeUp delay={24}>
-            <div style={{ display: "grid", gridTemplateColumns: `repeat(${v.detail.length}, 1fr)`, gap: 10 }}>
-              {v.detail.map((d, i) => (
-                <div key={i} style={{ borderRadius: 16, border: `1px solid ${C.line}`, padding: 16, fontSize: 15, lineHeight: 1.55, color: C.sub, background: C.bg }}>
-                  {d}
-                </div>
-              ))}
-            </div>
-          </FadeUp>
-        )}
-      </>
-    );
-  }
-
-  if (v.type === "triage" && v.cards) {
-    return (
-      <div style={{ display: "grid", gridTemplateColumns: `repeat(${v.cards.length}, 1fr)`, gap: 12 }}>
-        {v.cards.map((card, i) => (
-          <FadeUp key={card.title} delay={14 + i * 6}>
-            <div style={{ borderRadius: 18, border: `1px solid ${C.line}`, background: C.surface, padding: 20, height: "100%" }}>
-              <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 8 }}>{card.title}</div>
-              <div style={{ fontSize: 16, lineHeight: 1.6, color: C.sub }}>{card.text}</div>
-            </div>
-          </FadeUp>
-        ))}
-      </div>
-    );
-  }
-
-  // Generic fallback
   return (
-    <FadeUp delay={14}>
-      <div style={{ borderRadius: 20, border: `1px solid ${C.line}`, background: C.surface, padding: 24, fontSize: 18, color: C.sub }}>
-        {JSON.stringify(v, null, 2)}
+    <AbsoluteFill style={{ background: C.white, fontFamily: font, padding: "0 120px" }}>
+      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", gap: 32 }}>
+        <BigText delay={4} size={44}>같은 강의를 세 번 읽어도</BigText>
+
+        {/* Big ICC number */}
+        <div style={{
+          fontSize: 140, fontWeight: 900, letterSpacing: "-0.06em",
+          color: C.accent, lineHeight: 1, fontVariantNumeric: "tabular-nums",
+          opacity: iccSpring, transform: `translateY(${interpolate(iccSpring, [0, 1], [30, 0])}px)`,
+        }}>
+          {iccValue.toFixed(3)}
+        </div>
+
+        <SubText delay={22} size={20}>ICC (급내상관계수) — 15개 강의 중 13개가 Good 이상</SubText>
+
+        {/* Small metrics row */}
+        <div style={{ display: "flex", gap: 48, marginTop: 8 }}>
+          {[
+            { label: "Kappa", value: "0.883" },
+            { label: "Alpha", value: "0.873" },
+            { label: "SSI", value: "0.974" },
+          ].map((m, i) => {
+            const s = spring({ frame: frame - (30 + i * 6), fps, config: { damping: 20 } });
+            return (
+              <div key={m.label} style={{ opacity: s }}>
+                <div style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.04em", color: C.black }}>{m.value}</div>
+                <div style={{ fontSize: 14, color: C.muted, marginTop: 4 }}>{m.label}</div>
+              </div>
+            );
+          })}
+        </div>
       </div>
-    </FadeUp>
+      <PageNum n={3} total={8} />
+      <Caption text={scene.caption} />
+    </AbsoluteFill>
   );
+};
+
+// Scene 5: Chunk size — 비교 애니메이션
+const ChunkScene: React.FC<{ scene: VideoScene }> = ({ scene }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const bar30 = spring({ frame: frame - 14, fps, config: { damping: 20, stiffness: 60 } });
+  const bar15 = spring({ frame: frame - 20, fps, config: { damping: 20, stiffness: 60 } });
+
+  return (
+    <AbsoluteFill style={{ background: C.white, fontFamily: font, padding: "0 120px" }}>
+      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", gap: 40 }}>
+        <BigText delay={4} size={48}>청크 크기가 점수를 바꿔요</BigText>
+
+        {/* Visual comparison */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: 800 }}>
+          {/* 30min bar */}
+          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+            <span style={{ width: 100, fontSize: 16, fontWeight: 700, color: C.black, textAlign: "right" }}>30분 청크</span>
+            <div style={{ flex: 1, height: 48, background: C.bg, borderRadius: 12, overflow: "hidden" }}>
+              <div style={{
+                width: `${bar30 * 64.9}%`, height: "100%", borderRadius: 12,
+                background: C.accent, display: "flex", alignItems: "center",
+                justifyContent: "flex-end", paddingRight: 16,
+              }}>
+                <span style={{ fontSize: 20, fontWeight: 800, color: C.white }}>{(3.245 * bar30).toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
+          {/* 15min bar */}
+          <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+            <span style={{ width: 100, fontSize: 16, fontWeight: 700, color: C.sub, textAlign: "right" }}>15분 청크</span>
+            <div style={{ flex: 1, height: 48, background: C.bg, borderRadius: 12, overflow: "hidden" }}>
+              <div style={{
+                width: `${bar15 * 60.7}%`, height: "100%", borderRadius: 12,
+                background: C.line, display: "flex", alignItems: "center",
+                justifyContent: "flex-end", paddingRight: 16,
+              }}>
+                <span style={{ fontSize: 20, fontWeight: 800, color: C.sub }}>{(3.033 * bar15).toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Stats */}
+        <div style={{ display: "flex", gap: 48 }}>
+          {["p = 0.0006", "Cohen's d = 1.142", "+0.212 차이"].map((t, i) => {
+            const s = spring({ frame: frame - (34 + i * 6), fps, config: { damping: 20 } });
+            return (
+              <div key={i} style={{
+                fontSize: 18, fontWeight: 700, color: i === 2 ? C.accent : C.black,
+                opacity: s,
+              }}>
+                {t}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <PageNum n={4} total={8} />
+      <Caption text={scene.caption} />
+    </AbsoluteFill>
+  );
+};
+
+// Scene 6: Demo flow — 화면 목업 순차 등장
+const DemoScene: React.FC<{ scene: VideoScene }> = ({ scene }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const steps = ["Dashboard", "Experiments", "EDA", "Lecture Detail"];
+  const descs = ["전체 현황", "모델 비교", "데이터 분석", "근거와 액션"];
+
+  return (
+    <AbsoluteFill style={{ background: C.bg, fontFamily: font, padding: "0 80px" }}>
+      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", gap: 40 }}>
+        <BigText delay={4} size={44}>실제 사용 흐름</BigText>
+
+        <div style={{ display: "flex", gap: 20 }}>
+          {steps.map((step, i) => {
+            const s = spring({ frame: frame - (14 + i * 10), fps, config: { damping: 16, stiffness: 60 } });
+            return (
+              <React.Fragment key={step}>
+                <div style={{
+                  flex: 1, opacity: s,
+                  transform: `translateY(${interpolate(s, [0, 1], [30, 0])}px)`,
+                }}>
+                  <div style={{
+                    height: 280, background: C.white, borderRadius: 16,
+                    border: `1px solid ${C.line}`, overflow: "hidden",
+                    boxShadow: "0 8px 32px rgba(15,23,42,0.06)",
+                  }}>
+                    {scene.assetRefs[i] ? (
+                      <img src={staticFile(`assets/${scene.assetRefs[i]}`)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    ) : (
+                      <div style={{ height: "100%", background: `linear-gradient(180deg, ${C.white}, ${C.bg})` }} />
+                    )}
+                  </div>
+                  <div style={{ marginTop: 14, fontSize: 18, fontWeight: 700, color: C.black }}>{step}</div>
+                  <div style={{ fontSize: 14, color: C.sub, marginTop: 4 }}>{descs[i]}</div>
+                </div>
+                {i < steps.length - 1 && (
+                  <div style={{
+                    display: "flex", alignItems: "center", fontSize: 20,
+                    color: C.accent, fontWeight: 800, paddingTop: 120,
+                    opacity: spring({ frame: frame - (20 + i * 10), fps, config: { damping: 20 } }),
+                  }}>
+                    →
+                  </div>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </div>
+      <PageNum n={5} total={8} />
+      <Caption text={scene.caption} />
+    </AbsoluteFill>
+  );
+};
+
+// Scene 7: Report — 행동 제안서 스타일
+const ReportScene: React.FC<{ scene: VideoScene }> = ({ scene }) => (
+  <AbsoluteFill style={{ background: C.white, fontFamily: font, padding: "0 120px" }}>
+    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", gap: 32 }}>
+      <BigText delay={4} size={48}>리포트는 행동 제안서예요</BigText>
+      <AccentLine delay={10} />
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 28, maxWidth: 900 }}>
+        {[
+          { label: "OBSERVED", text: "강의 마무리 시 핵심 내용을 요약하는 발언이 거의 없어요", delay: 14 },
+          { label: "INTERPRETED", text: "수강생은 오늘 무엇을 배웠는지 정리할 기회를 놓칠 수 있어요", delay: 22 },
+          { label: "ACTION", text: "종료 1분 전 핵심 개념 3개를 다시 말하는 루틴을 넣어보세요", delay: 30 },
+        ].map((item) => {
+          const { opacity, y } = useFade(item.delay);
+          return (
+            <div key={item.label} style={{ opacity, transform: `translateY(${y}px)` }}>
+              <div style={{
+                fontSize: 12, fontWeight: 800, letterSpacing: "0.14em",
+                color: item.label === "ACTION" ? C.accent : C.muted,
+                marginBottom: 8,
+              }}>
+                {item.label}
+              </div>
+              <div style={{
+                fontSize: item.label === "ACTION" ? 26 : 22, lineHeight: 1.5,
+                color: item.label === "ACTION" ? C.black : C.sub,
+                fontWeight: item.label === "ACTION" ? 700 : 500,
+              }}>
+                {item.text}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+    <PageNum n={6} total={8} />
+    <Caption text={scene.caption} />
+  </AbsoluteFill>
+);
+
+// Scene 8: Next — 미래 비전
+const NextScene: React.FC<{ scene: VideoScene }> = ({ scene }) => (
+  <AbsoluteFill style={{ background: C.white, fontFamily: font, padding: "0 120px" }}>
+    <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "100%", gap: 32 }}>
+      <BigText delay={4} size={52}>신뢰도 검증은 끝냈어요.</BigText>
+      <BigText delay={12} size={52} color={C.accent}>이제 완성하는 단계예요.</BigText>
+      <AccentLine delay={18} />
+      <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 8 }}>
+        {[
+          "15개 강의 실데이터 프론트 전면 연결",
+          "유튜브 벤치마크 비교 기능",
+          "A/B 실험 확대 + 조작적 정의 정교화",
+          "운영 UX 마감",
+        ].map((item, i) => {
+          const { opacity, y } = useFade(24 + i * 6);
+          return (
+            <div key={i} style={{
+              display: "flex", alignItems: "center", gap: 14,
+              fontSize: 22, color: C.sub, fontWeight: 500,
+              opacity, transform: `translateY(${y}px)`,
+            }}>
+              <span style={{ width: 8, height: 8, borderRadius: 999, background: C.accent, flexShrink: 0 }} />
+              {item}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+    <PageNum n={7} total={8} />
+    <Caption text={scene.caption} />
+  </AbsoluteFill>
+);
+
+// ─── Scene Router ──────────────────────────────────────
+
+const SCENE_MAP: Record<string, React.FC<{ scene: VideoScene }>> = {
+  "scene-01": CoverScene,
+  "scene-02": ProblemScene,
+  "scene-03": PipelineScene,
+  "scene-04": ReliabilityScene,
+  "scene-05": ChunkScene,
+  "scene-06": DemoScene,
+  "scene-07": ReportScene,
+  "scene-08": NextScene,
 };
 
 // ─── Main Composition ──────────────────────────────────
 
-const getSlideById = (outline: OutlineData, slideId: string) => {
-  const slide = outline.slides.find((s) => s.id === slideId);
-  if (!slide) throw new Error(`Missing slide: ${slideId}`);
-  return slide;
-};
-
 export const MidtermDeckVideo: React.FC<{ outline: OutlineData }> = ({ outline }) => {
   return (
-    <AbsoluteFill style={{ background: C.surface }}>
+    <AbsoluteFill style={{ background: C.white }}>
       <Series>
-        {outline.videoScenes.map((scene, index) => {
-          const slide = getSlideById(outline, scene.slideId);
-          const durationInFrames = Math.round(scene.durationSec * 30);
+        {outline.videoScenes.map((scene) => {
+          const Comp = SCENE_MAP[scene.id];
+          if (!Comp) return null;
+          const dur = Math.round(scene.durationSec * 30);
           return (
-            <Series.Sequence key={scene.id} durationInFrames={durationInFrames}>
-              <SceneCard
-                slide={slide}
-                scene={scene}
-                sceneIndex={index}
-                totalScenes={outline.videoScenes.length}
-              />
+            <Series.Sequence key={scene.id} durationInFrames={dur}>
+              <Comp scene={scene} />
+              <Sequence premountFor={30}>
+                <Audio src={staticFile(`audio/${scene.id}.mp3`)} />
+              </Sequence>
             </Series.Sequence>
           );
         })}
