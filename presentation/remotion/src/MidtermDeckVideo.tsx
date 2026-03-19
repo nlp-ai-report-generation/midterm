@@ -1,8 +1,9 @@
 import React from "react";
 import {
-  AbsoluteFill, Audio, Sequence, Series, Video,
+  AbsoluteFill, Sequence, Series,
   interpolate, spring, staticFile, useCurrentFrame, useVideoConfig,
 } from "remotion";
+import { Audio } from "@remotion/media";
 import {
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, AreaChart, Area,
@@ -187,12 +188,44 @@ const S03: React.FC<{ scene: VideoScene }> = ({ scene }) => (
   </Shell>
 );
 
-const S04: React.FC<{ scene: VideoScene }> = ({ scene }) => (
-  <AbsoluteFill style={{ background: C.bg, fontFamily: FONT }}>
-    <Video src={staticFile("assets/architecture.mp4")} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-    <Caption text={scene.caption} />
-  </AbsoluteFill>
-);
+// 아키텍처 — 모션그래픽
+const S04: React.FC<{ scene: VideoScene }> = ({ scene }) => {
+  const f = useCurrentFrame(); const { fps } = useVideoConfig();
+  const blocks = [
+    { label: "STT 스크립트\n15개 강의", x: -500, delay: 6 },
+    { label: "LangGraph\n파이프라인", x: -120, delay: 14, accent: true },
+    { label: "운영자 뷰", x: 280, y: -80, delay: 22 },
+    { label: "강사 뷰", x: 280, y: 80, delay: 22 },
+  ];
+  return (
+    <Shell caption={scene.caption}>
+      <Title delay={2} size={32}>시스템 구조</Title>
+      <div style={{ position: "relative", width: 1200, height: 300, marginTop: 32 }}>
+        {blocks.map((b, i) => {
+          const s = spring({ frame: f - b.delay, fps, config: { damping: 18, stiffness: 70 } });
+          return (
+            <div key={i} style={{
+              position: "absolute", left: 600 + b.x - 90, top: 150 + (b.y || 0) - 35,
+              width: 180, height: 70, borderRadius: 14,
+              background: b.accent ? C.accent : C.accentLight,
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: 14, fontWeight: 700, color: b.accent ? "#fff" : C.black,
+              whiteSpace: "pre-line", textAlign: "center", lineHeight: 1.3,
+              opacity: s, transform: `scale(${interpolate(s, [0, 1], [0.8, 1])})`,
+              boxShadow: b.accent ? "0 6px 20px rgba(255,107,0,0.15)" : "none",
+            }}>{b.label}</div>
+          );
+        })}
+        {/* 화살표들 */}
+        {[{ x1: 510, x2: 570, y: 150, d: 12 }, { x1: 690, x2: 750, y: 120, d: 20 }, { x1: 690, x2: 750, y: 180, d: 20 }].map((a, i) => {
+          const s = spring({ frame: f - a.d, fps, config: { damping: 20 } });
+          return <div key={i} style={{ position: "absolute", left: a.x1, top: a.y - 1, width: (a.x2 - a.x1) * s, height: 3, background: C.accent, borderRadius: 2 }} />;
+        })}
+      </div>
+      <Fade delay={28}><div style={{ fontSize: 13, color: C.muted }}>React 19 · LangGraph · FastAPI · Supabase · GitHub Actions</div></Fade>
+    </Shell>
+  );
+};
 
 // ── 운영자 대시보드 (실제 화면) ──
 const S05: React.FC<{ scene: VideoScene }> = ({ scene }) => (
@@ -402,20 +435,129 @@ const S11: React.FC<{ scene: VideoScene }> = ({ scene }) => (
   </AppFrame>
 );
 
-// ── Pipeline (Manim) ──
-const S12: React.FC<{ scene: VideoScene }> = ({ scene }) => (
-  <AbsoluteFill style={{ background: C.bg }}><Video src={staticFile("assets/pipeline_flow.mp4")} style={{ width: "100%", height: "100%", objectFit: "contain" }} /><Caption text={scene.caption} /></AbsoluteFill>
-);
+// ── 파이프라인 모션그래픽 ──
+const S12: React.FC<{ scene: VideoScene }> = ({ scene }) => {
+  const f = useCurrentFrame(); const { fps } = useVideoConfig();
+  const nodes = ["STT\n스크립트", "전처리\n+ 청킹", "5개 카테고리\n병렬 평가", "가중 평균\n집계", "리포트\n생성"];
+  const cats = ["언어 표현", "강의 구조", "개념 명확성", "예시/실습", "상호작용"];
+  const flowLine = spring({ frame: f - 10, fps, config: { damping: 40, stiffness: 25 } });
+  return (
+    <Shell caption={scene.caption}>
+      <Title delay={2} size={28}>파이프라인</Title>
+      {/* 노드 흐름 */}
+      <div style={{ position: "relative", width: 1200, height: 120, marginTop: 24 }}>
+        <div style={{ position: "absolute", top: 55, left: 60, right: 60, height: 3, background: C.line, borderRadius: 2 }}>
+          <div style={{ width: `${flowLine * 100}%`, height: "100%", borderRadius: 2, background: C.accent }} />
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", position: "relative", padding: "0 20px" }}>
+          {nodes.map((n, i) => {
+            const ns = spring({ frame: f - (8 + i * 8), fps, config: { damping: 16, stiffness: 60 } });
+            const mid = i === 2;
+            return (
+              <div key={i} style={{
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 8, opacity: ns,
+                transform: `scale(${interpolate(ns, [0, 1], [0.85, 1])})`,
+              }}>
+                <div style={{
+                  width: mid ? 90 : 75, height: mid ? 90 : 75, borderRadius: "50%",
+                  background: mid ? C.accent : C.bg, border: `2px solid ${mid ? C.accent : C.line}`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: 11, fontWeight: 700, color: mid ? "#fff" : C.black, whiteSpace: "pre-line", textAlign: "center",
+                  boxShadow: mid ? "0 4px 16px rgba(255,107,0,0.15)" : "none",
+                }}>{n}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      {/* 5개 카테고리 */}
+      <div style={{ display: "flex", gap: 10, marginTop: 20 }}>
+        {cats.map((c, i) => {
+          const cs = spring({ frame: f - (46 + i * 3), fps, config: { damping: 18 } });
+          return (
+            <div key={c} style={{
+              padding: "8px 14px", borderRadius: 999, fontSize: 13, fontWeight: 600,
+              background: C.accentLight, color: C.accent, opacity: cs,
+            }}>{c}</div>
+          );
+        })}
+      </div>
+      <Fade delay={58}><div style={{ fontSize: 14, color: C.muted, marginTop: 16 }}>30분 윈도우 · 5분 오버랩 · HIGH=3 MED=2 LOW=1</div></Fade>
+    </Shell>
+  );
+};
 
-// ── 하네스 (Manim) ──
-const S13: React.FC<{ scene: VideoScene }> = ({ scene }) => (
-  <AbsoluteFill style={{ background: C.bg }}><Video src={staticFile("assets/harness_detail.mp4")} style={{ width: "100%", height: "100%", objectFit: "contain" }} /><Caption text={scene.caption} /></AbsoluteFill>
-);
+// ── 하네스 모션그래픽 ──
+const S13: React.FC<{ scene: VideoScene }> = ({ scene }) => {
+  const f = useCurrentFrame(); const { fps } = useVideoConfig();
+  // Phase 1: YAML 등장 (0~40f), Phase 2: 확대+점수 바 (40~끝)
+  const phase2 = spring({ frame: f - 40, fps, config: { damping: 20 } });
+  const yamlOp = interpolate(f, [0, 40, 50], [1, 1, 0], { extrapolateRight: "clamp" });
+  const scores = [{ s: 5, d: "매번 풍부하게 사용", w: 100 }, { s: 4, d: "자주 활용", w: 80 }, { s: 3, d: "빈도 낮음", w: 60 }, { s: 2, d: "거의 없음", w: 40 }, { s: 1, d: "전혀 없음", w: 20 }];
+  return (
+    <Shell caption={scene.caption}>
+      <Title delay={2} size={28}>하네스: 채점 기준 문서</Title>
+      {/* Phase 1: YAML */}
+      <div style={{ opacity: yamlOp, marginTop: 20, width: "100%", maxWidth: 700, textAlign: "left" }}>
+        <Fade delay={6}><div style={{ fontSize: 12, color: C.muted, marginBottom: 8 }}>src/harnesses/category_3_clarity.md</div></Fade>
+        <Fade delay={10}>
+          <div style={{ padding: "20px 24px", borderRadius: 12, background: C.surface, border: `1px solid ${C.line}`, fontFamily: "monospace", fontSize: 14, lineHeight: 1.8, color: C.sub }}>
+            <span style={{ color: C.accent }}>harness_id</span>: category_3_clarity{"\n"}
+            <span style={{ color: C.accent }}>category</span>: "3. 개념 설명 명확성"{"\n"}
+            <span style={{ color: C.accent }}>items</span>:{"\n"}
+            {"  "}- <span style={{ color: C.accent }}>name</span>: "<span style={{ color: C.black, fontWeight: 700 }}>비유 및 예시 활용</span>"{"\n"}
+            {"    "}<span style={{ color: C.accent }}>weight</span>: HIGH{"\n"}
+            {"    "}<span style={{ color: C.accent }}>chunk_focus</span>: all
+          </div>
+        </Fade>
+      </div>
+      {/* Phase 2: 점수 기준 */}
+      <div style={{ opacity: phase2, marginTop: 20, width: "100%", maxWidth: 800 }}>
+        <Fade delay={44}><div style={{ fontSize: 16, color: C.sub, marginBottom: 16, textAlign: "left" }}>3.2 비유 및 예시 활용 — 어려운 개념에 적절한 비유를 사용하는가</div></Fade>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {scores.map((sc, i) => {
+            const bs = spring({ frame: f - (48 + i * 4), fps, config: { damping: 20, stiffness: 60 } });
+            return (
+              <div key={sc.s} style={{ display: "flex", alignItems: "center", gap: 12, opacity: bs }}>
+                <div style={{ width: 32, height: 32, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, fontWeight: 800, background: `rgba(255,107,0,${sc.s * 0.2})`, color: sc.s >= 4 ? "#fff" : C.black }}>{sc.s}</div>
+                <div style={{ flex: 1, height: 20, borderRadius: 5, background: C.line, overflow: "hidden" }}>
+                  <div style={{ width: `${sc.w * bs}%`, height: "100%", borderRadius: 5, background: `rgba(255,107,0,${0.1 + sc.s * 0.18})` }} />
+                </div>
+                <div style={{ width: 200, fontSize: 13, color: C.sub, textAlign: "left" }}>{sc.d}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </Shell>
+  );
+};
 
-// ── ICC (Manim) ──
-const S14: React.FC<{ scene: VideoScene }> = ({ scene }) => (
-  <AbsoluteFill style={{ background: C.bg }}><Video src={staticFile("assets/icc_principle.mp4")} style={{ width: "100%", height: "100%", objectFit: "contain" }} /><Caption text={scene.caption} /></AbsoluteFill>
-);
+// ── ICC 모션그래픽 ──
+const S14: React.FC<{ scene: VideoScene }> = ({ scene }) => {
+  const f = useCurrentFrame(); const { fps } = useVideoConfig();
+  const icc = spring({ frame: f - 10, fps, config: { damping: 18, stiffness: 45 } });
+  return (
+    <Shell caption={scene.caption}>
+      <Fade delay={2}><div style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em" }}>같은 강의를 세 번 채점해도</div></Fade>
+      <div style={{ fontSize: 140, fontWeight: 900, letterSpacing: "-0.06em", color: C.accent, lineHeight: 1, marginTop: 12, fontVariantNumeric: "tabular-nums", opacity: icc }}>
+        {interpolate(icc, [0, 1], [0, 0.877]).toFixed(3)}
+      </div>
+      <Fade delay={20}><div style={{ fontSize: 18, color: C.sub, marginTop: 8 }}>ICC — 15개 중 13개가 Good 이상</div></Fade>
+      <div style={{ display: "flex", gap: 48, marginTop: 28 }}>
+        {[{ l: "Kappa", v: "0.883" }, { l: "Alpha", v: "0.873" }, { l: "SSI", v: "0.974" }].map((m, i) => {
+          const ms = spring({ frame: f - (28 + i * 5), fps, config: { damping: 20 } });
+          return (
+            <div key={m.l} style={{ opacity: ms, textAlign: "center" }}>
+              <div style={{ fontSize: 36, fontWeight: 800, letterSpacing: "-0.04em" }}>{m.v}</div>
+              <div style={{ fontSize: 13, color: C.muted, marginTop: 4 }}>{m.l}</div>
+            </div>
+          );
+        })}
+      </div>
+    </Shell>
+  );
+};
 
 // ── 청크 비교 ──
 const S15: React.FC<{ scene: VideoScene }> = ({ scene }) => {
@@ -458,9 +600,9 @@ const S16: React.FC<{ scene: VideoScene }> = ({ scene }) => (
     <Title delay={2} size={34}>리포트: 행동 제안서</Title>
     <div style={{ display: "flex", flexDirection: "column", gap: 22, marginTop: 28, maxWidth: 800, textAlign: "left" }}>
       {[
-        { tag: "OBSERVED", text: "마무리 시 요약 발언이 없습니다", d: 6 },
-        { tag: "INTERPRETED", text: "수강생이 정리할 기회를 놓칩니다", d: 14 },
-        { tag: "ACTION", text: "종료 1분 전 핵심 개념 3개를 다시 말하세요", d: 22 },
+        { tag: "OBSERVED", text: "설명 순서가 혼재되어 있어\n수강생이 내용을 따라가기 어렵습니다", d: 6 },
+        { tag: "INTERPRETED", text: "개념과 예시가 섞이면서\n핵심 정보가 잘 부각되지 않았습니다", d: 14 },
+        { tag: "ACTION", text: "설명의 흐름을 구조적으로 정리하고\n중요한 내용을 강조하는 표현을 추가하세요", d: 22 },
       ].map(it => (
         <Fade key={it.tag} delay={it.d}>
           <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.1em", color: it.tag === "ACTION" ? C.accent : C.muted, marginBottom: 6 }}>{it.tag}</div>
