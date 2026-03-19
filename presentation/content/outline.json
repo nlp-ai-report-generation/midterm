@@ -1,539 +1,74 @@
 {
   "meta": {
     "title": "AI 강의 분석 리포트 생성기",
-    "subtitle": "중간발표 덱",
+    "subtitle": "중간발표",
     "version": "2026-03-19",
-    "authors": [
-      "멋사 NLP 팀"
-    ]
+    "authors": ["멋사 NLP 팀"]
   },
-  "slides": [
-    {
-      "id": "slide-01",
-      "title": "강의 피드백을\n점수에서 근거로",
-      "subtitle": "강사가 바로 바꿀 수 있는 리포트를 만듭니다",
-      "body": [
-        {
-          "label": "관찰된 사실",
-          "items": [
-            "분석 대상은 백엔드 부트캠프 21기 강의 15개입니다.",
-            "평가 기준은 5개 카테고리, 18개 항목 체크리스트로 고정했습니다."
-          ]
-        },
-        {
-          "label": "해석",
-          "items": [
-            "핵심은 채점 자체보다, 강의를 다시 설계하게 만드는 피드백입니다."
-          ]
-        },
-        {
-          "label": "개선 방향",
-          "items": [
-            "점수와 근거, 다음 액션을 따로 보여줍니다."
-          ]
-        }
-      ],
-      "visual": {
-        "type": "heroMetrics",
-        "kicker": "MIDTERM REVIEW",
-        "metrics": [
-          { "value": "15", "label": "강의 수" },
-          { "value": "18", "label": "평가 항목" },
-          { "value": "3", "label": "교차 비교 모델" }
-        ]
-      },
-      "assets": [],
-      "speakerNotes": [
-        "이번 발표는 기능 소개보다 신뢰할 수 있는 강의 평가 도구를 만들고 있다는 점을 설득하는 데 초점을 둡니다.",
-        "문제 정의, 파이프라인, 실험 검증, 실제 데모, 다음 단계 순서로 설명합니다."
-      ]
-    },
-    {
-      "id": "slide-02",
-      "title": "문제는\n다음 액션이 안 보인다는 점",
-      "subtitle": "설문은 남지만, 수정 포인트는 남지 않습니다",
-      "body": [
-        {
-          "label": "관찰된 사실",
-          "items": [
-            "기존 피드백은 주관적 설문에 기대는 경우가 많아, 같은 기준으로 다시 보기 어렵습니다.",
-            "강의 스크립트는 길고 복잡해서 사람이 매번 다시 읽기엔 비용이 큽니다."
-          ]
-        },
-        {
-          "label": "해석",
-          "items": [
-            "점수만 있으면 이유가 없고, 서술만 있으면 기준이 흔들립니다."
-          ]
-        },
-        {
-          "label": "개선 방향",
-          "items": [
-            "체크리스트 기준 자동 평가와 행동 제안형 리포트가 필요합니다."
-          ]
-        }
-      ],
-      "visual": {
-        "type": "triage",
-        "cards": [
-          {
-            "title": "수동 검토는 오래 걸립니다",
-            "text": "강의를 처음부터 다시 듣고 체크리스트를 채우는 방식은 느리고, 평가자마다 기준도 달라집니다."
-          },
-          {
-            "title": "점수만으로는 부족합니다",
-            "text": "강사는 숫자보다 어느 장면이 문제였는지, 다음 강의에서 뭘 바꿔야 하는지 알고 싶어합니다."
-          },
-          {
-            "title": "이번 발표의 목표",
-            "text": "AI 평가가 믿을 만한지, 그리고 리포트가 실제로 읽히는지를 함께 보여주는 것입니다."
-          }
-        ]
-      },
-      "assets": [],
-      "speakerNotes": [
-        "핵심은 분석 모델 자체보다 '강사 행동으로 이어지는 리포트'를 만드는 일이라는 점을 먼저 잡습니다."
-      ]
-    },
-    {
-      "id": "slide-03",
-      "title": "무엇을 읽고,\n무엇으로 평가하나",
-      "subtitle": "실제 강의 스크립트와 품질 기준을 함께 봅니다",
-      "body": [
-        {
-          "label": "관찰된 사실",
-          "items": [
-            "총 15개 강의, 22,756줄 스크립트를 확보했습니다.",
-            "입력 자산은 스크립트, 메타데이터, 품질 체크리스트입니다."
-          ]
-        },
-        {
-          "label": "해석",
-          "items": [
-            "감상평이 아니라, 강의 맥락과 평가 기준을 함께 읽는 구조가 필요했습니다."
-          ]
-        },
-        {
-          "label": "개선 방향",
-          "items": [
-            "결과도 체크리스트 기준에 맞춰 카테고리별로 보여줍니다."
-          ]
-        }
-      ],
-      "visual": {
-        "type": "dataScope",
-        "stats": [
-          { "label": "강의 수", "value": "15개" },
-          { "label": "총 스크립트 라인", "value": "22,756줄" },
-          { "label": "일 평균 라인", "value": "1,517줄" },
-          { "label": "평가 구조", "value": "5개 카테고리 / 18개 항목" }
-        ],
-        "sources": [
-          "강의 스크립트 TXT",
-          "메타데이터 CSV",
-          "강의 품질 체크리스트"
-        ]
-      },
-      "assets": [],
-      "speakerNotes": [
-        "중간발표 단계에서 데이터 범위를 명확히 보여주면 과제가 가벼운 데모가 아니라는 점을 전달할 수 있습니다."
-      ]
-    },
-    {
-      "id": "slide-04",
-      "title": "평가부터 리포트까지\n한 흐름으로 묶었습니다",
-      "subtitle": "스크립트를 자르고, 다섯 평가자가 읽고, 하나의 결과로 합칩니다",
-      "body": [
-        {
-          "label": "관찰된 사실",
-          "items": [
-            "스크립트는 30분 윈도우, 5분 오버랩으로 자릅니다.",
-            "다섯 카테고리 평가 노드가 병렬로 돌고, 이후 집계와 리포트 생성이 이어집니다."
-          ]
-        },
-        {
-          "label": "해석",
-          "items": [
-            "강의는 흐름이 중요해서, 토큰보다 시간 기준으로 자르는 편이 자연스럽습니다."
-          ]
-        },
-        {
-          "label": "개선 방향",
-          "items": [
-            "실험으로 검증한 30분 청크를 운영 기본값으로 가져갑니다."
-          ]
-        }
-      ],
-      "visual": {
-        "type": "pipeline",
-        "nodes": [
-          "STT 트랜스크립트",
-          "전처리 + 청킹",
-          "5개 카테고리 병렬 평가",
-          "가중 평균 집계",
-          "리포트 생성"
-        ],
-        "detail": [
-          "chunk_by_time_window(window=30분, overlap=5분)",
-          "category harness 기반 JSON 평가",
-          "가중치 HIGH=3 / MEDIUM=2 / LOW=1"
-        ]
-      },
-      "assets": [],
-      "speakerNotes": [
-        "이 슬라이드는 구현량보다 판단 구조를 설명하는 장면입니다.",
-        "병렬 평가와 시간 기반 청킹이 왜 필요한지 짧게 짚고 넘어갑니다."
-      ]
-    },
-    {
-      "id": "slide-05",
-      "title": "평가 기준은\n코드가 아니라 문서에 둡니다",
-      "subtitle": "그래야 수정이 빠르고, 바뀐 이유도 남길 수 있습니다",
-      "body": [
-        {
-          "label": "관찰된 사실",
-          "items": [
-            "카테고리별 평가 기준은 `src/harnesses/*.md`에 저장해두었습니다.",
-            "하네스에는 항목 설명, 5점 앵커, chunk focus, 출력 형식이 들어갑니다."
-          ]
-        },
-        {
-          "label": "해석",
-          "items": [
-            "기준이 코드에 묻히면 수정도 느리고, 왜 바뀌었는지도 남기기 어렵습니다."
-          ]
-        },
-        {
-          "label": "개선 방향",
-          "items": [
-            "일관성이 낮았던 강의와 항목부터 정의를 더 선명하게 다듬습니다."
-          ]
-        }
-      ],
-      "visual": {
-        "type": "whyHarness",
-        "reasons": [
-          {
-            "title": "유지보수 용이",
-            "text": "카테고리 기준을 MD로 관리해 기준 수정과 리뷰가 쉽습니다."
-          },
-          {
-            "title": "병렬 평가 적합",
-            "text": "카테고리별 역할이 분리되어 LangGraph fan-out 구조와 잘 맞습니다."
-          },
-          {
-            "title": "근거 추적 가능",
-            "text": "항목별 점수와 근거를 JSON으로 남겨 이후 비교와 리포트에 재사용합니다."
-          }
-        ],
-        "focusItems": [
-          "02-04, 02-09는 ICC가 상대적으로 낮아 우선 정교화 대상입니다.",
-          "중간발표 이후에는 calibrator on/off와 chunking 변수 실험을 확장합니다."
-        ]
-      },
-      "assets": [],
-      "speakerNotes": [
-        "여기서는 'LLM을 썼다'보다 'LLM을 어떻게 관리 가능한 구조로 묶었는가'를 강조합니다."
-      ]
-    },
-    {
-      "id": "slide-06",
-      "title": "같은 강의를\n세 번 읽어도 비슷한가",
-      "subtitle": "평균 ICC 0.877, 15개 중 13개 강의가 Good 이상입니다",
-      "body": [
-        {
-          "label": "관찰된 사실",
-          "items": [
-            "조건은 GPT-4o-mini, temperature 0.1, 30분 청크, 3회 반복입니다.",
-            "평균 ICC 0.877, Kappa 0.883, Alpha 0.873, SSI 0.974를 기록했습니다."
-          ]
-        },
-        {
-          "label": "해석",
-          "items": [
-            "같은 강의를 반복 평가해도 흔들림이 작아, 측정 도구로서 기본 신뢰도는 확보했다고 볼 수 있습니다."
-          ]
-        },
-        {
-          "label": "개선 방향",
-          "items": [
-            "ICC가 낮았던 02-04, 02-09는 기준 보정 우선 사례로 잡습니다."
-          ]
-        }
-      ],
-      "visual": {
-        "type": "reliability",
-        "metrics": [
-          { "label": "ICC", "value": "0.877", "status": "Good" },
-          { "label": "Kappa", "value": "0.883", "status": "Almost Perfect" },
-          { "label": "Alpha", "value": "0.873", "status": "Reliable" },
-          { "label": "SSI", "value": "0.974", "status": "Very Stable" }
-        ],
-        "distribution": [
-          { "label": "Excellent (>0.90)", "value": 8 },
-          { "label": "Good (0.75~0.90)", "value": 5 },
-          { "label": "Moderate (0.60~0.75)", "value": 2 },
-          { "label": "Poor (<0.60)", "value": 0 }
-        ],
-        "callout": "15개 강의 중 13개가 Good 이상"
-      },
-      "assets": [],
-      "speakerNotes": [
-        "심사자 입장에서는 'AI 평가를 믿어도 되는가'가 먼저이므로, 가장 중요한 장표입니다."
-      ]
-    },
-    {
-      "id": "slide-07",
-      "title": "청크 크기는\n정말 점수를 바꾸는가",
-      "subtitle": "30분 청크가 15분 청크보다 평균 0.21점 높았습니다",
-      "body": [
-        {
-          "label": "관찰된 사실",
-          "items": [
-            "30분 청크 평균은 3.245, 15분 청크 평균은 3.033입니다.",
-            "p=0.0006, Cohen's d=1.142로 차이가 분명했습니다."
-          ]
-        },
-        {
-          "label": "해석",
-          "items": [
-            "강의 구조와 마무리 같은 맥락 요소는 더 긴 시간 창에서 더 잘 잡힙니다."
-          ]
-        },
-        {
-          "label": "개선 방향",
-          "items": [
-            "비교 실험과 운영 기본값을 모두 30분 청크로 통일합니다."
-          ]
-        }
-      ],
-      "visual": {
-        "type": "chunking",
-        "comparison": [
-          { "label": "30분 청크 평균", "value": "3.245" },
-          { "label": "15분 청크 평균", "value": "3.033" },
-          { "label": "평균 차이", "value": "+0.212" }
-        ],
-        "stats": [
-          "p = 0.0006",
-          "Cohen's d = 1.142",
-          "15개 중 13개 강의에서 30분 청크가 더 높음"
-        ]
-      },
-      "assets": [],
-      "speakerNotes": [
-        "이 장표는 모델 신뢰성 다음으로 운영 설정을 어떻게 고정할지 보여주는 역할입니다."
-      ]
-    },
-    {
-      "id": "slide-08",
-      "title": "심사자가 실제로 보는 흐름",
-      "subtitle": "Dashboard에서 Lecture Detail까지 하나의 맥락으로 연결합니다",
-      "body": [
-        {
-          "label": "관찰된 사실",
-          "items": [
-            "프론트는 정적 JSON을 읽어 운영 화면과 상세 화면을 렌더링합니다.",
-            "이번 발표에서는 dashboard, experiments, eda, lecture detail 네 화면을 이어서 보여줍니다."
-          ]
-        },
-        {
-          "label": "해석",
-          "items": [
-            "심사자에게는 모델 내부보다 무엇을, 왜, 어디서 확인하는지가 보이는 UX가 더 중요합니다."
-          ]
-        },
-        {
-          "label": "개선 방향",
-          "items": [
-            "실험 결과와 평가 JSON 연결 범위를 넓혀, 프론트에서도 전량 실데이터를 바로 보게 만듭니다."
-          ]
-        }
-      ],
-      "visual": {
-        "type": "demoFlow",
-        "steps": [
-          { "title": "Dashboard", "caption": "전체 강의 현황과 카테고리 평균" },
-          { "title": "Experiments", "caption": "모델 비교와 검증 포인트" },
-          { "title": "EDA", "caption": "발화량, 화자, 상호작용 분석" },
-          { "title": "Lecture Detail", "caption": "개별 강의 근거와 추천 액션" }
-        ]
-      },
-      "assets": [
-        "ui-dashboard.png",
-        "ui-experiments.png",
-        "ui-eda.png",
-        "ui-lecture-detail.png"
-      ],
-      "speakerNotes": [
-        "실제 발표에서는 네 화면을 20~30초 내로 연결해 보여주고, 각각 무엇을 판단하는 화면인지 한 줄씩 설명합니다."
-      ]
-    },
-    {
-      "id": "slide-09",
-      "title": "리포트는 점수표가 아니라\n행동 제안서여야 합니다",
-      "subtitle": "사실, 해석, 다음 액션을 나눠야 바로 적용할 수 있습니다",
-      "body": [
-        {
-          "label": "관찰된 사실",
-          "items": [
-            "리포트에는 '마무리 요약이 없음', '개념 뒤 예시 흐름이 섞임' 같은 근거 문장을 남깁니다."
-          ]
-        },
-        {
-          "label": "해석",
-          "items": [
-            "구조와 상호작용이 함께 흔들리면, 점수 설명보다 개선 우선순위가 더 중요합니다."
-          ]
-        },
-        {
-          "label": "개선 방향",
-          "items": [
-            "다음 강의에서는 마무리 1분 요약, 개념→예시 순서 고정, 이해 확인 질문 강화처럼 행동 단위로 제안합니다."
-          ]
-        }
-      ],
-      "visual": {
-        "type": "reportSample",
-        "score": "3.38 / 5.0",
-        "sample": {
-          "fact": "강의 마무리 시 핵심 내용을 요약하는 발언이 거의 없습니다.",
-          "interpretation": "수강생은 오늘 무엇을 배웠는지 정리할 기회를 놓칠 수 있습니다.",
-          "action": "종료 1분 전 핵심 개념 3개를 다시 말하는 루틴을 넣습니다."
-        }
-      },
-      "assets": [],
-      "speakerNotes": [
-        "이 슬라이드는 비개발자도 바로 이해할 수 있는 결과물 품질을 보여주는 장면입니다."
-      ]
-    },
-    {
-      "id": "slide-10",
-      "title": "그래서 지금,\n어디까지 왔는가",
-      "subtitle": "신뢰도 검증은 마쳤고, 이제 운영 완성도를 올리는 단계입니다",
-      "body": [
-        {
-          "label": "관찰된 사실",
-          "items": [
-            "프론트 공개본에는 실제 평가 JSON 1건이 들어가 있고, 전체 배치 반영은 남아 있습니다.",
-            "STT 품질 한계와 화자 구분 부재는 여전히 일부 항목 신뢰도에 영향을 줍니다."
-          ]
-        },
-        {
-          "label": "해석",
-          "items": [
-            "파이프라인과 신뢰도 검증은 끝났지만, 운영 UX와 데이터 갱신 흐름은 더 다듬어야 합니다."
-          ]
-        },
-        {
-          "label": "개선 방향",
-          "items": [
-            "15개 강의 실데이터 연결, A/B 실험 확장, 상세 화면 정리, 시연 영상 마감을 다음 단계로 둡니다."
-          ]
-        }
-      ],
-      "visual": {
-        "type": "nextSteps",
-        "columns": [
-          {
-            "title": "현재 한계",
-            "items": [
-              "프론트 실데이터 연결 범위 제한",
-              "STT 품질과 화자 구분 제약"
-            ]
-          },
-          {
-            "title": "중기 리스크",
-            "items": [
-              "하네스 기준 모호 항목 존재",
-              "설정 차이에 따른 점수 편향"
-            ]
-          },
-          {
-            "title": "다음 액션",
-            "items": [
-              "15강 배치 결과 프론트 반영",
-              "A/B 실험 확대",
-              "운영 UX와 발표 영상 마감"
-            ]
-          }
-        ]
-      },
-      "assets": [],
-      "speakerNotes": [
-        "여기서는 솔직하게 남은 과제를 말하되, 이미 무엇을 검증했는지와 다음 우선순위를 분명히 정리합니다."
-      ]
-    }
-  ],
+  "slides": [],
   "videoScenes": [
     {
       "id": "scene-01",
-      "slideId": "slide-01",
-      "durationSec": 18,
-      "narration": "This project transforms lecture feedback from simple scores into evidence-based reports. In this midterm presentation, we'll show you what problem we're solving, how reliable our AI evaluation is, and how the results actually read.",
-      "caption": "강의 피드백을 점수에서 근거로 바꿉니다",
-      "assetRefs": []
+      "slideId": "cover",
+      "durationSec": 8,
+      "narration": "AI 강의 분석 리포트.",
+      "caption": "AI 강의 분석 리포트."
     },
     {
       "id": "scene-02",
-      "slideId": "slide-02",
+      "slideId": "problem",
       "durationSec": 20,
-      "narration": "The core problem is that existing lecture feedback leaves no actionable next steps. Surveys are subjective, transcripts are too long to review manually, and scores alone don't tell instructors what to change. We built an automated evaluation system with checklist-based scoring and action-oriented reports.",
-      "caption": "기존 피드백은 다음에 뭘 바꿔야 할지 알려주지 못해요",
-      "assetRefs": []
+      "narration": "강의가 끝나면 수강생 설문이 남아요. 하지만 강사에게 다음 강의에서 구체적으로 뭘 바꿔야 하는지는 알려주지 못해요. 스크립트는 수천 줄이라 사람이 매번 다시 읽기엔 너무 오래 걸리고요. 점수만 있으면 이유가 없고, 서술만 있으면 기준이 흔들려요.",
+      "caption": "강의가 끝나면 수강생 설문이 남아요. 하지만 강사에게 다음 강의에서 구체적으로 뭘 바꿔야 하는지는 알려주지 못해요. 스크립트는 수천 줄이라 사람이 매번 다시 읽기엔 너무 오래 걸리고요. 점수만 있으면 이유가 없고, 서술만 있으면 기준이 흔들려요."
     },
     {
       "id": "scene-03",
-      "slideId": "slide-04",
+      "slideId": "service",
       "durationSec": 22,
-      "narration": "Our pipeline splits lecture transcripts into thirty-minute windows with five-minute overlaps, then runs five category evaluators in parallel using LangGraph. After scoring, an aggregator computes weighted averages and a report generator creates actionable feedback. Time-based chunking preserves the natural flow of lectures.",
-      "caption": "30분 윈도우로 자르고, 5개 평가자가 동시에 읽고, 리포트를 만들어요",
-      "assetRefs": []
+      "narration": "그래서 저희는 강의 녹음 텍스트를 AI가 직접 읽고, 18개 항목으로 자동 채점하는 시스템을 만들었어요. 운영자는 전체 강의의 품질을 한눈에 파악할 수 있고, 강사는 내 강의의 강점과 개선점을 바로 확인할 수 있어요. 대시보드, 강의 목록, 강의 상세, 데이터 분석까지 하나의 흐름으로 연결돼요.",
+      "caption": "그래서 저희는 강의 녹음 텍스트를 AI가 직접 읽고, 18개 항목으로 자동 채점하는 시스템을 만들었어요. 운영자는 전체 강의의 품질을 한눈에 파악할 수 있고, 강사는 내 강의의 강점과 개선점을 바로 확인할 수 있어요. 대시보드, 강의 목록, 강의 상세, 데이터 분석까지 하나의 흐름으로 연결돼요."
     },
     {
       "id": "scene-04",
-      "slideId": "slide-06",
-      "durationSec": 22,
-      "narration": "When we evaluated the same lecture three times, the average ICC was zero point eight seven seven, and Cohen's Kappa was zero point eight eight three. Thirteen out of fifteen lectures scored Good or above. This means our AI evaluation tool produces consistent, reliable results across repeated runs.",
-      "caption": "같은 강의를 3번 평가해도 점수가 거의 같았어요 — ICC 0.877",
-      "assetRefs": []
+      "slideId": "pipeline",
+      "durationSec": 28,
+      "narration": "강의 스크립트가 들어오면 먼저 30분 단위로 자르고, 5분씩 겹치게 해요. 시간 기준으로 자르는 이유는, 도입부에 학습 목표를 안내했는지, 마무리에 요약이 있는지 같은 시간 위치 기반 평가가 중요하기 때문이에요. 잘린 청크들은 다섯 개 카테고리 평가자에게 동시에 보내져요. 언어 품질, 강의 구조, 개념 명확성, 예시와 실습 연계, 수강생 상호작용. 각 평가자는 하네스라는 마크다운 문서에 정의된 기준대로 채점하고, 결과를 집계해서 최종 리포트를 만들어요.",
+      "caption": "강의 스크립트가 들어오면 먼저 30분 단위로 자르고, 5분씩 겹치게 해요. 시간 기준으로 자르는 이유는, 도입부에 학습 목표를 안내했는지, 마무리에 요약이 있는지 같은 시간 위치 기반 평가가 중요하기 때문이에요. 잘린 청크들은 다섯 개 카테고리 평가자에게 동시에 보내져요. 언어 품질, 강의 구조, 개념 명확성, 예시와 실습 연계, 수강생 상호작용. 각 평가자는 하네스라는 마크다운 문서에 정의된 기준대로 채점하고, 결과를 집계해서 최종 리포트를 만들어요."
     },
     {
       "id": "scene-05",
-      "slideId": "slide-07",
-      "durationSec": 20,
-      "narration": "Chunk size also significantly affects scores. Thirty-minute chunks averaged three point two four five, while fifteen-minute chunks averaged three point zero three three — a statistically significant difference with p-value zero point zero zero zero six and a large effect size. We standardized on thirty-minute chunks for all evaluations.",
-      "caption": "30분 청크가 15분보다 +0.21점 높았어요 — p < 0.001",
-      "assetRefs": []
+      "slideId": "harness",
+      "durationSec": 24,
+      "narration": "하네스는 평가 기준이 담긴 마크다운 파일이에요. 예를 들어 비유 및 예시 활용 항목은, 추상적 개념이 등장할 때 적절한 비유나 실생활 예시를 사용하는지를 봐요. 5점은 매번 풍부하게 사용한 경우, 3점은 있긴 하지만 빈도가 낮은 경우, 1점은 전혀 없는 경우예요. 이 기준은 코드가 아니라 문서에 있기 때문에, 비개발자도 수정할 수 있고, 새 카테고리를 추가하면 시스템이 자동으로 평가 노드를 만들어줘요.",
+      "caption": "하네스는 평가 기준이 담긴 마크다운 파일이에요. 예를 들어 비유 및 예시 활용 항목은, 추상적 개념이 등장할 때 적절한 비유나 실생활 예시를 사용하는지를 봐요. 5점은 매번 풍부하게 사용한 경우, 3점은 있긴 하지만 빈도가 낮은 경우, 1점은 전혀 없는 경우예요. 이 기준은 코드가 아니라 문서에 있기 때문에, 비개발자도 수정할 수 있고, 새 카테고리를 추가하면 시스템이 자동으로 평가 노드를 만들어줘요."
     },
     {
       "id": "scene-06",
-      "slideId": "slide-08",
-      "durationSec": 24,
-      "narration": "The frontend is designed around the actual workflow of operators and instructors. Starting from the dashboard overview, you can drill into model comparisons, explore lecture data through EDA, and finally reach individual lecture details with evidence and recommended actions.",
-      "caption": "대시보드에서 강의 상세까지 — 실제 사용 흐름을 보여드려요",
-      "assetRefs": [
-        "ui-dashboard.png",
-        "ui-experiments.png",
-        "ui-eda.png",
-        "ui-lecture-detail.png"
-      ]
+      "slideId": "reliability",
+      "durationSec": 22,
+      "narration": "같은 강의를 GPT-4o-mini로 세 번 반복 평가했을 때, 평균 ICC는 영점 팔칠칠이었어요. 15개 강의 중 13개가 Good 이상으로, 임상 연구에서 신뢰할 수 있는 측정 도구로 인정받는 수준이에요. Cohen의 Kappa는 영점 팔팔삼, Krippendorff의 Alpha는 영점 팔칠삼으로, 반복해도 거의 같은 점수가 나온다는 걸 확인했어요.",
+      "caption": "같은 강의를 GPT-4o-mini로 세 번 반복 평가했을 때, 평균 ICC는 0.877이었어요. 15개 강의 중 13개가 Good 이상으로, 임상 연구에서 신뢰할 수 있는 측정 도구로 인정받는 수준이에요. Cohen의 Kappa는 0.883, Krippendorff의 Alpha는 0.873으로, 반복해도 거의 같은 점수가 나온다는 걸 확인했어요."
     },
     {
       "id": "scene-07",
-      "slideId": "slide-09",
+      "slideId": "chunk",
       "durationSec": 18,
-      "narration": "Our report is not a scorecard — it's an action plan. Each report separates observed facts, interpretation, and specific improvement suggestions. This way, instructors know exactly what to change in their next lecture.",
-      "caption": "리포트는 점수표가 아니라 행동 제안서예요",
-      "assetRefs": []
+      "narration": "청크 크기도 점수에 유의미한 영향을 줬어요. 30분 청크 평균은 삼점 이사오, 15분 청크 평균은 삼점 영삼삼이었고, p값은 영점 영영영육으로 통계적으로 매우 유의미했어요. 30분 청크가 더 넓은 맥락을 담기 때문에 강의 흐름을 더 잘 파악하는 거예요. 그래서 운영 기본값을 30분으로 통일했어요.",
+      "caption": "청크 크기도 점수에 유의미한 영향을 줬어요. 30분 청크 평균은 3.245, 15분 청크 평균은 3.033이었고, p값은 0.0006으로 통계적으로 매우 유의미했어요. 30분 청크가 더 넓은 맥락을 담기 때문에 강의 흐름을 더 잘 파악하는 거예요. 그래서 운영 기본값을 30분으로 통일했어요."
     },
     {
       "id": "scene-08",
-      "slideId": "slide-10",
+      "slideId": "report",
       "durationSec": 16,
-      "narration": "We've validated reliability and built a working product. Next, we'll connect all fifteen lectures to the live frontend, expand A/B experiments, refine operational UX, and add YouTube lecture benchmarking for comparative analysis.",
-      "caption": "신뢰도 검증은 끝났어요. 다음은 운영 완성도를 높이는 단계예요",
-      "assetRefs": []
+      "narration": "최종 리포트는 점수표가 아니라 행동 제안서예요. 관찰된 사실, 해석, 그리고 구체적인 개선 제안을 분리해서, 강사가 다음 강의에서 바로 바꿀 수 있게 해줘요. 예를 들어, 마무리 요약이 없다는 사실을 관찰하고, 수강생이 정리할 기회를 놓친다고 해석하고, 종료 1분 전에 핵심 개념 세 개를 다시 말하라고 제안해요.",
+      "caption": "최종 리포트는 점수표가 아니라 행동 제안서예요. 관찰된 사실, 해석, 그리고 구체적인 개선 제안을 분리해서, 강사가 다음 강의에서 바로 바꿀 수 있게 해줘요. 예를 들어, 마무리 요약이 없다는 사실을 관찰하고, 수강생이 정리할 기회를 놓친다고 해석하고, 종료 1분 전에 핵심 개념 세 개를 다시 말하라고 제안해요."
+    },
+    {
+      "id": "scene-09",
+      "slideId": "future",
+      "durationSec": 16,
+      "narration": "신뢰도 검증은 끝냈어요. 다음 단계에서는 유튜브 강의를 벤치마크로 가져와서 같은 기준으로 비교하는 기능을 만들고, 평가 기준의 모호한 표현을 관찰 가능한 행동 지표로 정교화하고, 15개 강의 실데이터를 전면 연결하고, 강사가 실제로 쓰고 싶은 도구로 완성할 계획이에요.",
+      "caption": "신뢰도 검증은 끝냈어요. 다음 단계에서는 유튜브 강의를 벤치마크로 가져와서 같은 기준으로 비교하는 기능을 만들고, 평가 기준의 모호한 표현을 관찰 가능한 행동 지표로 정교화하고, 15개 강의 실데이터를 전면 연결하고, 강사가 실제로 쓰고 싶은 도구로 완성할 계획이에요."
     }
   ]
 }
