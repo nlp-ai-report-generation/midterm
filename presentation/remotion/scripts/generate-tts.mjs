@@ -27,7 +27,7 @@ if (!apiKey) {
   process.exit(1);
 }
 
-const voice = "nova"; // 영어 나레이션에 적합한 목소리
+const voice = "onyx"; // 남자 목소리
 
 for (const scene of outline.videoScenes) {
   const mp3Path = path.join(audioDir, `${scene.id}.mp3`);
@@ -43,6 +43,7 @@ for (const scene of outline.videoScenes) {
       model: "tts-1-hd",
       voice,
       input: scene.narration,
+      speed: 1.15,
       response_format: "mp3",
     }),
   });
