@@ -4,12 +4,18 @@ import {
   Audio,
   Sequence,
   Series,
+  Video,
   interpolate,
   spring,
   staticFile,
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
+import {
+  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, AreaChart, Area,
+  ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line,
+} from "recharts";
 
 type VideoScene = { id: string; durationSec: number; narration: string; caption: string };
 type OutlineData = { meta: any; slides: any[]; videoScenes: VideoScene[] };
@@ -17,414 +23,435 @@ type OutlineData = { meta: any; slides: any[]; videoScenes: VideoScene[] };
 const C = { bg: "#FFFFFF", surface: "#F8FAFC", accent: "#FF6B00", black: "#0F172A", sub: "#475569", muted: "#94A3B8", line: "#E2E8F0" };
 const FONT = "'Pretendard Variable','Pretendard',-apple-system,sans-serif";
 
-const useSpr = (d = 0, cfg = { damping: 20, stiffness: 80 }) => {
-  const f = useCurrentFrame(); const { fps } = useVideoConfig();
-  return spring({ frame: f - d, fps, config: cfg });
-};
+// ── 실제 데이터 ──
+const CATEGORY_AVGS = [
+  { cat: "언어 표현", score: 3.4 },
+  { cat: "강의 구조", score: 3.1 },
+  { cat: "개념 명확성", score: 3.3 },
+  { cat: "예시/실습", score: 3.0 },
+  { cat: "상호작용", score: 2.9 },
+];
+const TREND_DATA = [
+  { d: "02/02", s: 3.0 }, { d: "02/03", s: 3.0 }, { d: "02/04", s: 3.3 },
+  { d: "02/05", s: 3.2 }, { d: "02/06", s: 3.2 }, { d: "02/09", s: 3.5 },
+  { d: "02/10", s: 3.5 }, { d: "02/11", s: 3.2 }, { d: "02/12", s: 3.3 },
+  { d: "02/13", s: 3.3 }, { d: "02/23", s: 3.4 }, { d: "02/24", s: 3.4 },
+  { d: "02/25", s: 2.8 }, { d: "02/26", s: 3.4 }, { d: "02/27", s: 3.3 },
+];
+const RADAR_DATA = CATEGORY_AVGS.map(c => ({ subject: c.cat, A: c.score, fullMark: 5 }));
+const FILLER_DATA = [
+  { name: "자", value: 847 }, { name: "그래서", value: 623 },
+  { name: "이제", value: 518 }, { name: "네", value: 412 }, { name: "기타", value: 890 },
+];
+const LECTURE_LIST = [
+  { date: "02/02", subj: "객체지향 프로그래밍", score: 3.0 },
+  { date: "02/03", subj: "Front-End Programming", score: 3.0 },
+  { date: "02/04", subj: "Front-End Programming", score: 3.3 },
+  { date: "02/05", subj: "Front-End Programming", score: 3.2 },
+  { date: "02/06", subj: "Front-End Programming", score: 3.2 },
+  { date: "02/09", subj: "Front-End Programming", score: 3.5 },
+  { date: "02/10", subj: "Front-End Programming", score: 3.5 },
+];
+
+// ── Animation helpers ──
+const useSpr = (d = 0) => { const f = useCurrentFrame(); const { fps } = useVideoConfig(); return spring({ frame: f - d, fps, config: { damping: 18, stiffness: 80 } }); };
 
 const Fade: React.FC<{ children: React.ReactNode; delay?: number; style?: React.CSSProperties }> = ({ children, delay = 0, style }) => {
   const s = useSpr(delay);
-  return <div style={{ opacity: s, transform: `translateY(${interpolate(s, [0, 1], [24, 0])}px)`, ...style }}>{children}</div>;
+  return <div style={{ opacity: s, transform: `translateY(${interpolate(s, [0, 1], [20, 0])}px)`, ...style }}>{children}</div>;
 };
 
 const Caption: React.FC<{ text: string }> = ({ text }) => {
-  const s = useSpr(6);
+  const s = useSpr(4);
   return (
-    <div style={{ position: "absolute", bottom: 36, left: 48, right: 48, display: "flex", justifyContent: "center", opacity: s }}>
-      <div style={{ maxWidth: 1400, background: "rgba(15,23,42,0.88)", backdropFilter: "blur(12px)", color: "#fff", borderRadius: 14, padding: "14px 28px", fontSize: 21, fontWeight: 500, lineHeight: 1.6, textAlign: "center", whiteSpace: "pre-line" }}>
-        {text}
-      </div>
+    <div style={{ position: "absolute", bottom: 32, left: 40, right: 40, display: "flex", justifyContent: "center", opacity: s }}>
+      <div style={{ maxWidth: 1500, background: "rgba(15,23,42,0.88)", backdropFilter: "blur(12px)", color: "#fff", borderRadius: 12, padding: "12px 28px", fontSize: 20, fontWeight: 500, lineHeight: 1.6, textAlign: "center", whiteSpace: "pre-line" }}>{text}</div>
     </div>
   );
 };
 
-const Shell: React.FC<{ children: React.ReactNode; caption: string }> = ({ children, caption }) => (
-  <AbsoluteFill style={{ background: C.bg, fontFamily: FONT, color: C.black }}>
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center", padding: "60px 100px 100px", gap: 0 }}>
-      {children}
-    </div>
+const Shell: React.FC<{ children: React.ReactNode; caption: string; bg?: string }> = ({ children, caption, bg = C.bg }) => (
+  <AbsoluteFill style={{ background: bg, fontFamily: FONT, color: C.black }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", textAlign: "center", padding: "48px 80px 90px" }}>{children}</div>
     <Caption text={caption} />
   </AbsoluteFill>
 );
 
-const Title: React.FC<{ children: React.ReactNode; delay?: number; size?: number; color?: string }> = ({ children, delay = 4, size = 44, color = C.black }) => (
+const Title: React.FC<{ children: React.ReactNode; delay?: number; size?: number; color?: string }> = ({ children, delay = 2, size = 44, color = C.black }) => (
   <Fade delay={delay}><div style={{ fontSize: size, fontWeight: 800, lineHeight: 1.35, letterSpacing: "-0.03em", color, whiteSpace: "pre-line" }}>{children}</div></Fade>
 );
 
-const Sub: React.FC<{ children: React.ReactNode; delay?: number }> = ({ children, delay = 10 }) => (
-  <Fade delay={delay}><div style={{ fontSize: 21, color: C.sub, lineHeight: 1.65, marginTop: 20, maxWidth: 800 }}>{children}</div></Fade>
-);
+// ═══ SCENES ═══
 
-// ── SCENES ──────────────────────────────────────────
-
+// 1. Cover
 const S01: React.FC<{ scene: VideoScene }> = ({ scene }) => (
   <Shell caption={scene.caption}>
-    <Fade delay={4}><div style={{ fontSize: 72, fontWeight: 900, letterSpacing: "-0.04em" }}>AI 강의 분석</div></Fade>
-    <Fade delay={10}><div style={{ fontSize: 18, color: C.muted, marginTop: 20, letterSpacing: "0.2em" }}>MIDTERM PRESENTATION</div></Fade>
-    <Fade delay={16}><div style={{ fontSize: 15, color: C.sub, marginTop: 28 }}>백엔드 부트캠프 21기 · 15개 강의 · 18개 항목 · 3개 모델</div></Fade>
+    <Fade delay={2}><div style={{ fontSize: 64, fontWeight: 900, letterSpacing: "-0.04em" }}>AI 강의 분석</div></Fade>
+    <Fade delay={8}><div style={{ fontSize: 16, color: C.muted, marginTop: 16, letterSpacing: "0.2em" }}>중간발표 · 멋사 NLP 팀</div></Fade>
   </Shell>
 );
 
+// 2. Problem
 const S02: React.FC<{ scene: VideoScene }> = ({ scene }) => (
   <Shell caption={scene.caption}>
-    <Title delay={4} size={48}>설문은 남지만</Title>
-    <Title delay={12} size={48} color={C.accent}>다음 액션은 남지 않습니다</Title>
+    <Title delay={2} size={42}>15개 강의, 18개 항목</Title>
+    <Title delay={8} size={42} color={C.accent}>사람이 매번 채우기엔{"\n"}시간이 부족합니다</Title>
   </Shell>
 );
 
+// 3. Solution
 const S03: React.FC<{ scene: VideoScene }> = ({ scene }) => (
   <Shell caption={scene.caption}>
-    <Title delay={4} size={36}>스크립트는 수천 줄</Title>
-    <Sub delay={12}>사람이 매번 다시 읽기엔 비용이 크고,{"\n"}점수만 있으면 이유가 없고, 서술만 있으면 기준이 흔들립니다.</Sub>
+    <Title delay={2} size={38}>AI가 읽고, 채점하고{"\n"}개선 방향까지 제안합니다</Title>
   </Shell>
 );
 
+// 4. Architecture — Manim 영상
 const S04: React.FC<{ scene: VideoScene }> = ({ scene }) => (
-  <Shell caption={scene.caption}>
-    <Title delay={4} size={40}>강의 녹음을 AI가 읽고{"\n"}18개 항목으로 채점합니다</Title>
-    <Fade delay={14} style={{ display: "flex", gap: 24, marginTop: 40 }}>
-      {[{ n: "5", l: "카테고리" }, { n: "18", l: "평가 항목" }, { n: "15", l: "강의" }, { n: "3", l: "AI 모델" }].map((m, i) => (
-        <Fade key={m.l} delay={16 + i * 4}>
-          <div style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 52, fontWeight: 900, letterSpacing: "-0.05em", color: i === 0 ? C.accent : C.black }}>{m.n}</div>
-            <div style={{ fontSize: 14, color: C.muted, marginTop: 4 }}>{m.l}</div>
-          </div>
-        </Fade>
-      ))}
-    </Fade>
-  </Shell>
+  <AbsoluteFill style={{ background: C.bg, fontFamily: FONT }}>
+    <Video src={staticFile("assets/architecture.mp4")} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+    <Caption text={scene.caption} />
+  </AbsoluteFill>
 );
 
-// 서비스 UI 데모
+// 5. Operator Dashboard — 실제 차트
 const S05: React.FC<{ scene: VideoScene }> = ({ scene }) => {
-  const f = useCurrentFrame(); const { fps } = useVideoConfig();
-  const screens = ["대시보드", "강의 목록", "강의 상세", "데이터 분석"];
-  const descs = ["전체 현황 · 카테고리 평균", "15개 강의 리스트뷰", "레이더 차트 · 근거 · 액션", "발화량 · 습관 표현 · 상호작용"];
+  const s = useSpr(6);
   return (
     <Shell caption={scene.caption}>
-      <Title delay={4} size={36}>대시보드에서 강의 상세까지</Title>
-      <div style={{ display: "flex", gap: 20, marginTop: 40, width: "100%" }}>
-        {screens.map((s, i) => {
-          const sp = spring({ frame: f - (12 + i * 8), fps, config: { damping: 18, stiffness: 70 } });
-          return (
-            <div key={s} style={{ flex: 1, opacity: sp, transform: `translateY(${interpolate(sp, [0, 1], [24, 0])}px)` }}>
-              <div style={{ height: 220, borderRadius: 14, background: C.surface, border: `1px solid ${C.line}`, overflow: "hidden" }}>
-                <div style={{ padding: "10px 14px", borderBottom: `1px solid ${C.line}`, display: "flex", gap: 6 }}>
-                  <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#EF4444" }} />
-                  <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#EAB308" }} />
-                  <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#22C55E" }} />
-                </div>
-                <div style={{ padding: 14, display: "flex", flexDirection: "column", gap: 7, justifyContent: "center", height: "calc(100% - 34px)" }}>
-                  {[0.85, 0.65, 0.92, 0.55, 0.72].map((w, j) => (
-                    <div key={j} style={{ height: 10, borderRadius: 5, background: C.line, overflow: "hidden" }}>
-                      <div style={{ width: `${w * sp * 100}%`, height: "100%", borderRadius: 5, background: j === 0 ? C.accent : `rgba(255,107,0,${0.12 + w * 0.35})` }} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div style={{ marginTop: 12, fontSize: 15, fontWeight: 700 }}>{s}</div>
-              <div style={{ fontSize: 12, color: C.muted, marginTop: 3 }}>{descs[i]}</div>
-            </div>
-          );
-        })}
+      <Title delay={2} size={32}>운영자 대시보드</Title>
+      <div style={{ display: "flex", gap: 24, marginTop: 24, width: "100%", maxWidth: 1400, opacity: s }}>
+        {/* 카테고리 수평 바 */}
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.sub, marginBottom: 12 }}>카테고리별 평균</div>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={CATEGORY_AVGS} layout="vertical" margin={{ left: 80 }}>
+              <XAxis type="number" domain={[0, 5]} tick={{ fontSize: 12, fill: C.muted }} />
+              <YAxis type="category" dataKey="cat" tick={{ fontSize: 13, fill: C.black, fontWeight: 600 }} width={80} />
+              <Bar dataKey="score" fill={C.accent} radius={[0, 6, 6, 0]} animationDuration={1500} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        {/* 추이 에어리어 */}
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.sub, marginBottom: 12 }}>점수 추이</div>
+          <ResponsiveContainer width="100%" height={200}>
+            <AreaChart data={TREND_DATA}>
+              <CartesianGrid strokeDasharray="3 3" stroke={C.line} vertical={false} />
+              <XAxis dataKey="d" tick={{ fontSize: 11, fill: C.muted }} />
+              <YAxis domain={[2, 4]} tick={{ fontSize: 11, fill: C.muted }} />
+              <Area type="monotone" dataKey="s" stroke={C.accent} fill={C.accent} fillOpacity={0.12} strokeWidth={2} animationDuration={1500} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </Shell>
   );
 };
 
-// 파이프라인 개요
+// 6. Lecture List
 const S06: React.FC<{ scene: VideoScene }> = ({ scene }) => {
-  const f = useCurrentFrame(); const { fps } = useVideoConfig();
-  const flow = spring({ frame: f - 16, fps, config: { damping: 40, stiffness: 30 } });
-  const nodes = [
-    { l: "STT\n스크립트", s: "22,756줄" },
-    { l: "청킹", s: "30분 윈도우\n5분 오버랩" },
-    { l: "병렬 평가", s: "5개 카테고리" },
-    { l: "집계", s: "가중 평균" },
-    { l: "리포트", s: "근거 + 액션" },
-  ];
+  const s = useSpr(4);
   return (
     <Shell caption={scene.caption}>
-      <Title delay={4} size={36}>파이프라인</Title>
-      <div style={{ position: "relative", width: "100%", maxWidth: 1100, marginTop: 40 }}>
-        <div style={{ position: "absolute", top: 44, left: "10%", right: "10%", height: 3, background: C.line, borderRadius: 2 }}>
-          <div style={{ width: `${flow * 100}%`, height: "100%", borderRadius: 2, background: C.accent }} />
+      <Title delay={2} size={32}>강의 목록</Title>
+      <div style={{ width: "100%", maxWidth: 900, marginTop: 24, opacity: s, borderRadius: 14, overflow: "hidden", border: `1px solid ${C.line}` }}>
+        <div style={{ display: "grid", gridTemplateColumns: "80px 1fr 60px", padding: "12px 24px", background: C.surface, fontSize: 12, fontWeight: 700, color: C.muted }}>
+          <span>날짜</span><span>과목</span><span style={{ textAlign: "right" }}>점수</span>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", position: "relative" }}>
-          {nodes.map((n, i) => {
-            const ns = spring({ frame: f - (10 + i * 8), fps, config: { damping: 16, stiffness: 60 } });
-            const isMid = i === 2;
-            return (
-              <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, width: 140, opacity: ns, transform: `scale(${interpolate(ns, [0, 1], [0.85, 1])})` }}>
-                <div style={{
-                  width: isMid ? 88 : 72, height: isMid ? 88 : 72, borderRadius: "50%",
-                  background: isMid ? C.accent : C.bg, border: `2px solid ${isMid ? C.accent : C.line}`,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 12, fontWeight: 700, lineHeight: 1.3, textAlign: "center",
-                  color: isMid ? "#fff" : C.black, whiteSpace: "pre-line",
-                  boxShadow: isMid ? "0 6px 20px rgba(255,107,0,0.2)" : "none",
-                }}>{n.l}</div>
-                <div style={{ fontSize: 12, color: C.muted, fontWeight: 500, whiteSpace: "pre-line", textAlign: "center", lineHeight: 1.4 }}>{n.s}</div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </Shell>
-  );
-};
-
-// 파이프라인 상세 — 5개 카테고리 fan-out
-const S07: React.FC<{ scene: VideoScene }> = ({ scene }) => {
-  const f = useCurrentFrame(); const { fps } = useVideoConfig();
-  const cats = ["언어 표현 품질", "강의 도입 및 구조", "개념 설명 명확성", "예시 및 실습 연계", "수강생 상호작용"];
-  const items = ["3항목", "5항목", "4항목", "2항목", "4항목"];
-  return (
-    <Shell caption={scene.caption}>
-      <Title delay={4} size={36}>5개 카테고리 병렬 평가</Title>
-      <Sub delay={10}>각 평가자가 동시에 채점하고, 가중 평균으로 집계합니다</Sub>
-      <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 36, width: "100%", maxWidth: 900 }}>
-        {cats.map((cat, i) => {
-          const cs = spring({ frame: f - (16 + i * 6), fps, config: { damping: 18, stiffness: 60 } });
-          return (
-            <div key={cat} style={{ display: "flex", alignItems: "center", gap: 16, opacity: cs, transform: `translateX(${interpolate(cs, [0, 1], [-20, 0])}px)` }}>
-              <div style={{ width: 240, textAlign: "right", fontSize: 16, fontWeight: 700, color: C.black }}>{cat}</div>
-              <div style={{ flex: 1, height: 28, borderRadius: 8, background: C.surface, overflow: "hidden" }}>
-                <div style={{ width: `${cs * (50 + i * 10)}%`, height: "100%", borderRadius: 8, background: `rgba(255,107,0,${0.2 + i * 0.15})` }} />
-              </div>
-              <div style={{ width: 50, fontSize: 13, color: C.muted, fontWeight: 600 }}>{items[i]}</div>
+        {LECTURE_LIST.map((l, i) => (
+          <Fade key={l.date} delay={8 + i * 3}>
+            <div style={{ display: "grid", gridTemplateColumns: "80px 1fr 60px", padding: "14px 24px", borderTop: `1px solid ${C.line}`, fontSize: 14, alignItems: "center" }}>
+              <span style={{ color: C.muted, fontFamily: "monospace" }}>{l.date}</span>
+              <span style={{ fontWeight: 600 }}>{l.subj}</span>
+              <span style={{ textAlign: "right", fontWeight: 800, color: C.accent }}>{l.score.toFixed(1)}</span>
             </div>
-          );
-        })}
+          </Fade>
+        ))}
       </div>
     </Shell>
   );
 };
 
-// 하네스 소개
-const S08: React.FC<{ scene: VideoScene }> = ({ scene }) => (
-  <Shell caption={scene.caption}>
-    <Title delay={4} size={40}>하네스</Title>
-    <Sub delay={10}>평가 기준이 담긴 마크다운 문서입니다</Sub>
-    <Fade delay={18} style={{ marginTop: 36, width: "100%", maxWidth: 800, textAlign: "left" }}>
-      <div style={{ padding: "24px 28px", borderRadius: 14, background: C.surface, border: `1px solid ${C.line}`, fontFamily: "monospace", fontSize: 15, lineHeight: 1.7, color: C.sub }}>
-        <span style={{ color: C.muted }}>---</span>{"\n"}
-        <span style={{ color: C.accent }}>harness_id</span>: category_3_clarity{"\n"}
-        <span style={{ color: C.accent }}>category</span>: "3. 개념 설명 명확성"{"\n"}
-        <span style={{ color: C.accent }}>items</span>:{"\n"}
-        {"  "}- item_id: "3.2"{"\n"}
-        {"    "}name: "비유 및 예시 활용"{"\n"}
-        {"    "}weight: HIGH{"\n"}
-        {"    "}chunk_focus: all{"\n"}
-        <span style={{ color: C.muted }}>---</span>
+// 7. Lecture Detail — 레이더 + 피드백
+const S07: React.FC<{ scene: VideoScene }> = ({ scene }) => {
+  const s = useSpr(6);
+  return (
+    <Shell caption={scene.caption}>
+      <Title delay={2} size={32}>강의 상세</Title>
+      <div style={{ display: "flex", gap: 32, marginTop: 24, width: "100%", maxWidth: 1200, opacity: s }}>
+        <div style={{ flex: 1 }}>
+          <ResponsiveContainer width="100%" height={280}>
+            <RadarChart data={RADAR_DATA}>
+              <PolarGrid stroke={C.line} />
+              <PolarAngleAxis dataKey="subject" tick={{ fontSize: 13, fill: C.black, fontWeight: 600 }} />
+              <PolarRadiusAxis domain={[0, 5]} tick={false} axisLine={false} />
+              <Radar dataKey="A" stroke={C.accent} fill={C.accent} fillOpacity={0.2} strokeWidth={2} animationDuration={1200} />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 16, textAlign: "left" }}>
+          <Fade delay={10}>
+            <div style={{ padding: "16px 20px", borderRadius: 12, background: C.surface }}>
+              <div style={{ fontSize: 12, fontWeight: 800, color: C.accent, letterSpacing: "0.1em", marginBottom: 6 }}>잘한 점</div>
+              <div style={{ fontSize: 15, color: C.sub, lineHeight: 1.6 }}>개념 정의가 명확하고 예시 연결이 자연스럽습니다</div>
+            </div>
+          </Fade>
+          <Fade delay={16}>
+            <div style={{ padding: "16px 20px", borderRadius: 12, background: C.surface }}>
+              <div style={{ fontSize: 12, fontWeight: 800, color: C.muted, letterSpacing: "0.1em", marginBottom: 6 }}>개선할 점</div>
+              <div style={{ fontSize: 15, color: C.sub, lineHeight: 1.6 }}>이해 확인 질문 빈도를 높이면 좋겠습니다</div>
+            </div>
+          </Fade>
+          <Fade delay={22}>
+            <div style={{ padding: "16px 20px", borderRadius: 12, background: `rgba(255,107,0,0.06)` }}>
+              <div style={{ fontSize: 12, fontWeight: 800, color: C.accent, letterSpacing: "0.1em", marginBottom: 6 }}>추천 액션</div>
+              <div style={{ fontSize: 15, color: C.black, lineHeight: 1.6, fontWeight: 600 }}>핵심 설명 후 30초 멈추고 질문하세요</div>
+            </div>
+          </Fade>
+        </div>
       </div>
-    </Fade>
+    </Shell>
+  );
+};
+
+// 8. EDA — 발화량 + 파이
+const S08: React.FC<{ scene: VideoScene }> = ({ scene }) => {
+  const s = useSpr(6);
+  const barData = TREND_DATA.map(d => ({ date: d.d, lines: Math.round(800 + d.s * 300) }));
+  return (
+    <Shell caption={scene.caption}>
+      <Title delay={2} size={32}>데이터 분석</Title>
+      <div style={{ display: "flex", gap: 32, marginTop: 24, width: "100%", maxWidth: 1200, opacity: s }}>
+        <div style={{ flex: 1.2 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.sub, marginBottom: 8 }}>날짜별 발화량</div>
+          <ResponsiveContainer width="100%" height={220}>
+            <BarChart data={barData}>
+              <XAxis dataKey="date" tick={{ fontSize: 10, fill: C.muted }} />
+              <YAxis tick={{ fontSize: 10, fill: C.muted }} />
+              <Bar dataKey="lines" fill={C.accent} radius={[4, 4, 0, 0]} animationDuration={1200} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{ flex: 0.8 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, color: C.sub, marginBottom: 8 }}>습관 표현 분포</div>
+          <ResponsiveContainer width="100%" height={220}>
+            <PieChart>
+              <Pie data={FILLER_DATA} dataKey="value" nameKey="name" cx="50%" cy="50%" innerRadius={50} outerRadius={80} animationDuration={1200}>
+                {FILLER_DATA.map((_, i) => <Cell key={i} fill={`rgba(255,107,0,${0.3 + i * 0.15})`} />)}
+              </Pie>
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </Shell>
+  );
+};
+
+// 9. Instructor dashboard — 캘린더 + 피드백
+const S09: React.FC<{ scene: VideoScene }> = ({ scene }) => (
+  <Shell caption={scene.caption}>
+    <Title delay={2} size={32}>강사 뷰</Title>
+    <div style={{ display: "flex", gap: 32, marginTop: 24, width: "100%", maxWidth: 1200 }}>
+      <Fade delay={6} style={{ flex: 1, textAlign: "left" }}>
+        <div style={{ fontSize: 48, fontWeight: 900, letterSpacing: "-0.05em", color: C.accent }}>3.24</div>
+        <div style={{ fontSize: 16, color: C.muted, marginTop: 4 }}>내 평균 점수 (5점 만점)</div>
+        <div style={{ marginTop: 20 }}>
+          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 8 }}>강점</div>
+          <div style={{ fontSize: 15, color: C.sub, lineHeight: 1.6 }}>개념 정의가 명확합니다</div>
+          <div style={{ fontSize: 14, fontWeight: 700, marginTop: 16, marginBottom: 8 }}>개선 기회</div>
+          <div style={{ fontSize: 15, color: C.sub, lineHeight: 1.6 }}>이해 확인 질문 빈도</div>
+        </div>
+      </Fade>
+      <Fade delay={12} style={{ flex: 1 }}>
+        <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 8 }}>점수 추이</div>
+        <ResponsiveContainer width="100%" height={200}>
+          <LineChart data={TREND_DATA}>
+            <XAxis dataKey="d" tick={{ fontSize: 10, fill: C.muted }} />
+            <YAxis domain={[2, 4]} tick={{ fontSize: 10, fill: C.muted }} />
+            <Line type="monotone" dataKey="s" stroke={C.accent} strokeWidth={2} dot={{ fill: C.accent, r: 3 }} animationDuration={1200} />
+          </LineChart>
+        </ResponsiveContainer>
+      </Fade>
+    </div>
   </Shell>
 );
 
-// 하네스 예시 — 점수 기준
-const S09: React.FC<{ scene: VideoScene }> = ({ scene }) => {
-  const f = useCurrentFrame(); const { fps } = useVideoConfig();
-  const scores = [
-    { s: 5, d: "추상적 개념마다 풍부한 비유와 예시", w: 100 },
-    { s: 4, d: "자주 활용하며 이해에 도움", w: 80 },
-    { s: 3, d: "있으나 빈도가 낮거나 부적절", w: 60 },
-    { s: 2, d: "거의 없어 추상적 설명에 의존", w: 40 },
-    { s: 1, d: "비유/예시 없이 용어만으로 설명", w: 20 },
-  ];
-  return (
-    <Shell caption={scene.caption}>
-      <Title delay={4} size={32}>3.2 비유 및 예시 활용</Title>
-      <Sub delay={8}>어려운 개념에 적절한 비유나 실생활 예시를 활용하는가</Sub>
-      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 32, width: "100%", maxWidth: 800 }}>
-        {scores.map((sc, i) => {
-          const bs = spring({ frame: f - (14 + i * 5), fps, config: { damping: 22, stiffness: 60 } });
-          return (
-            <div key={sc.s} style={{ display: "flex", alignItems: "center", gap: 14, opacity: bs }}>
-              <div style={{ width: 36, height: 36, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 800, background: `rgba(255,107,0,${sc.s * 0.2})`, color: sc.s >= 4 ? "#fff" : C.black }}>{sc.s}</div>
-              <div style={{ flex: 1, height: 22, borderRadius: 6, background: C.line, overflow: "hidden" }}>
-                <div style={{ width: `${sc.w * bs}%`, height: "100%", borderRadius: 6, background: `rgba(255,107,0,${0.12 + sc.s * 0.18})` }} />
-              </div>
-              <div style={{ width: 280, fontSize: 14, color: C.sub, textAlign: "left" }}>{sc.d}</div>
-            </div>
-          );
-        })}
-      </div>
-    </Shell>
-  );
-};
-
-// 하네스 장점
+// 10. Instructor feedback
 const S10: React.FC<{ scene: VideoScene }> = ({ scene }) => (
   <Shell caption={scene.caption}>
-    <Title delay={4} size={36}>코드가 아니라 문서에 있습니다</Title>
-    <div style={{ display: "flex", gap: 40, marginTop: 40 }}>
+    <Title delay={2} size={36}>다음 강의에서 바로 바꿀 수 있는 액션</Title>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20, marginTop: 32, maxWidth: 800, textAlign: "left" }}>
       {[
-        { t: "비개발자도 수정 가능", d: "마크다운 파일만 고치면\n평가 기준이 바뀝니다" },
-        { t: "자동 확장", d: "category_6_new.md 파일을 추가하면\n평가 노드가 자동으로 생깁니다" },
-        { t: "버전 관리", d: "Git으로 기준 변경 이력을\n추적할 수 있습니다" },
-      ].map((item, i) => (
-        <Fade key={item.t} delay={10 + i * 6} style={{ flex: 1, textAlign: "center" }}>
-          <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 10 }}>{item.t}</div>
-          <div style={{ fontSize: 15, color: C.sub, lineHeight: 1.6, whiteSpace: "pre-line" }}>{item.d}</div>
+        { tag: "ACTION 1", text: "마무리 1분 전에 핵심 개념 3개를 다시 말하세요" },
+        { tag: "ACTION 2", text: "개념 설명 후 30초 멈추고 이해 확인 질문을 하세요" },
+        { tag: "ACTION 3", text: "예시를 먼저 보여주고, 그 다음 이론을 설명하세요" },
+      ].map((a, i) => (
+        <Fade key={a.tag} delay={8 + i * 6}>
+          <div style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+            <span style={{ fontSize: 12, fontWeight: 800, color: C.accent, letterSpacing: "0.1em", minWidth: 80 }}>{a.tag}</span>
+            <span style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.5 }}>{a.text}</span>
+          </div>
         </Fade>
       ))}
     </div>
   </Shell>
 );
 
-// ICC
-const S11: React.FC<{ scene: VideoScene }> = ({ scene }) => {
-  const f = useCurrentFrame(); const { fps } = useVideoConfig();
-  const icc = spring({ frame: f - 12, fps, config: { damping: 18, stiffness: 50 } });
-  return (
-    <Shell caption={scene.caption}>
-      <Fade delay={4}><div style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.03em" }}>같은 강의를 세 번 채점해도</div></Fade>
-      <div style={{ fontSize: 160, fontWeight: 900, letterSpacing: "-0.06em", color: C.accent, lineHeight: 1, marginTop: 16, fontVariantNumeric: "tabular-nums", opacity: icc }}>
-        {interpolate(icc, [0, 1], [0, 0.877]).toFixed(3)}
-      </div>
-      <Fade delay={22}><div style={{ fontSize: 18, color: C.sub, marginTop: 12 }}>ICC · 15개 중 13개가 Good 이상</div></Fade>
-    </Shell>
-  );
-};
+// 11. Score trend
+const S11: React.FC<{ scene: VideoScene }> = ({ scene }) => (
+  <Shell caption={scene.caption}>
+    <Title delay={2} size={32}>점수 추이</Title>
+    <Fade delay={6} style={{ width: "100%", maxWidth: 1100, marginTop: 24 }}>
+      <ResponsiveContainer width="100%" height={300}>
+        <AreaChart data={TREND_DATA}>
+          <CartesianGrid strokeDasharray="3 3" stroke={C.line} vertical={false} />
+          <XAxis dataKey="d" tick={{ fontSize: 12, fill: C.muted }} />
+          <YAxis domain={[2, 4]} tick={{ fontSize: 12, fill: C.muted }} />
+          <Area type="monotone" dataKey="s" stroke={C.accent} fill={C.accent} fillOpacity={0.15} strokeWidth={2.5} dot={{ fill: C.bg, stroke: C.accent, strokeWidth: 2, r: 4 }} animationDuration={1500} />
+        </AreaChart>
+      </ResponsiveContainer>
+    </Fade>
+  </Shell>
+);
 
-// 부가 지표
-const S12: React.FC<{ scene: VideoScene }> = ({ scene }) => {
+// 12. Pipeline — Manim
+const S12: React.FC<{ scene: VideoScene }> = ({ scene }) => (
+  <AbsoluteFill style={{ background: C.bg, fontFamily: FONT }}>
+    <Video src={staticFile("assets/pipeline_flow.mp4")} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+    <Caption text={scene.caption} />
+  </AbsoluteFill>
+);
+
+// 13. Harness
+const S13: React.FC<{ scene: VideoScene }> = ({ scene }) => {
   const f = useCurrentFrame(); const { fps } = useVideoConfig();
+  const scores = [
+    { s: 5, d: "풍부한 비유와 예시", w: 100 },
+    { s: 4, d: "자주 활용", w: 80 },
+    { s: 3, d: "빈도 낮음", w: 60 },
+    { s: 2, d: "거의 없음", w: 40 },
+    { s: 1, d: "전혀 없음", w: 20 },
+  ];
   return (
     <Shell caption={scene.caption}>
-      <div style={{ display: "flex", gap: 64 }}>
-        {[{ l: "Kappa", v: "0.883" }, { l: "Alpha", v: "0.873" }, { l: "SSI", v: "0.974" }].map((m, i) => {
-          const ms = spring({ frame: f - (6 + i * 6), fps, config: { damping: 20 } });
+      <Title delay={2} size={32}>하네스: 채점 기준</Title>
+      <Fade delay={6} style={{ fontSize: 18, color: C.sub, marginTop: 8 }}>3.2 비유 및 예시 활용 (가중치: 높음)</Fade>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 24, width: "100%", maxWidth: 800 }}>
+        {scores.map((sc, i) => {
+          const bs = spring({ frame: f - (10 + i * 4), fps, config: { damping: 20, stiffness: 60 } });
           return (
-            <div key={m.l} style={{ opacity: ms, textAlign: "center" }}>
-              <div style={{ fontSize: 56, fontWeight: 800, letterSpacing: "-0.04em" }}>{m.v}</div>
-              <div style={{ fontSize: 16, color: C.muted, marginTop: 8 }}>{m.l}</div>
+            <div key={sc.s} style={{ display: "flex", alignItems: "center", gap: 14, opacity: bs }}>
+              <div style={{ width: 36, height: 36, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, fontWeight: 800, background: `rgba(255,107,0,${sc.s * 0.2})`, color: sc.s >= 4 ? "#fff" : C.black }}>{sc.s}</div>
+              <div style={{ flex: 1, height: 24, borderRadius: 6, background: C.line, overflow: "hidden" }}>
+                <div style={{ width: `${sc.w * bs}%`, height: "100%", borderRadius: 6, background: `rgba(255,107,0,${0.1 + sc.s * 0.18})` }} />
+              </div>
+              <div style={{ width: 160, fontSize: 14, color: C.sub, textAlign: "left" }}>{sc.d}</div>
             </div>
           );
         })}
       </div>
-      <Fade delay={24}><div style={{ fontSize: 20, color: C.sub, marginTop: 36 }}>반복해도 거의 같은 점수가 나옵니다</div></Fade>
     </Shell>
   );
 };
 
-// 청크 비교
-const S13: React.FC<{ scene: VideoScene }> = ({ scene }) => {
+// 14. ICC — Manim + 카운트업
+const S14: React.FC<{ scene: VideoScene }> = ({ scene }) => (
+  <AbsoluteFill style={{ background: C.bg, fontFamily: FONT }}>
+    <Video src={staticFile("assets/icc_principle.mp4")} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+    <Caption text={scene.caption} />
+  </AbsoluteFill>
+);
+
+// 15. Chunk comparison — 실제 프론트 차트 스타일
+const S15: React.FC<{ scene: VideoScene }> = ({ scene }) => {
   const f = useCurrentFrame(); const { fps } = useVideoConfig();
-  const b30 = spring({ frame: f - 12, fps, config: { damping: 22, stiffness: 50 } });
-  const b15 = spring({ frame: f - 18, fps, config: { damping: 22, stiffness: 50 } });
+  const b30 = spring({ frame: f - 8, fps, config: { damping: 22, stiffness: 50 } });
+  const b15 = spring({ frame: f - 14, fps, config: { damping: 22, stiffness: 50 } });
   return (
     <Shell caption={scene.caption}>
-      <Title delay={4} size={36}>청크 크기가 점수를 바꿉니다</Title>
-      <div style={{ width: "100%", maxWidth: 800, marginTop: 40 }}>
+      <Title delay={2} size={32}>청크 크기 비교</Title>
+      <div style={{ width: "100%", maxWidth: 900, marginTop: 32 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 20, marginBottom: 14 }}>
-          <div style={{ width: 100, textAlign: "right", fontSize: 16, fontWeight: 700 }}>30분</div>
-          <div style={{ flex: 1, height: 52, background: C.surface, borderRadius: 12, overflow: "hidden" }}>
-            <div style={{ width: `${b30 * 64.9}%`, height: "100%", borderRadius: 12, background: C.accent, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 18 }}>
-              <span style={{ fontSize: 20, fontWeight: 800, color: "#fff" }}>{(3.245 * b30).toFixed(2)}</span>
+          <div style={{ width: 100, textAlign: "right", fontSize: 18, fontWeight: 700 }}>30분</div>
+          <div style={{ flex: 1, height: 56, background: C.surface, borderRadius: 14, overflow: "hidden" }}>
+            <div style={{ width: `${b30 * 64.9}%`, height: "100%", borderRadius: 14, background: C.accent, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 20 }}>
+              <span style={{ fontSize: 22, fontWeight: 800, color: "#fff" }}>{(3.245 * b30).toFixed(2)}</span>
             </div>
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <div style={{ width: 100, textAlign: "right", fontSize: 16, fontWeight: 700, color: C.sub }}>15분</div>
-          <div style={{ flex: 1, height: 52, background: C.surface, borderRadius: 12, overflow: "hidden" }}>
-            <div style={{ width: `${b15 * 60.7}%`, height: "100%", borderRadius: 12, background: C.line, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 18 }}>
-              <span style={{ fontSize: 20, fontWeight: 800, color: C.sub }}>{(3.033 * b15).toFixed(2)}</span>
+          <div style={{ width: 100, textAlign: "right", fontSize: 18, fontWeight: 700, color: C.sub }}>15분</div>
+          <div style={{ flex: 1, height: 56, background: C.surface, borderRadius: 14, overflow: "hidden" }}>
+            <div style={{ width: `${b15 * 60.7}%`, height: "100%", borderRadius: 14, background: C.line, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 20 }}>
+              <span style={{ fontSize: 22, fontWeight: 800, color: C.sub }}>{(3.033 * b15).toFixed(2)}</span>
             </div>
           </div>
         </div>
+      </div>
+      <div style={{ display: "flex", gap: 40, marginTop: 32 }}>
+        {["p = 0.0006", "Cohen's d = 1.142"].map((t, i) => (
+          <Fade key={i} delay={20 + i * 5}><div style={{ fontSize: 20, fontWeight: 700, color: C.black }}>{t}</div></Fade>
+        ))}
       </div>
     </Shell>
   );
 };
 
-// 청크 결론
-const S14: React.FC<{ scene: VideoScene }> = ({ scene }) => (
-  <Shell caption={scene.caption}>
-    <Title delay={4} size={40}>운영 기본값을{"\n"}30분 청크로 통일했습니다</Title>
-    <div style={{ display: "flex", gap: 40, marginTop: 40 }}>
-      {["p = 0.0006", "Cohen's d = 1.142", "+0.212 차이"].map((t, i) => (
-        <Fade key={i} delay={12 + i * 5}><div style={{ fontSize: 22, fontWeight: 700, color: i === 2 ? C.accent : C.black }}>{t}</div></Fade>
-      ))}
-    </div>
-  </Shell>
-);
-
-// 리포트
-const S15: React.FC<{ scene: VideoScene }> = ({ scene }) => (
-  <Shell caption={scene.caption}>
-    <Title delay={4} size={40}>리포트는 행동 제안서입니다</Title>
-    <Sub delay={10}>관찰 → 해석 → 제안 구조로 분리합니다</Sub>
-  </Shell>
-);
-
-// 리포트 예시
+// 16. Report
 const S16: React.FC<{ scene: VideoScene }> = ({ scene }) => (
   <Shell caption={scene.caption}>
-    <div style={{ display: "flex", flexDirection: "column", gap: 28, maxWidth: 800, width: "100%", textAlign: "left" }}>
+    <Title delay={2} size={36}>리포트: 행동 제안서</Title>
+    <div style={{ display: "flex", flexDirection: "column", gap: 24, marginTop: 32, maxWidth: 800, textAlign: "left" }}>
       {[
-        { tag: "OBSERVED", text: "강의 마무리 시 핵심 내용을\n요약하는 발언이 거의 없습니다", d: 6 },
-        { tag: "INTERPRETED", text: "수강생은 오늘 무엇을 배웠는지\n정리할 기회를 놓칠 수 있습니다", d: 16 },
-        { tag: "ACTION", text: "종료 1분 전 핵심 개념 3개를\n다시 말하는 루틴을 넣으세요", d: 26 },
-      ].map((it) => (
+        { tag: "OBSERVED", text: "마무리 시 요약 발언이 없습니다", d: 6 },
+        { tag: "INTERPRETED", text: "수강생이 정리할 기회를 놓칩니다", d: 14 },
+        { tag: "ACTION", text: "종료 1분 전 핵심 개념 3개를 다시 말하세요", d: 22 },
+      ].map(it => (
         <Fade key={it.tag} delay={it.d}>
-          <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.12em", color: it.tag === "ACTION" ? C.accent : C.muted, marginBottom: 8 }}>{it.tag}</div>
-          <div style={{ fontSize: it.tag === "ACTION" ? 24 : 20, lineHeight: 1.5, fontWeight: it.tag === "ACTION" ? 700 : 500, color: it.tag === "ACTION" ? C.black : C.sub, whiteSpace: "pre-line" }}>{it.text}</div>
+          <div style={{ fontSize: 12, fontWeight: 800, letterSpacing: "0.12em", color: it.tag === "ACTION" ? C.accent : C.muted, marginBottom: 6 }}>{it.tag}</div>
+          <div style={{ fontSize: it.tag === "ACTION" ? 24 : 20, lineHeight: 1.5, fontWeight: it.tag === "ACTION" ? 700 : 500, color: it.tag === "ACTION" ? C.black : C.sub }}>{it.text}</div>
         </Fade>
       ))}
     </div>
   </Shell>
 );
 
-// 연동
+// 17. Future + Ending
 const S17: React.FC<{ scene: VideoScene }> = ({ scene }) => (
   <Shell caption={scene.caption}>
-    <Title delay={4} size={36}>외부 서비스 연동</Title>
-    <div style={{ display: "flex", gap: 48, marginTop: 40 }}>
+    <Title delay={2} size={38}>향후 계획</Title>
+    <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 32, textAlign: "left" }}>
       {[
-        { t: "Google Drive", d: "트랜스크립트 파일을\n드라이브에서 가져옵니다" },
-        { t: "Notion", d: "평가 결과를 노션에\n내보내고 링크로 확인합니다" },
-      ].map((item, i) => (
-        <Fade key={item.t} delay={10 + i * 8} style={{ flex: 1, textAlign: "center" }}>
-          <div style={{ fontSize: 28, fontWeight: 800, marginBottom: 14 }}>{item.t}</div>
-          <div style={{ fontSize: 18, color: C.sub, lineHeight: 1.6, whiteSpace: "pre-line" }}>{item.d}</div>
-        </Fade>
-      ))}
-    </div>
-  </Shell>
-);
-
-// 미래
-const S18: React.FC<{ scene: VideoScene }> = ({ scene }) => (
-  <Shell caption={scene.caption}>
-    <Title delay={4} size={40}>신뢰도 검증은 끝냈습니다</Title>
-    <Title delay={12} size={40} color={C.accent}>이제 완성하는 단계입니다</Title>
-    <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 44, textAlign: "left" }}>
-      {["유튜브 강의를 벤치마크로 비교", "평가 기준 모호 표현을 행동 지표로 정교화", "15개 강의 실데이터 전면 연결", "강사가 실제로 쓰고 싶은 도구로 완성"].map((t, i) => (
-        <Fade key={i} delay={20 + i * 5}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 20, color: C.sub, fontWeight: 500 }}>
-            <span style={{ width: 7, height: 7, borderRadius: 999, background: C.accent, flexShrink: 0 }} />
+        "구글 드라이브 · 노션 연동으로 편하게 분석",
+        "유튜브 강의와 비교 분석",
+        "평가 기준 정교화로 프로세스 시간 단축",
+      ].map((t, i) => (
+        <Fade key={i} delay={8 + i * 5}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 22, color: C.sub, fontWeight: 500 }}>
+            <span style={{ width: 8, height: 8, borderRadius: 999, background: C.accent, flexShrink: 0 }} />
             {t}
           </div>
         </Fade>
       ))}
     </div>
+    <Fade delay={28}><div style={{ fontSize: 16, color: C.muted, marginTop: 40 }}>감사합니다</div></Fade>
   </Shell>
 );
 
+// ═══ ROUTER ═══
 const SCENES: Record<string, React.FC<{ scene: VideoScene }>> = {
   "scene-01": S01, "scene-02": S02, "scene-03": S03, "scene-04": S04,
   "scene-05": S05, "scene-06": S06, "scene-07": S07, "scene-08": S08,
   "scene-09": S09, "scene-10": S10, "scene-11": S11, "scene-12": S12,
   "scene-13": S13, "scene-14": S14, "scene-15": S15, "scene-16": S16,
-  "scene-17": S17, "scene-18": S18,
+  "scene-17": S17,
 };
 
 export const MidtermDeckVideo: React.FC<{ outline: OutlineData }> = ({ outline }) => (
   <AbsoluteFill style={{ background: C.bg }}>
     <Series>
-      {outline.videoScenes.map((scene) => {
+      {outline.videoScenes.map(scene => {
         const Comp = SCENES[scene.id];
         if (!Comp) return null;
         return (
