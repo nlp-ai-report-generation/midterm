@@ -534,14 +534,44 @@ pytest -v
 
 ## 👥 팀
 
-멋쟁이사자처럼 AXP 인턴 1-2조 (4주 프로젝트)
+> 멋쟁이사자처럼 AXP 인턴 1-2조 · 4주 프로젝트 · 2026.03 ~
 
-| 이름 | 역할 | 담당 영역 |
-|------|------|----------|
-| **손영진** | 프로젝트 리드 / 프론트엔드 / 기획 | 프로젝트 기획 및 전체 설계, 프론트엔드 대시보드 개발 (React 19, TypeScript, Recharts), UI/UX 디자인, AI 평가 하네스 설계, 발표 영상 제작 |
-| **이례진** | 백엔드 / 기술 기획 | 시스템 아키텍처 설계, LangGraph 파이프라인 구현 (전처리 → 집계 흐름), FastAPI 서버, AI 평가 하네스 설계 및 품질 관리, 실험 설계 |
-| **김지훈** | AI 엔지니어 / 백엔드 | LLM 평가 파이프라인 최적화 (속도/비용), AI 하네스 품질 평가 및 정교화, 신뢰도 메트릭 구현 (ICC, Kappa, Alpha), 백엔드 성능 개선 |
-| **박은비** | 데이터 분석 / QA | 강의 데이터 전처리 및 EDA 분석, 평가 결과 데이터 검증, 실험 데이터 정리 및 시각화, 품질 보증 (QA) |
+<table>
+  <tr>
+    <td align="center" width="250">
+      <b>손영진</b><br/>
+      <sub>Project Lead · Frontend · 기획</sub><br/><br/>
+      프로젝트 기획 및 전체 설계<br/>
+      프론트엔드 대시보드 (React 19)<br/>
+      UI/UX 디자인 · 발표 영상 제작<br/>
+      AI 평가 하네스 설계
+    </td>
+    <td align="center" width="250">
+      <b>안례진</b><br/>
+      <sub>Backend · 기술 기획</sub><br/><br/>
+      시스템 아키텍처 설계<br/>
+      LangGraph 파이프라인 구현<br/>
+      FastAPI 서버 · 실험 설계<br/>
+      AI 평가 하네스 품질 관리
+    </td>
+    <td align="center" width="250">
+      <b>정지훈</b><br/>
+      <sub>AI Engineer · Backend</sub><br/><br/>
+      LLM 평가 파이프라인 최적화<br/>
+      AI 하네스 품질 평가 및 정교화<br/>
+      신뢰도 메트릭 구현 (ICC, Kappa, Alpha)<br/>
+      백엔드 성능 개선
+    </td>
+    <td align="center" width="250">
+      <b>이은비</b><br/>
+      <sub>Data Analysis · QA</sub><br/><br/>
+      강의 데이터 전처리 및 EDA<br/>
+      평가 결과 데이터 검증<br/>
+      실험 데이터 정리 및 시각화<br/>
+      품질 보증 (QA)
+    </td>
+  </tr>
+</table>
 
 ---
 
