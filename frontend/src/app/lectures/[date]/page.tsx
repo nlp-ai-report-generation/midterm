@@ -11,14 +11,14 @@ import {
 } from "recharts";
 import { Brain, ChevronRight, Sparkles, TriangleAlert } from "lucide-react";
 import { useRole } from "@/contexts/RoleContext";
-import { getEvaluationByModel, getSimulation, getSimulationSummaryVisual, MODEL_LABELS, type ModelKey } from "@/lib/data";
+import { getEvaluationByModel, getSimulation, getSimulationColors, getSimulationSummaryVisual, MODEL_LABELS, type ModelKey } from "@/lib/data";
 import { formatDate, scoreColor, scoreBadgeTextColor, scoreLabel, weightLabel } from "@/lib/utils";
 import { exportToNotion } from "@/lib/api";
-import BrainIconCanvas from "@/components/simulation/BrainIconCanvas";
+import BrainCanvas from "@/components/simulation/BrainCanvas";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import FeedbackCard from "@/components/shared/FeedbackCard";
 import type { EvaluationResult, CategoryResult, ItemScore } from "@/types/evaluation";
-import type { BrainIconFramePayload, SimulationResult } from "@/types/simulation";
+import type { BrainIconFramePayload, SegmentColorPayload, SimulationResult } from "@/types/simulation";
 
 export default function LectureDetailPage() {
   const params = useParams();
@@ -28,6 +28,7 @@ export default function LectureDetailPage() {
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [summaryVisual, setSummaryVisual] = useState<BrainIconFramePayload | null>(null);
+  const [segmentColors, setSegmentColors] = useState<SegmentColorPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -47,15 +48,20 @@ export default function LectureDetailPage() {
 
     getSimulation(date)
       .then(async (result) => {
-        const visual = await getSimulationSummaryVisual(result.summary_visual.brain_icon_frames_json);
+        const [visual, colorPayload] = await Promise.all([
+          getSimulationSummaryVisual(result.summary_visual.brain_icon_frames_json),
+          getSimulationColors(result.assets.segment_colors_json),
+        ]);
         if (cancelled) return;
         setSimulation(result);
         setSummaryVisual(visual);
+        setSegmentColors(colorPayload);
       })
       .catch(() => {
         if (!cancelled) {
           setSimulation(null);
           setSummaryVisual(null);
+          setSegmentColors(null);
         }
       });
 
@@ -105,6 +111,11 @@ export default function LectureDetailPage() {
     score: value,
     fullMark: 5,
   }));
+  const firstSummaryFrame = summaryVisual?.frames[0] ?? null;
+  const firstColorSegment =
+    segmentColors && firstSummaryFrame
+      ? segmentColors.segments.find((segment) => segment.segment_id === firstSummaryFrame.segment_id) ?? null
+      : null;
 
   // Role-dependent feedback config
   const feedbackConfig = isOperator
@@ -298,14 +309,19 @@ export default function LectureDetailPage() {
             <p className="text-section">실험: 수강자 반응 시뮬레이션</p>
             <p className="text-caption">한 줄 결론부터 보고, 실시간 보기에서 스크립트와 반응을 같이 따라갈 수 있어요.</p>
           </div>
-          <Link to={`/lectures/${date}/simulation`} className="btn-secondary">
-            요약 보기
-          </Link>
         </div>
-        {simulation && summaryVisual?.frames[0] ? (
+        {simulation && firstSummaryFrame ? (
           <div className="lecture-simulation-card-body">
             <div className="lecture-simulation-card-visual">
-              <BrainIconCanvas frame={summaryVisual.frames[0]} compact />
+              {firstColorSegment ? (
+                <BrainCanvas
+                  meshUrl={simulation.assets.mesh_glb}
+                  colors={firstColorSegment.hemispheres}
+                  intensity={Math.min(1, 0.54 + firstSummaryFrame.proxies.attention / 140)}
+                  changeBoost={Math.min(1, 0.42 + firstSummaryFrame.proxies.novelty / 140)}
+                  variant="summary"
+                />
+              ) : null}
             </div>
             <div className="lecture-simulation-card-copy">
               <div className="simulation-pill-row">
@@ -335,8 +351,9 @@ export default function LectureDetailPage() {
                 요약 보기
                 <ChevronRight size={16} />
               </Link>
-              <Link to={`/lectures/${date}/simulation/live`} className="simulation-inline-link">
+              <Link to={`/lectures/${date}/simulation/live`} className="btn-primary">
                 실시간 보기
+                <ChevronRight size={16} />
               </Link>
             </div>
           </div>

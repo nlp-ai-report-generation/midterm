@@ -16,11 +16,19 @@ interface BrainCanvasProps {
     left: number[];
     right: number[];
   };
+  intensity?: number;
+  changeBoost?: number;
+  variant?: "live" | "summary";
 }
 
-function heatColor(value: number): [number, number, number] {
+function heatColor(value: number, intensity = 0.5, changeBoost = 0.5, variant: "live" | "summary" = "live"): [number, number, number] {
   const clamped = Math.max(0, Math.min(1, value));
-  const boosted = Math.pow(clamped, 0.78);
+  const contrast = 1.08 + changeBoost * 0.42;
+  const shifted = 0.12 + intensity * 0.14;
+  const normalized = Math.max(0, Math.min(1, (clamped - 0.24) * contrast + shifted));
+  const boosted = variant === "summary"
+    ? Math.round(Math.pow(normalized, 0.62) * 3.2) / 3.2
+    : Math.pow(normalized, 0.68);
 
   if (boosted < 0.36) {
     const ratio = boosted / 0.36;
@@ -42,19 +50,25 @@ function heatColor(value: number): [number, number, number] {
 
   const ratio = (boosted - 0.72) / 0.28;
   return [
-    1.0 + (0.87 - 1.0) * ratio,
-    0.56 + (0.23 - 0.56) * ratio,
-    0.16 + (0.06 - 0.16) * ratio,
+    1.0 + ((variant === "summary" ? 0.9 : 0.87) - 1.0) * ratio,
+    0.56 + ((variant === "summary" ? 0.28 : 0.23) - 0.56) * ratio,
+    0.16 + ((variant === "summary" ? 0.08 : 0.06) - 0.16) * ratio,
   ];
 }
 
-function paintMesh(mesh: Mesh, values: number[] | undefined) {
+function paintMesh(
+  mesh: Mesh,
+  values: number[] | undefined,
+  intensity = 0.5,
+  changeBoost = 0.5,
+  variant: "live" | "summary" = "live",
+) {
   if (!values?.length) return;
   const positions = mesh.geometry.getAttribute("position");
   const colors = new Float32Array(positions.count * 3);
 
   for (let idx = 0; idx < positions.count; idx += 1) {
-    const [r, g, b] = heatColor(values[idx % values.length] ?? 0.5);
+    const [r, g, b] = heatColor(values[idx % values.length] ?? 0.5, intensity, changeBoost, variant);
     colors[idx * 3] = r;
     colors[idx * 3 + 1] = g;
     colors[idx * 3 + 2] = b;
@@ -65,9 +79,9 @@ function paintMesh(mesh: Mesh, values: number[] | undefined) {
 
   mesh.material = new MeshStandardMaterial({
     vertexColors: true,
-    roughness: 0.92,
+    roughness: variant === "summary" ? 0.84 : 0.92,
     metalness: 0,
-    flatShading: true,
+    flatShading: variant === "summary",
   });
 }
 
@@ -81,7 +95,7 @@ function findMesh(root: Object3D, name: string): Mesh | null {
   return match;
 }
 
-function BrainModel({ meshUrl, colors }: BrainCanvasProps) {
+function BrainModel({ meshUrl, colors, intensity, changeBoost, variant = "live" }: BrainCanvasProps) {
   const { scene } = useGLTF(meshUrl);
   const paintedScene = useMemo(() => scene.clone(true), [scene]);
   const outlineScene = useMemo(() => {
@@ -89,27 +103,35 @@ function BrainModel({ meshUrl, colors }: BrainCanvasProps) {
     clone.traverse((child) => {
       if (!(child instanceof Mesh)) return;
       child.material = new MeshStandardMaterial({
-        color: "#fff8f2",
+        color: variant === "summary" ? "#fff6ef" : "#fff8f2",
         roughness: 1,
         metalness: 0,
         side: BackSide,
       });
-      child.scale.setScalar(1.018);
+      child.scale.setScalar(variant === "summary" ? 1.012 : 1.018);
     });
     return clone;
-  }, [scene]);
+  }, [scene, variant]);
 
   useEffect(() => {
     if (!colors) return;
     const left = findMesh(paintedScene, "left_hemisphere");
     const right = findMesh(paintedScene, "right_hemisphere");
-    if (left) paintMesh(left, colors.left);
-    if (right) paintMesh(right, colors.right);
-  }, [paintedScene, colors]);
+    if (left) paintMesh(left, colors.left, intensity, changeBoost, variant);
+    if (right) paintMesh(right, colors.right, intensity, changeBoost, variant);
+  }, [paintedScene, colors, intensity, changeBoost, variant]);
 
   return (
-    <Float speed={1.2} rotationIntensity={0.18} floatIntensity={0.18}>
-      <group position={[0, -0.1, 0.03]} rotation={[0.18, -0.28, 0.04]} scale={[0.0188, 0.0182, 0.0158]}>
+    <Float
+      speed={variant === "summary" ? 0.9 : 1.2}
+      rotationIntensity={variant === "summary" ? 0.12 : 0.18}
+      floatIntensity={variant === "summary" ? 0.11 : 0.18}
+    >
+      <group
+        position={variant === "summary" ? [0, -0.08, 0.03] : [0, -0.1, 0.03]}
+        rotation={variant === "summary" ? [0.2, -0.22, 0.02] : [0.18, -0.28, 0.04]}
+        scale={variant === "summary" ? [0.0196, 0.0191, 0.0166] : [0.0188, 0.0182, 0.0158]}
+      >
         <primitive object={outlineScene as Group} />
         <primitive object={paintedScene as Group} />
       </group>
@@ -137,23 +159,25 @@ function LoadingState() {
   );
 }
 
-export default function BrainCanvas({ meshUrl, colors }: BrainCanvasProps) {
+export default function BrainCanvas({ meshUrl, colors, intensity, changeBoost, variant = "live" }: BrainCanvasProps) {
   return (
-    <Canvas camera={{ position: [0, 0.2, 4.9], fov: 34 }}>
-      <color attach="background" args={["#f7f8fb"]} />
-      <ambientLight intensity={1.35} />
-      <directionalLight position={[3.2, 4.4, 4.6]} intensity={1.45} color="#fff5eb" />
-      <directionalLight position={[-4.5, 0.8, 2.6]} intensity={0.9} color="#ffd9bf" />
-      <directionalLight position={[0, -3.2, 2.4]} intensity={0.35} color="#ffffff" />
+    <Canvas camera={{ position: variant === "summary" ? [0, 0.14, 5.1] : [0, 0.2, 4.9], fov: variant === "summary" ? 32 : 34 }}>
+      <color attach="background" args={[variant === "summary" ? "#faf7f2" : "#f7f8fb"]} />
+      <ambientLight intensity={variant === "summary" ? 1.18 : 1.35} />
+      <directionalLight position={[3.2, 4.4, 4.6]} intensity={variant === "summary" ? 1.25 : 1.45} color="#fff5eb" />
+      <directionalLight position={[-4.5, 0.8, 2.6]} intensity={variant === "summary" ? 0.62 : 0.9} color="#ffd9bf" />
+      <directionalLight position={[0, -3.2, 2.4]} intensity={variant === "summary" ? 0.18 : 0.35} color="#ffffff" />
       <Suspense fallback={<LoadingState />}>
-        <BrainModel meshUrl={meshUrl} colors={colors} />
+        <BrainModel meshUrl={meshUrl} colors={colors} intensity={intensity} changeBoost={changeBoost} variant={variant} />
       </Suspense>
       <OrbitControls
         enablePan={false}
         autoRotate
-        autoRotateSpeed={0.8}
-        minDistance={3.3}
-        maxDistance={6.7}
+        enableRotate={variant !== "summary"}
+        enableZoom={variant !== "summary"}
+        autoRotateSpeed={variant === "summary" ? 0.56 : 0.8}
+        minDistance={variant === "summary" ? 4.5 : 3.3}
+        maxDistance={variant === "summary" ? 5.8 : 6.7}
         minPolarAngle={Math.PI / 3.3}
         maxPolarAngle={Math.PI / 1.75}
       />

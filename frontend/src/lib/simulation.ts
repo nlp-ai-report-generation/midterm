@@ -41,6 +41,40 @@ export function hintLabel(hint: RoiMetricSummary["functional_hint"]) {
   }
 }
 
+export function roiDisplayLabel(roi: Pick<RoiMetricSummary, "functional_hint" | "roi_display_name">) {
+  switch (roi.functional_hint) {
+    case "auditory_or_language_related":
+      return "청각 처리";
+    case "frontal_control_or_action_related":
+      return "전환 조절";
+    case "visual_processing_related":
+      return "시각 처리";
+    case "sensorimotor_or_attention_related":
+      return "집중 조절";
+    case "association_or_default_mode_related":
+      return "맥락 연결";
+    default:
+      return "표면 변화";
+  }
+}
+
+export function roiHintDescription(hint: RoiMetricSummary["functional_hint"]) {
+  switch (hint) {
+    case "auditory_or_language_related":
+      return "설명을 듣고 따라가는 패턴과 가까워요.";
+    case "frontal_control_or_action_related":
+      return "설명 축이 바뀌거나 정리되는 구간에서 함께 커질 수 있어요.";
+    case "visual_processing_related":
+      return "예시나 화면 정보가 바뀌는 흐름과 함께 읽혀요.";
+    case "sensorimotor_or_attention_related":
+      return "주의를 다시 모으는 흐름과 함께 읽혀요.";
+    case "association_or_default_mode_related":
+      return "앞뒤 맥락을 연결하는 흐름과 함께 읽혀요.";
+    default:
+      return "지금 구간의 변화 패턴과 함께 읽혀요.";
+  }
+}
+
 export function modalityLabel(sourceModality: SimulationResult["source_modality"]) {
   return sourceModality === "audio_only_fallback" ? "오디오 fallback" : "텍스트 TTS";
 }

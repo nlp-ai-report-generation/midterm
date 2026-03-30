@@ -56,7 +56,7 @@
 
 ### live 화면용 진짜 timestep cortical frame을 코랩 산출물에 어떻게 저장할 것인가
 
-- 상태: 현재 프론트 live 화면은 transcript line timestamp + 세그먼트 평균 반응 기반 fallback으로 동작함
+- 상태: 현재 프론트 live 화면은 transcript line timestamp + 세그먼트 평균 반응 + 원문 기반 heuristic remap fallback으로 동작함
 - 영향: 사용자가 라인 단위로 보는 brain 변화가 실제 timestep raw를 반영하는지, 혹은 세그먼트 평균을 반복 노출하는지에 따라 신뢰도와 설명 방식이 달라짐
 
 ## 운영

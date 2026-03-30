@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Brain, ChevronRight, Layers3, Sparkles, Waypoints } from "lucide-react";
-import BrainIconCanvas from "@/components/simulation/BrainIconCanvas";
-import { getSimulation, getSimulationSummaryVisual } from "@/lib/data";
+import { AlertTriangle, ArrowLeft, Brain, ChevronRight, Sparkles, Waypoints } from "lucide-react";
+import BrainCanvas from "@/components/simulation/BrainCanvas";
+import { getSimulation, getSimulationColors, getSimulationSummaryVisual } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
-import { hintLabel, modalityLabel } from "@/lib/simulation";
-import type { BrainIconFramePayload, SimulationResult } from "@/types/simulation";
+import { hintLabel, modalityLabel, roiHintDescription } from "@/lib/simulation";
+import type { BrainIconFramePayload, SegmentColorPayload, SimulationResult } from "@/types/simulation";
 
 function highlightLabel(kind: "attention" | "load" | "novelty") {
   return {
@@ -19,6 +19,7 @@ export default function LectureSimulationSummaryPage() {
   const { date = "" } = useParams();
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [summaryVisual, setSummaryVisual] = useState<BrainIconFramePayload | null>(null);
+  const [segmentColors, setSegmentColors] = useState<SegmentColorPayload | null>(null);
   const [selectedFrameIndex, setSelectedFrameIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -31,10 +32,14 @@ export default function LectureSimulationSummaryPage() {
 
     getSimulation(date)
       .then(async (result) => {
-        const visual = await getSimulationSummaryVisual(result.summary_visual.brain_icon_frames_json);
+        const [visual, colorPayload] = await Promise.all([
+          getSimulationSummaryVisual(result.summary_visual.brain_icon_frames_json),
+          getSimulationColors(result.assets.segment_colors_json),
+        ]);
         if (cancelled) return;
         setSimulation(result);
         setSummaryVisual(visual);
+        setSegmentColors(colorPayload);
       })
       .catch(() => {
         if (!cancelled) setError("시뮬레이션 요약을 준비하지 못했어요");
@@ -61,6 +66,10 @@ export default function LectureSimulationSummaryPage() {
     if (!simulation || !selectedFrame) return null;
     return simulation.segments.find((segment) => segment.segment_id === selectedFrame.segment_id) ?? null;
   }, [selectedFrame, simulation]);
+  const selectedColorSegment = useMemo(() => {
+    if (!segmentColors || !selectedFrame) return null;
+    return segmentColors.segments.find((segment) => segment.segment_id === selectedFrame.segment_id) ?? null;
+  }, [segmentColors, selectedFrame]);
 
   if (loading) {
     return (
@@ -117,12 +126,20 @@ export default function LectureSimulationSummaryPage() {
           </div>
 
           <div className="simulation-summary-stage-grid">
-            <div className="simulation-icon-shell">
-              <BrainIconCanvas frame={selectedFrame} />
+            <div className="simulation-summary-mesh-shell">
+              {selectedColorSegment ? (
+                <BrainCanvas
+                  meshUrl={simulation.assets.mesh_glb}
+                  colors={selectedColorSegment.hemispheres}
+                  intensity={Math.min(1, 0.54 + selectedFrame.proxies.attention / 140)}
+                  changeBoost={Math.min(1, 0.42 + selectedFrame.proxies.novelty / 140)}
+                  variant="summary"
+                />
+              ) : null}
             </div>
             <div className="simulation-summary-stack">
               <div className="simulation-summary-card simulation-summary-card-strong">
-                <p className="text-label">대표 구간</p>
+                <p className="text-label">한 줄 결론</p>
                 <p className="text-section" style={{ marginTop: 6 }}>{selectedFrame.title}</p>
                 <p className="text-body" style={{ marginTop: 10 }}>{selectedFrame.subtitle}</p>
                 <div className="simulation-pill-row" style={{ marginTop: 14 }}>
@@ -149,7 +166,7 @@ export default function LectureSimulationSummaryPage() {
 
         <div className="card card-padded simulation-side-card">
           <p className="text-label" style={{ marginBottom: 12 }}>이 결과를 이렇게 읽어요</p>
-          <div style={{ display: "grid", gap: 14 }}>
+          <div className="simulation-method-card-stack">
             <div>
               <p className="text-section" style={{ marginBottom: 4 }}>입력</p>
               <p className="text-body">{simulation.roi_summary.method_explainer.input_summary}</p>
@@ -162,8 +179,12 @@ export default function LectureSimulationSummaryPage() {
               <p className="text-section" style={{ marginBottom: 4 }}>영역</p>
               <p className="text-body">{simulation.roi_summary.method_explainer.roi_summary}</p>
             </div>
+            <div>
+              <p className="text-section" style={{ marginBottom: 4 }}>주의할 점</p>
+              <p className="text-body">실측 감정이 아니라 강도와 변화량을 묶어 읽는 실험용 프록시예요.</p>
+            </div>
             <div className="simulation-callout">
-              <Waypoints size={16} />
+              <AlertTriangle size={16} />
               <p>{simulation.lecture_summary.caution_text}</p>
             </div>
           </div>
@@ -205,10 +226,7 @@ export default function LectureSimulationSummaryPage() {
               <p className="text-section">강의 리듬 요약</p>
               <p className="text-caption">눈에 띄는 구간만 먼저 빠르게 읽어요.</p>
             </div>
-            <span className="simulation-pill">
-              <Layers3 size={14} />
-              {simulation.roi_summary.atlas_name}
-            </span>
+            <span className="simulation-pill">결론 먼저</span>
           </div>
           <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
             <div className="simulation-summary-row">
@@ -244,12 +262,10 @@ export default function LectureSimulationSummaryPage() {
             {simulation.roi_summary.lecture_top_rois.slice(0, 5).map((roi) => (
               <div key={`${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
                 <div>
-                  <p className="text-section" style={{ fontSize: 14 }}>{roi.roi_display_name}</p>
-                  <p className="text-caption">
-                    {roi.hemisphere === "left" ? "왼쪽" : "오른쪽"} · {hintLabel(roi.functional_hint)}
-                  </p>
+                  <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
+                  <p className="text-caption">{roiHintDescription(roi.functional_hint)}</p>
                 </div>
-                <p className="text-caption">{roi.mean_abs_response?.toFixed(4)}</p>
+                <p className="text-caption">{roi.hemisphere === "left" ? "왼쪽" : "오른쪽"}</p>
               </div>
             ))}
           </div>

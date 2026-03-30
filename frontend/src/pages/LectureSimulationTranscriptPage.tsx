@@ -15,6 +15,7 @@ function playbackIntervalMs(currentRelativeSeconds: number, nextRelativeSeconds:
 export default function LectureSimulationTranscriptPage() {
   const { date = "" } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [initialSegment] = useState(() => searchParams.get("segment"));
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [transcript, setTranscript] = useState<TranscriptBrowserData | null>(null);
   const [liveFrames, setLiveFrames] = useState<LiveBrainFramePayload | null>(null);
@@ -38,7 +39,6 @@ export default function LectureSimulationTranscriptPage() {
         setTranscript(transcriptResult);
         setLiveFrames(liveFramePayload);
 
-        const initialSegment = searchParams.get("segment");
         if (initialSegment) {
           const frameIndex = liveFramePayload.frames.findIndex((frame) => frame.segment_id === initialSegment);
           setCurrentFrameIndex(frameIndex >= 0 ? frameIndex : 0);
@@ -56,7 +56,7 @@ export default function LectureSimulationTranscriptPage() {
     return () => {
       cancelled = true;
     };
-  }, [date, searchParams]);
+  }, [date, initialSegment]);
 
   const flattenedLines = useMemo(() => {
     if (!transcript || !simulation) return [];
@@ -74,15 +74,6 @@ export default function LectureSimulationTranscriptPage() {
       block: "nearest",
     });
   }, [currentLine]);
-
-  useEffect(() => {
-    if (!simulation || !currentSegment) return;
-    const segmentId = currentSegment.segment_id;
-    if (searchParams.get("segment") === segmentId) return;
-    const next = new URLSearchParams(searchParams);
-    next.set("segment", segmentId);
-    setSearchParams(next, { replace: true });
-  }, [currentSegment, searchParams, setSearchParams, simulation]);
 
   useEffect(() => {
     if (!isPlaying || !liveFrames || liveFrames.frames.length === 0) return;
@@ -112,6 +103,21 @@ export default function LectureSimulationTranscriptPage() {
       </div>
     );
   }
+
+  const syncSegmentParam = (segmentId: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("segment", segmentId);
+    setSearchParams(next, { replace: true });
+  };
+
+  const jumpToFrame = (frameIndex: number, syncUrl = true) => {
+    const nextIndex = Math.max(0, Math.min(frameIndex, liveFrames.frames.length - 1));
+    setIsPlaying(false);
+    setCurrentFrameIndex(nextIndex);
+    if (syncUrl) {
+      syncSegmentParam(liveFrames.frames[nextIndex].segment_id);
+    }
+  };
 
   return (
     <div className="page-content">
@@ -206,8 +212,7 @@ export default function LectureSimulationTranscriptPage() {
                   onClick={() => {
                     const nextFrameIndex = liveFrames.frames.findIndex((frame) => frame.segment_id === segment.segment_id);
                     if (nextFrameIndex >= 0) {
-                      setIsPlaying(false);
-                      setCurrentFrameIndex(nextFrameIndex);
+                      jumpToFrame(nextFrameIndex);
                     }
                   }}
                   className="simulation-segment-button"
@@ -251,7 +256,7 @@ export default function LectureSimulationTranscriptPage() {
                   {currentSegment.roi_insights.top_active_rois.slice(0, 3).map((roi) => (
                     <div key={`active-${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
                       <div>
-                        <p className="text-section" style={{ fontSize: 14 }}>{roi.roi_display_name}</p>
+                        <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
                         <p className="text-caption">{roi.hemisphere === "left" ? "왼쪽" : "오른쪽"} · {hintLabel(roi.functional_hint)}</p>
                       </div>
                       <p className="text-caption">{roi.mean_abs_response?.toFixed(4)}</p>
@@ -269,7 +274,7 @@ export default function LectureSimulationTranscriptPage() {
                   {currentSegment.roi_insights.top_changed_rois.slice(0, 3).map((roi) => (
                     <div key={`changed-${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
                       <div>
-                        <p className="text-section" style={{ fontSize: 14 }}>{roi.roi_display_name}</p>
+                        <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
                         <p className="text-caption">{roi.hemisphere === "left" ? "왼쪽" : "오른쪽"} · {hintLabel(roi.functional_hint)}</p>
                       </div>
                       <p className="text-caption">{roi.delta_abs_response?.toFixed(4)}</p>
@@ -329,11 +334,10 @@ export default function LectureSimulationTranscriptPage() {
                             borderColor: active ? "rgba(255, 107, 0, 0.22)" : "transparent",
                             background: active ? "rgba(255, 107, 0, 0.08)" : "transparent",
                           }}
-                          onClick={() => {
-                            setIsPlaying(false);
-                            setCurrentFrameIndex(line.frame_index ?? 0);
-                          }}
-                        >
+                      onClick={() => {
+                        jumpToFrame(line.frame_index ?? 0);
+                      }}
+                    >
                           <span className="simulation-transcript-time">{line.timestamp}</span>
                           <span className="simulation-transcript-speaker">{line.speaker}</span>
                           <p className="text-body" style={{ flex: 1 }}>{line.text}</p>

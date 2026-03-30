@@ -218,6 +218,22 @@
 
 ### live 화면은 현재 라인 timestamp를 기준으로 반응 패널을 동기화한다
 
+- 결정: `/simulation/live`와 `/simulation/live/transcript`는 초기 진입 시에만 `?segment=`를 읽고, 재생 중에는 URL을 자동으로 갱신하지 않는다. URL 갱신은 사용자가 직접 클릭, 드래그, 점프했을 때만 수행한다.
+- 이유: 재생 루프에서 `setSearchParams()`가 반복 호출되면 `searchParams` 의존 fetch가 다시 돌며 loading이 켜지고, 사용자에게 새로고침처럼 느껴지는 UX 버그가 발생한다.
+- 결과: live 화면은 playback state를 내부 상태로 유지하고, `currentSegment` 변화만으로 데이터를 다시 fetch하지 않는다.
+
+### live fallback은 원문 기반 heuristic remap으로 체감을 보정한다
+
+- 결정: 진짜 timestep raw가 내려오기 전까지 live 화면은 세그먼트 평균 반응을 그대로 반복하지 않고, 원문 줄 단위 feature를 이용해 `heuristic_intensity`, `heuristic_change_boost`, `heuristic_timeline_emphasis`를 계산한 fallback remap을 사용한다.
+- 이유: 현재 코랩 산출물에는 per-timestep cortical frame이 없어 line 단위 brain 변화 체감이 약하다. 다만 완전한 가짜 보간으로 보이지 않도록 transcript timestamp, 줄 길이, 질문/강조 표현, 전환 키워드, 세그먼트 내 상대 위치를 함께 반영해야 한다.
+- 결과: `scripts/build_simulation_playback_assets.py`가 line별 heuristic score와 display metric을 생성하고, live heatmap과 Risk Timeline은 그 값을 이용해 색 대비와 playhead 체감을 강화한다.
+
+### 요약 탭은 실제 mesh 기반 축약 3D로, live는 현재 줄 중심 우측 레일로 운영한다
+
+- 결정: `/simulation` 요약 탭은 실제 fsaverage5 mesh를 요약 전용 렌더 규칙으로 축약해 보여주고, `/simulation/live`는 우측 레일을 `현재 줄 + 현재 패턴 + 쉬운 영역 설명` 중심으로 최소화한다.
+- 이유: summary 탭은 결론을 먼저 읽히게 하면서도 너무 평면 아이콘처럼 보이면 임팩트가 약하고, live 화면은 텍스트 박스가 많으면 뇌 반응과 playhead를 보는 집중을 깨뜨린다.
+- 결과: `BrainCanvas`에 summary variant를 추가해 flat/satin 느낌과 강한 단계형 대비를 적용했고, live 우측 패널은 atlas 기술명과 앞뒤 줄 나열보다 현재 줄 해석을 우선하는 구조로 재정리했다.
+
 - 결정: `/simulation/live`와 `/simulation/live/transcript`는 transcript line 선택/재생 위치를 기준으로 현재 세그먼트, Risk Timeline playhead, ROI Lens, 해석 문구를 같이 바꾸는 구조로 간다.
 - 이유: 사용자가 “지금 설명 중인 부분에서 어떤 반응으로 읽히는지”를 바로 확인하려면 세그먼트 선택보다 라인 중심 상호작용이 더 직관적이다.
 - 결과: transcript JSON에 `relative_seconds`, `frame_index`를 추가하고, `SimulationSegment.playback`, `live_assets` 계약을 확장했다.

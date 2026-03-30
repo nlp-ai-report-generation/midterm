@@ -87,6 +87,7 @@ export interface TranscriptBrowserData {
       relative_seconds: number;
       lecture_seconds?: number;
       frame_index?: number;
+      line_weight?: number;
       speaker: string;
       text: string;
     }[];
@@ -163,6 +164,9 @@ export interface LiveBrainFrame {
   lecture_seconds: number;
   color_segment_index: number;
   playback_ratio: number;
+  heuristic_intensity: number;
+  heuristic_change_boost: number;
+  heuristic_timeline_emphasis: number;
 }
 
 export interface LiveBrainFramePayload {
@@ -181,5 +185,9 @@ export interface LiveTimelineFramePayload {
     attention: number;
     load: number;
     novelty: number;
+    attention_display: number;
+    load_display: number;
+    novelty_display: number;
+    heuristic_timeline_emphasis: number;
   }>;
 }

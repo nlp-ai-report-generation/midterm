@@ -6,6 +6,14 @@
 
 ## 최근 완료
 
+- 강의 상세 페이지의 시뮬레이션 카드에서 중복 `요약 보기` CTA를 제거하고, 카드 시각화를 평면 brain icon 대신 summary와 같은 축약 3D mesh 톤으로 교체 (`frontend/src/app/lectures/[date]/page.tsx`)
+- `/lectures/:date/simulation` 요약 탭의 대표 시각화를 실제 `fsaverage5` mesh 기반 축약 3D로 전환하고, summary 전용 색 대비/자동 회전/flat shading을 적용 (`frontend/src/pages/LectureSimulationSummaryPage.tsx`, `frontend/src/components/simulation/BrainCanvas.tsx`, `frontend/src/app/globals.css`)
+- `/lectures/:date/simulation/live` 우측 레일을 `현재 줄 + 지금 읽히는 패턴 + 지금 반응하는 영역 + 왜 이렇게 해석해요` 구조로 재정리하고, 앞뒤 줄 다중 박스 의존도를 줄임 (`frontend/src/pages/LectureSimulationLivePage.tsx`, `frontend/src/app/globals.css`)
+- live 화면에서 `currentSegment -> URL 갱신 -> searchParams 의존 fetch` 루프를 끊어 재생 중 새로고침처럼 보이던 버그 수정 (`frontend/src/pages/LectureSimulationLivePage.tsx`, `frontend/src/pages/LectureSimulationTranscriptPage.tsx`)
+- `build_simulation_playback_assets.py`에 원문 기반 heuristic remap 추가: 줄 길이, 질문/강조 표현, 전환 키워드, 세그먼트 내 상대 위치를 합성해 line별 `heuristic_intensity`, `heuristic_change_boost`, `heuristic_timeline_emphasis`, `attention_display`, `load_display`, `novelty_display`, `line_weight` 생성 (`scripts/build_simulation_playback_assets.py`, `frontend/public/data/simulations/2026-02-02-*.json`)
+- live 화면 heatmap 대비를 heuristic intensity/change boost 기반으로 강화하고, Risk Timeline을 frame 단위 playhead + strongest/risk band 구조로 전환 (`frontend/src/components/simulation/BrainCanvas.tsx`, `frontend/src/pages/LectureSimulationLivePage.tsx`, `frontend/src/types/simulation.ts`)
+- live/transcript 화면의 ROI 표기는 raw atlas 명 대신 쉬운 역할 이름 중심으로 바꾸고, 우측 패널을 `현재 줄 + 현재 패턴 설명` 위주로 단순화 (`frontend/src/lib/simulation.ts`, `frontend/src/pages/LectureSimulationLivePage.tsx`, `frontend/src/pages/LectureSimulationTranscriptPage.tsx`, `frontend/src/pages/LectureSimulationSummaryPage.tsx`)
+- `cd frontend && npm run build` 재통과. line-weighted playback 자산과 강화된 live UI 계약까지 포함해 정적 빌드 확인 완료
 - 시뮬레이션 live 화면에서 하단 transcript 분리 카드를 제거하고, 3D brain / Risk Timeline / 현재 줄 / 앞뒤 줄을 같은 화면에서 읽는 2열 구조로 재배치 (`frontend/src/pages/LectureSimulationLivePage.tsx`, `frontend/src/app/globals.css`)
 - 요약 탭과 강의 상세 카드의 brain icon 표현을 구형 3D 메쉬 대신 평면 인포그래픽형 brain graphic으로 교체 (`frontend/src/components/simulation/BrainIconCanvas.tsx`, `frontend/src/pages/LectureSimulationSummaryPage.tsx`, `frontend/src/app/lectures/[date]/page.tsx`)
 - TRIBE 시뮬레이션 라우트를 `요약 탭 -> 실시간 Deep View -> 원문 브라우저` 구조로 재구성 (`/lectures/:date/simulation`, `/lectures/:date/simulation/live`, `/lectures/:date/simulation/live/transcript`)
@@ -71,6 +79,8 @@
 11. `02_build_brain_assets.ipynb`의 좌/우 반구 분할 규약이 실제 TRIBE raw output 정점 순서와 맞는지 검증
 12. 코랩에서 A100/H100 기준으로 audio-only 최적화 노트북 3개 날짜를 끝까지 실행해 실제 시간/메모리 개선 폭 확인
 13. live 화면을 실제 브라우저로 한 번 더 확인하고, 필요하면 타임라인 높이와 우측 레일 줄 수를 발표 리허설 기준으로 미세 조정
+14. 원문 기반 heuristic remap을 진짜 timestep raw frame 저장 형식으로 교체할 코랩/후처리 계약 설계
+15. summary 탭용 축약 3D와 lecture detail 카드 시각 표현의 역할 분리를 한 번 더 점검하고, 필요하면 detail 카드도 같은 톤으로 재정리
 
 ## 현재 저장소 상태
 
@@ -106,4 +116,4 @@
 
 - 전체 15개 강의 실제 평가 결과를 아직 생성하지 않음
 - `2026-02-09`, `2026-02-24` TRIBE raw 결과가 아직 완주본이 아니어서 ROI 기반 시뮬레이션 화면은 현재 `2026-02-02` 실데이터 중심으로만 검증됨
-- 현재 zip 산출물에는 per-timestep cortical frame이 저장되지 않아 live 화면은 line timestamp + 세그먼트 평균 반응 기반 fallback으로 동작함
+- 현재 zip 산출물에는 per-timestep cortical frame이 저장되지 않아 live 화면은 `원문 timestamp + 세그먼트 평균 반응 + heuristic remap` fallback으로 동작함

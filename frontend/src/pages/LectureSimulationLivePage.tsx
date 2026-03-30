@@ -16,6 +16,7 @@ import {
   Line,
   LineChart,
   ReferenceArea,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -36,6 +37,7 @@ import {
   hintLabel,
   metricTone,
   modalityLabel,
+  roiHintDescription,
   segmentTone,
 } from "@/lib/simulation";
 import type {
@@ -55,6 +57,7 @@ function playbackIntervalMs(currentRelativeSeconds: number, nextRelativeSeconds:
 export default function LectureSimulationLivePage() {
   const { date = "" } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [initialSegment] = useState(() => searchParams.get("segment"));
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [transcript, setTranscript] = useState<TranscriptBrowserData | null>(null);
   const [colors, setColors] = useState<SegmentColorPayload | null>(null);
@@ -89,7 +92,6 @@ export default function LectureSimulationLivePage() {
         setLiveFrames(liveFramePayload);
         setTimelineFrames(timelinePayload);
 
-        const initialSegment = searchParams.get("segment");
         if (initialSegment) {
           const firstIndex = liveFramePayload.frames.findIndex((frame) => frame.segment_id === initialSegment);
           setCurrentFrameIndex(firstIndex >= 0 ? firstIndex : 0);
@@ -107,7 +109,7 @@ export default function LectureSimulationLivePage() {
     return () => {
       cancelled = true;
     };
-  }, [date, searchParams]);
+  }, [date, initialSegment]);
 
   const flattenedLines = useMemo(() => {
     if (!transcript || !simulation) return [];
@@ -119,16 +121,21 @@ export default function LectureSimulationLivePage() {
   const currentTimelineFrame = timelineFrames?.frames[currentFrameIndex];
   const currentSegment = simulation?.segments[currentLine?.segment_index ?? 0];
   const currentColorSegment = colors?.segments[currentFrame?.color_segment_index ?? currentLine?.segment_index ?? 0];
-  const timelineData = useMemo(() => {
-    if (!simulation) return [];
-    return simulation.segments.map((segment, index) => ({
-      name: `${index + 1}`,
-      segment_id: segment.segment_id,
-      attention: segment.proxies.attention_proxy,
-      load: segment.proxies.load_proxy,
-      novelty: segment.proxies.novelty_proxy,
-    }));
-  }, [simulation]);
+  const timelineData = timelineFrames?.frames ?? [];
+  const segmentFrameBounds = useMemo(() => {
+    if (!liveFrames) return new Map<string, { start: number; end: number }>();
+    const bounds = new Map<string, { start: number; end: number }>();
+    for (const frame of liveFrames.frames) {
+      const existing = bounds.get(frame.segment_id);
+      if (!existing) {
+        bounds.set(frame.segment_id, { start: frame.lecture_seconds, end: frame.lecture_seconds });
+      } else {
+        existing.start = Math.min(existing.start, frame.lecture_seconds);
+        existing.end = Math.max(existing.end, frame.lecture_seconds);
+      }
+    }
+    return bounds;
+  }, [liveFrames]);
 
   const currentSegmentIndex = currentLine?.segment_index ?? 0;
   const nearbyLines = useMemo(() => {
@@ -137,15 +144,6 @@ export default function LectureSimulationLivePage() {
     const end = Math.min(flattenedLines.length, currentFrameIndex + 3);
     return flattenedLines.slice(start, end);
   }, [currentFrameIndex, currentLine, flattenedLines]);
-
-  useEffect(() => {
-    if (!simulation || !currentSegment) return;
-    const segmentId = currentSegment.segment_id;
-    if (searchParams.get("segment") === segmentId) return;
-    const next = new URLSearchParams(searchParams);
-    next.set("segment", segmentId);
-    setSearchParams(next, { replace: true });
-  }, [currentSegment, searchParams, setSearchParams, simulation]);
 
   useEffect(() => {
     if (!isPlaying || !liveFrames || liveFrames.frames.length === 0) return;
@@ -166,7 +164,19 @@ export default function LectureSimulationLivePage() {
     );
   }
 
-  if (error || !simulation || !transcript || !colors || !liveFrames || !timelineFrames || !currentLine || !currentSegment || !currentColorSegment) {
+  if (
+    error ||
+    !simulation ||
+    !transcript ||
+    !colors ||
+    !liveFrames ||
+    !timelineFrames ||
+    !currentLine ||
+    !currentFrame ||
+    !currentTimelineFrame ||
+    !currentSegment ||
+    !currentColorSegment
+  ) {
     return (
       <div className="card card-padded" style={{ minHeight: 280, display: "grid", placeItems: "center", gap: 12 }}>
         <div className="text-body">{error || "실시간 시뮬레이션을 아직 준비하지 못했어요"}</div>
@@ -178,6 +188,47 @@ export default function LectureSimulationLivePage() {
   }
 
   const segmentTags = buildSegmentTags(simulation, currentSegmentIndex);
+
+  const syncSegmentParam = (segmentId: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("segment", segmentId);
+    setSearchParams(next, { replace: true });
+  };
+
+  const jumpToFrame = (frameIndex: number, syncUrl = true) => {
+    const nextIndex = Math.max(0, Math.min(frameIndex, liveFrames.frames.length - 1));
+    setIsPlaying(false);
+    setCurrentFrameIndex(nextIndex);
+    if (syncUrl) {
+      syncSegmentParam(liveFrames.frames[nextIndex].segment_id);
+    }
+  };
+
+  const currentPatternSummary = (() => {
+    const intensity = currentFrame.heuristic_intensity;
+    const change = currentFrame.heuristic_change_boost;
+    const emphasis = currentFrame.heuristic_timeline_emphasis;
+    if (change >= 0.72) return "설명 축이 빠르게 바뀌는 줄이에요. 전환이 크게 읽혀요.";
+    if (intensity >= 0.76) return "설명 밀도와 추적 반응이 같이 올라가는 줄이에요.";
+    if (emphasis >= 0.72) return "지금 줄이 현재 구간의 중심 포인트로 읽혀요.";
+    return "이 줄은 현재 구간의 흐름을 이어주는 중심 연결부로 읽혀요.";
+  })();
+  const currentMetricSet = {
+    attention: timelineData[currentFrameIndex]?.attention_display ?? currentSegment.proxies.attention_proxy,
+    load: timelineData[currentFrameIndex]?.load_display ?? currentSegment.proxies.load_proxy,
+    novelty: timelineData[currentFrameIndex]?.novelty_display ?? currentSegment.proxies.novelty_proxy,
+  };
+  const patternReasons = [
+    currentMetricSet.attention >= 68
+      ? "반응 강도가 올라가요. 설명을 따라가는 압력이 커지는 줄로 읽혀요."
+      : "반응 강도는 안정적이에요. 흐름을 이어주는 줄에 가까워요.",
+    currentFrame.heuristic_change_boost >= 0.72
+      ? "직전 줄 대비 변화가 커요. 예시나 설명 축이 바뀌는 신호가 보여요."
+      : "직전 줄과 이어지는 흐름이에요. 급격한 전환은 크지 않아요.",
+    currentMetricSet.load >= 65
+      ? "정보 밀도가 높아요. 설명 속도를 한 번 끊어주면 따라가기 쉬워져요."
+      : "부하는 과하지 않아요. 현재 줄은 비교적 읽기 쉬운 구간이에요.",
+  ];
 
   return (
     <div className="page-content">
@@ -248,7 +299,12 @@ export default function LectureSimulationLivePage() {
           </div>
 
           <div className="simulation-brain-shell">
-            <BrainCanvas meshUrl={simulation.assets.mesh_glb} colors={currentColorSegment.hemispheres} />
+            <BrainCanvas
+              meshUrl={simulation.assets.mesh_glb}
+              colors={currentColorSegment.hemispheres}
+              intensity={currentFrame.heuristic_intensity}
+              changeBoost={currentFrame.heuristic_change_boost}
+            />
           </div>
 
           <div className="simulation-live-controls">
@@ -277,8 +333,7 @@ export default function LectureSimulationLivePage() {
                   onClick={() => {
                     const nextIndex = liveFrames.frames.findIndex((frame) => frame.segment_id === segmentId);
                     if (nextIndex >= 0) {
-                      setIsPlaying(false);
-                      setCurrentFrameIndex(nextIndex);
+                      jumpToFrame(nextIndex);
                     }
                   }}
                 >
@@ -294,34 +349,70 @@ export default function LectureSimulationLivePage() {
                 data={timelineData}
                 margin={{ top: 12, right: 8, left: -20, bottom: 0 }}
                 onClick={(state) => {
-                  const segmentId = (state as { activePayload?: Array<{ payload?: { segment_id?: string } }> } | undefined)
-                    ?.activePayload?.[0]?.payload?.segment_id;
-                  if (!segmentId) return;
-                  const nextIndex = liveFrames.frames.findIndex((frame) => frame.segment_id === segmentId);
-                  if (nextIndex >= 0) {
-                    setIsPlaying(false);
-                    setCurrentFrameIndex(nextIndex);
-                  }
+                  const lineIndex = (state as { activePayload?: Array<{ payload?: { line_index?: number } }> } | undefined)
+                    ?.activePayload?.[0]?.payload?.line_index;
+                  if (typeof lineIndex !== "number") return;
+                  jumpToFrame(lineIndex);
                 }}
               >
                 <CartesianGrid stroke="var(--grey-100)" vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 12, fill: "var(--text-muted)" }} />
+                {simulation.lecture_summary.strongest_segment_ids.map((segmentId) => {
+                  const bounds = segmentFrameBounds.get(segmentId);
+                  if (!bounds) return null;
+                  return (
+                    <ReferenceArea
+                      key={`strong-${segmentId}`}
+                      x1={bounds.start}
+                      x2={bounds.end}
+                      fill="rgba(255, 107, 0, 0.06)"
+                      strokeOpacity={0}
+                    />
+                  );
+                })}
+                {simulation.lecture_summary.risk_segment_ids.map((segmentId) => {
+                  const bounds = segmentFrameBounds.get(segmentId);
+                  if (!bounds) return null;
+                  return (
+                    <ReferenceArea
+                      key={`risk-${segmentId}`}
+                      x1={bounds.start}
+                      x2={bounds.end}
+                      fill="rgba(239, 68, 68, 0.07)"
+                      strokeOpacity={0}
+                    />
+                  );
+                })}
+                <ReferenceLine
+                  x={currentTimelineFrame.lecture_seconds}
+                  stroke="var(--primary)"
+                  strokeWidth={2}
+                />
+                <XAxis
+                  dataKey="lecture_seconds"
+                  type="number"
+                  domain={["dataMin", "dataMax"]}
+                  tick={{ fontSize: 12, fill: "var(--text-muted)" }}
+                  tickFormatter={(value) => {
+                    const minutes = Math.floor(Number(value) / 60);
+                    const seconds = Math.floor(Number(value) % 60);
+                    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+                  }}
+                />
                 <YAxis domain={[0, 100]} tick={{ fontSize: 12, fill: "var(--text-muted)" }} />
                 <Tooltip
                   formatter={(value, key) => {
                     const numeric = typeof value === "number" ? value : Number(value ?? 0);
                     return [`${numeric.toFixed(1)}`, String(key)];
                   }}
-                  labelFormatter={(label) => `세그먼트 ${label}`}
+                  labelFormatter={(label) => {
+                    const minutes = Math.floor(Number(label) / 60);
+                    const seconds = Math.floor(Number(label) % 60);
+                    return `재생 위치 ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+                  }}
                 />
-                <ReferenceArea
-                  x1={`${currentSegmentIndex + 1}`}
-                  x2={`${currentSegmentIndex + 1}`}
-                  fill="rgba(255,107,0,0.08)"
-                />
-                <Line type="monotone" dataKey="attention" stroke="var(--primary)" strokeWidth={3} dot={{ r: 3 }} name="Attention" />
-                <Line type="monotone" dataKey="load" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} name="Load" />
-                <Line type="monotone" dataKey="novelty" stroke="#0f172a" strokeWidth={2} dot={{ r: 2 }} name="Novelty" />
+                <Line type="monotone" dataKey="attention_display" stroke="var(--primary)" strokeWidth={3} dot={false} name="Attention" />
+                <Line type="monotone" dataKey="load_display" stroke="#ef4444" strokeWidth={2} dot={false} name="Load" />
+                <Line type="monotone" dataKey="novelty_display" stroke="#0f172a" strokeWidth={2} dot={false} name="Novelty" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -348,40 +439,10 @@ export default function LectureSimulationLivePage() {
             <div className="simulation-live-now-card">
               <p className="text-body">{currentLine.text}</p>
             </div>
-
-            <div className="simulation-live-nearby-list">
-              {nearbyLines.map((line) => {
-                const active = line.frame_index === currentFrameIndex;
-                return (
-                  <button
-                    key={`${line.segment_id}-${line.line_index}`}
-                    className="simulation-live-nearby-button"
-                    style={{
-                      borderColor: active ? "rgba(255, 107, 0, 0.22)" : "rgba(226, 232, 240, 0.85)",
-                      background: active ? "rgba(255, 107, 0, 0.08)" : "var(--surface)",
-                    }}
-                    onClick={() => {
-                      setIsPlaying(false);
-                      setCurrentFrameIndex(line.frame_index ?? currentFrameIndex);
-                    }}
-                  >
-                    <div className="simulation-meta-row">
-                      <span>{line.timestamp}</span>
-                      <span>·</span>
-                      <span>{line.segment_id}</span>
-                      <span>·</span>
-                      <span>{line.line_index + 1}번째 줄</span>
-                    </div>
-                    <p className="text-body" style={{ marginTop: 8 }}>{line.text}</p>
-                  </button>
-                );
-              })}
-            </div>
-
             <div className="simulation-panel-header" style={{ marginTop: 18 }}>
               <div>
-                <p className="text-section">현재 구간 요약</p>
-                <p className="text-caption">지금 줄이 속한 세그먼트를 같이 읽어요.</p>
+                <p className="text-section">지금 읽히는 패턴</p>
+                <p className="text-caption">현재 줄에서 왜 이렇게 보이는지 바로 읽어요.</p>
               </div>
               <Link
                 to={`/lectures/${date}/simulation/live/transcript?segment=${currentSegment.segment_id}`}
@@ -392,11 +453,20 @@ export default function LectureSimulationLivePage() {
               </Link>
             </div>
 
+            <div className="simulation-pattern-list" style={{ marginTop: 16 }}>
+              {patternReasons.map((reason, index) => (
+                <div key={index} className="simulation-pattern-item">
+                  <span className="simulation-pattern-index">{index + 1}</span>
+                  <p className="text-body">{reason}</p>
+                </div>
+              ))}
+            </div>
+
             <div className="simulation-metric-grid" style={{ marginTop: 16 }}>
               {[
-                ["Attention", currentSegment.proxies.attention_proxy],
-                ["Load", currentSegment.proxies.load_proxy],
-                ["Novelty", currentSegment.proxies.novelty_proxy],
+                ["Attention", currentMetricSet.attention],
+                ["Load", currentMetricSet.load],
+                ["Novelty", currentMetricSet.novelty],
               ].map(([label, value]) => (
                 <div key={label} className="simulation-metric-card">
                   <p className="text-label">{label}</p>
@@ -412,38 +482,38 @@ export default function LectureSimulationLivePage() {
                 <span key={tag} className="simulation-pill">{tag}</span>
               ))}
             </div>
-            <p className="text-body" style={{ marginTop: 18 }}>{currentSegment.roi_insights.summary_text}</p>
+
             <div className="simulation-callout" style={{ marginTop: 18 }}>
               <ScanText size={16} />
-              <p>지금 보는 줄과 바로 앞뒤 줄을 같은 화면에서 같이 읽을 수 있어요.</p>
+              <p>{currentPatternSummary}</p>
             </div>
           </div>
 
           <div className="card card-padded">
             <div className="simulation-panel-header">
               <div>
-                <p className="text-section">ROI Lens</p>
-                <p className="text-caption">현재 줄이 속한 구간의 영역 패턴이에요.</p>
+                <p className="text-section">지금 반응하는 영역</p>
+                <p className="text-caption">기술명 대신 지금 읽히는 역할과 이유만 보여줘요.</p>
               </div>
               <span className="simulation-pill">
                 <Layers3 size={14} />
-                {simulation.roi_summary.atlas_name}
+                쉬운 해석
               </span>
             </div>
             <div className="simulation-roi-grid" style={{ marginTop: 18 }}>
               <div className="simulation-roi-card">
                 <div className="simulation-panel-header">
-                  <p className="text-label">활성 ROI</p>
+                  <p className="text-label">지금 크게 읽히는 영역</p>
                   <Waypoints size={16} color="var(--primary)" />
                 </div>
                 <div className="simulation-roi-list" style={{ marginTop: 14 }}>
                   {currentSegment.roi_insights.top_active_rois.slice(0, 3).map((roi) => (
                     <div key={`active-${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
                       <div>
-                        <p className="text-section" style={{ fontSize: 14 }}>{roi.roi_display_name}</p>
-                        <p className="text-caption">{roi.hemisphere === "left" ? "왼쪽" : "오른쪽"} · {hintLabel(roi.functional_hint)}</p>
+                        <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
+                        <p className="text-caption">{roiHintDescription(roi.functional_hint)}</p>
                       </div>
-                      <p className="text-caption">{roi.mean_abs_response?.toFixed(4)}</p>
+                      <p className="text-caption">{roi.hemisphere === "left" ? "왼쪽" : "오른쪽"}</p>
                     </div>
                   ))}
                 </div>
@@ -451,21 +521,26 @@ export default function LectureSimulationLivePage() {
 
               <div className="simulation-roi-card">
                 <div className="simulation-panel-header">
-                  <p className="text-label">변화 ROI</p>
+                  <p className="text-label">지금 빠르게 바뀌는 영역</p>
                   <Waypoints size={16} color="var(--grey-700)" />
                 </div>
                 <div className="simulation-roi-list" style={{ marginTop: 14 }}>
                   {currentSegment.roi_insights.top_changed_rois.slice(0, 3).map((roi) => (
                     <div key={`changed-${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
                       <div>
-                        <p className="text-section" style={{ fontSize: 14 }}>{roi.roi_display_name}</p>
-                        <p className="text-caption">{roi.hemisphere === "left" ? "왼쪽" : "오른쪽"} · {hintLabel(roi.functional_hint)}</p>
+                        <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
+                        <p className="text-caption">직전 줄 대비 이 역할의 변화가 크게 읽혀요.</p>
                       </div>
-                      <p className="text-caption">{roi.delta_abs_response?.toFixed(4)}</p>
+                      <p className="text-caption">{roi.hemisphere === "left" ? "왼쪽" : "오른쪽"}</p>
                     </div>
                   ))}
                 </div>
               </div>
+            </div>
+
+            <div className="simulation-summary-selected" style={{ marginTop: 18 }}>
+              <p className="text-label">왜 이렇게 해석해요</p>
+              <p className="text-body" style={{ marginTop: 8 }}>{currentSegment.roi_insights.summary_text}</p>
             </div>
           </div>
         </div>
