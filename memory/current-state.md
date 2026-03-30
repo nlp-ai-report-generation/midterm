@@ -1,11 +1,31 @@
 # 현재 상태
 
-- 기준일: `2026-03-16`
-- 현재 운영 목표: LangGraph 기반 평가 결과를 실제 데이터로 축적하고, 평가자 기준으로 이해하기 쉬운 운영형 프론트 UX를 완성한다.
+- 기준일: `2026-03-30`
+- 현재 운영 목표: LangGraph 기반 평가 결과를 실제 데이터로 축적하는 동시에, TRIBE v2 기반 수강자 반응 시뮬레이션 실험 기능을 정적 프론트 UX로 연결한다.
 - 프로젝트 목표: 강의 스크립트와 품질 기준을 바탕으로 강사 개선 인사이트를 자동 생성하는 분석 리포트 시스템을 만든다.
 
 ## 최근 완료
 
+- `2026-02-02` TRIBE zip 산출물을 로컬에 반입하고 실제 raw `(55, 20484)` 기준으로 ROI 요약 JSON과 프론트 확장 JSON 생성 (`scripts/import_tribe_zip_and_build_simulation.py`, `analysis/roi/results/2026-02-02-roi-summary.json`, `frontend/public/data/simulations/2026-02-02.json`)
+- `fsaverage5 -> Destrieux atlas` 정점 매핑 생성 완료 (`analysis/roi/fsaverage5_destrieux_mapping.npz`, `analysis/roi/fsaverage5_destrieux_mapping.manifest.json`)
+- 시뮬레이션 화면을 전역 프록시 + ROI Lens + 방법 설명 카드 구조로 확장하고, 원문 브라우저에도 ROI 기반 요약과 해석 태그를 추가 (`frontend/src/pages/LectureSimulationPage.tsx`, `frontend/src/pages/LectureSimulationTranscriptPage.tsx`, `frontend/src/app/globals.css`, `frontend/src/types/simulation.ts`)
+- `/lectures/2026-02-02/simulation`와 `/lectures/2026-02-02/simulation/transcript`를 실제 데이터로 로컬 확인했고 `cd frontend && npm run build` 통과
+- TRIBE v2 실험용 프론트 라우트 2종 추가 (`/lectures/:date/simulation`, `/lectures/:date/simulation/transcript`)
+- 인터랙티브 3D 뇌 히트맵 추가: 실제 `fsaverage5` cortical mesh GLB + 세그먼트 슬라이더 + autoplay + 원문 브라우저 연동 (`frontend/src/components/simulation/`, `frontend/public/data/simulations/brain-mesh.glb`, `frontend/src/pages/LectureSimulationPage.tsx`, `frontend/src/pages/LectureSimulationTranscriptPage.tsx`)
+- 강의 상세 페이지에 수강자 반응 시뮬레이션 실험 카드 추가 (`frontend/src/app/lectures/[date]/page.tsx`)
+- 파일럿 3강의(`2026-02-02`, `2026-02-09`, `2026-02-24`)용 정적 simulation JSON / segment-colors JSON / transcript JSON 생성 (`frontend/public/data/simulations/`)
+- 시뮬레이션 seed 데이터 생성 스크립트 추가 (`scripts/build_simulation_seed_data.py`)
+- 코랩 업로드용 `colab/tribev2-student-reaction/` 폴더 추가 (`README.md`, 4개 ipynb, `requirements-colab.txt`, `sample_outputs/`)
+- `01_run_tribev2.ipynb`를 audio-only 최적화 버전으로 갱신: `TextToEvents.get_events()` 우회, 직접 TTS mp3 생성 후 `get_audio_and_text_events(..., audio_only=True)` 사용, `num_workers=0`, `batch_size=1`, 날짜별 partial save + resume 지원
+- README와 `docs/`에 TRIBE v2 실험 기능 원리, 코랩 실행 흐름, raw output 해석 로직 문서화 추가 (`README.md`, `docs/TRIBE_v2_수강자_반응_시뮬레이션.md`, `docs/현재-진행상황.md`)
+- `analysis/roi/` 작업 공간과 ROI 로컬 후처리 스크립트 2종 추가 (`scripts/export_fsaverage_roi_map.py`, `scripts/build_roi_summary_from_raw.py`, `analysis/roi/README.md`)
+- 중간발표용 독립 HTML 덱 원본 추가 (`presentation/index.html`, `presentation/styles.css`, `presentation/script.js`, `presentation/content/outline.json`)
+- `presentation-refer` 문법을 기준으로 중간발표 덱 디자인을 Apple-light 내러티브 톤으로 재정비
+- 중간발표 덱 카피를 발표용 UX 라이팅 기준으로 전면 리라이트하고 Remotion TTS도 갱신
+- 프론트 공개 라우트 `/presentation` 추가 및 정적 덱 iframe 내장 (`frontend/src/pages/PresentationPage.tsx`, `frontend/src/App.tsx`)
+- 발표 자료를 프론트 공개본과 Remotion 공개 자산으로 동기화하는 스크립트 추가 (`scripts/sync_presentation_assets.py`)
+- 발표 시연용 UI 캡처 4종 생성 (`presentation/assets/ui-dashboard.png`, `presentation/assets/ui-experiments.png`, `presentation/assets/ui-eda.png`, `presentation/assets/ui-lecture-detail.png`)
+- Remotion 기반 3분 설명형 영상 프로젝트 골격 추가, TTS 내레이션 8개 생성, 최종 MP4 렌더 완료 (`presentation/remotion/`, `presentation/remotion/out/midterm-deck.mp4`)
 - LangGraph 기반 평가 파이프라인 전체 구현 (5-노드 병렬 그래프)
 - 5개 카테고리 하네스 MD 작성 (18개 항목 세부 기준 + 5점 앵커)
 - 보정 하네스 및 리포트 생성 하네스 작성
@@ -31,12 +51,17 @@
 
 ## 지금 중요한 일
 
-1. 전체 15개 배치 평가 실행 후 프론트 정적 evaluation JSON 전체 교체
-2. 반복 실행(3패스) → IRR 메트릭 확인 → 신뢰도 임계값 달성 여부 확인
-3. A/B 실험 설계 및 실행 (모델, 온도, 청킹 변수)
-4. 실험 결과 기반 `/experiments` 페이지 실데이터 연결
-5. React SPA 배포 경로와 정적 데이터 갱신 흐름 문서 보강
-6. 강의 상세/설정 화면도 새 Apple 스타일 정보 구조에 맞춰 추가 정리
+1. 중간발표 덱 카피와 실제 발표 멘트 1차 합 맞추기
+2. Remotion 영상 자막·음성 타이밍 미세 조정 및 발표 리허설 반영
+3. 전체 15개 배치 평가 실행 후 프론트 정적 evaluation JSON 전체 교체
+4. 반복 실행(3패스) → IRR 메트릭 확인 → 신뢰도 임계값 달성 여부 확인
+5. A/B 실험 설계 및 실행 (모델, 온도, 청킹 변수)
+6. 실험 결과 기반 `/experiments` 페이지 실데이터 연결
+7. React SPA 배포 경로와 정적 데이터 갱신 흐름 문서 보강
+8. 강의 상세/설정 화면도 새 Apple 스타일 정보 구조에 맞춰 추가 정리
+9. `2026-02-09`, `2026-02-24`도 실제 raw 결과를 확보해 같은 ROI 해석 화면 계약으로 확장
+10. `02_build_brain_assets.ipynb`의 좌/우 반구 분할 규약이 실제 TRIBE raw output 정점 순서와 맞는지 검증
+11. 코랩에서 A100/H100 기준으로 audio-only 최적화 노트북 3개 날짜를 끝까지 실행해 실제 시간/메모리 개선 폭 확인
 
 ## 현재 저장소 상태
 
@@ -45,7 +70,12 @@
 - 기존 코드(src/preprocessing, src/rule_analysis 등): 유지, 하이브리드 활용 가능
 - 테스트: 46개 통과 (chunking, scoring, metrics, harness loading)
 - 프론트 UI: Apple 스타일 rail + 플로팅 내비 패널 + 모바일 하단 탭 + 공통 hero/panel 체계 기준으로 재정비 완료 (`frontend/`)
+- 프론트 시뮬레이션 UI: 파일럿 3강의 대상 실험용 3D 뇌 시각화/원문 브라우저 라우트 추가 완료, `fsaverage5` cortical mesh GLB 자산 연결 완료 (`frontend/src/pages/LectureSimulationPage.tsx`, `frontend/src/pages/LectureSimulationTranscriptPage.tsx`, `frontend/public/data/simulations/brain-mesh.glb`)
 - 정적 평가 데이터: 실제 분석 결과 1건 반영, 나머지 강의는 배치 실행 필요
+- 정적 시뮬레이션 데이터: `2026-02-02`는 실제 TRIBE raw 기반 ROI 해석 결과로 교체 완료, 나머지 파일럿 날짜는 추가 실데이터 확보 필요
+- TRIBE 코랩 노트북: audio-only fallback을 실제 audio-only preprocessing으로 최적화했고, worker 수를 0으로 낮췄으며 날짜별 partial resume 저장을 지원함 (`colab/tribev2-student-reaction/01_run_tribev2.ipynb`)
+- 발표 자산: `presentation/`이 소스 오브 트루스이며, `scripts/sync_presentation_assets.py`로 `frontend/public/presentation/`과 `presentation/remotion/public/`에 동기화함
+- 발표 영상: `presentation/remotion/`에서 TTS 자막형 설명 영상 렌더링 가능, 캡처 자산 4종과 내레이션 mp3 8개 생성 완료
 - Git 상태: 프론트 Apple 스타일 UX 재설계 관련 변경 존재, `.claude/` 디렉터리는 계속 미추적 상태
 
 ## 다음 세션 시작 체크리스트
@@ -54,10 +84,14 @@
 2. `memory/decisions.md` 확인
 3. `.env`에 `OPENAI_API_KEY` 확인
 4. `cd frontend && npm run dev`로 React SPA 확인
-5. `frontend/src/lib/navigation.tsx` 기준으로 route metadata와 헤더/내비가 같이 움직이는지 확인
-6. `python3 scripts/run_single.py --date 2026-02-02 --model gpt-4o-mini` 실행
-7. `python3 scripts/export_frontend_data.py --experiment-id <id>` 실행
+5. `python3 scripts/sync_presentation_assets.py`로 발표 공개본 재동기화
+6. `cd presentation/remotion && npm run tts && npm run render`로 발표 영상 갱신
+7. `python3 scripts/run_single.py --date 2026-02-02 --model gpt-4o-mini` 실행
+8. `python3 scripts/export_frontend_data.py --experiment-id <id>` 실행
+9. `python3 scripts/build_simulation_seed_data.py`로 시뮬레이션 정적 데이터 재생성
+10. `cd frontend && npm run build`로 시뮬레이션 라우트 포함 정적 빌드 확인
 
 ## 현재 블로커
 
 - 전체 15개 강의 실제 평가 결과를 아직 생성하지 않음
+- `2026-02-09`, `2026-02-24` TRIBE raw 결과가 아직 완주본이 아니어서 ROI 기반 시뮬레이션 화면은 현재 `2026-02-02` 실데이터 중심으로만 검증됨

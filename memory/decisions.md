@@ -127,3 +127,67 @@
 - 결정: 강한 강제 온보딩 대신 첫 방문 1회 자동 오픈 후 닫을 수 있는 선택형 투어를 둔다.
 - 이유: 화면 설명은 필요하지만, 매번 방해되는 오버레이는 운영 도구 사용성을 해친다.
 - 결과: `localStorage` 키 `lecture_ops_tour_seen`로 노출 여부를 저장하고, 사용자가 언제든 헤더/내비게이션에서 다시 열 수 있게 구현했다.
+
+## 2026-03-19
+
+### 중간발표 자산은 `presentation/`을 소스 오브 트루스로 둔다
+
+- 결정: 발표용 HTML 덱, 콘텐츠 스키마, 영상 프로젝트는 `presentation/` 아래에서 관리하고, 프론트 공개본은 동기화 결과물로 취급한다.
+- 이유: 제품 SPA와 발표 자산은 목적과 배포 흐름이 다르고, 한쪽을 수정할 때 다른 쪽도 같은 내용을 유지해야 하기 때문이다.
+- 결과: `presentation/content/outline.json`을 공통 원천으로 두고, `scripts/sync_presentation_assets.py`로 `frontend/public/presentation/`과 `presentation/remotion/public/`에 복제한다.
+
+### 중간발표 영상은 TTS + 자막형 Remotion 영상으로 제작
+
+- 결정: 설명형 3분 내 발표 영상은 별도 Remotion 프로젝트에서 만들고, 오디오는 macOS 기본 한국어 음성(`Yuna`) 기반 TTS를 기본값으로 사용한다.
+- 이유: 혼자 재생해도 이해 가능한 형태가 필요하고, 발표 현장에서는 음소거 재생 가능성도 있어 자막 중심 구성이 안전하다.
+- 결과: `presentation/remotion/`에 `MidtermDeckVideo` composition, `public/audio/scene-*.mp3`, 렌더 스크립트를 추가했다.
+
+## 2026-03-30
+
+### 수강자 반응 시뮬레이션은 TRIBE v2 기반 실험 기능으로 운영
+
+- 결정: 수강자 반응 시뮬레이션은 정식 평가 기능이 아니라 `TRIBE v2 기반 신경 반응 프록시` 실험 기능으로 소개한다.
+- 이유: 모델 출력은 시간축별 뇌 반응 예측이지 실제 수강생 감정·만족도 측정값이 아니므로, 과장된 제품 표현을 피해야 한다.
+- 결과: 프론트 라우트와 설명 문구에서 `실험 기능` 배지를 유지하고, 주의 문구를 함께 노출한다.
+
+### 원본 강의 txt의 코랩 업로드와 공개 원문 브라우저를 허용
+
+- 결정: 사용자 요청에 따라 원본 강의 txt를 개인 Drive/코랩에 업로드하는 흐름과 공개 배포본의 전체 원문 브라우저를 허용한다.
+- 이유: TRIBE v2 시뮬레이션과 시각화 데모를 위해 원문 접근성과 전체 맥락 탐색이 필요하다고 판단했다.
+- 결과: `colab/tribev2-student-reaction/` 노트북은 원본 txt 업로드를 전제로 작성했고, 프론트에 `/lectures/:date/simulation/transcript` 라우트를 추가했다.
+
+### 시뮬레이션 1차 범위는 파일럿 3강의 + 인터랙티브 3D 전체 히트맵
+
+- 결정: 1차 구현은 `2026-02-02`, `2026-02-09`, `2026-02-24` 세 강의만 대상으로 하고, 시각화는 `전체 3D 히트맵 + 세그먼트 슬라이더 + 원문 브라우저` 조합으로 고정한다.
+- 이유: 발표 임팩트와 구현 리스크를 함께 관리하려면 전 강의 일괄 처리보다 파일럿 3강의와 전체 히트맵 중심 인터랙션이 적절하다.
+- 결과: `frontend/public/data/simulations/`에 3강의용 정적 seed 데이터가 생성됐고, 강의 상세에서 실험 뷰로 연결된다.
+
+### 3D 뇌 시각화는 실제 fsaverage5 cortical mesh를 사용
+
+- 결정: 프론트 3D 시각화는 절차적 hemisphere가 아니라 `fsaverage5` cortical mesh GLB를 사용한다.
+- 이유: TRIBE v2 공식 출력이 fsaverage5 cortical mesh 위에 정의되므로, 실제 표면 자산을 쓰는 편이 모델 출력 구조와 시각화 의미에 맞다.
+- 결과: `scripts/export_fsaverage_mesh.py`로 `frontend/public/data/simulations/brain-mesh.glb`를 생성하고, `frontend/src/components/simulation/BrainCanvas.tsx`가 해당 GLB를 로드해 vertex color를 입힌다.
+
+### TRIBE 코랩 실행은 병렬화보다 audio-only 최적화 + low-worker + resume 전략을 우선한다
+
+- 결정: 코랩에서는 세그먼트 병렬 추론을 하지 않고, `audio_only` 경로를 진짜 audio-only preprocessing으로 단순화한 뒤 `num_workers=0`, `batch_size=1`, 날짜별 partial save + resume 방식으로 운영한다.
+- 이유: 기존 fallback은 `TextToEvents.get_events()`를 통해 단어 추출과 context 추가까지 한 번 더 돌려 메모리와 시간이 과도하게 들었고, Colab에서 worker 20개가 뜨며 OOM 위험이 커졌다.
+- 결과: `colab/tribev2-student-reaction/01_run_tribev2.ipynb`가 직접 gTTS mp3를 만들고 `get_audio_and_text_events(..., audio_only=True)`만 호출하도록 갱신됐다. 런타임은 `H100/A100 > L4 > T4`, TPU/CPU는 비권장으로 안내한다.
+
+### 2026-02-02 시뮬레이션 화면은 실제 raw 기반 ROI 해석본을 우선 공개한다
+
+- 결정: `2026-02-02` 강의 시뮬레이션 화면은 heuristic seed 데이터 대신 실제 TRIBE raw `(55, 20484)` 결과와 ROI 후처리 결과를 사용한다.
+- 이유: 발표/데모에서 실제 계산 흐름과 근거를 설명하려면 최소 1개 강의라도 실데이터 기준으로 검증된 화면이 필요하다.
+- 결과: `scripts/import_tribe_zip_and_build_simulation.py`로 zip 산출물을 로컬에 반입해 `frontend/public/data/simulations/2026-02-02.json`을 ROI 확장 계약으로 갱신했다.
+
+### ROI 해석은 Destrieux atlas + 규칙 기반 설명으로 고정한다
+
+- 결정: 정점 반응의 영역 해석은 `fsaverage5 -> Destrieux atlas` 매핑을 사용하고, 자연어 설명은 외부 API 없이 로컬 템플릿 규칙으로 생성한다.
+- 이유: 해석 재현성과 비용 통제가 필요하고, 심리 상태를 과장하지 않는 안전한 설명 방식이 필요하다.
+- 결과: `analysis/roi/fsaverage5_destrieux_mapping.npz`를 생성했고, `scripts/build_roi_summary_from_raw.py`와 import 스크립트가 `top_active_rois`, `top_changed_rois`, `summary_text`, `method_explainer`를 만든다.
+
+### 시뮬레이션 화면에는 계산 방법 설명 카드를 항상 노출한다
+
+- 결정: 시뮬레이션 메인 화면과 원문 브라우저에는 결과 해석 방식을 설명하는 카드 또는 문구를 기본으로 넣는다.
+- 이유: attention/load/novelty와 ROI 결과는 익숙하지 않은 개념이라, 사용자가 “왜 이런 값이 나왔는지” 바로 이해할 수 있어야 한다.
+- 결과: `/lectures/:date/simulation`에는 `TRIBE 결과를 이렇게 읽어요`와 `이 결과는 이렇게 만들어요` 섹션을, transcript 화면에는 축약 설명 카드를 둔다.

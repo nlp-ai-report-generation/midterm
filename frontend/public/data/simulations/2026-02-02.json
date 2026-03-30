@@ -1,0 +1,5056 @@
+{
+  "lecture_date": "2026-02-02",
+  "source_model": "tribev2",
+  "source_modality": "audio_only_fallback",
+  "generated_at": "2026-03-30T17:05:00+09:00",
+  "assets": {
+    "mesh_glb": "/data/simulations/brain-mesh.glb",
+    "segment_colors_json": "/data/simulations/2026-02-02-segment-colors.json"
+  },
+  "metadata": {
+    "subject": "객체지향 프로그래밍",
+    "content": "데코레이터 패턴, 옵저버 패턴",
+    "instructor": "김영아",
+    "segment_minutes": 5
+  },
+  "lecture_summary": {
+    "strongest_segment_ids": [
+      "seg-27",
+      "seg-44"
+    ],
+    "risk_segment_ids": [
+      "seg-48",
+      "seg-12"
+    ],
+    "summary_text": "TRIBE raw output을 전역 프록시와 영역 패턴으로 함께 묶어 강의 리듬을 읽은 결과예요.",
+    "caution_text": "TRIBE v2 기반 신경 반응 프록시 시뮬레이션이며 실제 수강생 감정·설문을 대체하지 않습니다."
+  },
+  "segments": [
+    {
+      "segment_id": "seg-01",
+      "start_time": "09:11:17",
+      "end_time": "09:16:16",
+      "proxies": {
+        "attention_proxy": 0.0,
+        "load_proxy": 74.2,
+        "novelty_proxy": 0.0
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.0925,
+            "mean_abs_response": 0.0925,
+            "delta_abs_response": 0.0
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.073463,
+            "mean_abs_response": 0.074189,
+            "delta_abs_response": 0.0
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.069934,
+            "mean_abs_response": 0.070332,
+            "delta_abs_response": 0.0
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 1,
+            "roi_name": "G_and_S_frontomargin",
+            "roi_display_name": "G and S frontomargin",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 59,
+            "signed_mean_response": 0.007505,
+            "mean_abs_response": 0.013833,
+            "delta_abs_response": 0.0
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 2,
+            "roi_name": "G_and_S_occipital_inf",
+            "roi_display_name": "G and S occipital inf",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 81,
+            "signed_mean_response": 0.009211,
+            "mean_abs_response": 0.017575,
+            "delta_abs_response": 0.0
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 3,
+            "roi_name": "G_and_S_paracentral",
+            "roi_display_name": "G and S paracentral",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 160,
+            "signed_mean_response": -0.005882,
+            "mean_abs_response": 0.016602,
+            "delta_abs_response": 0.0
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-02",
+      "start_time": "09:16:29",
+      "end_time": "09:21:10",
+      "proxies": {
+        "attention_proxy": 11.5,
+        "load_proxy": 59.1,
+        "novelty_proxy": 16.5
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.11173,
+            "mean_abs_response": 0.11173,
+            "delta_abs_response": 0.01923
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.094229,
+            "mean_abs_response": 0.094229,
+            "delta_abs_response": 0.020766
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.087559,
+            "mean_abs_response": 0.087559,
+            "delta_abs_response": 0.017625
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 36,
+            "roi_name": "G_temp_sup-Plan_tempo",
+            "roi_display_name": "G temp sup-Plan tempo",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 64,
+            "signed_mean_response": 0.054483,
+            "mean_abs_response": 0.062847,
+            "delta_abs_response": 0.022871
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 13,
+            "roi_name": "G_front_inf-Orbital",
+            "roi_display_name": "G front inf-Orbital",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 30,
+            "signed_mean_response": 0.043366,
+            "mean_abs_response": 0.043366,
+            "delta_abs_response": 0.022655
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 39,
+            "roi_name": "Lat_Fis-ant-Horizont",
+            "roi_display_name": "Lat Fis-ant-Horizont",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 24,
+            "signed_mean_response": 0.036208,
+            "mean_abs_response": 0.036382,
+            "delta_abs_response": 0.022231
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-03",
+      "start_time": "09:21:23",
+      "end_time": "09:26:10",
+      "proxies": {
+        "attention_proxy": 23.4,
+        "load_proxy": 69.0,
+        "novelty_proxy": 29.9
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.135993,
+            "mean_abs_response": 0.135993,
+            "delta_abs_response": 0.024263
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 26,
+            "signed_mean_response": 0.100673,
+            "mean_abs_response": 0.100673,
+            "delta_abs_response": 0.020221
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.098988,
+            "mean_abs_response": 0.098994,
+            "delta_abs_response": 0.013296
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 3,
+            "roi_name": "G_and_S_paracentral",
+            "roi_display_name": "G and S paracentral",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 136,
+            "signed_mean_response": 0.039241,
+            "mean_abs_response": 0.039936,
+            "delta_abs_response": 0.039611
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.055523,
+            "mean_abs_response": 0.055608,
+            "delta_abs_response": 0.036546
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 55,
+            "roi_name": "S_front_sup",
+            "roi_display_name": "S front sup",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 190,
+            "signed_mean_response": 0.029869,
+            "mean_abs_response": 0.031833,
+            "delta_abs_response": 0.034804
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-04",
+      "start_time": "09:26:20",
+      "end_time": "09:31:08",
+      "proxies": {
+        "attention_proxy": 13.0,
+        "load_proxy": 56.5,
+        "novelty_proxy": 22.3
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.110906,
+            "mean_abs_response": 0.110906,
+            "delta_abs_response": 0.025087
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.088101,
+            "mean_abs_response": 0.088238,
+            "delta_abs_response": 0.012213
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.082537,
+            "mean_abs_response": 0.082537,
+            "delta_abs_response": 0.016413
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 43,
+            "roi_name": "Pole_occipital",
+            "roi_display_name": "Pole occipital",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 112,
+            "signed_mean_response": 0.033417,
+            "mean_abs_response": 0.035199,
+            "delta_abs_response": 0.029149
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.029296,
+            "mean_abs_response": 0.030517,
+            "delta_abs_response": 0.026227
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 26,
+            "signed_mean_response": 0.074584,
+            "mean_abs_response": 0.074584,
+            "delta_abs_response": 0.026089
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-05",
+      "start_time": "09:31:25",
+      "end_time": "09:36:14",
+      "proxies": {
+        "attention_proxy": 3.4,
+        "load_proxy": 78.5,
+        "novelty_proxy": 16.3
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.102434,
+            "mean_abs_response": 0.102434,
+            "delta_abs_response": 0.008472
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.078333,
+            "mean_abs_response": 0.078333,
+            "delta_abs_response": 0.006315
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.07584,
+            "mean_abs_response": 0.076094,
+            "delta_abs_response": 0.012636
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 13,
+            "roi_name": "G_front_inf-Orbital",
+            "roi_display_name": "G front inf-Orbital",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 30,
+            "signed_mean_response": 0.021,
+            "mean_abs_response": 0.023636,
+            "delta_abs_response": 0.025127
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 426,
+            "signed_mean_response": 0.042908,
+            "mean_abs_response": 0.051809,
+            "delta_abs_response": 0.023604
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 14,
+            "roi_name": "G_front_inf-Triangul",
+            "roi_display_name": "G front inf-Triangul",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 68,
+            "signed_mean_response": 0.034335,
+            "mean_abs_response": 0.036275,
+            "delta_abs_response": 0.019695
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-06",
+      "start_time": "09:36:23",
+      "end_time": "09:40:46",
+      "proxies": {
+        "attention_proxy": 13.7,
+        "load_proxy": 70.9,
+        "novelty_proxy": 25.1
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.108693,
+            "mean_abs_response": 0.108693,
+            "delta_abs_response": 0.006873
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.08336,
+            "mean_abs_response": 0.08336,
+            "delta_abs_response": 0.006146
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.077214,
+            "mean_abs_response": 0.079317,
+            "delta_abs_response": 0.009939
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.05039,
+            "mean_abs_response": 0.05039,
+            "delta_abs_response": 0.033904
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 141,
+            "signed_mean_response": 0.028984,
+            "mean_abs_response": 0.02992,
+            "delta_abs_response": 0.032631
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 29,
+            "roi_name": "G_precentral",
+            "roi_display_name": "G precentral",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 237,
+            "signed_mean_response": 0.049904,
+            "mean_abs_response": 0.04999,
+            "delta_abs_response": 0.032062
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-07",
+      "start_time": "09:41:52",
+      "end_time": "09:46:08",
+      "proxies": {
+        "attention_proxy": 14.8,
+        "load_proxy": 59.9,
+        "novelty_proxy": 15.3
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 통제와 전환 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.123777,
+            "mean_abs_response": 0.123777,
+            "delta_abs_response": 0.015085
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.091018,
+            "mean_abs_response": 0.095281,
+            "delta_abs_response": 0.017026
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.093507,
+            "mean_abs_response": 0.093507,
+            "delta_abs_response": 0.010303
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 13,
+            "roi_name": "G_front_inf-Orbital",
+            "roi_display_name": "G front inf-Orbital",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 30,
+            "signed_mean_response": 0.046981,
+            "mean_abs_response": 0.047639,
+            "delta_abs_response": 0.022344
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 14,
+            "roi_name": "G_front_inf-Triangul",
+            "roi_display_name": "G front inf-Triangul",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 68,
+            "signed_mean_response": 0.06623,
+            "mean_abs_response": 0.067829,
+            "delta_abs_response": 0.02075
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 426,
+            "signed_mean_response": 0.064722,
+            "mean_abs_response": 0.075558,
+            "delta_abs_response": 0.019917
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 통제와 전환 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-08",
+      "start_time": "09:46:19",
+      "end_time": "09:51:06",
+      "proxies": {
+        "attention_proxy": 12.4,
+        "load_proxy": 74.6,
+        "novelty_proxy": 18.7
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.116987,
+            "mean_abs_response": 0.116987,
+            "delta_abs_response": 0.007602
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.091873,
+            "mean_abs_response": 0.091915,
+            "delta_abs_response": 0.017864
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.08498,
+            "mean_abs_response": 0.08498,
+            "delta_abs_response": 0.010302
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 53,
+            "roi_name": "S_front_inf",
+            "roi_display_name": "S front inf",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 143,
+            "signed_mean_response": 0.01597,
+            "mean_abs_response": 0.024688,
+            "delta_abs_response": 0.02671
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 63,
+            "roi_name": "S_orbital_lateral",
+            "roi_display_name": "S orbital lateral",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 21,
+            "signed_mean_response": 0.020794,
+            "mean_abs_response": 0.023846,
+            "delta_abs_response": 0.025378
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 38,
+            "roi_name": "G_temporal_middle",
+            "roi_display_name": "G temporal middle",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 188,
+            "signed_mean_response": 0.0274,
+            "mean_abs_response": 0.035422,
+            "delta_abs_response": 0.024907
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-09",
+      "start_time": "09:51:19",
+      "end_time": "09:56:04",
+      "proxies": {
+        "attention_proxy": 8.2,
+        "load_proxy": 76.3,
+        "novelty_proxy": 12.1
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.115039,
+            "mean_abs_response": 0.115039,
+            "delta_abs_response": 0.004055
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.090216,
+            "mean_abs_response": 0.090216,
+            "delta_abs_response": 0.006232
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.084442,
+            "mean_abs_response": 0.084442,
+            "delta_abs_response": 0.006952
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 44,
+            "roi_name": "Pole_temporal",
+            "roi_display_name": "Pole temporal",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 105,
+            "signed_mean_response": 0.017451,
+            "mean_abs_response": 0.020995,
+            "delta_abs_response": 0.015393
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 50,
+            "roi_name": "S_circular_insula_sup",
+            "roi_display_name": "S circular insula sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 145,
+            "signed_mean_response": -0.010722,
+            "mean_abs_response": 0.016102,
+            "delta_abs_response": 0.013521
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 4,
+            "roi_name": "G_and_S_subcentral",
+            "roi_display_name": "G and S subcentral",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 139,
+            "signed_mean_response": 0.007672,
+            "mean_abs_response": 0.018658,
+            "delta_abs_response": 0.013517
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-10",
+      "start_time": "09:56:19",
+      "end_time": "10:01:06",
+      "proxies": {
+        "attention_proxy": 8.7,
+        "load_proxy": 89.9,
+        "novelty_proxy": 23.9
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.08019,
+            "mean_abs_response": 0.08019,
+            "delta_abs_response": 0.034848
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.072562,
+            "mean_abs_response": 0.072745,
+            "delta_abs_response": 0.021633
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.072642,
+            "mean_abs_response": 0.072642,
+            "delta_abs_response": 0.017194
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.08019,
+            "mean_abs_response": 0.08019,
+            "delta_abs_response": 0.034848
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 52,
+            "roi_name": "S_collat_transv_post",
+            "roi_display_name": "S collat transv post",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 17,
+            "signed_mean_response": -0.019207,
+            "mean_abs_response": 0.019931,
+            "delta_abs_response": 0.031204
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 26,
+            "signed_mean_response": 0.053537,
+            "mean_abs_response": 0.053537,
+            "delta_abs_response": 0.028502
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-11",
+      "start_time": "10:01:20",
+      "end_time": "10:05:38",
+      "proxies": {
+        "attention_proxy": 27.2,
+        "load_proxy": 66.5,
+        "novelty_proxy": 37.8
+      },
+      "labels": [
+        "집중 하락",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.123874,
+            "mean_abs_response": 0.123874,
+            "delta_abs_response": 0.043684
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.111596,
+            "mean_abs_response": 0.111596,
+            "delta_abs_response": 0.039034
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.105723,
+            "mean_abs_response": 0.105723,
+            "delta_abs_response": 0.033191
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 426,
+            "signed_mean_response": 0.09296,
+            "mean_abs_response": 0.099322,
+            "delta_abs_response": 0.047482
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 43,
+            "roi_name": "Pole_occipital",
+            "roi_display_name": "Pole occipital",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 168,
+            "signed_mean_response": 0.038494,
+            "mean_abs_response": 0.04025,
+            "delta_abs_response": 0.047107
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 479,
+            "signed_mean_response": 0.085652,
+            "mean_abs_response": 0.092019,
+            "delta_abs_response": 0.045943
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-12",
+      "start_time": "10:06:22",
+      "end_time": "10:11:14",
+      "proxies": {
+        "attention_proxy": 19.3,
+        "load_proxy": 100.0,
+        "novelty_proxy": 18.4
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.134425,
+            "mean_abs_response": 0.134425,
+            "delta_abs_response": 0.010551
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 26,
+            "signed_mean_response": 0.103506,
+            "mean_abs_response": 0.103506,
+            "delta_abs_response": 0.009633
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.103203,
+            "mean_abs_response": 0.103203,
+            "delta_abs_response": 0.015041
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 58,
+            "roi_name": "S_oc_middle_and_Lunatus",
+            "roi_display_name": "S oc middle and Lunatus",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 58,
+            "signed_mean_response": 0.028213,
+            "mean_abs_response": 0.034115,
+            "delta_abs_response": 0.025442
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 52,
+            "roi_name": "S_collat_transv_post",
+            "roi_display_name": "S collat transv post",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 17,
+            "signed_mean_response": 0.050082,
+            "mean_abs_response": 0.050082,
+            "delta_abs_response": 0.023971
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 58,
+            "roi_name": "S_oc_middle_and_Lunatus",
+            "roi_display_name": "S oc middle and Lunatus",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 62,
+            "signed_mean_response": 0.052119,
+            "mean_abs_response": 0.052119,
+            "delta_abs_response": 0.021228
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-13",
+      "start_time": "10:11:34",
+      "end_time": "10:16:04",
+      "proxies": {
+        "attention_proxy": 25.5,
+        "load_proxy": 67.3,
+        "novelty_proxy": 35.6
+      },
+      "labels": [
+        "집중 하락",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.123476,
+            "mean_abs_response": 0.123476,
+            "delta_abs_response": 0.012743
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.093446,
+            "mean_abs_response": 0.093446,
+            "delta_abs_response": 0.00874
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.084748,
+            "mean_abs_response": 0.091845,
+            "delta_abs_response": 0.022704
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 60,
+            "roi_name": "S_occipital_ant",
+            "roi_display_name": "S occipital ant",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 49,
+            "signed_mean_response": -0.035305,
+            "mean_abs_response": 0.039652,
+            "delta_abs_response": 0.061006
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 60,
+            "roi_name": "S_occipital_ant",
+            "roi_display_name": "S occipital ant",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 56,
+            "signed_mean_response": -0.028617,
+            "mean_abs_response": 0.029833,
+            "delta_abs_response": 0.055968
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 19,
+            "roi_name": "G_occipital_middle",
+            "roi_display_name": "G occipital middle",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 132,
+            "signed_mean_response": -0.038277,
+            "mean_abs_response": 0.042347,
+            "delta_abs_response": 0.054003
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-14",
+      "start_time": "10:16:17",
+      "end_time": "10:21:03",
+      "proxies": {
+        "attention_proxy": 17.4,
+        "load_proxy": 62.7,
+        "novelty_proxy": 13.9
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.11753,
+            "mean_abs_response": 0.11753,
+            "delta_abs_response": 0.005946
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.092405,
+            "mean_abs_response": 0.092405,
+            "delta_abs_response": 0.003305
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.077141,
+            "mean_abs_response": 0.085735,
+            "delta_abs_response": 0.009239
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 59,
+            "roi_name": "S_oc_sup_and_transversal",
+            "roi_display_name": "S oc sup and transversal",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 89,
+            "signed_mean_response": -0.000624,
+            "mean_abs_response": 0.015862,
+            "delta_abs_response": 0.021166
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 57,
+            "roi_name": "S_intrapariet_and_P_trans",
+            "roi_display_name": "S intrapariet and P trans",
+            "functional_hint": "sensorimotor_or_attention_related",
+            "vertex_count": 299,
+            "signed_mean_response": 0.012371,
+            "mean_abs_response": 0.021903,
+            "delta_abs_response": 0.020039
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 57,
+            "roi_name": "S_intrapariet_and_P_trans",
+            "roi_display_name": "S intrapariet and P trans",
+            "functional_hint": "sensorimotor_or_attention_related",
+            "vertex_count": 274,
+            "signed_mean_response": 0.007525,
+            "mean_abs_response": 0.01986,
+            "delta_abs_response": 0.019454
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-15",
+      "start_time": "10:21:17",
+      "end_time": "10:26:01",
+      "proxies": {
+        "attention_proxy": 15.9,
+        "load_proxy": 57.9,
+        "novelty_proxy": 9.7
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.127877,
+            "mean_abs_response": 0.127877,
+            "delta_abs_response": 0.010347
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.098065,
+            "mean_abs_response": 0.098065,
+            "delta_abs_response": 0.005875
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.087755,
+            "mean_abs_response": 0.093635,
+            "delta_abs_response": 0.010862
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 60,
+            "roi_name": "S_occipital_ant",
+            "roi_display_name": "S occipital ant",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 49,
+            "signed_mean_response": -0.014517,
+            "mean_abs_response": 0.030966,
+            "delta_abs_response": 0.014864
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 2,
+            "roi_name": "G_and_S_occipital_inf",
+            "roi_display_name": "G and S occipital inf",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 72,
+            "signed_mean_response": 0.012748,
+            "mean_abs_response": 0.030768,
+            "delta_abs_response": 0.013506
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 479,
+            "signed_mean_response": 0.029971,
+            "mean_abs_response": 0.063444,
+            "delta_abs_response": 0.013326
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-16",
+      "start_time": "10:26:19",
+      "end_time": "10:31:13",
+      "proxies": {
+        "attention_proxy": 13.9,
+        "load_proxy": 61.0,
+        "novelty_proxy": 37.9
+      },
+      "labels": [
+        "집중 하락",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 통제와 전환 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.103338,
+            "mean_abs_response": 0.103338,
+            "delta_abs_response": 0.024539
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.079602,
+            "mean_abs_response": 0.079979,
+            "delta_abs_response": 0.021278
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.076436,
+            "mean_abs_response": 0.076436,
+            "delta_abs_response": 0.021629
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 29,
+            "roi_name": "G_precentral",
+            "roi_display_name": "G precentral",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 237,
+            "signed_mean_response": 0.018701,
+            "mean_abs_response": 0.025847,
+            "delta_abs_response": 0.05306
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.017887,
+            "mean_abs_response": 0.020611,
+            "delta_abs_response": 0.052113
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 3,
+            "roi_name": "G_and_S_paracentral",
+            "roi_display_name": "G and S paracentral",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 136,
+            "signed_mean_response": -0.000843,
+            "mean_abs_response": 0.015182,
+            "delta_abs_response": 0.050926
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 통제와 전환 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-17",
+      "start_time": "10:31:27",
+      "end_time": "10:36:16",
+      "proxies": {
+        "attention_proxy": 7.2,
+        "load_proxy": 80.9,
+        "novelty_proxy": 13.9
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.099087,
+            "mean_abs_response": 0.099087,
+            "delta_abs_response": 0.00484
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.075751,
+            "mean_abs_response": 0.076207,
+            "delta_abs_response": 0.008712
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.072102,
+            "mean_abs_response": 0.072102,
+            "delta_abs_response": 0.006253
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.034982,
+            "mean_abs_response": 0.035253,
+            "delta_abs_response": 0.017095
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 118,
+            "signed_mean_response": 0.024843,
+            "mean_abs_response": 0.0257,
+            "delta_abs_response": 0.016462
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 141,
+            "signed_mean_response": 0.018256,
+            "mean_abs_response": 0.02098,
+            "delta_abs_response": 0.016354
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-18",
+      "start_time": "10:36:22",
+      "end_time": "10:40:57",
+      "proxies": {
+        "attention_proxy": 9.0,
+        "load_proxy": 71.2,
+        "novelty_proxy": 17.3
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.111303,
+            "mean_abs_response": 0.111303,
+            "delta_abs_response": 0.012216
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.089478,
+            "mean_abs_response": 0.090164,
+            "delta_abs_response": 0.019766
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.084341,
+            "mean_abs_response": 0.084501,
+            "delta_abs_response": 0.023383
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 44,
+            "roi_name": "Pole_temporal",
+            "roi_display_name": "Pole temporal",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 105,
+            "signed_mean_response": 0.02817,
+            "mean_abs_response": 0.029445,
+            "delta_abs_response": 0.029222
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.084341,
+            "mean_abs_response": 0.084501,
+            "delta_abs_response": 0.023383
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 44,
+            "roi_name": "Pole_temporal",
+            "roi_display_name": "Pole temporal",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 117,
+            "signed_mean_response": 0.022019,
+            "mean_abs_response": 0.026725,
+            "delta_abs_response": 0.022191
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-19",
+      "start_time": "10:41:23",
+      "end_time": "10:43:08",
+      "proxies": {
+        "attention_proxy": 13.2,
+        "load_proxy": 67.3,
+        "novelty_proxy": 23.9
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.11994,
+            "mean_abs_response": 0.11994,
+            "delta_abs_response": 0.008715
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.091158,
+            "mean_abs_response": 0.091158,
+            "delta_abs_response": 0.009307
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.089538,
+            "mean_abs_response": 0.091084,
+            "delta_abs_response": 0.018587
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 44,
+            "roi_name": "Pole_temporal",
+            "roi_display_name": "Pole temporal",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 105,
+            "signed_mean_response": -0.000566,
+            "mean_abs_response": 0.014789,
+            "delta_abs_response": 0.030429
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 44,
+            "roi_name": "Pole_temporal",
+            "roi_display_name": "Pole temporal",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 117,
+            "signed_mean_response": -0.00515,
+            "mean_abs_response": 0.01268,
+            "delta_abs_response": 0.027424
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 59,
+            "roi_name": "S_oc_sup_and_transversal",
+            "roi_display_name": "S oc sup and transversal",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 96,
+            "signed_mean_response": 0.01143,
+            "mean_abs_response": 0.018198,
+            "delta_abs_response": 0.027068
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-20",
+      "start_time": "11:48:11",
+      "end_time": "11:48:26",
+      "proxies": {
+        "attention_proxy": 47.0,
+        "load_proxy": 52.6,
+        "novelty_proxy": 49.1
+      },
+      "labels": [
+        "리듬 안정",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 안정적으로 이어지는 구간이에요. 지금 설명 흐름을 유지하면서 핵심 문장을 더 분명하게 잡아주면 좋아요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.15577,
+            "mean_abs_response": 0.15577,
+            "delta_abs_response": 0.035829
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.129451,
+            "mean_abs_response": 0.139507,
+            "delta_abs_response": 0.050253
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.11434,
+            "mean_abs_response": 0.11434,
+            "delta_abs_response": 0.027713
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 19,
+            "roi_name": "G_occipital_middle",
+            "roi_display_name": "G occipital middle",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 132,
+            "signed_mean_response": -0.068323,
+            "mean_abs_response": 0.072957,
+            "delta_abs_response": 0.063496
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 22,
+            "roi_name": "G_oc-temp_med-Lingual",
+            "roi_display_name": "G oc-temp med-Lingual",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 153,
+            "signed_mean_response": -0.071972,
+            "mean_abs_response": 0.07496,
+            "delta_abs_response": 0.063298
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 30,
+            "roi_name": "G_precuneus",
+            "roi_display_name": "G precuneus",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 259,
+            "signed_mean_response": -0.073489,
+            "mean_abs_response": 0.07976,
+            "delta_abs_response": 0.062848
+          }
+        ],
+        "summary_text": "설명 추적 반응이 안정적으로 이어지는 구간이에요. 지금 설명 흐름을 유지하면서 핵심 문장을 더 분명하게 잡아주면 좋아요."
+      }
+    },
+    {
+      "segment_id": "seg-21",
+      "start_time": "01:00:30",
+      "end_time": "01:01:10",
+      "proxies": {
+        "attention_proxy": 40.8,
+        "load_proxy": 82.2,
+        "novelty_proxy": 45.7
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "통제와 전환 반응"
+      ],
+      "interpretation": "통제와 전환 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.099319,
+            "mean_abs_response": 0.099319,
+            "delta_abs_response": 0.028561
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 29,
+            "roi_name": "G_precentral",
+            "roi_display_name": "G precentral",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 237,
+            "signed_mean_response": 0.093115,
+            "mean_abs_response": 0.093265,
+            "delta_abs_response": 0.027302
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.09148,
+            "mean_abs_response": 0.09148,
+            "delta_abs_response": 0.06429
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.051487,
+            "mean_abs_response": 0.080267,
+            "delta_abs_response": 0.078144
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.027744,
+            "mean_abs_response": 0.055208,
+            "delta_abs_response": 0.073254
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 426,
+            "signed_mean_response": 0.003159,
+            "mean_abs_response": 0.043822,
+            "delta_abs_response": 0.068144
+          }
+        ],
+        "summary_text": "통제와 전환 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-22",
+      "start_time": "01:01:21",
+      "end_time": "01:06:11",
+      "proxies": {
+        "attention_proxy": 24.4,
+        "load_proxy": 49.6,
+        "novelty_proxy": 57.2
+      },
+      "labels": [
+        "집중 하락",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 통제와 전환 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.114965,
+            "mean_abs_response": 0.114965,
+            "delta_abs_response": 0.023661
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.086583,
+            "mean_abs_response": 0.086583,
+            "delta_abs_response": 0.017379
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.085179,
+            "mean_abs_response": 0.086049,
+            "delta_abs_response": 0.044261
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.025758,
+            "mean_abs_response": 0.027635,
+            "delta_abs_response": 0.073561
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 29,
+            "roi_name": "G_precentral",
+            "roi_display_name": "G precentral",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 237,
+            "signed_mean_response": 0.029327,
+            "mean_abs_response": 0.032412,
+            "delta_abs_response": 0.063902
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 38,
+            "roi_name": "G_temporal_middle",
+            "roi_display_name": "G temporal middle",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 188,
+            "signed_mean_response": 0.006568,
+            "mean_abs_response": 0.028438,
+            "delta_abs_response": 0.063503
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 통제와 전환 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-23",
+      "start_time": "01:06:25",
+      "end_time": "01:11:09",
+      "proxies": {
+        "attention_proxy": 11.3,
+        "load_proxy": 66.5,
+        "novelty_proxy": 15.6
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 표면 반응 변화을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.123613,
+            "mean_abs_response": 0.123613,
+            "delta_abs_response": 0.008648
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.095026,
+            "mean_abs_response": 0.095152,
+            "delta_abs_response": 0.010948
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.091829,
+            "mean_abs_response": 0.091829,
+            "delta_abs_response": 0.006033
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 56,
+            "roi_name": "S_interm_prim-Jensen",
+            "roi_display_name": "S interm prim-Jensen",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 31,
+            "signed_mean_response": 0.052589,
+            "mean_abs_response": 0.052597,
+            "delta_abs_response": 0.02371
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 72,
+            "roi_name": "S_subparietal",
+            "roi_display_name": "S subparietal",
+            "functional_hint": "sensorimotor_or_attention_related",
+            "vertex_count": 117,
+            "signed_mean_response": -0.003353,
+            "mean_abs_response": 0.030632,
+            "delta_abs_response": 0.019422
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 38,
+            "roi_name": "G_temporal_middle",
+            "roi_display_name": "G temporal middle",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 188,
+            "signed_mean_response": 0.024865,
+            "mean_abs_response": 0.035361,
+            "delta_abs_response": 0.018633
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 표면 반응 변화을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-24",
+      "start_time": "01:11:17",
+      "end_time": "01:15:58",
+      "proxies": {
+        "attention_proxy": 8.6,
+        "load_proxy": 75.9,
+        "novelty_proxy": 11.1
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.114304,
+            "mean_abs_response": 0.114304,
+            "delta_abs_response": 0.009308
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.089841,
+            "mean_abs_response": 0.089852,
+            "delta_abs_response": 0.006254
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.083578,
+            "mean_abs_response": 0.083578,
+            "delta_abs_response": 0.008251
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 58,
+            "roi_name": "S_oc_middle_and_Lunatus",
+            "roi_display_name": "S oc middle and Lunatus",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 58,
+            "signed_mean_response": -0.003136,
+            "mean_abs_response": 0.020408,
+            "delta_abs_response": 0.022149
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 58,
+            "roi_name": "S_oc_middle_and_Lunatus",
+            "roi_display_name": "S oc middle and Lunatus",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 62,
+            "signed_mean_response": 0.028851,
+            "mean_abs_response": 0.029818,
+            "delta_abs_response": 0.019677
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 60,
+            "roi_name": "S_occipital_ant",
+            "roi_display_name": "S occipital ant",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 56,
+            "signed_mean_response": 0.000904,
+            "mean_abs_response": 0.011346,
+            "delta_abs_response": 0.018804
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-25",
+      "start_time": "01:16:17",
+      "end_time": "01:21:13",
+      "proxies": {
+        "attention_proxy": 14.8,
+        "load_proxy": 86.2,
+        "novelty_proxy": 24.9
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.099052,
+            "mean_abs_response": 0.099052,
+            "delta_abs_response": 0.015252
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.086209,
+            "mean_abs_response": 0.086209,
+            "delta_abs_response": 0.014139
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.086166,
+            "mean_abs_response": 0.086176,
+            "delta_abs_response": 0.01593
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.002861,
+            "mean_abs_response": 0.016904,
+            "delta_abs_response": 0.032776
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 29,
+            "roi_name": "G_precentral",
+            "roi_display_name": "G precentral",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 237,
+            "signed_mean_response": 0.004266,
+            "mean_abs_response": 0.025485,
+            "delta_abs_response": 0.029643
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 141,
+            "signed_mean_response": -0.011485,
+            "mean_abs_response": 0.017621,
+            "delta_abs_response": 0.028586
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-26",
+      "start_time": "01:21:46",
+      "end_time": "01:26:16",
+      "proxies": {
+        "attention_proxy": 12.5,
+        "load_proxy": 47.8,
+        "novelty_proxy": 23.4
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 표면 반응 변화을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.1085,
+            "mean_abs_response": 0.1085,
+            "delta_abs_response": 0.009504
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.085593,
+            "mean_abs_response": 0.085593,
+            "delta_abs_response": 0.014065
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.080574,
+            "mean_abs_response": 0.080574,
+            "delta_abs_response": 0.010209
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 141,
+            "signed_mean_response": 0.016847,
+            "mean_abs_response": 0.019501,
+            "delta_abs_response": 0.028332
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 118,
+            "signed_mean_response": 0.026669,
+            "mean_abs_response": 0.027182,
+            "delta_abs_response": 0.027755
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.030411,
+            "mean_abs_response": 0.031414,
+            "delta_abs_response": 0.027551
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 표면 반응 변화을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-27",
+      "start_time": "01:26:29",
+      "end_time": "01:31:15",
+      "proxies": {
+        "attention_proxy": 100.0,
+        "load_proxy": 76.3,
+        "novelty_proxy": 100.0
+      },
+      "labels": [
+        "집중 상승",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.212151,
+            "mean_abs_response": 0.212151,
+            "delta_abs_response": 0.103651
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 36,
+            "roi_name": "G_temp_sup-Plan_tempo",
+            "roi_display_name": "G temp sup-Plan tempo",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 64,
+            "signed_mean_response": 0.17466,
+            "mean_abs_response": 0.17466,
+            "delta_abs_response": 0.119063
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.150247,
+            "mean_abs_response": 0.172379,
+            "delta_abs_response": 0.095248
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.167681,
+            "mean_abs_response": 0.167681,
+            "delta_abs_response": 0.13727
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 29,
+            "roi_name": "G_precentral",
+            "roi_display_name": "G precentral",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 237,
+            "signed_mean_response": 0.166956,
+            "mean_abs_response": 0.166956,
+            "delta_abs_response": 0.136193
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 43,
+            "roi_name": "Pole_occipital",
+            "roi_display_name": "Pole occipital",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 168,
+            "signed_mean_response": 0.131716,
+            "mean_abs_response": 0.143472,
+            "delta_abs_response": 0.127338
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-28",
+      "start_time": "01:31:21",
+      "end_time": "01:36:14",
+      "proxies": {
+        "attention_proxy": 59.9,
+        "load_proxy": 60.0,
+        "novelty_proxy": 51.2
+      },
+      "labels": [
+        "리듬 안정",
+        "설명 추적 반응",
+        "통제와 전환 반응"
+      ],
+      "interpretation": "설명 추적 반응이 안정적으로 이어지는 구간이에요. 지금 설명 흐름을 유지하면서 핵심 문장을 더 분명하게 잡아주면 좋아요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.143939,
+            "mean_abs_response": 0.143939,
+            "delta_abs_response": 0.068212
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.130071,
+            "mean_abs_response": 0.130071,
+            "delta_abs_response": 0.040045
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 29,
+            "roi_name": "G_precentral",
+            "roi_display_name": "G precentral",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 237,
+            "signed_mean_response": 0.123909,
+            "mean_abs_response": 0.123909,
+            "delta_abs_response": 0.043743
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.143939,
+            "mean_abs_response": 0.143939,
+            "delta_abs_response": 0.068212
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 36,
+            "roi_name": "G_temp_sup-Plan_tempo",
+            "roi_display_name": "G temp sup-Plan tempo",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 64,
+            "signed_mean_response": 0.107753,
+            "mean_abs_response": 0.107753,
+            "delta_abs_response": 0.066937
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.096005,
+            "mean_abs_response": 0.108208,
+            "delta_abs_response": 0.064597
+          }
+        ],
+        "summary_text": "설명 추적 반응이 안정적으로 이어지는 구간이에요. 지금 설명 흐름을 유지하면서 핵심 문장을 더 분명하게 잡아주면 좋아요."
+      }
+    },
+    {
+      "segment_id": "seg-29",
+      "start_time": "01:36:47",
+      "end_time": "01:41:07",
+      "proxies": {
+        "attention_proxy": 36.1,
+        "load_proxy": 83.8,
+        "novelty_proxy": 37.7
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.155019,
+            "mean_abs_response": 0.155019,
+            "delta_abs_response": 0.011475
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.113037,
+            "mean_abs_response": 0.11479,
+            "delta_abs_response": 0.024141
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.112985,
+            "mean_abs_response": 0.112985,
+            "delta_abs_response": 0.012966
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.080368,
+            "mean_abs_response": 0.080368,
+            "delta_abs_response": 0.049729
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 141,
+            "signed_mean_response": 0.050181,
+            "mean_abs_response": 0.050556,
+            "delta_abs_response": 0.046901
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 53,
+            "roi_name": "S_front_inf",
+            "roi_display_name": "S front inf",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 144,
+            "signed_mean_response": 0.044624,
+            "mean_abs_response": 0.0485,
+            "delta_abs_response": 0.045343
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-30",
+      "start_time": "01:41:30",
+      "end_time": "01:46:16",
+      "proxies": {
+        "attention_proxy": 18.1,
+        "load_proxy": 81.4,
+        "novelty_proxy": 41.8
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.118104,
+            "mean_abs_response": 0.118104,
+            "delta_abs_response": 0.036915
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.091031,
+            "mean_abs_response": 0.091284,
+            "delta_abs_response": 0.027938
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.08907,
+            "mean_abs_response": 0.08907,
+            "delta_abs_response": 0.023915
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.026563,
+            "mean_abs_response": 0.02866,
+            "delta_abs_response": 0.053805
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 29,
+            "roi_name": "G_precentral",
+            "roi_display_name": "G precentral",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 237,
+            "signed_mean_response": 0.027354,
+            "mean_abs_response": 0.032014,
+            "delta_abs_response": 0.053645
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 3,
+            "roi_name": "G_and_S_paracentral",
+            "roi_display_name": "G and S paracentral",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 136,
+            "signed_mean_response": 0.009743,
+            "mean_abs_response": 0.018521,
+            "delta_abs_response": 0.052413
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-31",
+      "start_time": "01:46:28",
+      "end_time": "01:51:15",
+      "proxies": {
+        "attention_proxy": 12.6,
+        "load_proxy": 60.8,
+        "novelty_proxy": 15.1
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 통제와 전환 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.127035,
+            "mean_abs_response": 0.127035,
+            "delta_abs_response": 0.008931
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.100123,
+            "mean_abs_response": 0.100249,
+            "delta_abs_response": 0.01085
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.092867,
+            "mean_abs_response": 0.092867,
+            "delta_abs_response": 0.004174
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 13,
+            "roi_name": "G_front_inf-Orbital",
+            "roi_display_name": "G front inf-Orbital",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 30,
+            "signed_mean_response": 0.04366,
+            "mean_abs_response": 0.04366,
+            "delta_abs_response": 0.0225
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 43,
+            "roi_name": "Pole_occipital",
+            "roi_display_name": "Pole occipital",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 168,
+            "signed_mean_response": 0.031061,
+            "mean_abs_response": 0.036286,
+            "delta_abs_response": 0.021035
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 13,
+            "roi_name": "G_front_inf-Orbital",
+            "roi_display_name": "G front inf-Orbital",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 25,
+            "signed_mean_response": 0.045328,
+            "mean_abs_response": 0.046133,
+            "delta_abs_response": 0.018368
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 통제와 전환 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-32",
+      "start_time": "01:51:31",
+      "end_time": "01:56:10",
+      "proxies": {
+        "attention_proxy": 28.2,
+        "load_proxy": 47.1,
+        "novelty_proxy": 31.8
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 통제와 전환 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.137516,
+            "mean_abs_response": 0.137516,
+            "delta_abs_response": 0.010481
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.101425,
+            "mean_abs_response": 0.103955,
+            "delta_abs_response": 0.012747
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.102066,
+            "mean_abs_response": 0.102066,
+            "delta_abs_response": 0.00921
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.076969,
+            "mean_abs_response": 0.076969,
+            "delta_abs_response": 0.041627
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 118,
+            "signed_mean_response": 0.064049,
+            "mean_abs_response": 0.064049,
+            "delta_abs_response": 0.039896
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 141,
+            "signed_mean_response": 0.055912,
+            "mean_abs_response": 0.055912,
+            "delta_abs_response": 0.039826
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 통제와 전환 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-33",
+      "start_time": "01:56:20",
+      "end_time": "02:01:09",
+      "proxies": {
+        "attention_proxy": 20.9,
+        "load_proxy": 61.5,
+        "novelty_proxy": 54.7
+      },
+      "labels": [
+        "집중 하락",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 통제와 전환 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.094118,
+            "mean_abs_response": 0.094118,
+            "delta_abs_response": 0.043398
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.078378,
+            "mean_abs_response": 0.078757,
+            "delta_abs_response": 0.034583
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.075825,
+            "mean_abs_response": 0.075841,
+            "delta_abs_response": 0.022325
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 70,
+            "roi_name": "S_precentral-sup-part",
+            "roi_display_name": "S precentral-sup-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 119,
+            "signed_mean_response": 0.001352,
+            "mean_abs_response": 0.016247,
+            "delta_abs_response": 0.075617
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 29,
+            "roi_name": "G_precentral",
+            "roi_display_name": "G precentral",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 237,
+            "signed_mean_response": 0.006469,
+            "mean_abs_response": 0.023487,
+            "delta_abs_response": 0.068424
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 141,
+            "signed_mean_response": -0.009036,
+            "mean_abs_response": 0.013631,
+            "delta_abs_response": 0.064948
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 통제와 전환 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-34",
+      "start_time": "02:01:20",
+      "end_time": "02:06:15",
+      "proxies": {
+        "attention_proxy": 5.4,
+        "load_proxy": 60.3,
+        "novelty_proxy": 19.4
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.10758,
+            "mean_abs_response": 0.10758,
+            "delta_abs_response": 0.013462
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.08059,
+            "mean_abs_response": 0.08059,
+            "delta_abs_response": 0.01084
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.080123,
+            "mean_abs_response": 0.080178,
+            "delta_abs_response": 0.012902
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 52,
+            "roi_name": "S_collat_transv_post",
+            "roi_display_name": "S collat transv post",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 17,
+            "signed_mean_response": 0.019365,
+            "mean_abs_response": 0.020137,
+            "delta_abs_response": 0.028456
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 59,
+            "roi_name": "S_oc_sup_and_transversal",
+            "roi_display_name": "S oc sup and transversal",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 96,
+            "signed_mean_response": -0.003959,
+            "mean_abs_response": 0.014975,
+            "delta_abs_response": 0.026555
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 43,
+            "roi_name": "Pole_occipital",
+            "roi_display_name": "Pole occipital",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 112,
+            "signed_mean_response": 0.036816,
+            "mean_abs_response": 0.036989,
+            "delta_abs_response": 0.025485
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-35",
+      "start_time": "02:06:18",
+      "end_time": "02:10:58",
+      "proxies": {
+        "attention_proxy": 17.6,
+        "load_proxy": 70.3,
+        "novelty_proxy": 19.7
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.13849,
+            "mean_abs_response": 0.13849,
+            "delta_abs_response": 0.03091
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.108653,
+            "mean_abs_response": 0.10872,
+            "delta_abs_response": 0.028807
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.100943,
+            "mean_abs_response": 0.100943,
+            "delta_abs_response": 0.027635
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 426,
+            "signed_mean_response": 0.076094,
+            "mean_abs_response": 0.086385,
+            "delta_abs_response": 0.032515
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.13849,
+            "mean_abs_response": 0.13849,
+            "delta_abs_response": 0.03091
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 14,
+            "roi_name": "G_front_inf-Triangul",
+            "roi_display_name": "G front inf-Triangul",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 68,
+            "signed_mean_response": 0.066609,
+            "mean_abs_response": 0.067883,
+            "delta_abs_response": 0.028815
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-36",
+      "start_time": "02:11:19",
+      "end_time": "02:16:12",
+      "proxies": {
+        "attention_proxy": 10.5,
+        "load_proxy": 74.1,
+        "novelty_proxy": 16.7
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.107891,
+            "mean_abs_response": 0.107891,
+            "delta_abs_response": 0.030599
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.082877,
+            "mean_abs_response": 0.082877,
+            "delta_abs_response": 0.018007
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.076343,
+            "mean_abs_response": 0.079356,
+            "delta_abs_response": 0.032311
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.065622,
+            "mean_abs_response": 0.066524,
+            "delta_abs_response": 0.03532
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.076343,
+            "mean_abs_response": 0.079356,
+            "delta_abs_response": 0.032311
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.107891,
+            "mean_abs_response": 0.107891,
+            "delta_abs_response": 0.030599
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-37",
+      "start_time": "02:16:19",
+      "end_time": "02:21:15",
+      "proxies": {
+        "attention_proxy": 20.4,
+        "load_proxy": 66.7,
+        "novelty_proxy": 19.4
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 표면 반응 변화을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.118426,
+            "mean_abs_response": 0.118426,
+            "delta_abs_response": 0.010535
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.092499,
+            "mean_abs_response": 0.092709,
+            "delta_abs_response": 0.017068
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.08514,
+            "mean_abs_response": 0.08514,
+            "delta_abs_response": 0.006398
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 56,
+            "roi_name": "S_interm_prim-Jensen",
+            "roi_display_name": "S interm prim-Jensen",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 31,
+            "signed_mean_response": 0.078468,
+            "mean_abs_response": 0.078468,
+            "delta_abs_response": 0.03415
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 479,
+            "signed_mean_response": 0.059201,
+            "mean_abs_response": 0.077574,
+            "delta_abs_response": 0.029727
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 14,
+            "roi_name": "G_front_inf-Triangul",
+            "roi_display_name": "G front inf-Triangul",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 69,
+            "signed_mean_response": 0.07923,
+            "mean_abs_response": 0.07923,
+            "delta_abs_response": 0.028898
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 표면 반응 변화을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-38",
+      "start_time": "02:21:26",
+      "end_time": "02:26:15",
+      "proxies": {
+        "attention_proxy": 15.8,
+        "load_proxy": 70.9,
+        "novelty_proxy": 24.2
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.130879,
+            "mean_abs_response": 0.130879,
+            "delta_abs_response": 0.012452
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.105652,
+            "mean_abs_response": 0.105652,
+            "delta_abs_response": 0.014962
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.097864,
+            "mean_abs_response": 0.097864,
+            "delta_abs_response": 0.016779
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 3,
+            "roi_name": "G_and_S_paracentral",
+            "roi_display_name": "G and S paracentral",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 136,
+            "signed_mean_response": 0.007727,
+            "mean_abs_response": 0.017909,
+            "delta_abs_response": 0.027685
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 118,
+            "signed_mean_response": 0.015661,
+            "mean_abs_response": 0.017544,
+            "delta_abs_response": 0.027343
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 63,
+            "roi_name": "S_orbital_lateral",
+            "roi_display_name": "S orbital lateral",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 21,
+            "signed_mean_response": 0.015764,
+            "mean_abs_response": 0.020736,
+            "delta_abs_response": 0.027165
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-39",
+      "start_time": "02:26:19",
+      "end_time": "02:31:07",
+      "proxies": {
+        "attention_proxy": 11.9,
+        "load_proxy": 59.9,
+        "novelty_proxy": 12.9
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.119918,
+            "mean_abs_response": 0.119918,
+            "delta_abs_response": 0.010961
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.096318,
+            "mean_abs_response": 0.096318,
+            "delta_abs_response": 0.011312
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 26,
+            "signed_mean_response": 0.089415,
+            "mean_abs_response": 0.089415,
+            "delta_abs_response": 0.005933
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 43,
+            "roi_name": "Pole_occipital",
+            "roi_display_name": "Pole occipital",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 168,
+            "signed_mean_response": 0.036986,
+            "mean_abs_response": 0.040609,
+            "delta_abs_response": 0.017909
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 43,
+            "roi_name": "Pole_occipital",
+            "roi_display_name": "Pole occipital",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 112,
+            "signed_mean_response": 0.053983,
+            "mean_abs_response": 0.054091,
+            "delta_abs_response": 0.017511
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 58,
+            "roi_name": "S_oc_middle_and_Lunatus",
+            "roi_display_name": "S oc middle and Lunatus",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 58,
+            "signed_mean_response": 0.001882,
+            "mean_abs_response": 0.026361,
+            "delta_abs_response": 0.017063
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-40",
+      "start_time": "02:31:24",
+      "end_time": "02:36:05",
+      "proxies": {
+        "attention_proxy": 11.8,
+        "load_proxy": 77.9,
+        "novelty_proxy": 19.0
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.120951,
+            "mean_abs_response": 0.120951,
+            "delta_abs_response": 0.005037
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.091782,
+            "mean_abs_response": 0.091782,
+            "delta_abs_response": 0.009044
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.088815,
+            "mean_abs_response": 0.090309,
+            "delta_abs_response": 0.017383
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 479,
+            "signed_mean_response": 0.031544,
+            "mean_abs_response": 0.062786,
+            "delta_abs_response": 0.034799
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 38,
+            "roi_name": "G_temporal_middle",
+            "roi_display_name": "G temporal middle",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 188,
+            "signed_mean_response": 0.009824,
+            "mean_abs_response": 0.029093,
+            "delta_abs_response": 0.030712
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 56,
+            "roi_name": "S_interm_prim-Jensen",
+            "roi_display_name": "S interm prim-Jensen",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 31,
+            "signed_mean_response": 0.031483,
+            "mean_abs_response": 0.032366,
+            "delta_abs_response": 0.030562
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 설명 추적 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-41",
+      "start_time": "02:36:19",
+      "end_time": "02:41:08",
+      "proxies": {
+        "attention_proxy": 18.5,
+        "load_proxy": 74.7,
+        "novelty_proxy": 20.5
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.121841,
+            "mean_abs_response": 0.121841,
+            "delta_abs_response": 0.005124
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.093098,
+            "mean_abs_response": 0.093156,
+            "delta_abs_response": 0.012899
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.087209,
+            "mean_abs_response": 0.087209,
+            "delta_abs_response": 0.00746
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 56,
+            "roi_name": "S_interm_prim-Jensen",
+            "roi_display_name": "S interm prim-Jensen",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 31,
+            "signed_mean_response": 0.074897,
+            "mean_abs_response": 0.074897,
+            "delta_abs_response": 0.043414
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 479,
+            "signed_mean_response": 0.063375,
+            "mean_abs_response": 0.074607,
+            "delta_abs_response": 0.032011
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 72,
+            "roi_name": "S_subparietal",
+            "roi_display_name": "S subparietal",
+            "functional_hint": "sensorimotor_or_attention_related",
+            "vertex_count": 117,
+            "signed_mean_response": 0.012807,
+            "mean_abs_response": 0.028867,
+            "delta_abs_response": 0.030591
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-42",
+      "start_time": "02:41:19",
+      "end_time": "02:46:07",
+      "proxies": {
+        "attention_proxy": 10.2,
+        "load_proxy": 77.4,
+        "novelty_proxy": 10.3
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.115526,
+            "mean_abs_response": 0.115526,
+            "delta_abs_response": 0.006315
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.086754,
+            "mean_abs_response": 0.087146,
+            "delta_abs_response": 0.006766
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.082498,
+            "mean_abs_response": 0.082498,
+            "delta_abs_response": 0.004712
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 56,
+            "roi_name": "S_interm_prim-Jensen",
+            "roi_display_name": "S interm prim-Jensen",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 31,
+            "signed_mean_response": 0.056,
+            "mean_abs_response": 0.056,
+            "delta_abs_response": 0.018897
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 2,
+            "roi_name": "G_and_S_occipital_inf",
+            "roi_display_name": "G and S occipital inf",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 81,
+            "signed_mean_response": 0.01753,
+            "mean_abs_response": 0.025376,
+            "delta_abs_response": 0.016288
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 13,
+            "roi_name": "G_front_inf-Orbital",
+            "roi_display_name": "G front inf-Orbital",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 25,
+            "signed_mean_response": 0.041918,
+            "mean_abs_response": 0.04275,
+            "delta_abs_response": 0.016194
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-43",
+      "start_time": "02:46:22",
+      "end_time": "02:50:25",
+      "proxies": {
+        "attention_proxy": 11.7,
+        "load_proxy": 62.6,
+        "novelty_proxy": 12.0
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.118007,
+            "mean_abs_response": 0.118007,
+            "delta_abs_response": 0.00383
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.092882,
+            "mean_abs_response": 0.092923,
+            "delta_abs_response": 0.007751
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.084745,
+            "mean_abs_response": 0.084745,
+            "delta_abs_response": 0.003426
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 2,
+            "roi_name": "G_and_S_occipital_inf",
+            "roi_display_name": "G and S occipital inf",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 81,
+            "signed_mean_response": 0.038627,
+            "mean_abs_response": 0.040952,
+            "delta_abs_response": 0.021097
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 52,
+            "roi_name": "S_collat_transv_post",
+            "roi_display_name": "S collat transv post",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 27,
+            "signed_mean_response": 0.026069,
+            "mean_abs_response": 0.02858,
+            "delta_abs_response": 0.018273
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 58,
+            "roi_name": "S_oc_middle_and_Lunatus",
+            "roi_display_name": "S oc middle and Lunatus",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 62,
+            "signed_mean_response": 0.028478,
+            "mean_abs_response": 0.03287,
+            "delta_abs_response": 0.016949
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-44",
+      "start_time": "03:11:00",
+      "end_time": "03:11:00",
+      "proxies": {
+        "attention_proxy": 65.8,
+        "load_proxy": 0.0,
+        "novelty_proxy": 96.3
+      },
+      "labels": [
+        "리듬 안정",
+        "설명 추적 반응",
+        "시각 처리 반응"
+      ],
+      "interpretation": "설명 추적 반응이 안정적으로 이어지는 구간이에요. 지금 설명 흐름을 유지하면서 핵심 문장을 더 분명하게 잡아주면 좋아요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 52,
+            "roi_name": "S_collat_transv_post",
+            "roi_display_name": "S collat transv post",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 27,
+            "signed_mean_response": -0.159673,
+            "mean_abs_response": 0.162413,
+            "delta_abs_response": 0.19055
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 60,
+            "roi_name": "S_occipital_ant",
+            "roi_display_name": "S occipital ant",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 49,
+            "signed_mean_response": -0.136335,
+            "mean_abs_response": 0.136335,
+            "delta_abs_response": 0.122388
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 43,
+            "roi_name": "Pole_occipital",
+            "roi_display_name": "Pole occipital",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 112,
+            "signed_mean_response": -0.128473,
+            "mean_abs_response": 0.128473,
+            "delta_abs_response": 0.184644
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 52,
+            "roi_name": "S_collat_transv_post",
+            "roi_display_name": "S collat transv post",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 27,
+            "signed_mean_response": -0.159673,
+            "mean_abs_response": 0.162413,
+            "delta_abs_response": 0.19055
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 43,
+            "roi_name": "Pole_occipital",
+            "roi_display_name": "Pole occipital",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 112,
+            "signed_mean_response": -0.128473,
+            "mean_abs_response": 0.128473,
+            "delta_abs_response": 0.184644
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 2,
+            "roi_name": "G_and_S_occipital_inf",
+            "roi_display_name": "G and S occipital inf",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 81,
+            "signed_mean_response": -0.121463,
+            "mean_abs_response": 0.121463,
+            "delta_abs_response": 0.160091
+          }
+        ],
+        "summary_text": "설명 추적 반응이 안정적으로 이어지는 구간이에요. 지금 설명 흐름을 유지하면서 핵심 문장을 더 분명하게 잡아주면 좋아요."
+      }
+    },
+    {
+      "segment_id": "seg-45",
+      "start_time": "03:11:17",
+      "end_time": "03:16:16",
+      "proxies": {
+        "attention_proxy": 35.5,
+        "load_proxy": 65.5,
+        "novelty_proxy": 87.3
+      },
+      "labels": [
+        "집중 하락",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.093392,
+            "mean_abs_response": 0.093392,
+            "delta_abs_response": 0.076914
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.069663,
+            "mean_abs_response": 0.072188,
+            "delta_abs_response": 0.073386
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.071202,
+            "mean_abs_response": 0.071202,
+            "delta_abs_response": 0.057454
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 52,
+            "roi_name": "S_collat_transv_post",
+            "roi_display_name": "S collat transv post",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 27,
+            "signed_mean_response": -0.004246,
+            "mean_abs_response": 0.016917,
+            "delta_abs_response": 0.160356
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 43,
+            "roi_name": "Pole_occipital",
+            "roi_display_name": "Pole occipital",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 112,
+            "signed_mean_response": 0.023345,
+            "mean_abs_response": 0.028696,
+            "delta_abs_response": 0.151818
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 2,
+            "roi_name": "G_and_S_occipital_inf",
+            "roi_display_name": "G and S occipital inf",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 81,
+            "signed_mean_response": 0.007462,
+            "mean_abs_response": 0.021283,
+            "delta_abs_response": 0.128925
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-46",
+      "start_time": "03:16:31",
+      "end_time": "03:21:10",
+      "proxies": {
+        "attention_proxy": 8.5,
+        "load_proxy": 53.4,
+        "novelty_proxy": 13.5
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.109842,
+            "mean_abs_response": 0.109842,
+            "delta_abs_response": 0.016451
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.087571,
+            "mean_abs_response": 0.088039,
+            "delta_abs_response": 0.01798
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.079871,
+            "mean_abs_response": 0.080045,
+            "delta_abs_response": 0.019527
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 60,
+            "roi_name": "S_occipital_ant",
+            "roi_display_name": "S occipital ant",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 49,
+            "signed_mean_response": -0.011291,
+            "mean_abs_response": 0.023283,
+            "delta_abs_response": 0.028684
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 60,
+            "roi_name": "S_occipital_ant",
+            "roi_display_name": "S occipital ant",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 56,
+            "signed_mean_response": -0.002019,
+            "mean_abs_response": 0.010041,
+            "delta_abs_response": 0.025967
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 180,
+            "signed_mean_response": 0.079871,
+            "mean_abs_response": 0.080045,
+            "delta_abs_response": 0.019527
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-47",
+      "start_time": "03:21:21",
+      "end_time": "03:26:15",
+      "proxies": {
+        "attention_proxy": 4.6,
+        "load_proxy": 58.8,
+        "novelty_proxy": 18.0
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.089108,
+            "mean_abs_response": 0.089108,
+            "delta_abs_response": 0.020735
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.069217,
+            "mean_abs_response": 0.069217,
+            "delta_abs_response": 0.011198
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.064562,
+            "mean_abs_response": 0.066122,
+            "delta_abs_response": 0.023326
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 426,
+            "signed_mean_response": 0.029236,
+            "mean_abs_response": 0.044543,
+            "delta_abs_response": 0.030881
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 56,
+            "roi_name": "S_interm_prim-Jensen",
+            "roi_display_name": "S interm prim-Jensen",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 31,
+            "signed_mean_response": 0.014445,
+            "mean_abs_response": 0.022147,
+            "delta_abs_response": 0.030026
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 13,
+            "roi_name": "G_front_inf-Orbital",
+            "roi_display_name": "G front inf-Orbital",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 30,
+            "signed_mean_response": 0.01902,
+            "mean_abs_response": 0.020807,
+            "delta_abs_response": 0.0252
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-48",
+      "start_time": "03:26:27",
+      "end_time": "03:31:11",
+      "proxies": {
+        "attention_proxy": 7.2,
+        "load_proxy": 99.4,
+        "novelty_proxy": 15.1
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.106687,
+            "mean_abs_response": 0.106687,
+            "delta_abs_response": 0.017579
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.081672,
+            "mean_abs_response": 0.082059,
+            "delta_abs_response": 0.017177
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.077719,
+            "mean_abs_response": 0.077719,
+            "delta_abs_response": 0.008696
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 56,
+            "roi_name": "S_interm_prim-Jensen",
+            "roi_display_name": "S interm prim-Jensen",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 31,
+            "signed_mean_response": 0.048401,
+            "mean_abs_response": 0.048401,
+            "delta_abs_response": 0.033956
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 479,
+            "signed_mean_response": 0.044118,
+            "mean_abs_response": 0.064786,
+            "delta_abs_response": 0.02693
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 426,
+            "signed_mean_response": 0.054171,
+            "mean_abs_response": 0.065059,
+            "delta_abs_response": 0.024977
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-49",
+      "start_time": "03:31:17",
+      "end_time": "03:36:16",
+      "proxies": {
+        "attention_proxy": 11.4,
+        "load_proxy": 71.4,
+        "novelty_proxy": 15.9
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.105064,
+            "mean_abs_response": 0.105064,
+            "delta_abs_response": 0.003638
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.080602,
+            "mean_abs_response": 0.080888,
+            "delta_abs_response": 0.008173
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.077207,
+            "mean_abs_response": 0.077207,
+            "delta_abs_response": 0.004306
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 118,
+            "signed_mean_response": 0.034261,
+            "mean_abs_response": 0.034475,
+            "delta_abs_response": 0.022627
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 7,
+            "roi_name": "G_and_S_cingul-Mid-Ant",
+            "roi_display_name": "G and S cingul-Mid-Ant",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 141,
+            "signed_mean_response": 0.027313,
+            "mean_abs_response": 0.028736,
+            "delta_abs_response": 0.022263
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 69,
+            "roi_name": "S_precentral-inf-part",
+            "roi_display_name": "S precentral-inf-part",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 121,
+            "signed_mean_response": 0.032416,
+            "mean_abs_response": 0.032773,
+            "delta_abs_response": 0.02135
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-50",
+      "start_time": "03:36:27",
+      "end_time": "03:41:15",
+      "proxies": {
+        "attention_proxy": 7.6,
+        "load_proxy": 86.8,
+        "novelty_proxy": 19.2
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.090577,
+            "mean_abs_response": 0.090577,
+            "delta_abs_response": 0.014486
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.069737,
+            "mean_abs_response": 0.069737,
+            "delta_abs_response": 0.008572
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.063811,
+            "mean_abs_response": 0.068409,
+            "delta_abs_response": 0.01701
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 56,
+            "roi_name": "S_interm_prim-Jensen",
+            "roi_display_name": "S interm prim-Jensen",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 31,
+            "signed_mean_response": 0.030252,
+            "mean_abs_response": 0.030615,
+            "delta_abs_response": 0.026898
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 14,
+            "roi_name": "G_front_inf-Triangul",
+            "roi_display_name": "G front inf-Triangul",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 69,
+            "signed_mean_response": 0.037688,
+            "mean_abs_response": 0.039039,
+            "delta_abs_response": 0.025404
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 38,
+            "roi_name": "G_temporal_middle",
+            "roi_display_name": "G temporal middle",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 188,
+            "signed_mean_response": 0.001393,
+            "mean_abs_response": 0.02978,
+            "delta_abs_response": 0.024063
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-51",
+      "start_time": "03:41:28",
+      "end_time": "03:46:10",
+      "proxies": {
+        "attention_proxy": 1.5,
+        "load_proxy": 66.1,
+        "novelty_proxy": 17.6
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.086372,
+            "mean_abs_response": 0.086372,
+            "delta_abs_response": 0.005495
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.066656,
+            "mean_abs_response": 0.067144,
+            "delta_abs_response": 0.009026
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.066526,
+            "mean_abs_response": 0.066526,
+            "delta_abs_response": 0.004383
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 60,
+            "roi_name": "S_occipital_ant",
+            "roi_display_name": "S occipital ant",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 49,
+            "signed_mean_response": -0.012149,
+            "mean_abs_response": 0.022366,
+            "delta_abs_response": 0.028479
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 60,
+            "roi_name": "S_occipital_ant",
+            "roi_display_name": "S occipital ant",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 56,
+            "signed_mean_response": 0.000275,
+            "mean_abs_response": 0.009994,
+            "delta_abs_response": 0.027613
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 2,
+            "roi_name": "G_and_S_occipital_inf",
+            "roi_display_name": "G and S occipital inf",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 72,
+            "signed_mean_response": 0.010248,
+            "mean_abs_response": 0.017824,
+            "delta_abs_response": 0.025178
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 시각 처리 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-52",
+      "start_time": "03:46:19",
+      "end_time": "03:51:09",
+      "proxies": {
+        "attention_proxy": 7.2,
+        "load_proxy": 67.1,
+        "novelty_proxy": 15.1
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.112045,
+            "mean_abs_response": 0.112045,
+            "delta_abs_response": 0.025672
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.085081,
+            "mean_abs_response": 0.085552,
+            "delta_abs_response": 0.019351
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.08312,
+            "mean_abs_response": 0.08312,
+            "delta_abs_response": 0.016593
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.112045,
+            "mean_abs_response": 0.112045,
+            "delta_abs_response": 0.025672
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 36,
+            "roi_name": "G_temp_sup-Plan_tempo",
+            "roi_display_name": "G temp sup-Plan tempo",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 83,
+            "signed_mean_response": 0.066166,
+            "mean_abs_response": 0.066166,
+            "delta_abs_response": 0.023978
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 56,
+            "roi_name": "S_interm_prim-Jensen",
+            "roi_display_name": "S interm prim-Jensen",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 31,
+            "signed_mean_response": 0.045203,
+            "mean_abs_response": 0.045203,
+            "delta_abs_response": 0.02021
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 설명 추적 반응을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-53",
+      "start_time": "03:51:23",
+      "end_time": "03:56:09",
+      "proxies": {
+        "attention_proxy": 30.8,
+        "load_proxy": 72.1,
+        "novelty_proxy": 32.2
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.146776,
+            "mean_abs_response": 0.146776,
+            "delta_abs_response": 0.034732
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.113272,
+            "mean_abs_response": 0.113272,
+            "delta_abs_response": 0.028191
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 26,
+            "signed_mean_response": 0.109496,
+            "mean_abs_response": 0.109496,
+            "delta_abs_response": 0.0343
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 14,
+            "roi_name": "G_front_inf-Triangul",
+            "roi_display_name": "G front inf-Triangul",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 69,
+            "signed_mean_response": 0.093238,
+            "mean_abs_response": 0.093238,
+            "delta_abs_response": 0.044636
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 56,
+            "roi_name": "S_interm_prim-Jensen",
+            "roi_display_name": "S interm prim-Jensen",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 31,
+            "signed_mean_response": 0.088833,
+            "mean_abs_response": 0.088833,
+            "delta_abs_response": 0.04363
+          },
+          {
+            "hemisphere": "left",
+            "roi_id": 13,
+            "roi_name": "G_front_inf-Orbital",
+            "roi_display_name": "G front inf-Orbital",
+            "functional_hint": "frontal_control_or_action_related",
+            "vertex_count": 30,
+            "signed_mean_response": 0.068137,
+            "mean_abs_response": 0.068137,
+            "delta_abs_response": 0.042424
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 통제와 전환 반응도 함께 커졌어요."
+      }
+    },
+    {
+      "segment_id": "seg-54",
+      "start_time": "03:56:23",
+      "end_time": "03:58:34",
+      "proxies": {
+        "attention_proxy": 40.7,
+        "load_proxy": 44.1,
+        "novelty_proxy": 55.1
+      },
+      "labels": [
+        "집중 하락",
+        "설명 추적 반응",
+        "연결 패턴 반응"
+      ],
+      "interpretation": "설명 추적 반응이 낮아지는 구간이에요. 표면 반응 변화을 한 번 살려주면 다시 따라가기 쉬워져요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.102385,
+            "mean_abs_response": 0.102385,
+            "delta_abs_response": 0.044392
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 10,
+            "roi_name": "G_cingul-Post-ventral",
+            "roi_display_name": "G cingul-Post-ventral",
+            "functional_hint": "association_or_default_mode_related",
+            "vertex_count": 41,
+            "signed_mean_response": -0.094052,
+            "mean_abs_response": 0.094052,
+            "delta_abs_response": 0.049649
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 33,
+            "roi_name": "G_temp_sup-G_T_transv",
+            "roi_display_name": "G temp sup-G T transv",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 39,
+            "signed_mean_response": 0.08628,
+            "mean_abs_response": 0.08628,
+            "delta_abs_response": 0.019463
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 56,
+            "roi_name": "S_interm_prim-Jensen",
+            "roi_display_name": "S interm prim-Jensen",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 31,
+            "signed_mean_response": -0.001837,
+            "mean_abs_response": 0.023091,
+            "delta_abs_response": 0.090669
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 74,
+            "roi_name": "S_temporal_sup",
+            "roi_display_name": "S temporal sup",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 479,
+            "signed_mean_response": -0.010277,
+            "mean_abs_response": 0.081836,
+            "delta_abs_response": 0.089502
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 72,
+            "roi_name": "S_subparietal",
+            "roi_display_name": "S subparietal",
+            "functional_hint": "sensorimotor_or_attention_related",
+            "vertex_count": 117,
+            "signed_mean_response": -0.062916,
+            "mean_abs_response": 0.062916,
+            "delta_abs_response": 0.08384
+          }
+        ],
+        "summary_text": "설명 추적 반응이 낮아지는 구간이에요. 표면 반응 변화을 한 번 살려주면 다시 따라가기 쉬워져요."
+      }
+    },
+    {
+      "segment_id": "seg-55",
+      "start_time": "04:09:59",
+      "end_time": "04:10:39",
+      "proxies": {
+        "attention_proxy": 39.0,
+        "load_proxy": 83.7,
+        "novelty_proxy": 30.8
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음",
+        "설명 추적 반응"
+      ],
+      "interpretation": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요.",
+      "roi_insights": {
+        "top_active_rois": [
+          {
+            "hemisphere": "right",
+            "roi_id": 75,
+            "roi_name": "S_temporal_transverse",
+            "roi_display_name": "S temporal transverse",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 19,
+            "signed_mean_response": 0.116737,
+            "mean_abs_response": 0.116737,
+            "delta_abs_response": 0.015849
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 36,
+            "roi_name": "G_temp_sup-Plan_tempo",
+            "roi_display_name": "G temp sup-Plan tempo",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 64,
+            "signed_mean_response": 0.114842,
+            "mean_abs_response": 0.114842,
+            "delta_abs_response": 0.042917
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 34,
+            "roi_name": "G_temp_sup-Lateral",
+            "roi_display_name": "G temp sup-Lateral",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 161,
+            "signed_mean_response": 0.095742,
+            "mean_abs_response": 0.113036,
+            "delta_abs_response": 0.030426
+          }
+        ],
+        "top_changed_rois": [
+          {
+            "hemisphere": "left",
+            "roi_id": 58,
+            "roi_name": "S_oc_middle_and_Lunatus",
+            "roi_display_name": "S oc middle and Lunatus",
+            "functional_hint": "unclassified_surface_pattern",
+            "vertex_count": 62,
+            "signed_mean_response": 0.059225,
+            "mean_abs_response": 0.0611,
+            "delta_abs_response": 0.059947
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 2,
+            "roi_name": "G_and_S_occipital_inf",
+            "roi_display_name": "G and S occipital inf",
+            "functional_hint": "visual_processing_related",
+            "vertex_count": 72,
+            "signed_mean_response": 0.020342,
+            "mean_abs_response": 0.042615,
+            "delta_abs_response": 0.053041
+          },
+          {
+            "hemisphere": "right",
+            "roi_id": 59,
+            "roi_name": "S_oc_sup_and_transversal",
+            "roi_display_name": "S oc sup and transversal",
+            "functional_hint": "auditory_or_language_related",
+            "vertex_count": 96,
+            "signed_mean_response": 0.020798,
+            "mean_abs_response": 0.033709,
+            "delta_abs_response": 0.052433
+          }
+        ],
+        "summary_text": "설명 추적 반응이 보이는 구간이에요. 정보가 촘촘해서 표면 반응 변화도 함께 커졌어요."
+      }
+    }
+  ],
+  "personas": [
+    {
+      "persona_id": "novice",
+      "label": "초보 수강자",
+      "overall_score": 25.3,
+      "top_positive_segment_ids": [
+        "seg-27",
+        "seg-44"
+      ],
+      "top_risk_segment_ids": [
+        "seg-48",
+        "seg-12"
+      ],
+      "reaction_summary": "기본 개념 흐름이 선명한 구간에서 반응이 올라가고, 밀도가 높아지면 따라가기 어려워질 수 있습니다."
+    },
+    {
+      "persona_id": "builder",
+      "label": "실습형 수강자",
+      "overall_score": 25.1,
+      "top_positive_segment_ids": [
+        "seg-27",
+        "seg-44"
+      ],
+      "top_risk_segment_ids": [
+        "seg-48",
+        "seg-12"
+      ],
+      "reaction_summary": "새로운 예시나 구조 전환에서 반응이 커지고, 반복 설명만 이어지면 체감 가치가 줄 수 있습니다."
+    },
+    {
+      "persona_id": "pace_sensitive",
+      "label": "속도 민감형",
+      "overall_score": 55.8,
+      "top_positive_segment_ids": [
+        "seg-27",
+        "seg-44"
+      ],
+      "top_risk_segment_ids": [
+        "seg-48",
+        "seg-12"
+      ],
+      "reaction_summary": "속도와 정보량이 맞는 구간에서 반응이 안정적이며, 부하가 높아지면 회복이 늦어질 수 있습니다."
+    }
+  ],
+  "roi_summary": {
+    "atlas_name": "destrieux",
+    "lecture_top_rois": [
+      {
+        "hemisphere": "right",
+        "roi_name": "S_temporal_transverse",
+        "roi_display_name": "S temporal transverse",
+        "functional_hint": "auditory_or_language_related",
+        "mean_abs_response": 0.115157
+      },
+      {
+        "hemisphere": "right",
+        "roi_name": "G_temp_sup-Lateral",
+        "roi_display_name": "G temp sup-Lateral",
+        "functional_hint": "auditory_or_language_related",
+        "mean_abs_response": 0.090847
+      },
+      {
+        "hemisphere": "right",
+        "roi_name": "G_temp_sup-G_T_transv",
+        "roi_display_name": "G temp sup-G T transv",
+        "functional_hint": "auditory_or_language_related",
+        "mean_abs_response": 0.085349
+      },
+      {
+        "hemisphere": "left",
+        "roi_name": "G_temp_sup-Lateral",
+        "roi_display_name": "G temp sup-Lateral",
+        "functional_hint": "auditory_or_language_related",
+        "mean_abs_response": 0.078781
+      },
+      {
+        "hemisphere": "left",
+        "roi_name": "S_temporal_transverse",
+        "roi_display_name": "S temporal transverse",
+        "functional_hint": "auditory_or_language_related",
+        "mean_abs_response": 0.077537
+      },
+      {
+        "hemisphere": "left",
+        "roi_name": "G_temp_sup-G_T_transv",
+        "roi_display_name": "G temp sup-G T transv",
+        "functional_hint": "auditory_or_language_related",
+        "mean_abs_response": 0.074417
+      },
+      {
+        "hemisphere": "right",
+        "roi_name": "S_temporal_sup",
+        "roi_display_name": "S temporal sup",
+        "functional_hint": "auditory_or_language_related",
+        "mean_abs_response": 0.068981
+      },
+      {
+        "hemisphere": "right",
+        "roi_name": "G_temp_sup-Plan_tempo",
+        "roi_display_name": "G temp sup-Plan tempo",
+        "functional_hint": "auditory_or_language_related",
+        "mean_abs_response": 0.068942
+      },
+      {
+        "hemisphere": "left",
+        "roi_name": "S_temporal_sup",
+        "roi_display_name": "S temporal sup",
+        "functional_hint": "auditory_or_language_related",
+        "mean_abs_response": 0.068912
+      },
+      {
+        "hemisphere": "left",
+        "roi_name": "G_temp_sup-Plan_tempo",
+        "roi_display_name": "G temp sup-Plan tempo",
+        "functional_hint": "auditory_or_language_related",
+        "mean_abs_response": 0.065528
+      },
+      {
+        "hemisphere": "left",
+        "roi_name": "Lat_Fis-post",
+        "roi_display_name": "Lat Fis-post",
+        "functional_hint": "unclassified_surface_pattern",
+        "mean_abs_response": 0.056653
+      },
+      {
+        "hemisphere": "right",
+        "roi_name": "G_front_inf-Triangul",
+        "roi_display_name": "G front inf-Triangul",
+        "functional_hint": "frontal_control_or_action_related",
+        "mean_abs_response": 0.055718
+      }
+    ],
+    "method_explainer": {
+      "input_summary": "강의 원문을 5분 세그먼트로 나누고 오디오 fallback 자극으로 TRIBE에 넣어요.",
+      "proxy_summary": "세그먼트 반응 강도와 변화량을 attention, load, novelty로 묶어 보여줘요.",
+      "roi_summary": "정점 반응을 뇌 영역 단위로 다시 묶어서 어느 패턴이 두드러지는지 읽어요."
+    }
+  }
+}
