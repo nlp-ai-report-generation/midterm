@@ -28,6 +28,15 @@ export interface SimulationResult {
       roi_summary: string;
     };
   };
+  summary_visual: {
+    brain_icon_frames_json: string;
+    hero_statement: string;
+    highlight_cards: SummaryHighlightCard[];
+  };
+  live_assets: {
+    brain_frames_json: string;
+    timeline_frames_json: string;
+  };
   segments: SimulationSegment[];
   personas: PersonaReaction[];
 }
@@ -48,6 +57,14 @@ export interface SimulationSegment {
     top_changed_rois: RoiMetricSummary[];
     summary_text: string;
   };
+  playback: {
+    frame_times: number[];
+    line_to_frame: Array<{
+      line_index: number;
+      start_frame: number;
+      end_frame: number;
+    }>;
+  };
 }
 
 export interface PersonaReaction {
@@ -67,6 +84,9 @@ export interface TranscriptBrowserData {
     end_time: string;
     lines: {
       timestamp: string;
+      relative_seconds: number;
+      lecture_seconds?: number;
+      frame_index?: number;
       speaker: string;
       text: string;
     }[];
@@ -101,4 +121,65 @@ export interface RoiMetricSummary {
     | "unclassified_surface_pattern";
   mean_abs_response?: number;
   delta_abs_response?: number;
+}
+
+export interface SummaryHighlightCard {
+  kind: "attention" | "load" | "novelty";
+  title: string;
+  summary: string;
+  segment_id: string;
+  value: number;
+}
+
+export interface BrainIconFrame {
+  frame_id: string;
+  segment_id: string;
+  title: string;
+  subtitle: string;
+  labels: string[];
+  proxies: {
+    attention: number;
+    load: number;
+    novelty: number;
+  };
+  zones: {
+    left: number[];
+    right: number[];
+  };
+}
+
+export interface BrainIconFramePayload {
+  lecture_date: string;
+  frames: BrainIconFrame[];
+}
+
+export interface LiveBrainFrame {
+  frame_id: string;
+  segment_id: string;
+  segment_index: number;
+  line_index: number;
+  timestamp: string;
+  relative_seconds: number;
+  lecture_seconds: number;
+  color_segment_index: number;
+  playback_ratio: number;
+}
+
+export interface LiveBrainFramePayload {
+  lecture_date: string;
+  frames: LiveBrainFrame[];
+}
+
+export interface LiveTimelineFramePayload {
+  lecture_date: string;
+  frames: Array<{
+    frame_id: string;
+    segment_id: string;
+    segment_index: number;
+    line_index: number;
+    lecture_seconds: number;
+    attention: number;
+    load: number;
+    novelty: number;
+  }>;
 }

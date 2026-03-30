@@ -11,6 +11,8 @@ from pathlib import Path
 
 import numpy as np
 
+from build_simulation_playback_assets import enrich_transcript_and_build_assets
+
 BASE = Path(__file__).resolve().parent.parent
 DEFAULT_ANALYSIS_DIR = BASE / "analysis" / "roi"
 DEFAULT_FRONTEND_DIR = BASE / "frontend" / "public" / "data" / "simulations"
@@ -335,6 +337,7 @@ def main() -> None:
 
     updated_frontend = update_simulation_payload(frontend_payload, prepared_segments, roi_payload)
     save_json(updated_frontend, args.frontend_dir / f"{date}.json")
+    enrich_transcript_and_build_assets(date, args.frontend_dir)
 
     manifest_path = args.frontend_dir / "manifest.json"
     if manifest_path.exists():

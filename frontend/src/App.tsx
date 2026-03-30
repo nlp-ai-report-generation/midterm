@@ -16,6 +16,10 @@ import SettingsPage from "@/pages/SettingsPage";
 import IntegrationsPage from "@/pages/IntegrationsPage";
 import AboutPage from "@/pages/AboutPage";
 import ValidationPage from "@/pages/ValidationPage";
+import PresentationPage from "@/pages/PresentationPage";
+import LectureSimulationPage from "@/pages/LectureSimulationPage";
+import LectureSimulationLivePage from "@/pages/LectureSimulationLivePage";
+import LectureSimulationTranscriptPage from "@/pages/LectureSimulationTranscriptPage";
 
 function RequireRole({ children }: { children: React.ReactNode }) {
   const { role } = useRole();
@@ -32,6 +36,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<RoleSelectPage />} />
+      <Route path="/presentation" element={<PresentationPage />} />
       <Route
         element={
           <RequireRole>
@@ -42,6 +47,10 @@ export default function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/lectures" element={<LecturesPage />} />
         <Route path="/lectures/:date" element={<LectureDetailPage />} />
+        <Route path="/lectures/:date/simulation" element={<LectureSimulationPage />} />
+        <Route path="/lectures/:date/simulation/live" element={<LectureSimulationLivePage />} />
+        <Route path="/lectures/:date/simulation/live/transcript" element={<LectureSimulationTranscriptPage />} />
+        <Route path="/lectures/:date/simulation/transcript" element={<Navigate to="live/transcript" replace relative="path" />} />
         <Route path="/eda" element={<EDAPage />} />
         <Route path="/checklist" element={<ChecklistPage />} />
         <Route path="/experiments" element={<ExperimentsPage />} />

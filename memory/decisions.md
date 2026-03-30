@@ -144,6 +144,18 @@
 
 ## 2026-03-30
 
+### 시뮬레이션 live 화면은 brain, timeline, 현재 줄을 같은 화면에서 읽는 구조로 고정
+
+- 결정: `/lectures/:date/simulation/live`에서는 하단에 전체 transcript를 길게 두지 않고, 3D brain 패널 옆에서 현재 줄과 앞뒤 줄을 바로 읽는 2열 구조로 유지한다.
+- 이유: 사용자가 뇌 반응 재생과 원문 해석을 같은 시야 안에서 동시에 확인해야 UX가 자연스럽고, 아래로 오가며 보는 흐름은 집중을 끊는다.
+- 결과: live 화면은 `brain + inline timeline`과 `현재 줄/앞뒤 줄 + ROI 해석`을 한 화면에 배치하고, 전체 원문은 별도 `/simulation/live/transcript` 화면으로 분리한다.
+
+### 요약 탭의 brain 표현은 3D 구형 메쉬 대신 평면 인포그래픽으로 고정
+
+- 결정: `/lectures/:date/simulation`과 강의 상세 카드의 대표 brain 표현은 장난감 같은 3D 메쉬 대신 평면형 brain infographic으로 통일한다.
+- 이유: 요약 화면은 결론을 빠르게 전달하는 역할이어서 사실적인 3D보다 단순하고 즉시 읽히는 시각 표현이 더 적합하다.
+- 결과: `BrainIconCanvas`는 summary/detail에서 zone 기반 평면 인포그래픽을 렌더하고, 실제 3D mesh는 live 화면에서만 유지한다.
+
 ### 수강자 반응 시뮬레이션은 TRIBE v2 기반 실험 기능으로 운영
 
 - 결정: 수강자 반응 시뮬레이션은 정식 평가 기능이 아니라 `TRIBE v2 기반 신경 반응 프록시` 실험 기능으로 소개한다.
@@ -191,3 +203,27 @@
 - 결정: 시뮬레이션 메인 화면과 원문 브라우저에는 결과 해석 방식을 설명하는 카드 또는 문구를 기본으로 넣는다.
 - 이유: attention/load/novelty와 ROI 결과는 익숙하지 않은 개념이라, 사용자가 “왜 이런 값이 나왔는지” 바로 이해할 수 있어야 한다.
 - 결과: `/lectures/:date/simulation`에는 `TRIBE 결과를 이렇게 읽어요`와 `이 결과는 이렇게 만들어요` 섹션을, transcript 화면에는 축약 설명 카드를 둔다.
+
+### TRIBE 시뮬레이션은 `요약 탭 + 실시간 Deep View` 2단 구조로 운영한다
+
+- 결정: 강의 상세에는 시뮬레이션 본문을 임베드하지 않고 요약 카드와 CTA만 두고, 실제 시뮬레이션은 `/lectures/:date/simulation` 요약 탭과 `/lectures/:date/simulation/live` 심층 화면으로 분리한다.
+- 이유: 평가 화면 안에서 3D와 원문을 바로 모두 보여주면 정보 밀도가 과해지고, 사용자는 먼저 결론을 빠르게 읽은 뒤 필요할 때 깊게 들어가는 흐름이 더 적합하다.
+- 결과: summary 탭은 커스텀 brain icon 인포그래픽과 한 줄 결론 중심으로, live 화면은 3D brain + Risk Timeline + transcript 동기화 중심으로 설계한다.
+
+### 요약 탭 3D는 실제 cortical mesh 대신 커스텀 brain icon mesh를 쓴다
+
+- 결정: `/simulation` 요약 탭에서는 실제 fsaverage5 mesh를 쓰지 않고, 단순한 좌/우 반구 brain icon canvas를 사용한다.
+- 이유: 요약 탭의 목적은 해부학적 충실도가 아니라 결론 전달과 시선 유도이며, 아이콘형 시각화가 더 가볍고 읽기 쉽다.
+- 결과: `frontend/src/components/simulation/BrainIconCanvas.tsx`가 요약 탭과 강의 상세 카드의 대표 시각 자산이 된다.
+
+### live 화면은 현재 라인 timestamp를 기준으로 반응 패널을 동기화한다
+
+- 결정: `/simulation/live`와 `/simulation/live/transcript`는 transcript line 선택/재생 위치를 기준으로 현재 세그먼트, Risk Timeline playhead, ROI Lens, 해석 문구를 같이 바꾸는 구조로 간다.
+- 이유: 사용자가 “지금 설명 중인 부분에서 어떤 반응으로 읽히는지”를 바로 확인하려면 세그먼트 선택보다 라인 중심 상호작용이 더 직관적이다.
+- 결과: transcript JSON에 `relative_seconds`, `frame_index`를 추가하고, `SimulationSegment.playback`, `live_assets` 계약을 확장했다.
+
+### 현재 live 자산은 line timestamp + 세그먼트 평균 반응 기반 fallback으로 운영한다
+
+- 결정: 현재 공개본의 live frame은 진짜 timestep cortical raw가 아니라, transcript line timestamp에 세그먼트 평균 반응을 매핑한 fallback으로 운영한다.
+- 이유: 현재 zip 산출물에는 per-timestep cortical frame 배열이 저장되어 있지 않아, line 단위 실시간 UX를 바로 만들려면 세그먼트 평균 반응을 활용한 중간 계약이 필요했다.
+- 결과: `scripts/build_simulation_playback_assets.py`가 `summary_visual`, `live_assets`, `segment.playback`, `transcript.relative_seconds/frame_index`를 생성한다. 이후 코랩 산출물에 실제 timestep raw가 추가되면 같은 프론트 계약으로 대체할 예정이다.

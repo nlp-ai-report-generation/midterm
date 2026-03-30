@@ -6,6 +6,13 @@
 
 ## 최근 완료
 
+- 시뮬레이션 live 화면에서 하단 transcript 분리 카드를 제거하고, 3D brain / Risk Timeline / 현재 줄 / 앞뒤 줄을 같은 화면에서 읽는 2열 구조로 재배치 (`frontend/src/pages/LectureSimulationLivePage.tsx`, `frontend/src/app/globals.css`)
+- 요약 탭과 강의 상세 카드의 brain icon 표현을 구형 3D 메쉬 대신 평면 인포그래픽형 brain graphic으로 교체 (`frontend/src/components/simulation/BrainIconCanvas.tsx`, `frontend/src/pages/LectureSimulationSummaryPage.tsx`, `frontend/src/app/lectures/[date]/page.tsx`)
+- TRIBE 시뮬레이션 라우트를 `요약 탭 -> 실시간 Deep View -> 원문 브라우저` 구조로 재구성 (`/lectures/:date/simulation`, `/lectures/:date/simulation/live`, `/lectures/:date/simulation/live/transcript`)
+- 요약 탭용 커스텀 brain icon 인포그래픽과 lecture detail CTA 카드 추가 (`frontend/src/components/simulation/BrainIconCanvas.tsx`, `frontend/src/pages/LectureSimulationSummaryPage.tsx`, `frontend/src/app/lectures/[date]/page.tsx`)
+- live 화면에 line timestamp 기반 재생 상태, transcript 하이라이트, Risk Timeline playhead, ROI Lens 동기화 추가 (`frontend/src/pages/LectureSimulationLivePage.tsx`, `frontend/src/pages/LectureSimulationTranscriptPage.tsx`)
+- 시뮬레이션 데이터 계약을 `summary_visual`, `live_assets`, `segment.playback`, `transcript.relative_seconds/frame_index`까지 확장하고 `2026-02-02` 실제 데이터에 반영 (`scripts/build_simulation_playback_assets.py`, `frontend/public/data/simulations/2026-02-02-*.json`)
+- `cd frontend && npm run build`로 summary/live 구조 포함 정적 빌드 통과
 - `2026-02-02` TRIBE zip 산출물을 로컬에 반입하고 실제 raw `(55, 20484)` 기준으로 ROI 요약 JSON과 프론트 확장 JSON 생성 (`scripts/import_tribe_zip_and_build_simulation.py`, `analysis/roi/results/2026-02-02-roi-summary.json`, `frontend/public/data/simulations/2026-02-02.json`)
 - `fsaverage5 -> Destrieux atlas` 정점 매핑 생성 완료 (`analysis/roi/fsaverage5_destrieux_mapping.npz`, `analysis/roi/fsaverage5_destrieux_mapping.manifest.json`)
 - 시뮬레이션 화면을 전역 프록시 + ROI Lens + 방법 설명 카드 구조로 확장하고, 원문 브라우저에도 ROI 기반 요약과 해석 태그를 추가 (`frontend/src/pages/LectureSimulationPage.tsx`, `frontend/src/pages/LectureSimulationTranscriptPage.tsx`, `frontend/src/app/globals.css`, `frontend/src/types/simulation.ts`)
@@ -60,8 +67,10 @@
 7. React SPA 배포 경로와 정적 데이터 갱신 흐름 문서 보강
 8. 강의 상세/설정 화면도 새 Apple 스타일 정보 구조에 맞춰 추가 정리
 9. `2026-02-09`, `2026-02-24`도 실제 raw 결과를 확보해 같은 ROI 해석 화면 계약으로 확장
-10. `02_build_brain_assets.ipynb`의 좌/우 반구 분할 규약이 실제 TRIBE raw output 정점 순서와 맞는지 검증
-11. 코랩에서 A100/H100 기준으로 audio-only 최적화 노트북 3개 날짜를 끝까지 실행해 실제 시간/메모리 개선 폭 확인
+10. 시뮬레이션 live 자산을 세그먼트 평균 기반 fallback이 아니라 실제 timestep frame 저장 형식으로 코랩/후처리 계약에 반영
+11. `02_build_brain_assets.ipynb`의 좌/우 반구 분할 규약이 실제 TRIBE raw output 정점 순서와 맞는지 검증
+12. 코랩에서 A100/H100 기준으로 audio-only 최적화 노트북 3개 날짜를 끝까지 실행해 실제 시간/메모리 개선 폭 확인
+13. live 화면을 실제 브라우저로 한 번 더 확인하고, 필요하면 타임라인 높이와 우측 레일 줄 수를 발표 리허설 기준으로 미세 조정
 
 ## 현재 저장소 상태
 
@@ -73,6 +82,7 @@
 - 프론트 시뮬레이션 UI: 파일럿 3강의 대상 실험용 3D 뇌 시각화/원문 브라우저 라우트 추가 완료, `fsaverage5` cortical mesh GLB 자산 연결 완료 (`frontend/src/pages/LectureSimulationPage.tsx`, `frontend/src/pages/LectureSimulationTranscriptPage.tsx`, `frontend/public/data/simulations/brain-mesh.glb`)
 - 정적 평가 데이터: 실제 분석 결과 1건 반영, 나머지 강의는 배치 실행 필요
 - 정적 시뮬레이션 데이터: `2026-02-02`는 실제 TRIBE raw 기반 ROI 해석 결과로 교체 완료, 나머지 파일럿 날짜는 추가 실데이터 확보 필요
+- 정적 시뮬레이션 데이터 계약: `2026-02-02`는 summary/live 자산과 transcript line mapping까지 확장 완료. 다만 live frame은 현재 세그먼트 평균 반응을 라인 timestamp에 매핑한 fallback이며 진짜 timestep raw는 아직 저장되지 않음
 - TRIBE 코랩 노트북: audio-only fallback을 실제 audio-only preprocessing으로 최적화했고, worker 수를 0으로 낮췄으며 날짜별 partial resume 저장을 지원함 (`colab/tribev2-student-reaction/01_run_tribev2.ipynb`)
 - 발표 자산: `presentation/`이 소스 오브 트루스이며, `scripts/sync_presentation_assets.py`로 `frontend/public/presentation/`과 `presentation/remotion/public/`에 동기화함
 - 발표 영상: `presentation/remotion/`에서 TTS 자막형 설명 영상 렌더링 가능, 캡처 자산 4종과 내레이션 mp3 8개 생성 완료
@@ -89,9 +99,11 @@
 7. `python3 scripts/run_single.py --date 2026-02-02 --model gpt-4o-mini` 실행
 8. `python3 scripts/export_frontend_data.py --experiment-id <id>` 실행
 9. `python3 scripts/build_simulation_seed_data.py`로 시뮬레이션 정적 데이터 재생성
-10. `cd frontend && npm run build`로 시뮬레이션 라우트 포함 정적 빌드 확인
+10. `python3 scripts/build_simulation_playback_assets.py --date 2026-02-02`로 summary/live 자산 재생성
+11. `cd frontend && npm run build`로 시뮬레이션 라우트 포함 정적 빌드 확인
 
 ## 현재 블로커
 
 - 전체 15개 강의 실제 평가 결과를 아직 생성하지 않음
 - `2026-02-09`, `2026-02-24` TRIBE raw 결과가 아직 완주본이 아니어서 ROI 기반 시뮬레이션 화면은 현재 `2026-02-02` 실데이터 중심으로만 검증됨
+- 현재 zip 산출물에는 per-timestep cortical frame이 저장되지 않아 live 화면은 line timestamp + 세그먼트 평균 반응 기반 fallback으로 동작함

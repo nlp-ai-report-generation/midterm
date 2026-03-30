@@ -9,6 +9,14 @@ import type {
   ChunkInfo,
   ChecklistItem,
 } from "@/types/evaluation";
+import type {
+  BrainIconFramePayload,
+  LiveBrainFramePayload,
+  LiveTimelineFramePayload,
+  SegmentColorPayload,
+  SimulationResult,
+  TranscriptBrowserData,
+} from "@/types/simulation";
 
 const DATA_BASE = `${import.meta.env.BASE_URL}data`;
 
@@ -117,6 +125,36 @@ export async function getCurriculumFlow(): Promise<CurriculumEntry[]> {
 /** 전처리: 청킹 결과 */
 export async function getChunks(date: string): Promise<ChunkInfo[]> {
   return fetchJSON<ChunkInfo[]>(`preprocessing/${date}_chunks.json`);
+}
+
+/* ── TRIBE v2 시뮬레이션 ── */
+
+export async function getSimulation(date: string): Promise<SimulationResult> {
+  return fetchJSON<SimulationResult>(`simulations/${date}.json`);
+}
+
+export async function getSimulationTranscript(date: string): Promise<TranscriptBrowserData> {
+  return fetchJSON<TranscriptBrowserData>(`simulations/${date}-transcript.json`);
+}
+
+export async function getSimulationColors(path: string): Promise<SegmentColorPayload> {
+  const normalized = path.startsWith("/") ? path.replace(/^\/data\//, "") : path;
+  return fetchJSON<SegmentColorPayload>(normalized);
+}
+
+export async function getSimulationSummaryVisual(path: string): Promise<BrainIconFramePayload> {
+  const normalized = path.startsWith("/") ? path.replace(/^\/data\//, "") : path;
+  return fetchJSON<BrainIconFramePayload>(normalized);
+}
+
+export async function getSimulationLiveFrames(path: string): Promise<LiveBrainFramePayload> {
+  const normalized = path.startsWith("/") ? path.replace(/^\/data\//, "") : path;
+  return fetchJSON<LiveBrainFramePayload>(normalized);
+}
+
+export async function getSimulationTimelineFrames(path: string): Promise<LiveTimelineFramePayload> {
+  const normalized = path.startsWith("/") ? path.replace(/^\/data\//, "") : path;
+  return fetchJSON<LiveTimelineFramePayload>(normalized);
 }
 
 /* ── Opus 심층 분석 ── */

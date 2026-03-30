@@ -9,13 +9,16 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { Brain, ChevronRight, Sparkles, TriangleAlert } from "lucide-react";
 import { useRole } from "@/contexts/RoleContext";
-import { getEvaluationByModel, MODEL_LABELS, type ModelKey } from "@/lib/data";
+import { getEvaluationByModel, getSimulation, getSimulationSummaryVisual, MODEL_LABELS, type ModelKey } from "@/lib/data";
 import { formatDate, scoreColor, scoreBadgeTextColor, scoreLabel, weightLabel } from "@/lib/utils";
 import { exportToNotion } from "@/lib/api";
+import BrainIconCanvas from "@/components/simulation/BrainIconCanvas";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import FeedbackCard from "@/components/shared/FeedbackCard";
 import type { EvaluationResult, CategoryResult, ItemScore } from "@/types/evaluation";
+import type { BrainIconFramePayload, SimulationResult } from "@/types/simulation";
 
 export default function LectureDetailPage() {
   const params = useParams();
@@ -23,6 +26,8 @@ export default function LectureDetailPage() {
   const { isOperator } = useRole();
   const [model, setModel] = useState<ModelKey>("gpt4o-mini");
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
+  const [simulation, setSimulation] = useState<SimulationResult | null>(null);
+  const [summaryVisual, setSummaryVisual] = useState<BrainIconFramePayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -35,6 +40,29 @@ export default function LectureDetailPage() {
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, [date, model]);
+
+  useEffect(() => {
+    if (!date) return;
+    let cancelled = false;
+
+    getSimulation(date)
+      .then(async (result) => {
+        const visual = await getSimulationSummaryVisual(result.summary_visual.brain_icon_frames_json);
+        if (cancelled) return;
+        setSimulation(result);
+        setSummaryVisual(visual);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setSimulation(null);
+          setSummaryVisual(null);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [date]);
 
   if (loading) {
     return (
@@ -262,6 +290,63 @@ export default function LectureDetailPage() {
           items={recommendations}
           color="var(--grey-500)"
         />
+      </div>
+
+      <div className="card card-padded">
+        <div className="simulation-panel-header">
+          <div>
+            <p className="text-section">실험: 수강자 반응 시뮬레이션</p>
+            <p className="text-caption">한 줄 결론부터 보고, 실시간 보기에서 스크립트와 반응을 같이 따라갈 수 있어요.</p>
+          </div>
+          <Link to={`/lectures/${date}/simulation`} className="btn-secondary">
+            요약 보기
+          </Link>
+        </div>
+        {simulation && summaryVisual?.frames[0] ? (
+          <div className="lecture-simulation-card-body">
+            <div className="lecture-simulation-card-visual">
+              <BrainIconCanvas frame={summaryVisual.frames[0]} compact />
+            </div>
+            <div className="lecture-simulation-card-copy">
+              <div className="simulation-pill-row">
+                <span className="simulation-pill simulation-pill-primary">
+                  <Sparkles size={14} />
+                  빠르게 보는 요약
+                </span>
+                <span className="simulation-pill">
+                  <Brain size={14} />
+                  실시간 Deep View 지원
+                </span>
+              </div>
+              <p className="text-section" style={{ marginTop: 14 }}>{simulation.summary_visual.hero_statement}</p>
+              <p className="text-body" style={{ marginTop: 10 }}>{simulation.lecture_summary.summary_text}</p>
+              <div className="simulation-pill-row" style={{ marginTop: 14 }}>
+                <span className="simulation-pill">강한 구간 {simulation.lecture_summary.strongest_segment_ids.length}개</span>
+                <span className="simulation-pill">주의 구간 {simulation.lecture_summary.risk_segment_ids.length}개</span>
+                <span className="simulation-pill">{simulation.segments.length}개 세그먼트</span>
+              </div>
+              <div className="simulation-callout" style={{ marginTop: 16 }}>
+                <TriangleAlert size={16} />
+                <p>{simulation.lecture_summary.caution_text}</p>
+              </div>
+            </div>
+            <div className="lecture-simulation-card-actions">
+              <Link to={`/lectures/${date}/simulation`} className="btn-secondary">
+                요약 보기
+                <ChevronRight size={16} />
+              </Link>
+              <Link to={`/lectures/${date}/simulation/live`} className="simulation-inline-link">
+                실시간 보기
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="simulation-pill-row" style={{ marginTop: 16 }}>
+            <span className="simulation-pill">요약 인포그래픽</span>
+            <span className="simulation-pill">실시간 3D</span>
+            <span className="simulation-pill">원문 동기화</span>
+          </div>
+        )}
       </div>
     </div>
   );

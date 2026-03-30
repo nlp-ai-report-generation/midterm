@@ -483,6 +483,282 @@ body {
 .simulation-side-card {
   min-height: 100%;
 }
+.simulation-summary-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.9fr);
+  gap: 24px;
+  align-items: stretch;
+}
+.simulation-summary-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.simulation-summary-stage-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.95fr) minmax(0, 1.05fr);
+  gap: 20px;
+  align-items: stretch;
+}
+.simulation-icon-shell {
+  min-height: 360px;
+  border-radius: 28px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 149, 80, 0.18), transparent 34%),
+    radial-gradient(circle at 78% 20%, rgba(255, 191, 139, 0.16), transparent 32%),
+    linear-gradient(180deg, #fff8ee, #f7f2ea 56%, #f3eee7);
+  border: 1px solid rgba(255, 170, 118, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 18px 40px -28px rgba(15, 23, 42, 0.16);
+}
+.brain-graphic {
+  height: 100%;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 20px;
+}
+.brain-graphic-compact {
+  padding: 14px;
+  grid-template-rows: minmax(0, 1fr);
+}
+.brain-graphic-stage {
+  position: relative;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255, 149, 80, 0.2), transparent 30%),
+    radial-gradient(circle at 78% 16%, rgba(255, 191, 139, 0.22), transparent 32%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(248, 244, 238, 0.92));
+  border: 1px solid rgba(255, 170, 118, 0.18);
+  overflow: hidden;
+}
+.brain-graphic-ridge {
+  position: absolute;
+  top: 14%;
+  bottom: 18%;
+  left: 50%;
+  width: 18px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 248, 238, 0.98), rgba(248, 235, 219, 0.88));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 10px 18px -16px rgba(15, 23, 42, 0.28);
+}
+.brain-graphic-hemisphere {
+  position: relative;
+  width: min(42%, 240px);
+  aspect-ratio: 0.92;
+  border-radius: 42% 46% 40% 48% / 44% 50% 40% 46%;
+  background: linear-gradient(180deg, rgba(255, 252, 247, 0.98), rgba(247, 239, 229, 0.96));
+  border: 1px solid rgba(255, 170, 118, 0.24);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.84),
+    0 18px 28px -24px rgba(15, 23, 42, 0.2);
+}
+.brain-graphic-hemisphere-left {
+  transform: rotate(-8deg);
+}
+.brain-graphic-hemisphere-right {
+  transform: rotate(8deg);
+}
+.brain-graphic-zone {
+  position: absolute;
+  border-radius: 999px;
+  filter: saturate(1.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 8px 18px -14px rgba(255, 107, 0, 0.6);
+}
+.brain-graphic-zone-1 {
+  top: 18%;
+  left: 12%;
+  width: 54%;
+  height: 18%;
+}
+.brain-graphic-zone-2 {
+  top: 40%;
+  left: 22%;
+  width: 60%;
+  height: 18%;
+}
+.brain-graphic-zone-3 {
+  top: 26%;
+  right: 12%;
+  width: 22%;
+  height: 38%;
+  border-radius: 22px;
+}
+.brain-graphic-zone-4 {
+  bottom: 16%;
+  left: 20%;
+  width: 52%;
+  height: 16%;
+}
+.brain-graphic-shadow {
+  position: absolute;
+  left: 50%;
+  bottom: 10%;
+  width: 62%;
+  height: 14%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.12);
+  filter: blur(18px);
+}
+.brain-graphic-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-end;
+}
+.simulation-summary-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.simulation-summary-card {
+  border-radius: 22px;
+  padding: 22px;
+  border: 1px solid rgba(255, 170, 118, 0.14);
+  background: linear-gradient(180deg, rgba(255, 250, 245, 0.96), rgba(255, 255, 255, 1));
+}
+.simulation-summary-card-strong {
+  min-height: 220px;
+}
+.simulation-summary-link-card {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-end;
+  padding: 20px 22px;
+  border-radius: 22px;
+  background: var(--grey-50);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+}
+.simulation-summary-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.simulation-highlight-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+.simulation-highlight-card:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 107, 0, 0.18);
+  box-shadow: 0 14px 24px -22px rgba(255, 107, 0, 0.22);
+}
+.simulation-highlight-value {
+  margin-top: auto;
+  padding-top: 18px;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.04em;
+}
+.simulation-summary-selected {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: var(--radius-inner);
+  background: rgba(255, 244, 235, 0.72);
+}
+.simulation-live-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 22px;
+}
+.simulation-live-line-card {
+  padding: 16px 18px;
+  border-radius: var(--radius-inner);
+  background: linear-gradient(180deg, rgba(255, 244, 235, 0.82), rgba(255, 255, 255, 1));
+  border: 1px solid rgba(255, 170, 118, 0.16);
+}
+.simulation-live-now-card {
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 244, 235, 0.88), rgba(255, 255, 255, 1));
+  border: 1px solid rgba(255, 170, 118, 0.16);
+}
+.simulation-live-now-card .text-body {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+.simulation-live-nearby-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+.simulation-live-nearby-button {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  border-radius: 16px;
+  text-align: left;
+  transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease;
+}
+.simulation-live-nearby-button:hover {
+  transform: translateY(-1px);
+}
+.simulation-live-transcript {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+}
+.simulation-live-line-button {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  text-align: left;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+.lecture-simulation-card-body {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: stretch;
+  margin-top: 18px;
+}
+.lecture-simulation-card-visual {
+  min-height: 168px;
+  border-radius: 24px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 26% 22%, rgba(255, 149, 80, 0.18), transparent 32%),
+    linear-gradient(180deg, #fff8ee, #f4efe7);
+  border: 1px solid rgba(255, 170, 118, 0.16);
+}
+.lecture-simulation-card-copy {
+  min-width: 0;
+}
+.lecture-simulation-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
 
 /* ─── Responsive ─── */
 @media (max-width: 767px) {
@@ -506,22 +782,39 @@ body {
   /* 카드 그리드 모바일: 1열 */
   .card-grid { grid-template-columns: 1fr !important; }
   .simulation-hero,
+  .simulation-summary-hero,
   .simulation-main-grid,
   .simulation-transcript-grid,
   .simulation-persona-grid,
   .simulation-metric-grid,
   .simulation-roi-grid,
   .simulation-method-grid,
-  .simulation-summary-grid {
+  .simulation-summary-grid,
+  .simulation-summary-card-grid,
+  .simulation-summary-stage-grid,
+  .lecture-simulation-card-body {
     grid-template-columns: 1fr;
   }
   .simulation-title { font-size: 24px; }
   .simulation-brain-shell { height: 360px; }
+  .simulation-icon-shell { min-height: 320px; }
   .simulation-segment-nav {
     position: static;
     max-height: none;
   }
   .simulation-transcript-line {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .simulation-summary-link-card,
+  .lecture-simulation-card-actions {
+    align-items: flex-start;
+  }
+  .brain-graphic-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .simulation-live-line-button {
     flex-direction: column;
     gap: 4px;
   }
