@@ -4,7 +4,16 @@ import { AlertTriangle, ArrowLeft, Brain, ChevronRight, Sparkles, Waypoints } fr
 import BrainCanvas from "@/components/simulation/BrainCanvas";
 import { getSimulation, getSimulationColors, getSimulationSummaryVisual } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
-import { hintLabel, modalityLabel, roiHintDescription } from "@/lib/simulation";
+import {
+  hintLabel,
+  interpretMetricCombo,
+  isFlowZone,
+  modalityLabel,
+  roiHintDescription,
+  roiNeuroscienceHint,
+  roiResponseLevel,
+} from "@/lib/simulation";
+import MetricGauge from "@/components/simulation/MetricGauge";
 import type { BrainIconFramePayload, SegmentColorPayload, SimulationResult } from "@/types/simulation";
 
 function highlightLabel(kind: "attention" | "load" | "novelty") {
@@ -259,20 +268,28 @@ export default function LectureSimulationSummaryPage() {
         <div className="card card-padded">
           <p className="text-section" style={{ marginBottom: 10 }}>영역 상위 패턴</p>
           <div className="simulation-roi-list">
-            {simulation.roi_summary.lecture_top_rois.slice(0, 5).map((roi) => (
-              <div key={`${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
-                <div>
-                  <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
-                  <p className="text-caption">{roiHintDescription(roi.functional_hint)}</p>
+            {simulation.roi_summary.lecture_top_rois.slice(0, 5).map((roi) => {
+              const level = roiResponseLevel(roi.mean_abs_response);
+              return (
+                <div key={`${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
+                  <div>
+                    <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
+                    <p className="text-caption">{roiHintDescription(roi.functional_hint)}</p>
+                  </div>
+                  <span className="text-caption" style={{ flexShrink: 0 }}>{level.label} · {roi.hemisphere === "left" ? "좌" : "우"}</span>
                 </div>
-                <p className="text-caption">{roi.hemisphere === "left" ? "왼쪽" : "오른쪽"}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
           {selectedSegment && (
             <div className="simulation-summary-selected">
               <p className="text-label">지금 보고 있는 구간</p>
               <p className="text-body" style={{ marginTop: 8 }}>{selectedSegment.roi_insights.summary_text}</p>
+              <div className="simulation-metric-grid" style={{ marginTop: 12 }}>
+                <MetricGauge label="Attention" value={selectedSegment.proxies.attention_proxy} metric="attention" compact />
+                <MetricGauge label="Load" value={selectedSegment.proxies.load_proxy} metric="load" compact />
+                <MetricGauge label="Novelty" value={selectedSegment.proxies.novelty_proxy} metric="novelty" compact />
+              </div>
             </div>
           )}
         </div>

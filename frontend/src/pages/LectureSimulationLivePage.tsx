@@ -33,13 +33,21 @@ import {
 import { formatDate } from "@/lib/utils";
 import {
   buildSegmentTags,
+  computeLectureStats,
+  computeSegmentDerivedMetrics,
+  deduplicateRois,
   flattenTranscript,
   hintLabel,
-  metricTone,
+  interpretLineHeuristics,
+  interpretMetricCombo,
+  isFlowZone,
   modalityLabel,
   roiHintDescription,
+  roiNeuroscienceHint,
+  roiResponseLevel,
   segmentTone,
 } from "@/lib/simulation";
+import MetricGauge from "@/components/simulation/MetricGauge";
 import type {
   LiveBrainFramePayload,
   LiveTimelineFramePayload,
@@ -65,6 +73,7 @@ export default function LectureSimulationLivePage() {
   const [timelineFrames, setTimelineFrames] = useState<LiveTimelineFramePayload | null>(null);
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -122,6 +131,10 @@ export default function LectureSimulationLivePage() {
   const currentSegment = simulation?.segments[currentLine?.segment_index ?? 0];
   const currentColorSegment = colors?.segments[currentFrame?.color_segment_index ?? currentLine?.segment_index ?? 0];
   const timelineData = timelineFrames?.frames ?? [];
+  const lectureStats = useMemo(() => {
+    if (!timelineData.length) return undefined;
+    return computeLectureStats(timelineData);
+  }, [timelineData]);
   const segmentFrameBounds = useMemo(() => {
     if (!liveFrames) return new Map<string, { start: number; end: number }>();
     const bounds = new Map<string, { start: number; end: number }>();
@@ -149,12 +162,13 @@ export default function LectureSimulationLivePage() {
     if (!isPlaying || !liveFrames || liveFrames.frames.length === 0) return;
     const frame = liveFrames.frames[currentFrameIndex];
     const nextFrame = liveFrames.frames[currentFrameIndex + 1];
+    const baseMs = playbackIntervalMs(frame?.relative_seconds ?? 0, nextFrame?.relative_seconds);
     const timer = window.setTimeout(() => {
       setCurrentFrameIndex((prev) => (prev + 1) % liveFrames.frames.length);
-    }, playbackIntervalMs(frame?.relative_seconds ?? 0, nextFrame?.relative_seconds));
+    }, baseMs / playbackSpeed);
 
     return () => window.clearTimeout(timer);
-  }, [currentFrameIndex, isPlaying, liveFrames]);
+  }, [currentFrameIndex, isPlaying, liveFrames, playbackSpeed]);
 
   if (loading) {
     return (
@@ -204,31 +218,25 @@ export default function LectureSimulationLivePage() {
     }
   };
 
-  const currentPatternSummary = (() => {
-    const intensity = currentFrame.heuristic_intensity;
-    const change = currentFrame.heuristic_change_boost;
-    const emphasis = currentFrame.heuristic_timeline_emphasis;
-    if (change >= 0.72) return "설명 축이 빠르게 바뀌는 줄이에요. 전환이 크게 읽혀요.";
-    if (intensity >= 0.76) return "설명 밀도와 추적 반응이 같이 올라가는 줄이에요.";
-    if (emphasis >= 0.72) return "지금 줄이 현재 구간의 중심 포인트로 읽혀요.";
-    return "이 줄은 현재 구간의 흐름을 이어주는 중심 연결부로 읽혀요.";
-  })();
+  const lineInterpretation = interpretLineHeuristics(currentFrame);
+  const derivedMetrics = useMemo(() => {
+    if (!transcript || currentSegmentIndex == null) return null;
+    const seg = transcript.segments[currentSegmentIndex];
+    if (!seg) return null;
+    return computeSegmentDerivedMetrics(seg.lines);
+  }, [transcript, currentSegmentIndex]);
   const currentMetricSet = {
     attention: timelineData[currentFrameIndex]?.attention_display ?? currentSegment.proxies.attention_proxy,
     load: timelineData[currentFrameIndex]?.load_display ?? currentSegment.proxies.load_proxy,
     novelty: timelineData[currentFrameIndex]?.novelty_display ?? currentSegment.proxies.novelty_proxy,
   };
-  const patternReasons = [
-    currentMetricSet.attention >= 68
-      ? "반응 강도가 올라가요. 설명을 따라가는 압력이 커지는 줄로 읽혀요."
-      : "반응 강도는 안정적이에요. 흐름을 이어주는 줄에 가까워요.",
-    currentFrame.heuristic_change_boost >= 0.72
-      ? "직전 줄 대비 변화가 커요. 예시나 설명 축이 바뀌는 신호가 보여요."
-      : "직전 줄과 이어지는 흐름이에요. 급격한 전환은 크지 않아요.",
-    currentMetricSet.load >= 65
-      ? "정보 밀도가 높아요. 설명 속도를 한 번 끊어주면 따라가기 쉬워져요."
-      : "부하는 과하지 않아요. 현재 줄은 비교적 읽기 쉬운 구간이에요.",
-  ];
+  const comboInterpretation = interpretMetricCombo(
+    currentMetricSet.attention,
+    currentMetricSet.load,
+    currentMetricSet.novelty,
+    lectureStats,
+  );
+  const currentFlowZone = isFlowZone(currentMetricSet.attention, currentMetricSet.load, currentMetricSet.novelty);
 
   return (
     <div className="page-content">
@@ -292,10 +300,33 @@ export default function LectureSimulationLivePage() {
               <p className="text-section">Brain Live Panel</p>
               <p className="text-caption">라인 선택과 재생 위치에 맞춰 현재 구간을 같이 보여줘요.</p>
             </div>
-            <button className="btn-secondary" onClick={() => setIsPlaying((prev) => !prev)}>
-              {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-              {isPlaying ? "일시정지" : "재생하기"}
-            </button>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <button className="btn-secondary" onClick={() => setIsPlaying((prev) => !prev)}>
+                {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+                {isPlaying ? "정지" : "재생"}
+              </button>
+              <div style={{ display: "flex", gap: 2 }}>
+                {[0.5, 1, 2].map((speed) => (
+                  <button
+                    key={speed}
+                    onClick={() => setPlaybackSpeed(speed)}
+                    style={{
+                      padding: "6px 10px",
+                      fontSize: 12,
+                      fontWeight: playbackSpeed === speed ? 800 : 600,
+                      borderRadius: "var(--radius-sm)",
+                      border: "1px solid",
+                      borderColor: playbackSpeed === speed ? "var(--primary)" : "var(--border)",
+                      background: playbackSpeed === speed ? "var(--primary-light)" : "var(--surface)",
+                      color: playbackSpeed === speed ? "var(--primary)" : "var(--text-secondary)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {speed}x
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="simulation-brain-shell">
@@ -410,9 +441,9 @@ export default function LectureSimulationLivePage() {
                     return `재생 위치 ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
                   }}
                 />
-                <Line type="monotone" dataKey="attention_display" stroke="var(--primary)" strokeWidth={3} dot={false} name="Attention" />
-                <Line type="monotone" dataKey="load_display" stroke="#ef4444" strokeWidth={2} dot={false} name="Load" />
-                <Line type="monotone" dataKey="novelty_display" stroke="#0f172a" strokeWidth={2} dot={false} name="Novelty" />
+                <Line type="basis" dataKey="attention_display" stroke="var(--primary)" strokeWidth={2.5} dot={false} name="Attention" connectNulls />
+                <Line type="basis" dataKey="load_display" stroke="#ef4444" strokeWidth={2} dot={false} name="Load" connectNulls />
+                <Line type="basis" dataKey="novelty_display" stroke="#0f172a" strokeWidth={2} dot={false} name="Novelty" connectNulls />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -453,29 +484,81 @@ export default function LectureSimulationLivePage() {
               </Link>
             </div>
 
-            <div className="simulation-pattern-list" style={{ marginTop: 16 }}>
-              {patternReasons.map((reason, index) => (
-                <div key={index} className="simulation-pattern-item">
-                  <span className="simulation-pattern-index">{index + 1}</span>
-                  <p className="text-body">{reason}</p>
+            <div className="simulation-combo-card" style={{
+              marginTop: 16,
+              background: comboInterpretation.severity === "success" ? "rgba(34,197,94,0.06)" :
+                comboInterpretation.severity === "warning" ? "rgba(239,68,68,0.06)" :
+                comboInterpretation.severity === "caution" ? "rgba(245,158,11,0.06)" : "var(--grey-50)",
+              borderColor: comboInterpretation.severity === "success" ? "rgba(34,197,94,0.2)" :
+                comboInterpretation.severity === "warning" ? "rgba(239,68,68,0.2)" :
+                comboInterpretation.severity === "caution" ? "rgba(245,158,11,0.2)" : "var(--border)",
+            }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+                  <span className="simulation-combo-badge" style={{
+                    color: comboInterpretation.severity === "success" ? "var(--color-flow)" :
+                      comboInterpretation.severity === "warning" ? "var(--color-risk)" :
+                      comboInterpretation.severity === "caution" ? "var(--color-caution)" : "var(--grey-700)",
+                    background: comboInterpretation.severity === "success" ? "rgba(34,197,94,0.12)" :
+                      comboInterpretation.severity === "warning" ? "rgba(239,68,68,0.12)" :
+                      comboInterpretation.severity === "caution" ? "rgba(245,158,11,0.12)" : "rgba(51,65,85,0.08)",
+                  }}>
+                    {comboInterpretation.pattern}
+                  </span>
+                  {currentFlowZone && (
+                    <span className="simulation-flow-indicator" style={{ color: "var(--color-flow)", borderColor: "rgba(34,197,94,0.3)" }}>
+                      <Sparkles size={12} />
+                      Flow
+                    </span>
+                  )}
                 </div>
-              ))}
+                <p className="text-body">{comboInterpretation.diagnosis}</p>
+                {comboInterpretation.suggestion && (
+                  <p className="text-caption" style={{ marginTop: 6 }}>{comboInterpretation.suggestion}</p>
+                )}
+              </div>
             </div>
 
             <div className="simulation-metric-grid" style={{ marginTop: 16 }}>
-              {[
-                ["Attention", currentMetricSet.attention],
-                ["Load", currentMetricSet.load],
-                ["Novelty", currentMetricSet.novelty],
-              ].map(([label, value]) => (
-                <div key={label} className="simulation-metric-card">
-                  <p className="text-label">{label}</p>
-                  <p className="simulation-metric-value" style={{ color: metricTone(Number(value)) }}>
-                    {Number(value).toFixed(1)}
+              <MetricGauge label="Attention" value={currentMetricSet.attention} metric="attention" />
+              <MetricGauge label="Load" value={currentMetricSet.load} metric="load" />
+              <MetricGauge label="Novelty" value={currentMetricSet.novelty} metric="novelty" />
+            </div>
+
+            {derivedMetrics && (
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 12 }}>
+                <div style={{ padding: "10px 14px", borderRadius: "var(--radius-inner)", background: "var(--grey-50)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span className="text-label">리듬 변이</span>
+                    <span style={{
+                      fontSize: 11, fontWeight: 700, padding: "2px 7px", borderRadius: 999,
+                      color: derivedMetrics.pacing >= 35 ? "var(--color-flow)" : "var(--color-caution)",
+                      background: derivedMetrics.pacing >= 35 ? "rgba(34,197,94,0.10)" : "rgba(245,158,11,0.10)",
+                    }}>
+                      {derivedMetrics.pacingLabel}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4, lineHeight: 1.45 }}>
+                    문장 길이 변이 — {derivedMetrics.pacing >= 35 ? "설명에 강약이 있어요" : "단조로운 흐름이에요"}
                   </p>
                 </div>
-              ))}
-            </div>
+                <div style={{ padding: "10px 14px", borderRadius: "var(--radius-inner)", background: "var(--grey-50)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span className="text-label">참여 유도</span>
+                    <span style={{
+                      fontSize: 11, fontWeight: 700, padding: "2px 7px", borderRadius: 999,
+                      color: derivedMetrics.engagementCue >= 20 ? "var(--color-flow)" : "var(--color-caution)",
+                      background: derivedMetrics.engagementCue >= 20 ? "rgba(34,197,94,0.10)" : "rgba(245,158,11,0.10)",
+                    }}>
+                      {derivedMetrics.engagementLabel}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4, lineHeight: 1.45 }}>
+                    질문·예시·격려·전환 — {derivedMetrics.engagementCue >= 20 ? "참여 유도가 활발해요" : "유도 신호가 적어요"}
+                  </p>
+                </div>
+              </div>
+            )}
 
             <div className="simulation-pill-row" style={{ marginTop: 18 }}>
               {segmentTags.map((tag) => (
@@ -485,7 +568,7 @@ export default function LectureSimulationLivePage() {
 
             <div className="simulation-callout" style={{ marginTop: 18 }}>
               <ScanText size={16} />
-              <p>{currentPatternSummary}</p>
+              <p><strong>{lineInterpretation.dominantSignal}</strong> — {lineInterpretation.microSummary}</p>
             </div>
           </div>
 
@@ -507,15 +590,18 @@ export default function LectureSimulationLivePage() {
                   <Waypoints size={16} color="var(--primary)" />
                 </div>
                 <div className="simulation-roi-list" style={{ marginTop: 14 }}>
-                  {currentSegment.roi_insights.top_active_rois.slice(0, 3).map((roi) => (
-                    <div key={`active-${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
-                      <div>
-                        <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
-                        <p className="text-caption">{roiHintDescription(roi.functional_hint)}</p>
+                  {deduplicateRois(currentSegment.roi_insights.top_active_rois, "mean_abs_response").slice(0, 3).map((roi) => {
+                    const level = roiResponseLevel(roi.mean_abs_response);
+                    return (
+                      <div key={`active-${roi.functional_hint}`} className="simulation-roi-item">
+                        <div style={{ minWidth: 0 }}>
+                          <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
+                          <p className="text-caption">{roiHintDescription(roi.functional_hint)}</p>
+                        </div>
+                        <span className="text-caption" style={{ flexShrink: 0 }}>{level.label}</span>
                       </div>
-                      <p className="text-caption">{roi.hemisphere === "left" ? "왼쪽" : "오른쪽"}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
@@ -525,15 +611,18 @@ export default function LectureSimulationLivePage() {
                   <Waypoints size={16} color="var(--grey-700)" />
                 </div>
                 <div className="simulation-roi-list" style={{ marginTop: 14 }}>
-                  {currentSegment.roi_insights.top_changed_rois.slice(0, 3).map((roi) => (
-                    <div key={`changed-${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
-                      <div>
-                        <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
-                        <p className="text-caption">직전 줄 대비 이 역할의 변화가 크게 읽혀요.</p>
+                  {deduplicateRois(currentSegment.roi_insights.top_changed_rois, "delta_abs_response").slice(0, 3).map((roi) => {
+                    const level = roiResponseLevel(roi.delta_abs_response);
+                    return (
+                      <div key={`changed-${roi.functional_hint}`} className="simulation-roi-item">
+                        <div style={{ minWidth: 0 }}>
+                          <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
+                          <p className="text-caption">직전 대비 변화 {level.label}</p>
+                        </div>
+                        <span className="text-caption" style={{ flexShrink: 0 }}>{level.label}</span>
                       </div>
-                      <p className="text-caption">{roi.hemisphere === "left" ? "왼쪽" : "오른쪽"}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -541,6 +630,11 @@ export default function LectureSimulationLivePage() {
             <div className="simulation-summary-selected" style={{ marginTop: 18 }}>
               <p className="text-label">왜 이렇게 해석해요</p>
               <p className="text-body" style={{ marginTop: 8 }}>{currentSegment.roi_insights.summary_text}</p>
+              {currentSegment.roi_insights.top_active_rois[0] && (
+                <p className="text-caption" style={{ marginTop: 8 }}>
+                  {roiNeuroscienceHint(currentSegment.roi_insights.top_active_rois[0].functional_hint)}
+                </p>
+              )}
             </div>
           </div>
         </div>

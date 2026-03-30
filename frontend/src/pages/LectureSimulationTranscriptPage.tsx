@@ -3,7 +3,15 @@ import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Brain, FileText, Layers3, Pause, Play, Sparkles, Waypoints } from "lucide-react";
 import { getSimulation, getSimulationLiveFrames, getSimulationTranscript } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
-import { buildSegmentTags, flattenTranscript, hintLabel } from "@/lib/simulation";
+import {
+  buildSegmentTags,
+  deduplicateRois,
+  flattenTranscript,
+  hintLabel,
+  roiNeuroscienceHint,
+  roiResponseLevel,
+} from "@/lib/simulation";
+import MetricGauge from "@/components/simulation/MetricGauge";
 import type { LiveBrainFramePayload, SimulationResult, TranscriptBrowserData } from "@/types/simulation";
 
 function playbackIntervalMs(currentRelativeSeconds: number, nextRelativeSeconds: number | undefined) {
@@ -21,6 +29,7 @@ export default function LectureSimulationTranscriptPage() {
   const [liveFrames, setLiveFrames] = useState<LiveBrainFramePayload | null>(null);
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const lineRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -79,11 +88,12 @@ export default function LectureSimulationTranscriptPage() {
     if (!isPlaying || !liveFrames || liveFrames.frames.length === 0) return;
     const frame = liveFrames.frames[currentFrameIndex];
     const nextFrame = liveFrames.frames[currentFrameIndex + 1];
+    const baseMs = playbackIntervalMs(frame?.relative_seconds ?? 0, nextFrame?.relative_seconds);
     const timer = window.setTimeout(() => {
       setCurrentFrameIndex((prev) => (prev + 1) % liveFrames.frames.length);
-    }, playbackIntervalMs(frame?.relative_seconds ?? 0, nextFrame?.relative_seconds));
+    }, baseMs / playbackSpeed);
     return () => window.clearTimeout(timer);
-  }, [currentFrameIndex, isPlaying, liveFrames]);
+  }, [currentFrameIndex, isPlaying, liveFrames, playbackSpeed]);
 
   if (loading) {
     return (
@@ -158,23 +168,39 @@ export default function LectureSimulationTranscriptPage() {
               <p className="text-label">Brain Sync Summary</p>
               <p className="text-caption">{currentSegment.segment_id} · {currentLine.timestamp}</p>
             </div>
-            <button className="btn-secondary" onClick={() => setIsPlaying((prev) => !prev)}>
-              {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-              {isPlaying ? "일시정지" : "재생하기"}
-            </button>
+            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+              <button className="btn-secondary" onClick={() => setIsPlaying((prev) => !prev)}>
+                {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+                {isPlaying ? "정지" : "재생"}
+              </button>
+              <div style={{ display: "flex", gap: 2 }}>
+                {[0.5, 1, 2].map((speed) => (
+                  <button
+                    key={speed}
+                    onClick={() => setPlaybackSpeed(speed)}
+                    style={{
+                      padding: "4px 8px",
+                      fontSize: 11,
+                      fontWeight: playbackSpeed === speed ? 800 : 600,
+                      borderRadius: "var(--radius-sm)",
+                      border: "1px solid",
+                      borderColor: playbackSpeed === speed ? "var(--primary)" : "var(--border)",
+                      background: playbackSpeed === speed ? "var(--primary-light)" : "var(--surface)",
+                      color: playbackSpeed === speed ? "var(--primary)" : "var(--text-secondary)",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {speed}x
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="simulation-metric-grid" style={{ marginTop: 18 }}>
-            {[
-              ["Attention", currentSegment.proxies.attention_proxy],
-              ["Load", currentSegment.proxies.load_proxy],
-              ["Novelty", currentSegment.proxies.novelty_proxy],
-            ].map(([label, value]) => (
-              <div key={label} className="simulation-metric-card">
-                <p className="text-label">{label}</p>
-                <p className="simulation-metric-value">{Number(value).toFixed(1)}</p>
-              </div>
-            ))}
+            <MetricGauge label="Attention" value={currentSegment.proxies.attention_proxy} metric="attention" compact />
+            <MetricGauge label="Load" value={currentSegment.proxies.load_proxy} metric="load" compact />
+            <MetricGauge label="Novelty" value={currentSegment.proxies.novelty_proxy} metric="novelty" compact />
           </div>
           <div className="simulation-pill-row" style={{ marginTop: 18 }}>
             {buildSegmentTags(simulation, currentLine.segment_index).map((tag) => (
@@ -253,15 +279,18 @@ export default function LectureSimulationTranscriptPage() {
                   <Waypoints size={16} color="var(--primary)" />
                 </div>
                 <div className="simulation-roi-list" style={{ marginTop: 14 }}>
-                  {currentSegment.roi_insights.top_active_rois.slice(0, 3).map((roi) => (
-                    <div key={`active-${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
-                      <div>
-                        <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
-                        <p className="text-caption">{roi.hemisphere === "left" ? "왼쪽" : "오른쪽"} · {hintLabel(roi.functional_hint)}</p>
+                  {deduplicateRois(currentSegment.roi_insights.top_active_rois, "mean_abs_response").slice(0, 3).map((roi) => {
+                    const level = roiResponseLevel(roi.mean_abs_response);
+                    return (
+                      <div key={`active-${roi.functional_hint}`} className="simulation-roi-item">
+                        <div style={{ minWidth: 0 }}>
+                          <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
+                          <p className="text-caption">반응 {level.label}</p>
+                        </div>
+                        <span className="text-caption" style={{ flexShrink: 0 }}>{level.label}</span>
                       </div>
-                      <p className="text-caption">{roi.mean_abs_response?.toFixed(4)}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
@@ -271,21 +300,31 @@ export default function LectureSimulationTranscriptPage() {
                   <Layers3 size={16} color="var(--grey-700)" />
                 </div>
                 <div className="simulation-roi-list" style={{ marginTop: 14 }}>
-                  {currentSegment.roi_insights.top_changed_rois.slice(0, 3).map((roi) => (
-                    <div key={`changed-${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
-                      <div>
-                        <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
-                        <p className="text-caption">{roi.hemisphere === "left" ? "왼쪽" : "오른쪽"} · {hintLabel(roi.functional_hint)}</p>
+                  {deduplicateRois(currentSegment.roi_insights.top_changed_rois, "delta_abs_response").slice(0, 3).map((roi) => {
+                    const level = roiResponseLevel(roi.delta_abs_response);
+                    return (
+                      <div key={`changed-${roi.functional_hint}`} className="simulation-roi-item">
+                        <div style={{ minWidth: 0 }}>
+                          <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
+                          <p className="text-caption">변화 {level.label}</p>
+                        </div>
+                        <span className="text-caption" style={{ flexShrink: 0 }}>{level.label}</span>
                       </div>
-                      <p className="text-caption">{roi.delta_abs_response?.toFixed(4)}</p>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
             <div className="simulation-callout" style={{ marginTop: 18 }}>
               <Brain size={16} />
-              <p>{currentSegment.roi_insights.summary_text}</p>
+              <div>
+                <p>{currentSegment.roi_insights.summary_text}</p>
+                {currentSegment.roi_insights.top_active_rois[0] && (
+                  <p style={{ marginTop: 6, fontSize: 12, color: "var(--text-muted)" }}>
+                    {roiNeuroscienceHint(currentSegment.roi_insights.top_active_rois[0].functional_hint)}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 

@@ -21,38 +21,45 @@ interface BrainCanvasProps {
   variant?: "live" | "summary";
 }
 
+/**
+ * 5-stop heatmap: cool grey → warm beige → cream → orange → deep red
+ * Wider spectrum than original 3-stop for better low-mid differentiation
+ */
 function heatColor(value: number, intensity = 0.5, changeBoost = 0.5, variant: "live" | "summary" = "live"): [number, number, number] {
   const clamped = Math.max(0, Math.min(1, value));
   const contrast = 1.08 + changeBoost * 0.42;
   const shifted = 0.12 + intensity * 0.14;
   const normalized = Math.max(0, Math.min(1, (clamped - 0.24) * contrast + shifted));
   const boosted = variant === "summary"
-    ? Math.round(Math.pow(normalized, 0.62) * 3.2) / 3.2
+    ? Math.round(Math.pow(normalized, 0.62) * 4) / 4
     : Math.pow(normalized, 0.68);
 
-  if (boosted < 0.36) {
-    const ratio = boosted / 0.36;
-    return [
-      0.92 + (1.0 - 0.92) * ratio,
-      0.94 + (0.86 - 0.94) * ratio,
-      0.96 + (0.78 - 0.96) * ratio,
-    ];
+  // Stop 1: cool grey (inactive)
+  if (boosted < 0.2) {
+    const r = boosted / 0.2;
+    return [0.90 + r * 0.02, 0.93 - r * 0.01, 0.97 - r * 0.03];
   }
-
-  if (boosted < 0.72) {
-    const ratio = (boosted - 0.36) / 0.36;
-    return [
-      1.0 + (1.0 - 1.0) * ratio,
-      0.86 + (0.56 - 0.86) * ratio,
-      0.78 + (0.16 - 0.78) * ratio,
-    ];
+  // Stop 2: warm beige
+  if (boosted < 0.4) {
+    const r = (boosted - 0.2) / 0.2;
+    return [0.92 + r * 0.08, 0.92 - r * 0.04, 0.94 - r * 0.14];
   }
-
-  const ratio = (boosted - 0.72) / 0.28;
+  // Stop 3: cream → orange transition
+  if (boosted < 0.6) {
+    const r = (boosted - 0.4) / 0.2;
+    return [1.0, 0.88 - r * 0.28, 0.80 - r * 0.56];
+  }
+  // Stop 4: orange → deep orange
+  if (boosted < 0.8) {
+    const r = (boosted - 0.6) / 0.2;
+    return [1.0 - r * 0.05, 0.60 - r * 0.28, 0.24 - r * 0.14];
+  }
+  // Stop 5: deep orange → red
+  const r = (boosted - 0.8) / 0.2;
   return [
-    1.0 + ((variant === "summary" ? 0.9 : 0.87) - 1.0) * ratio,
-    0.56 + ((variant === "summary" ? 0.28 : 0.23) - 0.56) * ratio,
-    0.16 + ((variant === "summary" ? 0.08 : 0.06) - 0.16) * ratio,
+    0.95 - r * (variant === "summary" ? 0.08 : 0.10),
+    0.32 - r * (variant === "summary" ? 0.12 : 0.15),
+    0.10 - r * (variant === "summary" ? 0.03 : 0.04),
   ];
 }
 
