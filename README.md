@@ -61,6 +61,7 @@
 - [시작하기](#-시작하기)
 - [대시보드 페이지](#%EF%B8%8F-대시보드-페이지)
 - [문서](#-문서)
+- [뇌 반응 시뮬레이션 (TRIBE v2)](#-뇌-반응-시뮬레이션-tribe-v2)
 - [고도화 로드맵](#%EF%B8%8F-고도화-로드맵)
 
 ---
@@ -215,6 +216,7 @@ GPT-4o-mini로 15개 강의를 각 3회씩 반복 평가했어요.
 - **데이터 분석(EDA)** — 발화량, 화자 구성, 소통 빈도, 습관 표현
 - **강의 비교** — 2개 강의를 나란히 놓고 카테고리별로 비교해요
 - **점수 추이** — 카테고리별로 시간에 따라 어떻게 변하는지 추적해요
+- **TRIBE v2 수강자 반응 시뮬레이션** — 강의 텍스트를 세그먼트 단위로 TRIBE v2에 넣어 3D 뇌 히트맵과 원문 브라우저로 탐색해요
 - **외부 연동** — 구글 드라이브에서 파일을 가져오고, 노션에 결과를 내보낼 수 있어요
 - **GitHub Actions** — 파일만 올리면 자동으로 평가하고 배포해요
 
@@ -291,6 +293,7 @@ POST /api/settings    → API 키, 모델 설정 변경
 │   └── experiment/         # 실험 러너, 신뢰도 메트릭
 ├── api/                    # FastAPI 서버
 ├── scripts/                # run_single.py, run_batch.py
+├── colab/                  # TRIBE v2 코랩 실행 템플릿
 ├── experiments/            # 실험 결과 저장소
 └── tests/                  # 단위 테스트 (46개)
 ```
@@ -339,6 +342,8 @@ python3 scripts/run_batch.py --model gpt-4o-mini --passes 3 --no-calibrator
 |--------|------|------|
 | 대시보드 | /dashboard | 전체 현황, KPI, 히트맵, 추이 |
 | 강의 평가 | /lectures | 15개 강의 목록 + 모델 전환 |
+| 수강자 반응 시뮬레이션 | /lectures/:date/simulation | TRIBE v2 기반 3D 뇌 히트맵 + 세그먼트 타임라인 |
+| 원문 브라우저 | /lectures/:date/simulation/transcript | 세그먼트와 동기화된 전체 원문 탐색 |
 | 데이터 분석 | /eda | 발화량, 화자, 소통, 습관 표현 |
 | 모델 비교 | /experiments | 3모델 점수 비교 + 카테고리 차트 |
 | 강의 비교 | /compare | 2개 강의를 나란히 비교 |
@@ -355,7 +360,45 @@ python3 scripts/run_batch.py --model gpt-4o-mini --passes 3 --no-calibrator
 | [기획서](docs/기획서.md) | 프로젝트 배경, 목표, 아키텍처, 일정 |
 | [현재 진행상황](docs/현재-진행상황.md) | 완료/진행 중/다음 단계, 성과 수치 |
 | [실험 결과 보고서](docs/experiment_results_midterm.md) | 신뢰도 검증 실험 상세 분석 |
+| [TRIBE v2 수강자 반응 시뮬레이션](docs/TRIBE_v2_수강자_반응_시뮬레이션.md) | 원리, 코랩 실행 흐름, raw output 해석, 3D 시각화 구조 |
+| [TRIBE ROI 로컬 후처리 준비](analysis/roi/README.md) | raw output을 로컬에서 ROI 단위로 다시 묶는 준비 절차 |
 | [인터페이스 계약서](docs/interface_contract.md) | 프론트-백엔드 API 스펙 |
+
+---
+
+## 🧠 뇌 반응 시뮬레이션 (TRIBE v2)
+
+기존 18개 항목 점수 평가를 넘어서, **강의 흐름의 시간축 반응 변화**를 뇌 표면 위에 시각화하는 실험 기능이에요.
+
+### 원리
+
+[TRIBE v2](https://github.com/facebookresearch/tribev2)는 Meta AI/FAIR이 개발한 뇌 인코딩 모델이에요. **25명 피험자의 451.6시간 실제 fMRI 데이터**로 훈련되었고, Algonauts 2025 뇌 모델링 대회에서 1위를 했어요.
+
+```
+강의 텍스트 → TTS 음성 합성 → TRIBE v2 모델 → 10,242개 뇌 표면 정점별 cortical response 예측
+```
+
+모델 내부에서는 LLaMA 3.2 (텍스트) + Wav2Vec-BERT (오디오) 인코더로 특성을 추출하고, Transformer로 융합한 뒤, fMRI로 훈련된 Subject Block이 fsaverage5 뇌 표면의 각 vertex별 BOLD 반응을 예측합니다. 5초 hemodynamic delay 보정도 적용돼요.
+
+### 뇌 영역별 해석이 가능한 이유
+
+TRIBE가 "텍스트에서 만든 숫자를 뇌에 임의로 칠하는 것"이 아닌 이유:
+
+- **Audio → 측두엽, Video → 후두엽, Text → 전두/두정엽** 패턴이 학습으로 나타남 (규칙으로 넣은 것이 아님)
+- 모델 내부 ICA 분석에서 **Primary Auditory, Language, DMN, Visual** 등 5개 기능적 네트워크가 자발적으로 출현
+- FFA(방추상 얼굴 영역), Broca 영역 국소화를 in-silico로 성공적으로 재현
+
+### 프론트엔드에서 보여주는 지표
+
+| 지표 | 원천 | 해석 |
+|------|------|------|
+| **Attention** | TRIBE 반응 크기 + 변화율 | 이탈위험 → 수동수신 → 능동추적 → 밀착참여 → 최고집중 |
+| **Load** | 텍스트 밀도 + 반응 크기 | 너무쉬움 → 여유 → **최적도전** → 높은밀도 → 과부하 |
+| **Novelty** | 직전 대비 반응 변화량 | 안정 → 점진변화 → **전환중** → 급변 → 맥락끊김 |
+| **Pacing** | 문장 길이 변이 계수 | 단조로움 → 균일 → 적절한리듬 → 역동적 |
+| **Engagement Cue** | 질문/예시/격려/전환 패턴 | 유도부족 → 약한유도 → 적절한유도 → 적극유도 |
+
+> 상세 원리, 코랩 실행 방법, 논문 인용은 [TRIBE v2 수강자 반응 시뮬레이션 문서](docs/TRIBE_v2_수강자_반응_시뮬레이션.md)를 참고하세요.
 
 ---
 
