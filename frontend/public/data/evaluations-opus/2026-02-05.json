@@ -1,0 +1,41 @@
+{
+  "lecture_date":"2026-02-05","transcript_path":"2026-02-05_kdt-backendj-21th.txt",
+  "metadata":{"course_id":"kdt-backendj-21th","course_name":"백엔드 부트캠프 21기: Java","date":"2026-02-05","subjects":["Front-End Programming"],"contents":["JavaScript 기본 문법"],"instructor":"김영아","sub_instructors":["김다은","정석현"]},
+  "category_results":[
+    {"category_name":"1. 언어 표현 품질","items":[
+      {"item_id":"1.1","item_name":"불필요한 반복 표현","category":"1. 언어 표현 품질","score":2,"weight":"HIGH","evidence":["'이렇게 해서' 반복","습관적 표현 빈번"],"reasoning":"습관적 반복 표현이 전반적으로 빈번.","confidence":0.85,"caveats":[]},
+      {"item_id":"1.2","item_name":"발화 완결성","category":"1. 언어 표현 품질","score":2,"weight":"MEDIUM","evidence":["미완결 문장 다수","주어-서술어 불일치"],"reasoning":"문장 완결성이 낮음.","confidence":0.8,"caveats":[]},
+      {"item_id":"1.3","item_name":"언어 일관성","category":"1. 언어 표현 품질","score":3,"weight":"MEDIUM","evidence":["존댓말 기본","간헐적 반말 혼재"],"reasoning":"존댓말 기조 유지하나 반말 전환 패턴 존재.","confidence":0.8,"caveats":[]}
+    ],"weighted_average":2.29},
+    {"category_name":"2. 강의 도입 및 구조","items":[
+      {"item_id":"2.1","item_name":"학습 목표 안내","category":"2. 강의 도입 및 구조","score":4,"weight":"HIGH","evidence":["'셀렉트 전체 실행 흐름 섹션이 있어요'","데이터 타입, 그룹바이/해빙 학습 안내"],"reasoning":"당일 학습 목표를 구체적으로 안내.","confidence":0.85,"caveats":[]},
+      {"item_id":"2.2","item_name":"전날 복습 연계","category":"2. 강의 도입 및 구조","score":4,"weight":"HIGH","evidence":["'어제 기본 워크벤치 활용 그 다음에 쿼리 작성 이런 거 이것들을 지금 어제 학습을 하셨는데'","이전 수업 내용 요약 후 연결"],"reasoning":"이전 수업 내용을 체계적으로 요약하고 당일 학습과 연결.","confidence":0.85,"caveats":[]},
+      {"item_id":"2.3","item_name":"설명 순서","category":"2. 강의 도입 및 구조","score":3,"weight":"MEDIUM","evidence":["데이터 분류 -> DDL/DML/DCL -> 실습 순서","중간 부가 설명으로 흐름 산만"],"reasoning":"설명 순서는 논리적이나 흐름 산만 구간 존재.","confidence":0.75,"caveats":[]},
+      {"item_id":"2.4","item_name":"핵심 내용 강조","category":"2. 강의 도입 및 구조","score":3,"weight":"MEDIUM","evidence":["'DDL은 스키마 정의, DML은 셀렉트 인서트 업데이트 딜리트'","제약 조건 중요성 강조"],"reasoning":"핵심 구분을 시도하나 반복 속에서 약화.","confidence":0.75,"caveats":[]},
+      {"item_id":"2.5","item_name":"마무리 요약","category":"2. 강의 도입 및 구조","score":2,"weight":"LOW","evidence":["명시적 마무리 요약 부재"],"reasoning":"체계적 마무리 요약 부재.","confidence":0.8,"caveats":[]}
+    ],"weighted_average":3.36},
+    {"category_name":"3. 개념 설명 명확성","items":[
+      {"item_id":"3.1","item_name":"개념 정의","category":"3. 개념 설명 명확성","score":3,"weight":"HIGH","evidence":["DDL/DML/DCL/TCL 개념 분류 설명","'데이터 정의 언어가 우리 DDL인데 크리에이트 알터 드롭'"],"reasoning":"SQL 언어 분류를 체계적으로 설명하나 형식적 정의보다 나열 위주.","confidence":0.75,"caveats":[]},
+      {"item_id":"3.2","item_name":"비유 및 예시 활용","category":"3. 개념 설명 명확성","score":3,"weight":"HIGH","evidence":["'VO를 금방 만들 수 있어요' - 자바 클래스와 연결","정형/비정형 데이터 실생활 예시"],"reasoning":"비유와 예시를 활용하나 체계성 다소 부족.","confidence":0.75,"caveats":[]},
+      {"item_id":"3.3","item_name":"선행 개념 확인","category":"3. 개념 설명 명확성","score":3,"weight":"MEDIUM","evidence":["자바 클래스와 DB 엔티티 연결","이전 학습과 연계"],"reasoning":"선행 개념 연결 시도 있으나 간헐적.","confidence":0.75,"caveats":[]},
+      {"item_id":"3.4","item_name":"발화 속도 적절성","category":"3. 개념 설명 명확성","score":2,"weight":"MEDIUM","evidence":["빠른 발화 속도","내용 생략 빈번"],"reasoning":"발화 속도가 빨라 전달 산만.","confidence":0.7,"caveats":[]}
+    ],"weighted_average":2.8},
+    {"category_name":"4. 예시 및 실습 연계","items":[
+      {"item_id":"4.1","item_name":"예시 적절성","category":"4. 예시 및 실습 연계","score":3,"weight":"HIGH","evidence":["SQL DDL/DML 예시 코드","데이터 포맷 실습 예시"],"reasoning":"적절한 코드 예시 제시.","confidence":0.75,"caveats":[]},
+      {"item_id":"4.2","item_name":"실습 연계","category":"4. 예시 및 실습 연계","score":3,"weight":"HIGH","evidence":["데이터 포맷 실습 진행","'한번 풀어보도록 할게요'"],"reasoning":"실습 기회 제공하나 시간 부족.","confidence":0.7,"caveats":[]}
+    ],"weighted_average":3.0},
+    {"category_name":"5. 수강생 상호작용","items":[
+      {"item_id":"5.1","item_name":"오류 대응","category":"5. 수강생 상호작용","score":2,"weight":"MEDIUM","evidence":["오류 대응 사례 제한적"],"reasoning":"오류 대응 장면이 제한적.","confidence":0.65,"caveats":[]},
+      {"item_id":"5.2","item_name":"이해 확인 질문","category":"5. 수강생 상호작용","score":3,"weight":"HIGH","evidence":["'되셨을까요?'","'쉬우나요?'"],"reasoning":"이해 확인 질문 있으나 응답 확인 부족.","confidence":0.85,"caveats":[]},
+      {"item_id":"5.3","item_name":"참여 유도","category":"5. 수강생 상호작용","score":2,"weight":"HIGH","evidence":["적극적 참여 유도 제한적"],"reasoning":"참여 유도 활동 미흡.","confidence":0.75,"caveats":[]},
+      {"item_id":"5.4","item_name":"질문 응답 충분성","category":"5. 수강생 상호작용","score":2,"weight":"HIGH","evidence":["질문 응답 장면 제한적"],"reasoning":"학생 질의 응답 사례 제한적.","confidence":0.6,"caveats":[]}
+    ],"weighted_average":2.36}
+  ],
+  "weighted_average":2.76,"weighted_total":116.0,
+  "category_averages":{"1. 언어 표현 품질":2.29,"2. 강의 도입 및 구조":3.36,"3. 개념 설명 명확성":2.8,"4. 예시 및 실습 연계":3.0,"5. 수강생 상호작용":2.36},
+  "report_markdown":"# 종합 평가\n\n## 종합 점수: 2.76/5.0\n\n## 강점\n- 학습 목표 명확 안내\n- 이전 수업 체계적 연계\n- DDL/DML/DCL 개념 분류 체계적\n\n## 개선 필요\n- 반복 표현 감소\n- 발화 속도 조절\n- 학생 상호작용 강화",
+  "strengths":["학습 목표 명확 안내","이전 수업 체계적 연계","DDL/DML/DCL 개념 분류 체계적"],
+  "improvements":["반복 표현 감소 필요","발화 속도 조절 필요","학생 상호작용 강화 필요"],
+  "recommendations":["핵심 개념 정의 사전 준비","마무리 요약 시간 확보","학생 참여 유도 활동 추가"],
+  "token_usage":{},"cost_usd":0
+}

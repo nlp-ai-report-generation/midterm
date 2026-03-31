@@ -1,0 +1,314 @@
+{
+  "atlas_name": "destrieux",
+  "vertex_count_per_hemisphere": 10242,
+  "vertex_count_total": 20484,
+  "roi_count": 76,
+  "left_unique_roi_count": 75,
+  "right_unique_roi_count": 75,
+  "roi_names": [
+    {
+      "roi_id": 0,
+      "roi_name": "Unknown"
+    },
+    {
+      "roi_id": 1,
+      "roi_name": "G_and_S_frontomargin"
+    },
+    {
+      "roi_id": 2,
+      "roi_name": "G_and_S_occipital_inf"
+    },
+    {
+      "roi_id": 3,
+      "roi_name": "G_and_S_paracentral"
+    },
+    {
+      "roi_id": 4,
+      "roi_name": "G_and_S_subcentral"
+    },
+    {
+      "roi_id": 5,
+      "roi_name": "G_and_S_transv_frontopol"
+    },
+    {
+      "roi_id": 6,
+      "roi_name": "G_and_S_cingul-Ant"
+    },
+    {
+      "roi_id": 7,
+      "roi_name": "G_and_S_cingul-Mid-Ant"
+    },
+    {
+      "roi_id": 8,
+      "roi_name": "G_and_S_cingul-Mid-Post"
+    },
+    {
+      "roi_id": 9,
+      "roi_name": "G_cingul-Post-dorsal"
+    },
+    {
+      "roi_id": 10,
+      "roi_name": "G_cingul-Post-ventral"
+    },
+    {
+      "roi_id": 11,
+      "roi_name": "G_cuneus"
+    },
+    {
+      "roi_id": 12,
+      "roi_name": "G_front_inf-Opercular"
+    },
+    {
+      "roi_id": 13,
+      "roi_name": "G_front_inf-Orbital"
+    },
+    {
+      "roi_id": 14,
+      "roi_name": "G_front_inf-Triangul"
+    },
+    {
+      "roi_id": 15,
+      "roi_name": "G_front_middle"
+    },
+    {
+      "roi_id": 16,
+      "roi_name": "G_front_sup"
+    },
+    {
+      "roi_id": 17,
+      "roi_name": "G_Ins_lg_and_S_cent_ins"
+    },
+    {
+      "roi_id": 18,
+      "roi_name": "G_insular_short"
+    },
+    {
+      "roi_id": 19,
+      "roi_name": "G_occipital_middle"
+    },
+    {
+      "roi_id": 20,
+      "roi_name": "G_occipital_sup"
+    },
+    {
+      "roi_id": 21,
+      "roi_name": "G_oc-temp_lat-fusifor"
+    },
+    {
+      "roi_id": 22,
+      "roi_name": "G_oc-temp_med-Lingual"
+    },
+    {
+      "roi_id": 23,
+      "roi_name": "G_oc-temp_med-Parahip"
+    },
+    {
+      "roi_id": 24,
+      "roi_name": "G_orbital"
+    },
+    {
+      "roi_id": 25,
+      "roi_name": "G_pariet_inf-Angular"
+    },
+    {
+      "roi_id": 26,
+      "roi_name": "G_pariet_inf-Supramar"
+    },
+    {
+      "roi_id": 27,
+      "roi_name": "G_parietal_sup"
+    },
+    {
+      "roi_id": 28,
+      "roi_name": "G_postcentral"
+    },
+    {
+      "roi_id": 29,
+      "roi_name": "G_precentral"
+    },
+    {
+      "roi_id": 30,
+      "roi_name": "G_precuneus"
+    },
+    {
+      "roi_id": 31,
+      "roi_name": "G_rectus"
+    },
+    {
+      "roi_id": 32,
+      "roi_name": "G_subcallosal"
+    },
+    {
+      "roi_id": 33,
+      "roi_name": "G_temp_sup-G_T_transv"
+    },
+    {
+      "roi_id": 34,
+      "roi_name": "G_temp_sup-Lateral"
+    },
+    {
+      "roi_id": 35,
+      "roi_name": "G_temp_sup-Plan_polar"
+    },
+    {
+      "roi_id": 36,
+      "roi_name": "G_temp_sup-Plan_tempo"
+    },
+    {
+      "roi_id": 37,
+      "roi_name": "G_temporal_inf"
+    },
+    {
+      "roi_id": 38,
+      "roi_name": "G_temporal_middle"
+    },
+    {
+      "roi_id": 39,
+      "roi_name": "Lat_Fis-ant-Horizont"
+    },
+    {
+      "roi_id": 40,
+      "roi_name": "Lat_Fis-ant-Vertical"
+    },
+    {
+      "roi_id": 41,
+      "roi_name": "Lat_Fis-post"
+    },
+    {
+      "roi_id": 42,
+      "roi_name": "Medial_wall"
+    },
+    {
+      "roi_id": 43,
+      "roi_name": "Pole_occipital"
+    },
+    {
+      "roi_id": 44,
+      "roi_name": "Pole_temporal"
+    },
+    {
+      "roi_id": 45,
+      "roi_name": "S_calcarine"
+    },
+    {
+      "roi_id": 46,
+      "roi_name": "S_central"
+    },
+    {
+      "roi_id": 47,
+      "roi_name": "S_cingul-Marginalis"
+    },
+    {
+      "roi_id": 48,
+      "roi_name": "S_circular_insula_ant"
+    },
+    {
+      "roi_id": 49,
+      "roi_name": "S_circular_insula_inf"
+    },
+    {
+      "roi_id": 50,
+      "roi_name": "S_circular_insula_sup"
+    },
+    {
+      "roi_id": 51,
+      "roi_name": "S_collat_transv_ant"
+    },
+    {
+      "roi_id": 52,
+      "roi_name": "S_collat_transv_post"
+    },
+    {
+      "roi_id": 53,
+      "roi_name": "S_front_inf"
+    },
+    {
+      "roi_id": 54,
+      "roi_name": "S_front_middle"
+    },
+    {
+      "roi_id": 55,
+      "roi_name": "S_front_sup"
+    },
+    {
+      "roi_id": 56,
+      "roi_name": "S_interm_prim-Jensen"
+    },
+    {
+      "roi_id": 57,
+      "roi_name": "S_intrapariet_and_P_trans"
+    },
+    {
+      "roi_id": 58,
+      "roi_name": "S_oc_middle_and_Lunatus"
+    },
+    {
+      "roi_id": 59,
+      "roi_name": "S_oc_sup_and_transversal"
+    },
+    {
+      "roi_id": 60,
+      "roi_name": "S_occipital_ant"
+    },
+    {
+      "roi_id": 61,
+      "roi_name": "S_oc-temp_lat"
+    },
+    {
+      "roi_id": 62,
+      "roi_name": "S_oc-temp_med_and_Lingual"
+    },
+    {
+      "roi_id": 63,
+      "roi_name": "S_orbital_lateral"
+    },
+    {
+      "roi_id": 64,
+      "roi_name": "S_orbital_med-olfact"
+    },
+    {
+      "roi_id": 65,
+      "roi_name": "S_orbital-H_Shaped"
+    },
+    {
+      "roi_id": 66,
+      "roi_name": "S_parieto_occipital"
+    },
+    {
+      "roi_id": 67,
+      "roi_name": "S_pericallosal"
+    },
+    {
+      "roi_id": 68,
+      "roi_name": "S_postcentral"
+    },
+    {
+      "roi_id": 69,
+      "roi_name": "S_precentral-inf-part"
+    },
+    {
+      "roi_id": 70,
+      "roi_name": "S_precentral-sup-part"
+    },
+    {
+      "roi_id": 71,
+      "roi_name": "S_suborbital"
+    },
+    {
+      "roi_id": 72,
+      "roi_name": "S_subparietal"
+    },
+    {
+      "roi_id": 73,
+      "roi_name": "S_temporal_inf"
+    },
+    {
+      "roi_id": 74,
+      "roi_name": "S_temporal_sup"
+    },
+    {
+      "roi_id": 75,
+      "roi_name": "S_temporal_transverse"
+    }
+  ]
+}

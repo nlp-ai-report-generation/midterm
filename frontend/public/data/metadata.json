@@ -1,0 +1,244 @@
+[
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-02",
+    "subjects": [
+      "객체지향 프로그래밍"
+    ],
+    "contents": [
+      "데코레이터 패턴, 옵저버 패턴",
+      "파사드 패턴, 전략 패턴"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-03",
+    "subjects": [
+      "Front-End Programming"
+    ],
+    "contents": [
+      "HTML, CSS를 이용한 화면 설계 및 표현"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-04",
+    "subjects": [
+      "Front-End Programming"
+    ],
+    "contents": [
+      "HTML, CSS를 이용한 화면 설계 및 표현"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-05",
+    "subjects": [
+      "Front-End Programming"
+    ],
+    "contents": [
+      "JavaScript 기본 문법"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-06",
+    "subjects": [
+      "Front-End Programming"
+    ],
+    "contents": [
+      "JavaScript 기본 문법"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-09",
+    "subjects": [
+      "Front-End Programming"
+    ],
+    "contents": [
+      "React.js 기반의 웹 사이트 구현"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-10",
+    "subjects": [
+      "Front-End Programming"
+    ],
+    "contents": [
+      "React.js 기반의 웹 사이트 구현"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-11",
+    "subjects": [
+      "Front-End Programming"
+    ],
+    "contents": [
+      "React.js 기반의 웹 사이트 구현"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-12",
+    "subjects": [
+      "Front-End Programming"
+    ],
+    "contents": [
+      "React.js 기반의 웹 사이트 구현",
+      "컴포넌트 스타일링(테일윈드 등)"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-13",
+    "subjects": [
+      "Front-End Programming"
+    ],
+    "contents": [
+      "컴포넌트 스타일링(테일윈드 등)"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-23",
+    "subjects": [
+      "Front-End Programming"
+    ],
+    "contents": [
+      "React Query 와 같은 서버상태 관리도구 사용"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-24",
+    "subjects": [
+      "Back-End Programming"
+    ],
+    "contents": [
+      "HTTP 통신 개요 및 웹 작동 방식"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-25",
+    "subjects": [
+      "Back-End Programming"
+    ],
+    "contents": [
+      "HTTP 통신 개요 및 웹 작동 방식"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-26",
+    "subjects": [
+      "Back-End Programming"
+    ],
+    "contents": [
+      "HTTP 통신 개요 및 웹 작동 방식"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  {
+    "course_id": "kdt-backendj-21th",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-27",
+    "subjects": [
+      "Back-End Programming"
+    ],
+    "contents": [
+      "HTTP 통신 개요 및 웹 작동 방식"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  }
+]

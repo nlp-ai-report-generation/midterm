@@ -44,3 +44,7 @@ Thumbs.db
 
 # Logs
 *.log
+presentation/remotion/node_modules/
+presentation/remotion/.tmp/
+presentation/remotion/out/
+presentation/remotion/public/manim/videos/*/partial_movie_files/

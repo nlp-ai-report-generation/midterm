@@ -1,5 +1,0 @@
-﻿Summarize strengths and improvement actions from analysis results.
-Return concise markdown with:
-1. Strengths
-2. Risks
-3. Recommended actions

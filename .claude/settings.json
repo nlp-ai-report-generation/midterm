@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m pytest tests/test_chunking.py tests/test_scoring.py tests/test_metrics.py tests/test_harness_loading.py -v)",
+      "Bash(yes \"\")",
+      "Bash(npx create-next-app@latest frontend --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
+      "Bash(npm install:*)",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Read(//Users/youngjinson/멋사-인턴/frontend/**)",
+      "Bash(ls /Users/youngjinson/멋사-인턴/frontend/src/app/lectures/[date]/ /Users/youngjinson/멋사-인턴/frontend/src/app/preprocessing/[date]/ /Users/youngjinson/멋사-인턴/frontend/src/app/experiments/[id]/)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(find /Users/youngjinson/멋사-인턴 -name .env* -o -name *.env)",
+      "Bash(find /Users/youngjinson/멋사-인턴/frontend/app -type f \\\\\\(-name *.tsx -o -name *.css \\\\\\))",
+      "Bash(find /Users/youngjinson/멋사-인턴/frontend/src -type f \\\\\\(-name *.tsx -o -name *.css \\\\\\))",
+      "Read(//Users/youngj국사-인턴/frontend/src/app/preprocessing/**)",
+      "Read(//Users/youngjション/멋사-인턴/src/graph/**)",
+      "Bash(find . -name \"*.tsx\" -exec sed -i '' 's/ease: \\\\[0\\\\.25, 0\\\\.46, 0\\\\.45, 0\\\\.94\\\\]/ease: \"\"easeOut\"\"/g' {} +)",
+      "Bash(find . -name \"*.tsx\" -exec sed -i '' 's/, ease: \"\"easeOut\"\"//g' {} +)",
+      "Bash(find /Users/youngjinson/멋사-인턴/frontend -name *.css -o -name layout.tsx -o -name tailwind.config.*)",
+      "Bash(find /Users/youngjinson/멋사-인턴/frontend/src -name *dashboard* -o -name *eda* -o -name *settings*)",
+      "Bash(find /Users/youngjinson/멋사-인턴 -name *.csv -type f)",
+      "Bash(wc -l \"/Users/youngjinson/멋사-인턴/NLP 과제 1 - AI 강의 분석 리포트 생성기/강의 스크립트\"/*.txt)",
+      "Bash(find /Users/youngjinson/멋사-인턴/frontend -name tailwind.config.* -o -name next.config.*)",
+      "Bash(find /Users/youngjinson/멋사-인턴 -name *eda* -o -name *analysis* -o -name *statistics*)",
+      "Read(//Users/youngjson/멋사-인턴/**)",
+      "Bash(wc -l /Users/youngjinson/멋사-인턴/frontend/src/app/*/page.tsx)",
+      "Bash(rm -f components/layout/PageHero.tsx components/layout/TourOverlay.tsx components/layout/BottomTabBar.tsx lib/navigation.tsx components/cards/KPICard.tsx components/cards/LectureCard.tsx components/charts/ScoreTrend.tsx components/charts/CategoryHeatmap.tsx)",
+      "Bash(rm -rf components/cards components/charts)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:developers-apps-in-toss.toss.im)",
+      "WebFetch(domain:toss.tech)",
+      "Read(//Users/youngjinson/멋사-인턴/**)",
+      "Bash(kill 71686 71684)"
+    ],
+    "additionalDirectories": [
+      "/Users/youngjinson/멋사-인턴"
+    ]
+  }
+}

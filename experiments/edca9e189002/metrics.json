@@ -1,0 +1,128 @@
+{
+  "2026-02-02": {
+    "cohens_kappa": 0.9091,
+    "krippendorffs_alpha": 0.8909,
+    "icc": 0.8947,
+    "score_stability_index": 0.9691,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-03": {
+    "cohens_kappa": 0.8789,
+    "krippendorffs_alpha": 0.8863,
+    "icc": 0.89,
+    "score_stability_index": 0.9753,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-04": {
+    "cohens_kappa": 0.6987,
+    "krippendorffs_alpha": 0.7475,
+    "icc": 0.7572,
+    "score_stability_index": 0.9346,
+    "n_passes": 3,
+    "n_items": 17
+  },
+  "2026-02-05": {
+    "cohens_kappa": 0.8261,
+    "krippendorffs_alpha": 0.7607,
+    "icc": 0.7667,
+    "score_stability_index": 0.9506,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-06": {
+    "cohens_kappa": 0.9577,
+    "krippendorffs_alpha": 0.8894,
+    "icc": 0.8931,
+    "score_stability_index": 0.9753,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-09": {
+    "cohens_kappa": 0.7895,
+    "krippendorffs_alpha": 0.6901,
+    "icc": 0.6971,
+    "score_stability_index": 0.9506,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-10": {
+    "cohens_kappa": 0.8302,
+    "krippendorffs_alpha": 0.8135,
+    "icc": 0.8195,
+    "score_stability_index": 0.9691,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-11": {
+    "cohens_kappa": 0.9221,
+    "krippendorffs_alpha": 0.9274,
+    "icc": 0.9299,
+    "score_stability_index": 0.9815,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-12": {
+    "cohens_kappa": 0.9104,
+    "krippendorffs_alpha": 0.9167,
+    "icc": 0.9196,
+    "score_stability_index": 0.9815,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-13": {
+    "cohens_kappa": 0.9237,
+    "krippendorffs_alpha": 0.9211,
+    "icc": 0.9238,
+    "score_stability_index": 0.9815,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-23": {
+    "cohens_kappa": 0.775,
+    "krippendorffs_alpha": 0.8063,
+    "icc": 0.8118,
+    "score_stability_index": 0.9815,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-24": {
+    "cohens_kappa": 0.9703,
+    "krippendorffs_alpha": 0.9807,
+    "icc": 0.9814,
+    "score_stability_index": 0.9938,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-25": {
+    "cohens_kappa": 0.9178,
+    "krippendorffs_alpha": 0.9211,
+    "icc": 0.9239,
+    "score_stability_index": 0.9815,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-26": {
+    "cohens_kappa": 0.9695,
+    "krippendorffs_alpha": 0.9622,
+    "icc": 0.9635,
+    "score_stability_index": 0.9877,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "2026-02-27": {
+    "cohens_kappa": 0.9647,
+    "krippendorffs_alpha": 0.9771,
+    "icc": 0.9779,
+    "score_stability_index": 0.9938,
+    "n_passes": 3,
+    "n_items": 18
+  },
+  "_overall": {
+    "avg_cohens_kappa": 0.8829,
+    "avg_krippendorffs_alpha": 0.8727,
+    "avg_icc": 0.8767,
+    "avg_score_stability_index": 0.9738
+  }
+}
