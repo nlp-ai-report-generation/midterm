@@ -1,0 +1,10 @@
+{
+  "mesh_version": "pilot-v1",
+  "vertex_count": 10242,
+  "segment_minutes": 5,
+  "dates": [
+    "2026-02-02",
+    "2026-02-09",
+    "2026-02-24"
+  ]
+}

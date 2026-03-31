@@ -32,10 +32,40 @@
       "WebFetch(domain:developers-apps-in-toss.toss.im)",
       "WebFetch(domain:toss.tech)",
       "Read(//Users/youngjinson/멋사-인턴/**)",
-      "Bash(kill 71686 71684)"
+      "Bash(kill 71686 71684)",
+      "WebSearch",
+      "Bash(git -C /Users/youngjinson/멋사-인턴 add frontend/src/app/globals.css frontend/src/app/lectures/page.tsx frontend/src/components/shared/AiSummary.tsx frontend/src/components/layout/Sidebar.tsx frontend/src/lib/utils.ts)",
+      "Bash(git -C:*)",
+      "Bash(node scripts/generate-tts.mjs)",
+      "Bash(npx remotion:*)",
+      "Bash(node scripts/capture-validation.mjs)",
+      "Bash(node scripts/capture-all.mjs)",
+      "Read(//tmp/remotion-preview/**)",
+      "Read(//private/tmp/remotion-preview/**)",
+      "Bash(ls /tmp/remotion-preview/frame-*.png)",
+      "Bash(mkdir -p /tmp/remotion-final)",
+      "Bash(node -e \":*)",
+      "Read(//private/tmp/remotion-final/**)",
+      "WebFetch(domain:www.notion.so)",
+      "Bash(ls NLP 과제 1 - AI 강의 분석 리포트 생성기/*.csv)",
+      "Read(//private/tmp/midterm-submit/**)",
+      "Read(//tmp/midterm-submit/**)",
+      "Read(//Users/youngj션-인턴/frontend/src/pages/**)",
+      "Bash(wc -l /Users/youngjinson/멋사-인턴/frontend/public/data/simulations/*.json)",
+      "Bash(find /Users/youngjinson/멋사-인턴/frontend -name *tailwind* -o -name postcss.config.*)",
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)",
+      "Bash(git push:*)"
     ],
     "additionalDirectories": [
-      "/Users/youngjinson/멋사-인턴"
+      "/Users/youngjinson/멋사-인턴",
+      "/Users/youngjinson/멋사-인턴/presentation/remotion/public/audio",
+      "/tmp/midterm-submit/frontend/public/data",
+      "/private/tmp/midterm-submit/frontend/public/data",
+      "/tmp/midterm-submit/presentation/remotion/public/assets",
+      "/private/tmp/midterm-submit/presentation/remotion/public/assets",
+      "/tmp/midterm-submit",
+      "/private/tmp/midterm-submit"
     ]
   }
 }

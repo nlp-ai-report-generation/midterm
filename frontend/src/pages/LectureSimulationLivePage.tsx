@@ -153,12 +153,12 @@ export default function LectureSimulationLivePage() {
   }, [liveFrames]);
 
   const currentSegmentIndex = currentLine?.segment_index ?? 0;
-  const nearbyLines = useMemo(() => {
-    if (!currentLine) return [];
-    const start = Math.max(0, currentFrameIndex - 2);
-    const end = Math.min(flattenedLines.length, currentFrameIndex + 3);
-    return flattenedLines.slice(start, end);
-  }, [currentFrameIndex, currentLine, flattenedLines]);
+  const derivedMetrics = useMemo(() => {
+    if (!transcript) return null;
+    const seg = transcript.segments[currentSegmentIndex];
+    if (!seg) return null;
+    return computeSegmentDerivedMetrics(seg.lines);
+  }, [transcript, currentSegmentIndex]);
 
   useEffect(() => {
     if (!isPlaying || !liveFrames || liveFrames.frames.length === 0) return;
@@ -221,12 +221,6 @@ export default function LectureSimulationLivePage() {
   };
 
   const lineInterpretation = interpretLineHeuristics(currentFrame);
-  const derivedMetrics = useMemo(() => {
-    if (!transcript || currentSegmentIndex == null) return null;
-    const seg = transcript.segments[currentSegmentIndex];
-    if (!seg) return null;
-    return computeSegmentDerivedMetrics(seg.lines);
-  }, [transcript, currentSegmentIndex]);
   const currentMetricSet = {
     attention: timelineData[currentFrameIndex]?.attention_display ?? currentSegment.proxies.attention_proxy,
     load: timelineData[currentFrameIndex]?.load_display ?? currentSegment.proxies.load_proxy,

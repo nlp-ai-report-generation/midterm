@@ -1,9 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:/Users/youngjinson/멋사-인턴/presentation/remotion/public/manim/videos/pipeline/1080p30/partial_movie_files/ArchitectureDiagram/1697185472_2089401441_223132457.mp4'
-file 'file:/Users/youngjinson/멋사-인턴/presentation/remotion/public/manim/videos/pipeline/1080p30/partial_movie_files/ArchitectureDiagram/2038921957_7482860_1533060346.mp4'
-file 'file:/Users/youngjinson/멋사-인턴/presentation/remotion/public/manim/videos/pipeline/1080p30/partial_movie_files/ArchitectureDiagram/2038921957_1102266449_3976970043.mp4'
-file 'file:/Users/youngjinson/멋사-인턴/presentation/remotion/public/manim/videos/pipeline/1080p30/partial_movie_files/ArchitectureDiagram/2038921957_1591812791_3229085849.mp4'
-file 'file:/Users/youngjinson/멋사-인턴/presentation/remotion/public/manim/videos/pipeline/1080p30/partial_movie_files/ArchitectureDiagram/2038921957_4141867782_2908319150.mp4'
-file 'file:/Users/youngjinson/멋사-인턴/presentation/remotion/public/manim/videos/pipeline/1080p30/partial_movie_files/ArchitectureDiagram/2038921957_1682964197_3706161853.mp4'
-file 'file:/Users/youngjinson/멋사-인턴/presentation/remotion/public/manim/videos/pipeline/1080p30/partial_movie_files/ArchitectureDiagram/2038921957_864944165_624495951.mp4'
-file 'file:/Users/youngjinson/멋사-인턴/presentation/remotion/public/manim/videos/pipeline/1080p30/partial_movie_files/ArchitectureDiagram/2038921957_4229673186_1000236537.mp4'

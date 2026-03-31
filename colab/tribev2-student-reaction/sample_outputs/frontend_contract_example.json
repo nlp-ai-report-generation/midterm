@@ -1,0 +1,46 @@
+{
+  "lecture_date": "2026-02-02",
+  "source_model": "tribev2",
+  "source_modality": "text_tts",
+  "generated_at": "2026-03-30T12:00:00+09:00",
+  "assets": {
+    "mesh_glb": "/data/simulations/brain-mesh.glb",
+    "segment_colors_json": "/data/simulations/2026-02-02-segment-colors.json"
+  },
+  "metadata": {
+    "subject": "객체지향 프로그래밍",
+    "content": "데코레이터 패턴, 옵저버 패턴",
+    "instructor": "김영아",
+    "segment_minutes": 5
+  },
+  "lecture_summary": {
+    "strongest_segment_ids": ["seg-02", "seg-04"],
+    "risk_segment_ids": ["seg-06", "seg-08"],
+    "summary_text": "예시 전환이 들어가는 구간에서 집중 프록시가 상승합니다.",
+    "caution_text": "TRIBE v2 기반 신경 반응 프록시 시뮬레이션입니다."
+  },
+  "segments": [
+    {
+      "segment_id": "seg-01",
+      "start_time": "09:11:17",
+      "end_time": "09:16:55",
+      "proxies": {
+        "attention_proxy": 58.4,
+        "load_proxy": 44.1,
+        "novelty_proxy": 52.0
+      },
+      "labels": ["리듬 안정"],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다."
+    }
+  ],
+  "personas": [
+    {
+      "persona_id": "novice",
+      "label": "초보 수강자",
+      "overall_score": 61.2,
+      "top_positive_segment_ids": ["seg-02", "seg-04"],
+      "top_risk_segment_ids": ["seg-06", "seg-08"],
+      "reaction_summary": "기본 개념과 흐름이 분명한 구간에서 반응이 올라갑니다."
+    }
+  ]
+}

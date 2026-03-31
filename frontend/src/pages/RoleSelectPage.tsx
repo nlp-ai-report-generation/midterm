@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRole } from "@/contexts/RoleContext";
 
@@ -55,7 +55,7 @@ export default function RoleSelectPage() {
         boxSizing: "border-box",
       }}
     >
-      <div style={{ width: "100%", maxWidth: 420 }}>
+        <div style={{ width: "100%", maxWidth: 420 }}>
         {/* 로고 + 제목 (항상 표시) */}
         <div style={{ marginBottom: 36 }}>
           <div
@@ -140,6 +140,18 @@ export default function RoleSelectPage() {
               <p className="text-caption" style={{ marginTop: 6, fontSize: 12 }}>
                 로그인 없이 샘플 데이터를 확인할 수 있어요
               </p>
+              <Link
+                to="/presentation"
+                style={{
+                  display: "inline-flex",
+                  marginTop: 12,
+                  fontSize: 13,
+                  fontWeight: 700,
+                  color: "var(--primary)",
+                }}
+              >
+                중간발표 자료 보기
+              </Link>
             </div>
           </>
         )}

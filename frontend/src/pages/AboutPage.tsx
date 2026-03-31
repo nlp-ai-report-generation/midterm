@@ -188,16 +188,28 @@ export default function AboutPage() {
 
         {/* CTA */}
         <div>
-          <Link
-            to="/dashboard"
-            className="btn-primary"
-            style={{
-              fontSize: 15,
-              padding: "14px 32px",
-            }}
-          >
-            시작하기 →
-          </Link>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <Link
+              to="/dashboard"
+              className="btn-primary"
+              style={{
+                fontSize: 15,
+                padding: "14px 32px",
+              }}
+            >
+              시작하기 →
+            </Link>
+            <Link
+              to="/presentation"
+              className="btn-secondary"
+              style={{
+                fontSize: 15,
+                padding: "14px 32px",
+              }}
+            >
+              중간발표 보기
+            </Link>
+          </div>
         </div>
       </div>
     </div>

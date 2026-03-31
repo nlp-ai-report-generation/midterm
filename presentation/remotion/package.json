@@ -1,26 +1,26 @@
 {
-  "name": "lecture-analysis-presentation-video",
-  "version": "0.1.0",
+  "name": "midterm-pitch-video",
+  "version": "1.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "studio": "remotion studio src/index.ts",
-    "render": "remotion render src/index.ts MidtermDeckVideo out/midterm-deck.mp4",
-    "tts": "node ./scripts/generate-tts.mjs",
-    "sync-assets": "python3 ../../scripts/sync_presentation_assets.py"
+    "render": "remotion render src/index.ts MidtermPitch out/midterm-pitch.mp4",
+    "tts": "node scripts/generate-tts.mjs"
   },
   "dependencies": {
-    "@remotion/media": "^4.0.366",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
-    "recharts": "^3.8.0",
-    "remotion": "^4.0.366",
-    "zod": "^4.1.12"
+    "@remotion/cli": "4.0.436",
+    "@remotion/media": "4.0.436",
+    "@remotion/transitions": "4.0.436",
+    "dotenv": "^16.4.7",
+    "openai": "^4.80.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "4.0.436",
+    "zod": "4.3.6"
   },
   "devDependencies": {
-    "@remotion/cli": "^4.0.366",
-    "@types/react": "^19.2.2",
-    "@types/react-dom": "^19.2.2",
-    "typescript": "^5.9.3"
+    "@types/react": "^19.0.0",
+    "puppeteer": "^24.39.1",
+    "typescript": "^5.7.0"
   }
 }

@@ -6,6 +6,8 @@
 
 ## 최근 완료
 
+- `/lectures/:date/simulation/live` 흰 화면 원인을 `LectureSimulationLivePage.tsx`의 훅 순서 위반으로 특정하고 수정: early return 아래에 있던 `useMemo(derivedMetrics)`를 상단으로 이동해 로딩 후 런타임 blank 이슈 제거
+- 로컬 확인 편의를 위해 프론트 dev 서버를 `3000`뿐 아니라 `3001`에서도 최신 코드로 띄울 수 있게 재실행
 - 강의 상세 페이지의 시뮬레이션 카드에서 중복 `요약 보기` CTA를 제거하고, 카드 시각화를 평면 brain icon 대신 summary와 같은 축약 3D mesh 톤으로 교체 (`frontend/src/app/lectures/[date]/page.tsx`)
 - `/lectures/:date/simulation` 요약 탭의 대표 시각화를 실제 `fsaverage5` mesh 기반 축약 3D로 전환하고, summary 전용 색 대비/자동 회전/flat shading을 적용 (`frontend/src/pages/LectureSimulationSummaryPage.tsx`, `frontend/src/components/simulation/BrainCanvas.tsx`, `frontend/src/app/globals.css`)
 - `/lectures/:date/simulation/live` 우측 레일을 `현재 줄 + 지금 읽히는 패턴 + 지금 반응하는 영역 + 왜 이렇게 해석해요` 구조로 재정리하고, 앞뒤 줄 다중 박스 의존도를 줄임 (`frontend/src/pages/LectureSimulationLivePage.tsx`, `frontend/src/app/globals.css`)

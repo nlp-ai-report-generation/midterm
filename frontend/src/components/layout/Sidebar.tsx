@@ -13,6 +13,7 @@ import {
   Settings,
   Link2,
   Info,
+  Presentation,
   type LucideIcon,
 } from "lucide-react";
 
@@ -56,6 +57,7 @@ const OPERATOR_NAV: NavGroup[] = [
     items: [
       { to: "/settings", label: "설정", icon: Settings },
       { to: "/integrations", label: "연동", icon: Link2 },
+      { to: "/presentation", label: "발표 자료", icon: Presentation },
       { to: "/about", label: "소개", icon: Info },
     ],
   },
@@ -72,6 +74,7 @@ const INSTRUCTOR_NAV: NavGroup[] = [
   {
     items: [
       { to: "/settings", label: "설정", icon: Settings },
+      { to: "/presentation", label: "발표 자료", icon: Presentation },
       { to: "/about", label: "소개", icon: Info },
     ],
   },

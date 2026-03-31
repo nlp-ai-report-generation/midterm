@@ -1,0 +1,991 @@
+{
+  "lecture_date": "2026-02-24",
+  "source_model": "tribev2",
+  "source_modality": "text_tts",
+  "generated_at": "2026-03-30T12:00:00+09:00",
+  "assets": {
+    "mesh_glb": "/data/simulations/brain-mesh.glb",
+    "segment_colors_json": "/data/simulations/2026-02-24-segment-colors.json"
+  },
+  "metadata": {
+    "subject": "Back-End Programming",
+    "content": "HTTP 통신 개요 및 웹 작동 방식",
+    "instructor": "김영아",
+    "segment_minutes": 5
+  },
+  "lecture_summary": {
+    "strongest_segment_ids": [
+      "seg-29",
+      "seg-12"
+    ],
+    "risk_segment_ids": [
+      "seg-09",
+      "seg-46"
+    ],
+    "summary_text": "강의 리듬이 안정적인 가운데 일부 구간에서 설명 밀도가 올라가며 반응 변동폭이 커집니다. 예시나 질문이 들어가는 순간에 집중 프록시가 비교적 선명하게 상승합니다.",
+    "caution_text": "이 결과는 TRIBE v2 기반 신경 반응 프록시 시뮬레이션이며 실제 수강생 설문·생체신호를 대체하지 않습니다."
+  },
+  "segments": [
+    {
+      "segment_id": "seg-01",
+      "start_time": "09:10:21",
+      "end_time": "09:15:16",
+      "proxies": {
+        "attention_proxy": 47.2,
+        "load_proxy": 94.0,
+        "novelty_proxy": 75.1
+      },
+      "labels": [
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-02",
+      "start_time": "09:15:30",
+      "end_time": "09:20:13",
+      "proxies": {
+        "attention_proxy": 58.5,
+        "load_proxy": 98.4,
+        "novelty_proxy": 16.3
+      },
+      "labels": [
+        "부하 높음"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-03",
+      "start_time": "09:20:23",
+      "end_time": "09:25:15",
+      "proxies": {
+        "attention_proxy": 54.3,
+        "load_proxy": 54.1,
+        "novelty_proxy": 9.1
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-04",
+      "start_time": "09:25:25",
+      "end_time": "09:30:19",
+      "proxies": {
+        "attention_proxy": 32.5,
+        "load_proxy": 86.1,
+        "novelty_proxy": 29.1
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-05",
+      "start_time": "09:30:31",
+      "end_time": "09:35:08",
+      "proxies": {
+        "attention_proxy": 66.0,
+        "load_proxy": 71.8,
+        "novelty_proxy": 38.4
+      },
+      "labels": [
+        "부하 높음"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-06",
+      "start_time": "09:35:22",
+      "end_time": "09:40:20",
+      "proxies": {
+        "attention_proxy": 46.1,
+        "load_proxy": 72.4,
+        "novelty_proxy": 21.5
+      },
+      "labels": [
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-07",
+      "start_time": "09:40:27",
+      "end_time": "09:45:18",
+      "proxies": {
+        "attention_proxy": 62.7,
+        "load_proxy": 64.6,
+        "novelty_proxy": 25.5
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-08",
+      "start_time": "09:45:31",
+      "end_time": "09:50:18",
+      "proxies": {
+        "attention_proxy": 21.3,
+        "load_proxy": 81.3,
+        "novelty_proxy": 57.4
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-09",
+      "start_time": "09:50:32",
+      "end_time": "09:55:20",
+      "proxies": {
+        "attention_proxy": 49.1,
+        "load_proxy": 100.0,
+        "novelty_proxy": 72.6
+      },
+      "labels": [
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-10",
+      "start_time": "09:55:33",
+      "end_time": "10:00:15",
+      "proxies": {
+        "attention_proxy": 56.2,
+        "load_proxy": 76.8,
+        "novelty_proxy": 14.6
+      },
+      "labels": [
+        "부하 높음"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-11",
+      "start_time": "10:00:27",
+      "end_time": "10:05:08",
+      "proxies": {
+        "attention_proxy": 70.3,
+        "load_proxy": 83.5,
+        "novelty_proxy": 14.5
+      },
+      "labels": [
+        "집중 상승",
+        "부하 높음"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-12",
+      "start_time": "10:05:23",
+      "end_time": "10:10:19",
+      "proxies": {
+        "attention_proxy": 90.9,
+        "load_proxy": 77.8,
+        "novelty_proxy": 18.4
+      },
+      "labels": [
+        "집중 상승",
+        "부하 높음"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-13",
+      "start_time": "10:10:36",
+      "end_time": "10:14:32",
+      "proxies": {
+        "attention_proxy": 17.2,
+        "load_proxy": 77.9,
+        "novelty_proxy": 80.7
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-14",
+      "start_time": "10:15:39",
+      "end_time": "10:20:18",
+      "proxies": {
+        "attention_proxy": 25.5,
+        "load_proxy": 66.2,
+        "novelty_proxy": 4.4
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-15",
+      "start_time": "10:20:26",
+      "end_time": "10:25:20",
+      "proxies": {
+        "attention_proxy": 41.0,
+        "load_proxy": 61.7,
+        "novelty_proxy": 26.9
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-16",
+      "start_time": "10:25:26",
+      "end_time": "10:30:15",
+      "proxies": {
+        "attention_proxy": 27.4,
+        "load_proxy": 55.3,
+        "novelty_proxy": 20.9
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-17",
+      "start_time": "10:30:25",
+      "end_time": "10:35:11",
+      "proxies": {
+        "attention_proxy": 68.0,
+        "load_proxy": 63.9,
+        "novelty_proxy": 51.8
+      },
+      "labels": [
+        "리듬 안정"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-18",
+      "start_time": "10:35:30",
+      "end_time": "10:40:17",
+      "proxies": {
+        "attention_proxy": 44.7,
+        "load_proxy": 58.2,
+        "novelty_proxy": 28.3
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-19",
+      "start_time": "10:40:31",
+      "end_time": "10:45:18",
+      "proxies": {
+        "attention_proxy": 21.1,
+        "load_proxy": 81.6,
+        "novelty_proxy": 24.4
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-20",
+      "start_time": "10:45:30",
+      "end_time": "10:50:15",
+      "proxies": {
+        "attention_proxy": 37.7,
+        "load_proxy": 81.7,
+        "novelty_proxy": 24.0
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-21",
+      "start_time": "10:50:21",
+      "end_time": "10:53:34",
+      "proxies": {
+        "attention_proxy": 25.9,
+        "load_proxy": 52.2,
+        "novelty_proxy": 18.7
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-22",
+      "start_time": "11:15:45",
+      "end_time": "11:19:58",
+      "proxies": {
+        "attention_proxy": 32.9,
+        "load_proxy": 88.5,
+        "novelty_proxy": 18.9
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-23",
+      "start_time": "11:21:33",
+      "end_time": "11:25:09",
+      "proxies": {
+        "attention_proxy": 33.6,
+        "load_proxy": 67.4,
+        "novelty_proxy": 13.3
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-24",
+      "start_time": "11:25:24",
+      "end_time": "11:30:08",
+      "proxies": {
+        "attention_proxy": 36.5,
+        "load_proxy": 72.4,
+        "novelty_proxy": 0.0
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-25",
+      "start_time": "11:30:22",
+      "end_time": "11:34:56",
+      "proxies": {
+        "attention_proxy": 26.7,
+        "load_proxy": 64.3,
+        "novelty_proxy": 9.2
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-26",
+      "start_time": "11:35:24",
+      "end_time": "11:40:18",
+      "proxies": {
+        "attention_proxy": 33.5,
+        "load_proxy": 79.7,
+        "novelty_proxy": 15.5
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-27",
+      "start_time": "11:40:31",
+      "end_time": "11:45:20",
+      "proxies": {
+        "attention_proxy": 54.1,
+        "load_proxy": 54.9,
+        "novelty_proxy": 19.5
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-28",
+      "start_time": "11:45:25",
+      "end_time": "11:50:13",
+      "proxies": {
+        "attention_proxy": 43.2,
+        "load_proxy": 63.7,
+        "novelty_proxy": 15.1
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-29",
+      "start_time": "11:50:22",
+      "end_time": "11:55:18",
+      "proxies": {
+        "attention_proxy": 100.0,
+        "load_proxy": 73.5,
+        "novelty_proxy": 88.2
+      },
+      "labels": [
+        "집중 상승",
+        "부하 높음"
+      ],
+      "interpretation": "새 개념이 들어오면서 반응 강도가 함께 올라가는 구간입니다. 데모나 예시 전환이 집중을 끌어올린 것으로 해석할 수 있습니다."
+    },
+    {
+      "segment_id": "seg-30",
+      "start_time": "11:55:36",
+      "end_time": "11:56:41",
+      "proxies": {
+        "attention_proxy": 23.0,
+        "load_proxy": 69.7,
+        "novelty_proxy": 100.0
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-31",
+      "start_time": "01:11:43",
+      "end_time": "01:15:16",
+      "proxies": {
+        "attention_proxy": 21.4,
+        "load_proxy": 49.8,
+        "novelty_proxy": 16.5
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-32",
+      "start_time": "01:15:33",
+      "end_time": "01:20:18",
+      "proxies": {
+        "attention_proxy": 73.9,
+        "load_proxy": 76.8,
+        "novelty_proxy": 58.3
+      },
+      "labels": [
+        "집중 상승",
+        "부하 높음"
+      ],
+      "interpretation": "새 개념이 들어오면서 반응 강도가 함께 올라가는 구간입니다. 데모나 예시 전환이 집중을 끌어올린 것으로 해석할 수 있습니다."
+    },
+    {
+      "segment_id": "seg-33",
+      "start_time": "01:20:26",
+      "end_time": "01:25:10",
+      "proxies": {
+        "attention_proxy": 37.9,
+        "load_proxy": 66.3,
+        "novelty_proxy": 39.7
+      },
+      "labels": [
+        "집중 하락"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-34",
+      "start_time": "01:25:28",
+      "end_time": "01:30:14",
+      "proxies": {
+        "attention_proxy": 61.8,
+        "load_proxy": 55.7,
+        "novelty_proxy": 31.0
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-35",
+      "start_time": "01:30:28",
+      "end_time": "01:35:20",
+      "proxies": {
+        "attention_proxy": 36.6,
+        "load_proxy": 67.7,
+        "novelty_proxy": 27.1
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-36",
+      "start_time": "01:35:36",
+      "end_time": "01:40:10",
+      "proxies": {
+        "attention_proxy": 28.6,
+        "load_proxy": 66.2,
+        "novelty_proxy": 9.3
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-37",
+      "start_time": "01:40:25",
+      "end_time": "01:45:17",
+      "proxies": {
+        "attention_proxy": 42.9,
+        "load_proxy": 69.1,
+        "novelty_proxy": 17.2
+      },
+      "labels": [
+        "부하 높음"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-38",
+      "start_time": "01:45:32",
+      "end_time": "01:49:48",
+      "proxies": {
+        "attention_proxy": 50.6,
+        "load_proxy": 67.4,
+        "novelty_proxy": 9.5
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-39",
+      "start_time": "01:50:27",
+      "end_time": "01:55:17",
+      "proxies": {
+        "attention_proxy": 47.2,
+        "load_proxy": 56.8,
+        "novelty_proxy": 7.2
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-40",
+      "start_time": "01:55:32",
+      "end_time": "02:00:14",
+      "proxies": {
+        "attention_proxy": 52.8,
+        "load_proxy": 56.0,
+        "novelty_proxy": 8.6
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-41",
+      "start_time": "02:00:35",
+      "end_time": "02:05:14",
+      "proxies": {
+        "attention_proxy": 29.1,
+        "load_proxy": 65.1,
+        "novelty_proxy": 26.5
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-42",
+      "start_time": "02:05:29",
+      "end_time": "02:10:14",
+      "proxies": {
+        "attention_proxy": 23.1,
+        "load_proxy": 66.8,
+        "novelty_proxy": 8.8
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-43",
+      "start_time": "02:10:32",
+      "end_time": "02:15:02",
+      "proxies": {
+        "attention_proxy": 38.2,
+        "load_proxy": 71.0,
+        "novelty_proxy": 26.3
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-44",
+      "start_time": "02:15:23",
+      "end_time": "02:20:17",
+      "proxies": {
+        "attention_proxy": 15.5,
+        "load_proxy": 61.1,
+        "novelty_proxy": 36.9
+      },
+      "labels": [
+        "집중 하락"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-45",
+      "start_time": "02:20:33",
+      "end_time": "02:25:12",
+      "proxies": {
+        "attention_proxy": 23.6,
+        "load_proxy": 78.8,
+        "novelty_proxy": 20.3
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-46",
+      "start_time": "02:25:27",
+      "end_time": "02:26:22",
+      "proxies": {
+        "attention_proxy": 1.7,
+        "load_proxy": 79.2,
+        "novelty_proxy": 23.4
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-47",
+      "start_time": "02:46:32",
+      "end_time": "02:50:14",
+      "proxies": {
+        "attention_proxy": 34.5,
+        "load_proxy": 57.5,
+        "novelty_proxy": 29.0
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-48",
+      "start_time": "02:50:23",
+      "end_time": "02:55:20",
+      "proxies": {
+        "attention_proxy": 32.1,
+        "load_proxy": 89.0,
+        "novelty_proxy": 8.6
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-49",
+      "start_time": "02:55:22",
+      "end_time": "03:00:05",
+      "proxies": {
+        "attention_proxy": 32.0,
+        "load_proxy": 62.0,
+        "novelty_proxy": 16.2
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-50",
+      "start_time": "03:00:21",
+      "end_time": "03:05:18",
+      "proxies": {
+        "attention_proxy": 90.2,
+        "load_proxy": 77.2,
+        "novelty_proxy": 84.9
+      },
+      "labels": [
+        "집중 상승",
+        "부하 높음"
+      ],
+      "interpretation": "새 개념이 들어오면서 반응 강도가 함께 올라가는 구간입니다. 데모나 예시 전환이 집중을 끌어올린 것으로 해석할 수 있습니다."
+    },
+    {
+      "segment_id": "seg-51",
+      "start_time": "03:05:24",
+      "end_time": "03:10:13",
+      "proxies": {
+        "attention_proxy": 78.1,
+        "load_proxy": 71.8,
+        "novelty_proxy": 22.6
+      },
+      "labels": [
+        "집중 상승",
+        "부하 높음"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-52",
+      "start_time": "03:10:21",
+      "end_time": "03:15:06",
+      "proxies": {
+        "attention_proxy": 49.1,
+        "load_proxy": 72.1,
+        "novelty_proxy": 30.5
+      },
+      "labels": [
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-53",
+      "start_time": "03:15:21",
+      "end_time": "03:20:18",
+      "proxies": {
+        "attention_proxy": 55.5,
+        "load_proxy": 71.3,
+        "novelty_proxy": 7.6
+      },
+      "labels": [
+        "부하 높음"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-54",
+      "start_time": "03:20:27",
+      "end_time": "03:25:12",
+      "proxies": {
+        "attention_proxy": 45.2,
+        "load_proxy": 56.8,
+        "novelty_proxy": 23.5
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-55",
+      "start_time": "03:25:27",
+      "end_time": "03:30:10",
+      "proxies": {
+        "attention_proxy": 62.3,
+        "load_proxy": 61.0,
+        "novelty_proxy": 29.1
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-56",
+      "start_time": "03:30:26",
+      "end_time": "03:34:58",
+      "proxies": {
+        "attention_proxy": 53.8,
+        "load_proxy": 56.0,
+        "novelty_proxy": 7.2
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-57",
+      "start_time": "03:35:24",
+      "end_time": "03:39:55",
+      "proxies": {
+        "attention_proxy": 19.4,
+        "load_proxy": 56.1,
+        "novelty_proxy": 43.1
+      },
+      "labels": [
+        "집중 하락"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-58",
+      "start_time": "03:40:29",
+      "end_time": "03:45:12",
+      "proxies": {
+        "attention_proxy": 24.1,
+        "load_proxy": 38.3,
+        "novelty_proxy": 4.5
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    },
+    {
+      "segment_id": "seg-59",
+      "start_time": "03:45:34",
+      "end_time": "03:50:09",
+      "proxies": {
+        "attention_proxy": 47.7,
+        "load_proxy": 71.3,
+        "novelty_proxy": 28.9
+      },
+      "labels": [
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-60",
+      "start_time": "03:50:27",
+      "end_time": "03:55:08",
+      "proxies": {
+        "attention_proxy": 65.4,
+        "load_proxy": 65.5,
+        "novelty_proxy": 12.8
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-61",
+      "start_time": "03:55:27",
+      "end_time": "04:00:18",
+      "proxies": {
+        "attention_proxy": 46.6,
+        "load_proxy": 60.0,
+        "novelty_proxy": 13.6
+      },
+      "labels": [
+        "복습 필요"
+      ],
+      "interpretation": "반응이 큰 흔들림 없이 유지되는 구간입니다. 현재 리듬을 유지하면서 핵심 문장을 조금 더 분명하게 강조하는 편이 좋습니다."
+    },
+    {
+      "segment_id": "seg-62",
+      "start_time": "04:00:25",
+      "end_time": "04:00:46",
+      "proxies": {
+        "attention_proxy": 0.4,
+        "load_proxy": 70.8,
+        "novelty_proxy": 47.1
+      },
+      "labels": [
+        "집중 하락",
+        "부하 높음"
+      ],
+      "interpretation": "설명 밀도에 비해 반응 유지가 떨어져 인지 부하가 높게 읽히는 구간입니다. 속도 조절이나 요약 신호가 필요합니다."
+    },
+    {
+      "segment_id": "seg-63",
+      "start_time": "05:50:13",
+      "end_time": "05:50:17",
+      "proxies": {
+        "attention_proxy": 0.0,
+        "load_proxy": 0.0,
+        "novelty_proxy": 16.7
+      },
+      "labels": [
+        "집중 하락",
+        "복습 필요"
+      ],
+      "interpretation": "반응 강도가 낮아지는 구간입니다. 질문, 예시, 리캡 같은 리듬 전환 장치가 있으면 다시 끌어올릴 수 있습니다."
+    }
+  ],
+  "personas": [
+    {
+      "persona_id": "novice",
+      "label": "초보 수강자",
+      "overall_score": 37.7,
+      "top_positive_segment_ids": [
+        "seg-29",
+        "seg-12"
+      ],
+      "top_risk_segment_ids": [
+        "seg-62",
+        "seg-46"
+      ],
+      "reaction_summary": "기본 개념과 흐름이 분명한 구간에서 반응이 안정적으로 올라갑니다. 밀도가 급격히 올라가는 구간은 따라가기 어렵게 느껴질 수 있습니다."
+    },
+    {
+      "persona_id": "builder",
+      "label": "실습형 수강자",
+      "overall_score": 32.8,
+      "top_positive_segment_ids": [
+        "seg-29",
+        "seg-30"
+      ],
+      "top_risk_segment_ids": [
+        "seg-58",
+        "seg-24"
+      ],
+      "reaction_summary": "새로운 예시나 패턴 전환이 보이는 구간에서 반응이 크게 올라갑니다. 반복 설명만 길어지면 체감 가치가 떨어질 수 있습니다."
+    },
+    {
+      "persona_id": "pace_sensitive",
+      "label": "속도 민감형",
+      "overall_score": 66.2,
+      "top_positive_segment_ids": [
+        "seg-34",
+        "seg-03"
+      ],
+      "top_risk_segment_ids": [
+        "seg-46",
+        "seg-63"
+      ],
+      "reaction_summary": "설명 속도와 정보량이 적절하게 맞는 구간에서 반응이 고르게 유지됩니다. 부하가 한 번 높아지면 회복이 느린 편입니다."
+    }
+  ]
+}
