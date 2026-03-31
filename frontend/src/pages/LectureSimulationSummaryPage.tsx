@@ -41,6 +41,7 @@ export default function LectureSimulationSummaryPage() {
 
     getSimulation(date)
       .then(async (result) => {
+        if (!result.summary_visual) throw new Error("summary_visual missing");
         const [visual, colorPayload] = await Promise.all([
           getSimulationSummaryVisual(result.summary_visual.brain_icon_frames_json),
           getSimulationColors(result.assets.segment_colors_json),
@@ -121,7 +122,7 @@ export default function LectureSimulationSummaryPage() {
             </Link>
             <h1 className="simulation-title">{simulation.metadata.subject}</h1>
             <p className="text-body" style={{ maxWidth: 720 }}>
-              {simulation.summary_visual.hero_statement}
+              {simulation.summary_visual?.hero_statement}
             </p>
             <div className="simulation-meta-row">
               <span>{formatDate(simulation.lecture_date)}</span>
@@ -178,15 +179,15 @@ export default function LectureSimulationSummaryPage() {
           <div className="simulation-method-card-stack">
             <div>
               <p className="text-section" style={{ marginBottom: 4 }}>입력</p>
-              <p className="text-body">{simulation.roi_summary.method_explainer.input_summary}</p>
+              <p className="text-body">{simulation.roi_summary?.method_explainer.input_summary}</p>
             </div>
             <div>
               <p className="text-section" style={{ marginBottom: 4 }}>숫자</p>
-              <p className="text-body">{simulation.roi_summary.method_explainer.proxy_summary}</p>
+              <p className="text-body">{simulation.roi_summary?.method_explainer.proxy_summary}</p>
             </div>
             <div>
               <p className="text-section" style={{ marginBottom: 4 }}>영역</p>
-              <p className="text-body">{simulation.roi_summary.method_explainer.roi_summary}</p>
+              <p className="text-body">{simulation.roi_summary?.method_explainer.roi_summary}</p>
             </div>
             <div>
               <p className="text-section" style={{ marginBottom: 4 }}>주의할 점</p>
@@ -211,7 +212,7 @@ export default function LectureSimulationSummaryPage() {
       </div>
 
       <div className="simulation-summary-card-grid">
-        {simulation.summary_visual.highlight_cards.map((card) => (
+        {simulation.summary_visual?.highlight_cards.map((card) => (
           <button
             key={card.kind}
             className="card card-padded simulation-highlight-card"
@@ -268,7 +269,7 @@ export default function LectureSimulationSummaryPage() {
         <div className="card card-padded">
           <p className="text-section" style={{ marginBottom: 10 }}>영역 상위 패턴</p>
           <div className="simulation-roi-list">
-            {simulation.roi_summary.lecture_top_rois.slice(0, 5).map((roi) => {
+            {simulation.roi_summary?.lecture_top_rois.slice(0, 5).map((roi) => {
               const level = roiResponseLevel(roi.mean_abs_response);
               return (
                 <div key={`${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
@@ -284,7 +285,7 @@ export default function LectureSimulationSummaryPage() {
           {selectedSegment && (
             <div className="simulation-summary-selected">
               <p className="text-label">지금 보고 있는 구간</p>
-              <p className="text-body" style={{ marginTop: 8 }}>{selectedSegment.roi_insights.summary_text}</p>
+              <p className="text-body" style={{ marginTop: 8 }}>{selectedSegment.roi_insights?.summary_text}</p>
               <div className="simulation-metric-grid" style={{ marginTop: 12 }}>
                 <MetricGauge label="Attention" value={selectedSegment.proxies.attention_proxy} metric="attention" compact />
                 <MetricGauge label="Load" value={selectedSegment.proxies.load_proxy} metric="load" compact />

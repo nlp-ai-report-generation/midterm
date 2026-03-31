@@ -42,6 +42,7 @@ export default function LectureSimulationTranscriptPage() {
 
     Promise.all([getSimulation(date), getSimulationTranscript(date)])
       .then(async ([simulationResult, transcriptResult]) => {
+        if (!simulationResult.live_assets) throw new Error("live_assets missing");
         const liveFramePayload = await getSimulationLiveFrames(simulationResult.live_assets.brain_frames_json);
         if (cancelled) return;
         setSimulation(simulationResult);
@@ -207,7 +208,7 @@ export default function LectureSimulationTranscriptPage() {
               <span key={tag} className="simulation-pill">{tag}</span>
             ))}
           </div>
-          <p className="text-body" style={{ marginTop: 18 }}>{currentSegment.roi_insights.summary_text}</p>
+          <p className="text-body" style={{ marginTop: 18 }}>{currentSegment.roi_insights?.summary_text}</p>
         </div>
       </div>
 
@@ -279,7 +280,7 @@ export default function LectureSimulationTranscriptPage() {
                   <Waypoints size={16} color="var(--primary)" />
                 </div>
                 <div className="simulation-roi-list" style={{ marginTop: 14 }}>
-                  {deduplicateRois(currentSegment.roi_insights.top_active_rois, "mean_abs_response").slice(0, 3).map((roi) => {
+                  {deduplicateRois(currentSegment.roi_insights?.top_active_rois, "mean_abs_response").slice(0, 3).map((roi) => {
                     const level = roiResponseLevel(roi.mean_abs_response);
                     return (
                       <div key={`active-${roi.functional_hint}`} className="simulation-roi-item">
@@ -300,7 +301,7 @@ export default function LectureSimulationTranscriptPage() {
                   <Layers3 size={16} color="var(--grey-700)" />
                 </div>
                 <div className="simulation-roi-list" style={{ marginTop: 14 }}>
-                  {deduplicateRois(currentSegment.roi_insights.top_changed_rois, "delta_abs_response").slice(0, 3).map((roi) => {
+                  {deduplicateRois(currentSegment.roi_insights?.top_changed_rois, "delta_abs_response").slice(0, 3).map((roi) => {
                     const level = roiResponseLevel(roi.delta_abs_response);
                     return (
                       <div key={`changed-${roi.functional_hint}`} className="simulation-roi-item">
@@ -318,10 +319,10 @@ export default function LectureSimulationTranscriptPage() {
             <div className="simulation-callout" style={{ marginTop: 18 }}>
               <Brain size={16} />
               <div>
-                <p>{currentSegment.roi_insights.summary_text}</p>
-                {currentSegment.roi_insights.top_active_rois[0] && (
+                <p>{currentSegment.roi_insights?.summary_text}</p>
+                {currentSegment.roi_insights?.top_active_rois[0] && (
                   <p style={{ marginTop: 6, fontSize: 12, color: "var(--text-muted)" }}>
-                    {roiNeuroscienceHint(currentSegment.roi_insights.top_active_rois[0].functional_hint)}
+                    {roiNeuroscienceHint(currentSegment.roi_insights?.top_active_rois[0].functional_hint)}
                   </p>
                 )}
               </div>

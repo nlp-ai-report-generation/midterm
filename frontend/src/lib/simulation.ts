@@ -113,13 +113,14 @@ export function flattenTranscript(
       start_time: segment.start_time,
       end_time: segment.end_time,
       labels: simulationSegment?.labels ?? [],
-      interpretation: simulationSegment?.roi_insights.summary_text ?? simulationSegment?.interpretation ?? "",
+      interpretation: simulationSegment?.roi_insights?.summary_text ?? simulationSegment?.interpretation ?? "",
     }));
   });
 }
 
 /** ROI를 functional_hint별로 그룹화하여 고유 항목만 반환 (가장 강한 것 우선) */
-export function deduplicateRois(rois: RoiMetricSummary[], valueKey: "mean_abs_response" | "delta_abs_response" = "mean_abs_response"): RoiMetricSummary[] {
+export function deduplicateRois(rois: RoiMetricSummary[] | undefined, valueKey: "mean_abs_response" | "delta_abs_response" = "mean_abs_response"): RoiMetricSummary[] {
+  if (!rois) return [];
   const seen = new Map<string, RoiMetricSummary>();
   for (const roi of rois) {
     const existing = seen.get(roi.functional_hint);
@@ -135,7 +136,7 @@ export function buildSegmentTags(simulation: SimulationResult, index: number) {
   if (!segment) return [];
 
   const tags = [...segment.labels];
-  const firstHint = segment.roi_insights.top_active_rois[0]?.functional_hint;
+  const firstHint = segment.roi_insights?.top_active_rois[0]?.functional_hint;
   if (firstHint) {
     tags.push(hintLabel(firstHint));
   }
@@ -501,4 +502,140 @@ export function computeSegmentDerivedMetrics(
   else engagementLabel = "유도 부족";
 
   return { pacing, pacingLabel, engagementCue, engagementLabel, engagementBreakdown: breakdown };
+}
+
+/* ─── ROI Functional Profile (뇌 영역별 기능 프로필) ─── */
+
+/**
+ * 6개 기능 카테고리별 활성도를 집계하여 "뇌 기능 프로필"을 만든다.
+ * 단순 magnitude가 아니라 **어떤 영역에서** 반응이 강한지로 해석한다.
+ *
+ * 신경과학 근거:
+ * - auditory/language (측두엽): Wernicke 영역 — 언어 이해, 의미 처리
+ * - frontal/control (전전두엽): DLPFC — 작업기억, 실행 기능, 메타인지
+ * - visual (후두엽): 시각 정보 처리
+ * - sensorimotor/attention (두정엽): Posner 주의 네트워크 — 주의 전환
+ * - association/DMN (기본 모드): 맥락 연결 or mind-wandering
+ */
+
+const FUNCTIONAL_CATEGORIES = [
+  "auditory_or_language_related",
+  "frontal_control_or_action_related",
+  "visual_processing_related",
+  "sensorimotor_or_attention_related",
+  "association_or_default_mode_related",
+] as const;
+
+type FunctionalCategory = typeof FUNCTIONAL_CATEGORIES[number];
+
+const CATEGORY_LABELS: Record<FunctionalCategory, string> = {
+  auditory_or_language_related: "언어 처리",
+  frontal_control_or_action_related: "실행 통제",
+  visual_processing_related: "시각 처리",
+  sensorimotor_or_attention_related: "주의 전환",
+  association_or_default_mode_related: "맥락 연결",
+};
+
+const CATEGORY_DESCRIPTIONS: Record<FunctionalCategory, string> = {
+  auditory_or_language_related: "강의 언어를 듣고 의미를 해석하는 영역 (측두엽 Wernicke)",
+  frontal_control_or_action_related: "정보를 정리하고 개념을 통합하는 영역 (전전두엽 DLPFC)",
+  visual_processing_related: "슬라이드나 시각 자료를 처리하는 영역 (후두엽)",
+  sensorimotor_or_attention_related: "주의 방향을 전환하는 영역 (두정엽)",
+  association_or_default_mode_related: "앞뒤 맥락을 연결하거나 내적 사고를 하는 영역 (DMN)",
+};
+
+export interface FunctionalProfile {
+  /** 카테고리별 상대 활성도 (0~100, 강의 내 정규화) */
+  categories: Array<{
+    key: FunctionalCategory;
+    label: string;
+    description: string;
+    value: number;
+    isTop: boolean;
+  }>;
+  /** 가장 강한 카테고리의 해석 */
+  dominantInterpretation: string;
+  /** 프로필 패턴 해석 */
+  profilePattern: string;
+}
+
+/** ROI 목록에서 기능 카테고리별 평균 활성도를 계산한다 */
+export function computeFunctionalProfile(
+  activeRois: RoiMetricSummary[] | undefined,
+  changedRois: RoiMetricSummary[] | undefined,
+): FunctionalProfile {
+  const allRois = [...(activeRois ?? []), ...(changedRois ?? [])];
+
+  // 카테고리별 mean_abs_response 집계
+  const categoryValues = new Map<FunctionalCategory, number[]>();
+  for (const cat of FUNCTIONAL_CATEGORIES) {
+    categoryValues.set(cat, []);
+  }
+  for (const roi of allRois) {
+    const cat = roi.functional_hint as FunctionalCategory;
+    if (categoryValues.has(cat)) {
+      const val = roi.mean_abs_response ?? roi.delta_abs_response ?? 0;
+      categoryValues.get(cat)!.push(val);
+    }
+  }
+
+  // 카테고리별 평균 + 정규화
+  const rawScores = FUNCTIONAL_CATEGORIES.map((cat) => {
+    const vals = categoryValues.get(cat) ?? [];
+    return vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+  });
+  const maxScore = Math.max(...rawScores, 0.001);
+
+  const categories = FUNCTIONAL_CATEGORIES.map((cat, i) => ({
+    key: cat,
+    label: CATEGORY_LABELS[cat],
+    description: CATEGORY_DESCRIPTIONS[cat],
+    value: Math.round((rawScores[i] / maxScore) * 100),
+    isTop: false,
+  }));
+
+  // 상위 2개 표시
+  const sorted = [...categories].sort((a, b) => b.value - a.value);
+  for (const top of sorted.slice(0, 2)) {
+    const found = categories.find((c) => c.key === top.key);
+    if (found) found.isTop = true;
+  }
+
+  // 프로필 패턴 해석
+  const top1 = sorted[0];
+  const top2 = sorted[1];
+  const bottom = sorted[sorted.length - 1];
+
+  let dominantInterpretation: string;
+  let profilePattern: string;
+
+  if (top1.key === "auditory_or_language_related" && top2.key === "frontal_control_or_action_related") {
+    dominantInterpretation = "설명을 듣고 적극적으로 정리하는 패턴이에요. 능동적 이해가 일어나고 있어요.";
+    profilePattern = "능동적 이해";
+  } else if (top1.key === "auditory_or_language_related" && (top2.key === "association_or_default_mode_related" || top2.value < 30)) {
+    dominantInterpretation = "설명을 듣고는 있지만 깊은 처리 없이 수동적으로 받아들이는 패턴이에요.";
+    profilePattern = "수동적 청취";
+  } else if (top1.key === "frontal_control_or_action_related") {
+    dominantInterpretation = "작업기억과 실행 기능이 가장 활발해요. 복잡한 개념을 정리하거나 비교 판단하는 중이에요.";
+    profilePattern = "인지적 통합";
+  } else if (top1.key === "association_or_default_mode_related") {
+    dominantInterpretation = "기본 모드 네트워크가 가장 활발해요. 맥락을 연결하는 깊은 사고이거나, 주의가 분산될 가능성이 있어요.";
+    profilePattern = "맥락 연결 / 이탈 가능";
+  } else if (top1.key === "sensorimotor_or_attention_related") {
+    dominantInterpretation = "주의 전환 네트워크가 활발해요. 새로운 내용에 주의를 재정렬하는 중이에요.";
+    profilePattern = "주의 재정렬";
+  } else if (top1.key === "visual_processing_related") {
+    dominantInterpretation = "시각 처리 영역이 가장 활발해요. 화면 자료나 도표에 집중하는 구간이에요.";
+    profilePattern = "시각 정보 처리";
+  } else {
+    dominantInterpretation = `${top1.label} 영역이 가장 활발하고, ${top2.label} 영역이 그 다음이에요.`;
+    profilePattern = `${top1.label} 우세`;
+  }
+
+  // 하위 영역 보충
+  if (bottom.value < 10) {
+    dominantInterpretation += ` ${bottom.label} 영역은 거의 반응하지 않고 있어요.`;
+  }
+
+  return { categories, dominantInterpretation, profilePattern };
 }

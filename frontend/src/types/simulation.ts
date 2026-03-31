@@ -19,7 +19,7 @@ export interface SimulationResult {
     summary_text: string;
     caution_text: string;
   };
-  roi_summary: {
+  roi_summary?: {
     atlas_name: string;
     lecture_top_rois: RoiMetricSummary[];
     method_explainer: {
@@ -28,12 +28,12 @@ export interface SimulationResult {
       roi_summary: string;
     };
   };
-  summary_visual: {
+  summary_visual?: {
     brain_icon_frames_json: string;
     hero_statement: string;
     highlight_cards: SummaryHighlightCard[];
   };
-  live_assets: {
+  live_assets?: {
     brain_frames_json: string;
     timeline_frames_json: string;
   };
@@ -52,12 +52,12 @@ export interface SimulationSegment {
   };
   labels: string[];
   interpretation: string;
-  roi_insights: {
+  roi_insights?: {
     top_active_rois: RoiMetricSummary[];
     top_changed_rois: RoiMetricSummary[];
     summary_text: string;
   };
-  playback: {
+  playback?: {
     frame_times: number[];
     line_to_frame: Array<{
       line_index: number;
