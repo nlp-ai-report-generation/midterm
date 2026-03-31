@@ -19,9 +19,24 @@ import type {
 } from "@/types/simulation";
 
 const DATA_BASE = `${import.meta.env.BASE_URL}data`;
+const BASE_DATA_PREFIX = DATA_BASE.replace(/^\//, "");
+
+function normalizeDataPath(path: string): string {
+  if (/^(https?:)?\/\//.test(path)) return path;
+  if (path.startsWith(DATA_BASE)) return path.slice(DATA_BASE.length).replace(/^\/+/, "");
+  if (path.startsWith(`/${BASE_DATA_PREFIX}`)) return path.slice(BASE_DATA_PREFIX.length + 1).replace(/^\/+/, "");
+  if (path.startsWith("/data/")) return path.replace(/^\/data\//, "");
+  if (path.startsWith("data/")) return path.replace(/^data\//, "");
+  return path.replace(/^\/+/, "");
+}
+
+export function resolveDataAssetPath(path: string): string {
+  if (/^(https?:)?\/\//.test(path)) return path;
+  return `${DATA_BASE}/${normalizeDataPath(path)}`;
+}
 
 async function fetchJSON<T>(path: string): Promise<T> {
-  const res = await fetch(`${DATA_BASE}/${path}`);
+  const res = await fetch(resolveDataAssetPath(path));
   if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
   return res.json() as Promise<T>;
 }
@@ -138,23 +153,19 @@ export async function getSimulationTranscript(date: string): Promise<TranscriptB
 }
 
 export async function getSimulationColors(path: string): Promise<SegmentColorPayload> {
-  const normalized = path.startsWith("/") ? path.replace(/^\/data\//, "") : path;
-  return fetchJSON<SegmentColorPayload>(normalized);
+  return fetchJSON<SegmentColorPayload>(path);
 }
 
 export async function getSimulationSummaryVisual(path: string): Promise<BrainIconFramePayload> {
-  const normalized = path.startsWith("/") ? path.replace(/^\/data\//, "") : path;
-  return fetchJSON<BrainIconFramePayload>(normalized);
+  return fetchJSON<BrainIconFramePayload>(path);
 }
 
 export async function getSimulationLiveFrames(path: string): Promise<LiveBrainFramePayload> {
-  const normalized = path.startsWith("/") ? path.replace(/^\/data\//, "") : path;
-  return fetchJSON<LiveBrainFramePayload>(normalized);
+  return fetchJSON<LiveBrainFramePayload>(path);
 }
 
 export async function getSimulationTimelineFrames(path: string): Promise<LiveTimelineFramePayload> {
-  const normalized = path.startsWith("/") ? path.replace(/^\/data\//, "") : path;
-  return fetchJSON<LiveTimelineFramePayload>(normalized);
+  return fetchJSON<LiveTimelineFramePayload>(path);
 }
 
 /* ── Opus 심층 분석 ── */

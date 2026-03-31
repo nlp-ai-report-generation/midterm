@@ -1,5 +1,13 @@
 # 결정 기록
 
+## 2026-03-31
+
+### 프론트 정적 data/mesh 자산 경로는 항상 `BASE_URL` 기준으로 resolve
+
+- 결정: GitHub Pages 같은 하위 경로 배포를 고려해 `/data/...` 절대 경로를 직접 쓰지 않고, `import.meta.env.BASE_URL`을 거치는 공용 resolve 함수로 정적 JSON/GLB 자산 경로를 만든다.
+- 이유: `https://yj99son.github.io/mutsa_nlp/...`처럼 repo path 아래에 배포될 때 절대 경로 `/data/...`는 루트 도메인으로 향해 404가 나고, `useGLTF()` 같은 런타임 loader 예외가 에러 바운더리 없이 전체 화면 blank로 이어질 수 있다.
+- 결과: `frontend/src/lib/data.ts`에 `resolveDataAssetPath()`를 두고, simulation JSON fetch와 `BrainCanvas` mesh preload가 같은 규칙을 사용한다.
+
 ## 2026-03-10
 
 ### 에이전트 운영 문서는 벤더 중립으로 작성

@@ -9,6 +9,7 @@ import {
   MeshStandardMaterial,
   Object3D,
 } from "three";
+import { resolveDataAssetPath } from "@/lib/data";
 
 interface BrainCanvasProps {
   meshUrl: string;
@@ -103,7 +104,8 @@ function findMesh(root: Object3D, name: string): Mesh | null {
 }
 
 function BrainModel({ meshUrl, colors, intensity, changeBoost, variant = "live" }: BrainCanvasProps) {
-  const { scene } = useGLTF(meshUrl);
+  const resolvedMeshUrl = useMemo(() => resolveDataAssetPath(meshUrl), [meshUrl]);
+  const { scene } = useGLTF(resolvedMeshUrl);
   const paintedScene = useMemo(() => scene.clone(true), [scene]);
   const outlineScene = useMemo(() => {
     const clone = scene.clone(true);
@@ -192,4 +194,4 @@ export default function BrainCanvas({ meshUrl, colors, intensity, changeBoost, v
   );
 }
 
-useGLTF.preload("/data/simulations/brain-mesh.glb");
+useGLTF.preload(resolveDataAssetPath("simulations/brain-mesh.glb"));

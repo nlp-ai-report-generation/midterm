@@ -1,11 +1,14 @@
 # 현재 상태
 
-- 기준일: `2026-03-30`
+- 기준일: `2026-03-31`
 - 현재 운영 목표: LangGraph 기반 평가 결과를 실제 데이터로 축적하는 동시에, TRIBE v2 기반 수강자 반응 시뮬레이션 실험 기능을 정적 프론트 UX로 연결한다.
 - 프로젝트 목표: 강의 스크립트와 품질 기준을 바탕으로 강사 개선 인사이트를 자동 생성하는 분석 리포트 시스템을 만든다.
 
 ## 최근 완료
 
+- GitHub Pages 배포 흰 화면 원인을 `simulation.assets.mesh_glb`와 `BrainCanvas` preload의 절대 경로(`/data/...`)로 특정하고 수정: `BASE_URL` 기준 `resolveDataAssetPath()`를 도입해 JSON/GLB 자산을 `/mutsa_nlp/...` 하위 경로에서도 올바르게 읽도록 정리 (`frontend/src/lib/data.ts`, `frontend/src/components/simulation/BrainCanvas.tsx`)
+- 실제 배포 URL `https://yj99son.github.io/mutsa_nlp/lectures/2026-02-02`를 브라우저와 `curl`로 재확인해 기존 콘솔 404가 `https://yj99son.github.io/data/simulations/brain-mesh.glb` 절대 경로에서 발생함을 확인
+- `cd frontend && GITHUB_PAGES_BASE=/mutsa_nlp/ npm run build` 재통과
 - `/lectures/:date/simulation/live` 흰 화면 원인을 `LectureSimulationLivePage.tsx`의 훅 순서 위반으로 특정하고 수정: early return 아래에 있던 `useMemo(derivedMetrics)`를 상단으로 이동해 로딩 후 런타임 blank 이슈 제거
 - 로컬 확인 편의를 위해 프론트 dev 서버를 `3000`뿐 아니라 `3001`에서도 최신 코드로 띄울 수 있게 재실행
 - 강의 상세 페이지의 시뮬레이션 카드에서 중복 `요약 보기` CTA를 제거하고, 카드 시각화를 평면 brain icon 대신 summary와 같은 축약 3D mesh 톤으로 교체 (`frontend/src/app/lectures/[date]/page.tsx`)
@@ -98,7 +101,7 @@
 - TRIBE 코랩 노트북: audio-only fallback을 실제 audio-only preprocessing으로 최적화했고, worker 수를 0으로 낮췄으며 날짜별 partial resume 저장을 지원함 (`colab/tribev2-student-reaction/01_run_tribev2.ipynb`)
 - 발표 자산: `presentation/`이 소스 오브 트루스이며, `scripts/sync_presentation_assets.py`로 `frontend/public/presentation/`과 `presentation/remotion/public/`에 동기화함
 - 발표 영상: `presentation/remotion/`에서 TTS 자막형 설명 영상 렌더링 가능, 캡처 자산 4종과 내레이션 mp3 8개 생성 완료
-- Git 상태: 프론트 Apple 스타일 UX 재설계 관련 변경 존재, `.claude/` 디렉터리는 계속 미추적 상태
+- Git 상태: GitHub Pages 하위 경로용 data/mesh asset resolve 수정 반영 완료, `.claude/` 디렉터리는 계속 미추적 상태
 
 ## 다음 세션 시작 체크리스트
 
