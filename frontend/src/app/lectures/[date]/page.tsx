@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { Brain, ChevronRight, Sparkles, TriangleAlert } from "lucide-react";
+import { Brain, ChevronRight, Sparkles } from "lucide-react";
 import { useRole } from "@/contexts/RoleContext";
 import { getEvaluationByModel, getSimulation, getSimulationColors, getSimulationSummaryVisual, MODEL_LABELS, type ModelKey } from "@/lib/data";
 import { formatDate, scoreColor, scoreBadgeTextColor, scoreLabel, weightLabel } from "@/lib/utils";
@@ -307,7 +307,7 @@ export default function LectureDetailPage() {
         <div className="simulation-panel-header">
           <div>
             <p className="text-section">실험: 수강자 반응 시뮬레이션</p>
-            <p className="text-caption">한 줄 결론부터 보고, 실시간 보기에서 스크립트와 반응을 같이 따라갈 수 있어요.</p>
+            <p className="text-caption">3D 반응 시각화와 원문 동기화를 한 화면 흐름으로 볼 수 있어요.</p>
           </div>
         </div>
         {simulation && firstSummaryFrame ? (
@@ -327,32 +327,23 @@ export default function LectureDetailPage() {
               <div className="simulation-pill-row">
                 <span className="simulation-pill simulation-pill-primary">
                   <Sparkles size={14} />
-                  빠르게 보는 요약
+                  실험 기능
                 </span>
                 <span className="simulation-pill">
                   <Brain size={14} />
-                  실시간 Deep View 지원
+                  3D + 원문 동기화
                 </span>
               </div>
-              <p className="text-section" style={{ marginTop: 14 }}>{simulation.summary_visual?.hero_statement}</p>
-              <p className="text-body" style={{ marginTop: 10 }}>{simulation.lecture_summary.summary_text}</p>
-              <div className="simulation-pill-row" style={{ marginTop: 14 }}>
-                <span className="simulation-pill">강한 구간 {simulation.lecture_summary.strongest_segment_ids.length}개</span>
-                <span className="simulation-pill">주의 구간 {simulation.lecture_summary.risk_segment_ids.length}개</span>
-                <span className="simulation-pill">{simulation.segments.length}개 세그먼트</span>
-              </div>
-              <div className="simulation-callout" style={{ marginTop: 16 }}>
-                <TriangleAlert size={16} />
-                <p>{simulation.lecture_summary.caution_text}</p>
-              </div>
+              <p className="text-section" style={{ marginTop: 14 }}>
+                {simulation.summary_visual?.hero_statement ?? "강의 흐름과 반응 패턴을 같이 따라가는 실험 화면"}
+              </p>
+              <p className="text-body" style={{ marginTop: 10 }}>
+                요약, 실시간, 원문 보기로 이어지는 전용 화면에서 강한 구간과 위험 구간을 더 명확하게 읽을 수 있습니다.
+              </p>
             </div>
             <div className="lecture-simulation-card-actions">
-              <Link to={`/lectures/${date}/simulation`} className="btn-secondary">
-                요약 보기
-                <ChevronRight size={16} />
-              </Link>
-              <Link to={`/lectures/${date}/simulation/live`} className="btn-primary">
-                실시간 보기
+              <Link to={`/lectures/${date}/simulation`} className="btn-primary">
+                시뮬레이션 보기
                 <ChevronRight size={16} />
               </Link>
             </div>

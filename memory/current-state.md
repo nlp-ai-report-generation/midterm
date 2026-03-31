@@ -1,11 +1,17 @@
 # 현재 상태
 
-- 기준일: `2026-03-31`
+- 기준일: `2026-04-01`
 - 현재 운영 목표: LangGraph 기반 평가 결과를 실제 데이터로 축적하는 동시에, TRIBE v2 기반 수강자 반응 시뮬레이션 실험 기능을 정적 프론트 UX로 연결한다.
 - 프로젝트 목표: 강의 스크립트와 품질 기준을 바탕으로 강사 개선 인사이트를 자동 생성하는 분석 리포트 시스템을 만든다.
 
 ## 최근 완료
 
+- TRIBE 시뮬레이션 UI를 Toss 기사형 레이아웃 리듬 기준으로 재구성하고, 색 체계를 `오렌지 포인트 + 흰색/검은색/회색`으로 재매핑 (`frontend/src/app/globals.css`, `frontend/src/lib/simulation.ts`, `frontend/src/components/simulation/BrainCanvas.tsx`)
+- `/lectures/:date/simulation` 요약 탭을 `hero + aside + 리스트형 feature row` 구조로 재정리하고, 결론 읽기 화면 역할에 맞게 strongest/risk/ROI 설명 밀도를 조정 (`frontend/src/pages/LectureSimulationSummaryPage.tsx`)
+- `/lectures/:date/simulation/live`를 `좌측 brain/timeline stage + 우측 해석 rail` 구조로 재정리하고, 현재 줄/패턴/metric/ROI 요약만 남겨 first glance를 brain/timeline으로 고정 (`frontend/src/pages/LectureSimulationLivePage.tsx`, `frontend/src/app/globals.css`)
+- `/lectures/:date/simulation/live/transcript`를 대시보드형에서 읽기 중심 기사형 레이아웃으로 바꾸고, sticky 세그먼트 nav + 상단 해석 요약 + line row 강조 구조로 단순화 (`frontend/src/pages/LectureSimulationTranscriptPage.tsx`, `frontend/src/app/globals.css`)
+- 강의 상세 페이지의 시뮬레이션 카드를 compact teaser + 단일 CTA(`시뮬레이션 보기`)로 축소해 상세 안에서 중복 요약을 읽지 않도록 정리 (`frontend/src/app/lectures/[date]/page.tsx`)
+- `cd frontend && npm run build` 통과. 새 simulation summary/live/transcript/detail 카드 구조까지 포함해 정적 빌드 확인 완료
 - GitHub Pages 배포 흰 화면 원인을 `simulation.assets.mesh_glb`와 `BrainCanvas` preload의 절대 경로(`/data/...`)로 특정하고 수정: `BASE_URL` 기준 `resolveDataAssetPath()`를 도입해 JSON/GLB 자산을 `/mutsa_nlp/...` 하위 경로에서도 올바르게 읽도록 정리 (`frontend/src/lib/data.ts`, `frontend/src/components/simulation/BrainCanvas.tsx`)
 - 실제 배포 URL `https://yj99son.github.io/mutsa_nlp/lectures/2026-02-02`를 브라우저와 `curl`로 재확인해 기존 콘솔 404가 `https://yj99son.github.io/data/simulations/brain-mesh.glb` 절대 경로에서 발생함을 확인
 - `cd frontend && GITHUB_PAGES_BASE=/mutsa_nlp/ npm run build` 재통과
@@ -85,7 +91,7 @@
 12. 코랩에서 A100/H100 기준으로 audio-only 최적화 노트북 3개 날짜를 끝까지 실행해 실제 시간/메모리 개선 폭 확인
 13. live 화면을 실제 브라우저로 한 번 더 확인하고, 필요하면 타임라인 높이와 우측 레일 줄 수를 발표 리허설 기준으로 미세 조정
 14. 원문 기반 heuristic remap을 진짜 timestep raw frame 저장 형식으로 교체할 코랩/후처리 계약 설계
-15. summary 탭용 축약 3D와 lecture detail 카드 시각 표현의 역할 분리를 한 번 더 점검하고, 필요하면 detail 카드도 같은 톤으로 재정리
+15. summary/live/transcript 재설계 후 실제 모바일 브라우저에서 line row 길이, stage 높이, CTA 간격을 한 번 더 실기기 기준으로 점검
 
 ## 현재 저장소 상태
 
@@ -95,6 +101,7 @@
 - 테스트: 46개 통과 (chunking, scoring, metrics, harness loading)
 - 프론트 UI: Apple 스타일 rail + 플로팅 내비 패널 + 모바일 하단 탭 + 공통 hero/panel 체계 기준으로 재정비 완료 (`frontend/`)
 - 프론트 시뮬레이션 UI: 파일럿 3강의 대상 실험용 3D 뇌 시각화/원문 브라우저 라우트 추가 완료, `fsaverage5` cortical mesh GLB 자산 연결 완료 (`frontend/src/pages/LectureSimulationPage.tsx`, `frontend/src/pages/LectureSimulationTranscriptPage.tsx`, `frontend/public/data/simulations/brain-mesh.glb`)
+- 프론트 시뮬레이션 UI 최신 상태: Toss 기사형 레이아웃 리듬을 참조해 `summary = 결론 읽기`, `live = stage 집중`, `transcript = 읽기 전용`, `lecture detail = CTA teaser` 역할로 재분리 완료
 - 정적 평가 데이터: 실제 분석 결과 1건 반영, 나머지 강의는 배치 실행 필요
 - 정적 시뮬레이션 데이터: `2026-02-02`는 실제 TRIBE raw 기반 ROI 해석 결과로 교체 완료, 나머지 파일럿 날짜는 추가 실데이터 확보 필요
 - 정적 시뮬레이션 데이터 계약: `2026-02-02`는 summary/live 자산과 transcript line mapping까지 확장 완료. 다만 live frame은 현재 세그먼트 평균 반응을 라인 timestamp에 매핑한 fallback이며 진짜 timestep raw는 아직 저장되지 않음

@@ -80,6 +80,29 @@ export default function LectureSimulationSummaryPage() {
     if (!segmentColors || !selectedFrame) return null;
     return segmentColors.segments.find((segment) => segment.segment_id === selectedFrame.segment_id) ?? null;
   }, [segmentColors, selectedFrame]);
+  const selectedCombo = useMemo(() => {
+    if (!selectedSegment) return null;
+    return interpretMetricCombo(
+      selectedSegment.proxies.attention_proxy,
+      selectedSegment.proxies.load_proxy,
+      selectedSegment.proxies.novelty_proxy,
+    );
+  }, [selectedSegment]);
+  const selectedFlowZone = useMemo(() => {
+    if (!selectedSegment) return false;
+    return isFlowZone(
+      selectedSegment.proxies.attention_proxy,
+      selectedSegment.proxies.load_proxy,
+      selectedSegment.proxies.novelty_proxy,
+    );
+  }, [selectedSegment]);
+  const focusSegmentIds = useMemo(
+    () => Array.from(new Set([
+      ...(simulation?.lecture_summary.strongest_segment_ids ?? []),
+      ...(simulation?.lecture_summary.risk_segment_ids ?? []),
+    ])),
+    [simulation?.lecture_summary.risk_segment_ids, simulation?.lecture_summary.strongest_segment_ids],
+  );
 
   if (loading) {
     return (
@@ -111,18 +134,18 @@ export default function LectureSimulationSummaryPage() {
             </span>
             <span className="simulation-pill">
               <Brain size={14} />
-              빠르게 읽는 수강자 반응 요약
+              {simulation.metadata.subject}
             </span>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 18 }}>
+          <div className="simulation-article-header">
             <Link to={`/lectures/${date}`} className="simulation-inline-link">
               <ArrowLeft size={16} />
               강의 상세로 돌아가기
             </Link>
-            <h1 className="simulation-title">{simulation.metadata.subject}</h1>
-            <p className="text-body" style={{ maxWidth: 720 }}>
-              {simulation.summary_visual?.hero_statement}
+            <h1 className="simulation-title">{simulation.summary_visual?.hero_statement}</h1>
+            <p className="simulation-article-lead">
+              {simulation.lecture_summary.summary_text}
             </p>
             <div className="simulation-meta-row">
               <span>{formatDate(simulation.lecture_date)}</span>
@@ -149,24 +172,31 @@ export default function LectureSimulationSummaryPage() {
             </div>
             <div className="simulation-summary-stack">
               <div className="simulation-summary-card simulation-summary-card-strong">
-                <p className="text-label">한 줄 결론</p>
-                <p className="text-section" style={{ marginTop: 6 }}>{selectedFrame.title}</p>
+                <p className="text-label">지금 먼저 볼 구간</p>
+                <p className="text-section" style={{ marginTop: 8, fontSize: 22, lineHeight: 1.4 }}>{selectedFrame.title}</p>
                 <p className="text-body" style={{ marginTop: 10 }}>{selectedFrame.subtitle}</p>
                 <div className="simulation-pill-row" style={{ marginTop: 14 }}>
                   {selectedFrame.labels.map((label) => (
                     <span key={label} className="simulation-pill">{label}</span>
                   ))}
                 </div>
+                {selectedSegment ? (
+                  <div className="simulation-metric-grid" style={{ marginTop: 18 }}>
+                    <MetricGauge label="Attention" value={selectedSegment.proxies.attention_proxy} metric="attention" compact />
+                    <MetricGauge label="Load" value={selectedSegment.proxies.load_proxy} metric="load" compact />
+                    <MetricGauge label="Novelty" value={selectedSegment.proxies.novelty_proxy} metric="novelty" compact />
+                  </div>
+                ) : null}
               </div>
               <div className="simulation-summary-link-card">
                 <div>
-                  <p className="text-section">실시간으로 자세히 볼 수 있어요</p>
+                  <p className="text-section">상세 해석은 실시간 화면에서 읽어요</p>
                   <p className="text-body" style={{ marginTop: 6 }}>
-                    스크립트 라인과 반응 패턴을 같이 보면서 지금 설명 중인 위치를 바로 따라갈 수 있어요.
+                    뇌 반응, playhead, 원문 위치를 같은 화면에서 따라가면서 왜 이런 해석이 나왔는지 볼 수 있어요.
                   </p>
                 </div>
-                <Link to={`/lectures/${date}/simulation/live`} className="btn-secondary">
-                  실시간 보기
+                <Link to={`/lectures/${date}/simulation/live`} className="btn-primary">
+                  실시간 시뮬레이션 보기
                   <ChevronRight size={16} />
                 </Link>
               </div>
@@ -174,31 +204,24 @@ export default function LectureSimulationSummaryPage() {
           </div>
         </div>
 
-        <div className="card card-padded simulation-side-card">
-          <p className="text-label" style={{ marginBottom: 12 }}>이 결과를 이렇게 읽어요</p>
-          <div className="simulation-method-card-stack">
-            <div>
-              <p className="text-section" style={{ marginBottom: 4 }}>입력</p>
-              <p className="text-body">{simulation.roi_summary?.method_explainer.input_summary}</p>
+        <aside className="simulation-aside-card">
+          <p className="simulation-aside-heading">이 화면에서 알 수 있는 것</p>
+          <div className="simulation-aside-list">
+            <div className="simulation-aside-item">
+              반응이 큰 구간과 주의 구간을 먼저 고르고, 필요한 구간만 live에서 깊게 봅니다.
             </div>
-            <div>
-              <p className="text-section" style={{ marginBottom: 4 }}>숫자</p>
-              <p className="text-body">{simulation.roi_summary?.method_explainer.proxy_summary}</p>
+            <div className="simulation-aside-item">
+              이 화면의 숫자는 실제 감정 측정이 아니라 attention, load, novelty 프록시를 묶은 실험용 해석입니다.
             </div>
-            <div>
-              <p className="text-section" style={{ marginBottom: 4 }}>영역</p>
-              <p className="text-body">{simulation.roi_summary?.method_explainer.roi_summary}</p>
-            </div>
-            <div>
-              <p className="text-section" style={{ marginBottom: 4 }}>주의할 점</p>
-              <p className="text-body">실측 감정이 아니라 강도와 변화량을 묶어 읽는 실험용 프록시예요.</p>
-            </div>
-            <div className="simulation-callout">
-              <AlertTriangle size={16} />
-              <p>{simulation.lecture_summary.caution_text}</p>
+            <div className="simulation-aside-item">
+              ROI 이름보다 지금 강의가 어떤 패턴으로 읽히는지에 집중해서 보도록 정리했습니다.
             </div>
           </div>
-        </div>
+          <div className="simulation-callout">
+            <AlertTriangle size={16} />
+            <p>{simulation.lecture_summary.caution_text}</p>
+          </div>
+        </aside>
       </div>
 
       <div className="tab-bar" role="tablist">
@@ -211,88 +234,102 @@ export default function LectureSimulationSummaryPage() {
         </Link>
       </div>
 
-      <div className="simulation-summary-card-grid">
-        {simulation.summary_visual?.highlight_cards.map((card) => (
-          <button
-            key={card.kind}
-            className="card card-padded simulation-highlight-card"
-            onClick={() => {
-              const frameIndex = summaryVisual.frames.findIndex((frame) => frame.segment_id === card.segment_id);
-              setSelectedFrameIndex(frameIndex >= 0 ? frameIndex : 0);
-            }}
-          >
-            <p className="text-label">{highlightLabel(card.kind)}</p>
-            <p className="text-section" style={{ marginTop: 8 }}>{card.segment_id}</p>
-            <p className="text-body" style={{ marginTop: 10 }}>{card.summary}</p>
-            <p className="simulation-highlight-value">{card.value.toFixed(1)}</p>
-          </button>
-        ))}
-      </div>
-
       <div className="simulation-summary-grid">
         <div className="card card-padded">
           <div className="simulation-panel-header">
             <div>
-              <p className="text-section">강의 리듬 요약</p>
-              <p className="text-caption">눈에 띄는 구간만 먼저 빠르게 읽어요.</p>
+              <p className="text-section">구간 바로 보기</p>
+              <p className="text-caption">주요 장면만 먼저 훑고, 필요한 구간을 눌러 상세 해석으로 이동해요.</p>
             </div>
             <span className="simulation-pill">결론 먼저</span>
           </div>
-          <div style={{ display: "grid", gap: 12, marginTop: 16 }}>
-            <div className="simulation-summary-row">
-              <span className="text-label">반응이 큰 구간</span>
-              <div className="simulation-pill-row">
-                {simulation.lecture_summary.strongest_segment_ids.map((segmentId) => (
-                  <Link key={segmentId} to={`/lectures/${date}/simulation/live?segment=${segmentId}`} className="simulation-pill-button">
-                    {segmentId}
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div className="simulation-summary-row">
-              <span className="text-label">주의 구간</span>
-              <div className="simulation-pill-row">
-                {simulation.lecture_summary.risk_segment_ids.map((segmentId) => (
-                  <Link key={segmentId} to={`/lectures/${date}/simulation/live?segment=${segmentId}`} className="simulation-pill-button">
-                    {segmentId}
-                  </Link>
-                ))}
-              </div>
-            </div>
-            <div className="simulation-callout">
-              <Sparkles size={16} />
-              <p>{simulation.lecture_summary.summary_text}</p>
-            </div>
+          <div className="simulation-feature-list" style={{ marginTop: 22 }}>
+            {simulation.summary_visual?.highlight_cards.map((card) => (
+              <button
+                key={card.kind}
+                className="simulation-feature-row"
+                onClick={() => {
+                  const frameIndex = summaryVisual.frames.findIndex((frame) => frame.segment_id === card.segment_id);
+                  setSelectedFrameIndex(frameIndex >= 0 ? frameIndex : 0);
+                }}
+              >
+                <div className="simulation-feature-row-copy">
+                  <div className="simulation-pill-row">
+                    <span className={`simulation-pill ${card.segment_id === selectedFrame.segment_id ? "simulation-pill-primary" : ""}`}>
+                      {card.segment_id}
+                    </span>
+                    <span className="simulation-pill">{highlightLabel(card.kind)}</span>
+                  </div>
+                  <p className="text-section" style={{ marginTop: 2, fontSize: 20, lineHeight: 1.45 }}>{card.summary}</p>
+                  <p className="text-body">
+                    {card.segment_id} 구간을 먼저 눌러 고정하고, 실시간 보기에서 같은 위치를 이어서 읽을 수 있어요.
+                  </p>
+                </div>
+                <div className="simulation-feature-row-figure" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 18 }}>
+                  <span className={`simulation-pill ${card.segment_id === selectedFrame.segment_id ? "simulation-pill-primary" : ""}`}>
+                    {card.kind === "attention" ? "attention" : card.kind === "load" ? "load" : "novelty"}
+                  </span>
+                  <div style={{ display: "grid", gap: 4 }}>
+                    <p className="text-label">segment</p>
+                    <p className="text-section" style={{ fontSize: 18 }}>{card.segment_id}</p>
+                    <p className="text-caption">proxy score {card.value.toFixed(1)}</p>
+                  </div>
+                </div>
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="card card-padded">
-          <p className="text-section" style={{ marginBottom: 10 }}>영역 상위 패턴</p>
-          <div className="simulation-roi-list">
-            {simulation.roi_summary?.lecture_top_rois.slice(0, 5).map((roi) => {
-              const level = roiResponseLevel(roi.mean_abs_response);
-              return (
-                <div key={`${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
-                  <div>
-                    <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
-                    <p className="text-caption">{roiHintDescription(roi.functional_hint)}</p>
-                  </div>
-                  <span className="text-caption" style={{ flexShrink: 0 }}>{level.label} · {roi.hemisphere === "left" ? "좌" : "우"}</span>
-                </div>
-              );
-            })}
-          </div>
-          {selectedSegment && (
-            <div className="simulation-summary-selected">
-              <p className="text-label">지금 보고 있는 구간</p>
-              <p className="text-body" style={{ marginTop: 8 }}>{selectedSegment.roi_insights?.summary_text}</p>
-              <div className="simulation-metric-grid" style={{ marginTop: 12 }}>
-                <MetricGauge label="Attention" value={selectedSegment.proxies.attention_proxy} metric="attention" compact />
-                <MetricGauge label="Load" value={selectedSegment.proxies.load_proxy} metric="load" compact />
-                <MetricGauge label="Novelty" value={selectedSegment.proxies.novelty_proxy} metric="novelty" compact />
+        <div className="simulation-aside-card">
+          <p className="simulation-aside-heading">현재 선택한 구간 해석</p>
+          {selectedCombo ? (
+            <div className="simulation-summary-selected" style={{ marginTop: 0 }}>
+              <div className="simulation-pill-row">
+                <span className="simulation-pill simulation-pill-primary">{selectedCombo.pattern}</span>
+                {selectedFlowZone ? <span className="simulation-pill">flow candidate</span> : null}
+              </div>
+              <p className="text-body" style={{ marginTop: 12 }}>{selectedCombo.diagnosis}</p>
+              <p className="text-caption" style={{ marginTop: 8 }}>{selectedCombo.suggestion}</p>
+            </div>
+          ) : null}
+          {selectedSegment ? (
+            <div className="sim-stack-md">
+              <div className="sim-stack-xs">
+                <p className="text-label">ROI 요약</p>
+                <p className="text-body">{selectedSegment.roi_insights?.summary_text}</p>
+                {selectedSegment.roi_insights?.top_active_rois[0] ? (
+                  <p className="text-caption">
+                    {roiNeuroscienceHint(selectedSegment.roi_insights.top_active_rois[0].functional_hint)}
+                  </p>
+                ) : null}
+              </div>
+              <div className="simulation-roi-list">
+                {simulation.roi_summary?.lecture_top_rois.slice(0, 4).map((roi) => {
+                  const level = roiResponseLevel(roi.mean_abs_response);
+                  return (
+                    <div key={`${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
+                      <div>
+                        <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
+                        <p className="text-caption">{roiHintDescription(roi.functional_hint)}</p>
+                      </div>
+                      <span className="text-caption" style={{ flexShrink: 0 }}>{level.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="simulation-pill-row">
+                {focusSegmentIds.map((segmentId) => (
+                  <Link key={segmentId} to={`/lectures/${date}/simulation/live?segment=${segmentId}`} className="simulation-pill-button">
+                    {segmentId}
+                  </Link>
+                ))}
+              </div>
+              <div className="simulation-callout">
+                <Waypoints size={16} />
+                <p>{simulation.roi_summary?.method_explainer.roi_summary}</p>
               </div>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

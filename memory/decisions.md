@@ -1,5 +1,19 @@
 # 결정 기록
 
+## 2026-04-01
+
+### TRIBE 시뮬레이션 화면은 Toss 기사형 레이아웃 리듬 + 오렌지/모노톤 팔레트로 고정
+
+- 결정: simulation summary/live/transcript/detail 카드는 기존 혼합 대시보드 스타일 대신 Toss 계열 기사형 레이아웃 리듬을 직접 차용하고, 색상은 블루 계열을 버리고 `오렌지 포인트 + 흰색/검은색/회색`으로 재매핑한다.
+- 이유: 기존 화면은 카드 수와 강조 포인트가 너무 많아 first glance가 흐렸고, 사용자 요청도 "레퍼런스를 거의 그대로 가져오되 색만 오렌지/모노톤으로 바꾸기"였다.
+- 결과: `summary`는 hero + aside + feature row, `live`는 좌측 stage + 우측 해석 rail, `transcript`는 읽기 중심 column, `lecture detail`은 teaser + 단일 CTA 구조로 정리했다.
+
+### 강의 상세의 시뮬레이션 카드는 중복 요약 대신 단일 CTA로 운영
+
+- 결정: 강의 상세 페이지에서는 simulation summary 텍스트, caution, 다중 CTA를 두지 않고 compact teaser와 `시뮬레이션 보기` 버튼 하나만 남긴다.
+- 이유: 상세 페이지 안에서 이미 결론을 소비하게 만들면 simulation summary 화면의 역할이 사라지고, 정보 위계가 다시 겹친다.
+- 결과: 강의 상세는 simulation 진입 역할만 맡고, 실제 해석은 `/lectures/:date/simulation` 이하 전용 화면에서 읽도록 흐름을 고정했다.
+
 ## 2026-03-31
 
 ### 프론트 정적 data/mesh 자산 경로는 항상 `BASE_URL` 기준으로 resolve

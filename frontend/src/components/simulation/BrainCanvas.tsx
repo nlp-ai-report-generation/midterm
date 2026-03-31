@@ -112,7 +112,7 @@ function BrainModel({ meshUrl, colors, intensity, changeBoost, variant = "live" 
     clone.traverse((child) => {
       if (!(child instanceof Mesh)) return;
       child.material = new MeshStandardMaterial({
-        color: variant === "summary" ? "#fff6ef" : "#fff8f2",
+        color: variant === "summary" ? "#fff7f1" : "#fffaf6",
         roughness: 1,
         metalness: 0,
         side: BackSide,
@@ -171,10 +171,10 @@ function LoadingState() {
 export default function BrainCanvas({ meshUrl, colors, intensity, changeBoost, variant = "live" }: BrainCanvasProps) {
   return (
     <Canvas camera={{ position: variant === "summary" ? [0, 0.14, 5.1] : [0, 0.2, 4.9], fov: variant === "summary" ? 32 : 34 }}>
-      <color attach="background" args={[variant === "summary" ? "#faf7f2" : "#f7f8fb"]} />
-      <ambientLight intensity={variant === "summary" ? 1.18 : 1.35} />
-      <directionalLight position={[3.2, 4.4, 4.6]} intensity={variant === "summary" ? 1.25 : 1.45} color="#fff5eb" />
-      <directionalLight position={[-4.5, 0.8, 2.6]} intensity={variant === "summary" ? 0.62 : 0.9} color="#ffd9bf" />
+      <color attach="background" args={[variant === "summary" ? "#fff9f4" : "#fffaf7"]} />
+      <ambientLight intensity={variant === "summary" ? 1.1 : 1.25} />
+      <directionalLight position={[3.2, 4.4, 4.6]} intensity={variant === "summary" ? 1.18 : 1.34} color="#fff1e4" />
+      <directionalLight position={[-4.5, 0.8, 2.6]} intensity={variant === "summary" ? 0.56 : 0.82} color="#ffd3b0" />
       <directionalLight position={[0, -3.2, 2.4]} intensity={variant === "summary" ? 0.18 : 0.35} color="#ffffff" />
       <Suspense fallback={<LoadingState />}>
         <BrainModel meshUrl={meshUrl} colors={colors} intensity={intensity} changeBoost={changeBoost} variant={variant} />

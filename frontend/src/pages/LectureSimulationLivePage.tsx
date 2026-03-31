@@ -237,7 +237,7 @@ export default function LectureSimulationLivePage() {
   return (
     <div className="page-content">
       <div className="simulation-hero">
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div className="card card-padded simulation-summary-stage">
           <div className="simulation-pill-row">
             <span className="simulation-pill simulation-pill-primary">
               <Sparkles size={14} />
@@ -248,14 +248,14 @@ export default function LectureSimulationLivePage() {
               {modalityLabel(simulation.source_modality)}
             </span>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div className="simulation-article-header">
             <Link to={`/lectures/${date}/simulation`} className="simulation-inline-link">
               <ArrowLeft size={16} />
               요약 화면으로 돌아가기
             </Link>
             <h1 className="simulation-title">{simulation.metadata.subject} 실시간 시뮬레이션</h1>
-            <p className="text-body" style={{ maxWidth: 740 }}>
-              지금 설명 중인 스크립트 라인에 맞춰 뇌 시뮬레이션, Risk Timeline, ROI 요약을 같이 따라가요.
+            <p className="simulation-article-lead">
+              지금 읽히는 줄에 맞춰 뇌 반응, risk timeline, 패턴 해석을 한 시야에서 따라가도록 재정리한 화면입니다.
             </p>
             <div className="simulation-meta-row">
               <span>{formatDate(simulation.lecture_date)}</span>
@@ -267,16 +267,14 @@ export default function LectureSimulationLivePage() {
           </div>
         </div>
 
-        <div className="card card-padded simulation-side-card">
-          <p className="text-label" style={{ marginBottom: 12 }}>이 화면은 이렇게 봐요</p>
-          <div className="simulation-live-line-card">
-            <div style={{ display: "grid", gap: 10 }}>
-              <p className="text-body">왼쪽에서는 뇌 반응과 Risk Timeline이 같이 움직여요.</p>
-              <p className="text-body">오른쪽에서는 지금 줄과 바로 앞뒤 줄을 같이 읽을 수 있어요.</p>
-              <p className="text-body">더 긴 원문이 필요하면 원문 전체 보기로 바로 넘어갈 수 있어요.</p>
-            </div>
+        <aside className="simulation-aside-card">
+          <p className="simulation-aside-heading">이 화면은 이렇게 보면 됩니다</p>
+          <div className="simulation-aside-list">
+            <div className="simulation-aside-item">왼쪽 stage는 brain, 스크럽, timeline이 같이 움직이는 핵심 화면입니다.</div>
+            <div className="simulation-aside-item">오른쪽 rail은 현재 줄과 현재 패턴만 남겨 해석을 짧게 읽게 만듭니다.</div>
+            <div className="simulation-aside-item">전체 원문이 필요하면 transcript 화면으로 넘어가 같은 위치에서 계속 읽을 수 있습니다.</div>
           </div>
-        </div>
+        </aside>
       </div>
 
       <div className="tab-bar" role="tablist">
@@ -293,30 +291,20 @@ export default function LectureSimulationLivePage() {
         <div className="card card-padded">
           <div className="simulation-panel-header">
             <div>
-              <p className="text-section">Brain Live Panel</p>
-              <p className="text-caption">라인 선택과 재생 위치에 맞춰 현재 구간을 같이 보여줘요.</p>
+              <p className="text-section">Live Stage</p>
+              <p className="text-caption">핵심 조작과 3D 시각화를 한 덩어리로 배치했습니다.</p>
             </div>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <button className="btn-secondary" onClick={() => setIsPlaying((prev) => !prev)}>
                 {isPlaying ? <Pause size={16} /> : <Play size={16} />}
                 {isPlaying ? "정지" : "재생"}
               </button>
-              <div style={{ display: "flex", gap: 2 }}>
+              <div className="simulation-speed-group">
                 {[0.5, 1, 2].map((speed) => (
                   <button
                     key={speed}
                     onClick={() => setPlaybackSpeed(speed)}
-                    style={{
-                      padding: "6px 10px",
-                      fontSize: 12,
-                      fontWeight: playbackSpeed === speed ? 800 : 600,
-                      borderRadius: "var(--radius-sm)",
-                      border: "1px solid",
-                      borderColor: playbackSpeed === speed ? "var(--primary)" : "var(--border)",
-                      background: playbackSpeed === speed ? "var(--primary-light)" : "var(--surface)",
-                      color: playbackSpeed === speed ? "var(--primary)" : "var(--text-secondary)",
-                      cursor: "pointer",
-                    }}
+                    className={`simulation-speed-button ${playbackSpeed === speed ? "simulation-speed-button-active" : ""}`}
                   >
                     {speed}x
                   </button>
@@ -325,123 +313,150 @@ export default function LectureSimulationLivePage() {
             </div>
           </div>
 
-          <div className="simulation-brain-shell">
-            <BrainCanvas
-              meshUrl={simulation.assets.mesh_glb}
-              colors={currentColorSegment.hemispheres}
-              intensity={currentFrame.heuristic_intensity}
-              changeBoost={currentFrame.heuristic_change_boost}
-            />
+          <div className="simulation-stage-card" style={{ marginTop: 22 }}>
+            <div className="simulation-panel-header">
+              <div className="simulation-pill-row">
+                <span className="simulation-pill simulation-pill-primary">{currentSegment.segment_id}</span>
+                <span className="simulation-pill">{currentLine.timestamp}</span>
+                {currentFlowZone ? <span className="simulation-pill">flow candidate</span> : null}
+              </div>
+              <span className="simulation-mini-meta">{currentFrameIndex + 1} / {liveFrames.frames.length}</span>
+            </div>
+
+            <div className="simulation-brain-shell">
+              <BrainCanvas
+                meshUrl={simulation.assets.mesh_glb}
+                colors={currentColorSegment.hemispheres}
+                intensity={currentFrame.heuristic_intensity}
+                changeBoost={currentFrame.heuristic_change_boost}
+              />
+            </div>
+
+            <div className="simulation-live-controls">
+              <div className="simulation-slider-head">
+                <span className="text-label">라인 스크럽</span>
+                <span className="text-caption">
+                  {currentLine.start_time} - {currentLine.end_time}
+                </span>
+              </div>
+              <input
+                className="progress-bar"
+                type="range"
+                min={0}
+                max={liveFrames.frames.length - 1}
+                value={currentFrameIndex}
+                onChange={(event) => {
+                  setIsPlaying(false);
+                  setCurrentFrameIndex(Number(event.target.value));
+                }}
+              />
+              <div className="simulation-pill-row">
+                {simulation.lecture_summary.strongest_segment_ids.concat(simulation.lecture_summary.risk_segment_ids).slice(0, 4).map((segmentId) => (
+                  <button
+                    key={segmentId}
+                    className="simulation-pill-button"
+                    onClick={() => {
+                      const nextIndex = liveFrames.frames.findIndex((frame) => frame.segment_id === segmentId);
+                      if (nextIndex >= 0) {
+                        jumpToFrame(nextIndex);
+                      }
+                    }}
+                  >
+                    {segmentId}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <div className="simulation-live-controls">
-            <div className="simulation-slider-head">
-              <span className="text-label">라인 스크럽</span>
-              <span className="text-caption">
-                {currentFrameIndex + 1} / {liveFrames.frames.length} · {currentLine.start_time} - {currentLine.end_time}
-              </span>
+          <div className="simulation-chart-card">
+            <div className="simulation-panel-header">
+              <div>
+                <p className="text-section">Risk Timeline</p>
+                <p className="text-caption">현재 줄과 같은 위치의 playhead를 보여줍니다.</p>
+              </div>
+              <Link
+                to={`/lectures/${date}/simulation/live/transcript?segment=${currentSegment.segment_id}`}
+                className="simulation-inline-link"
+              >
+                <FileText size={16} />
+                원문 보기
+              </Link>
             </div>
-            <input
-              className="progress-bar"
-              type="range"
-              min={0}
-              max={liveFrames.frames.length - 1}
-              value={currentFrameIndex}
-              onChange={(event) => {
-                setIsPlaying(false);
-                setCurrentFrameIndex(Number(event.target.value));
-              }}
-            />
-            <div className="simulation-pill-row">
-              {simulation.lecture_summary.strongest_segment_ids.concat(simulation.lecture_summary.risk_segment_ids).slice(0, 4).map((segmentId) => (
-                <button
-                  key={segmentId}
-                  className="simulation-pill-button"
-                  onClick={() => {
-                    const nextIndex = liveFrames.frames.findIndex((frame) => frame.segment_id === segmentId);
-                    if (nextIndex >= 0) {
-                      jumpToFrame(nextIndex);
-                    }
+
+            <div style={{ height: 238 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={timelineData}
+                  margin={{ top: 12, right: 8, left: -20, bottom: 0 }}
+                  onClick={(state) => {
+                    const lineIndex = (state as { activePayload?: Array<{ payload?: { line_index?: number } }> } | undefined)
+                      ?.activePayload?.[0]?.payload?.line_index;
+                    if (typeof lineIndex !== "number") return;
+                    jumpToFrame(lineIndex);
                   }}
                 >
-                  {segmentId}
-                </button>
-              ))}
+                  <CartesianGrid stroke="var(--grey-100)" vertical={false} />
+                  {simulation.lecture_summary.strongest_segment_ids.map((segmentId) => {
+                    const bounds = segmentFrameBounds.get(segmentId);
+                    if (!bounds) return null;
+                    return (
+                      <ReferenceArea
+                        key={`strong-${segmentId}`}
+                        x1={bounds.start}
+                        x2={bounds.end}
+                        fill="rgba(255, 107, 0, 0.08)"
+                        strokeOpacity={0}
+                      />
+                    );
+                  })}
+                  {simulation.lecture_summary.risk_segment_ids.map((segmentId) => {
+                    const bounds = segmentFrameBounds.get(segmentId);
+                    if (!bounds) return null;
+                    return (
+                      <ReferenceArea
+                        key={`risk-${segmentId}`}
+                        x1={bounds.start}
+                        x2={bounds.end}
+                        fill="rgba(17, 17, 17, 0.05)"
+                        strokeOpacity={0}
+                      />
+                    );
+                  })}
+                  <ReferenceLine
+                    x={currentTimelineFrame.lecture_seconds}
+                    stroke="var(--primary)"
+                    strokeWidth={2}
+                  />
+                  <XAxis
+                    dataKey="lecture_seconds"
+                    type="number"
+                    domain={["dataMin", "dataMax"]}
+                    tick={{ fontSize: 12, fill: "var(--text-muted)" }}
+                    tickFormatter={(value) => {
+                      const minutes = Math.floor(Number(value) / 60);
+                      const seconds = Math.floor(Number(value) % 60);
+                      return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+                    }}
+                  />
+                  <YAxis domain={[0, 100]} tick={{ fontSize: 12, fill: "var(--text-muted)" }} />
+                  <Tooltip
+                    formatter={(value, key) => {
+                      const numeric = typeof value === "number" ? value : Number(value ?? 0);
+                      return [`${numeric.toFixed(1)}`, String(key)];
+                    }}
+                    labelFormatter={(label) => {
+                      const minutes = Math.floor(Number(label) / 60);
+                      const seconds = Math.floor(Number(label) % 60);
+                      return `재생 위치 ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+                    }}
+                  />
+                  <Line type="basis" dataKey="attention_display" stroke="var(--primary)" strokeWidth={2.5} dot={false} name="Attention" connectNulls />
+                  <Line type="basis" dataKey="load_display" stroke="var(--grey-800)" strokeWidth={2} dot={false} name="Load" connectNulls />
+                  <Line type="basis" dataKey="novelty_display" stroke="var(--grey-500)" strokeWidth={2} dot={false} name="Novelty" connectNulls />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
-          </div>
-
-          <div style={{ height: 238, marginTop: 22 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={timelineData}
-                margin={{ top: 12, right: 8, left: -20, bottom: 0 }}
-                onClick={(state) => {
-                  const lineIndex = (state as { activePayload?: Array<{ payload?: { line_index?: number } }> } | undefined)
-                    ?.activePayload?.[0]?.payload?.line_index;
-                  if (typeof lineIndex !== "number") return;
-                  jumpToFrame(lineIndex);
-                }}
-              >
-                <CartesianGrid stroke="var(--grey-100)" vertical={false} />
-                {simulation.lecture_summary.strongest_segment_ids.map((segmentId) => {
-                  const bounds = segmentFrameBounds.get(segmentId);
-                  if (!bounds) return null;
-                  return (
-                    <ReferenceArea
-                      key={`strong-${segmentId}`}
-                      x1={bounds.start}
-                      x2={bounds.end}
-                      fill="rgba(255, 107, 0, 0.06)"
-                      strokeOpacity={0}
-                    />
-                  );
-                })}
-                {simulation.lecture_summary.risk_segment_ids.map((segmentId) => {
-                  const bounds = segmentFrameBounds.get(segmentId);
-                  if (!bounds) return null;
-                  return (
-                    <ReferenceArea
-                      key={`risk-${segmentId}`}
-                      x1={bounds.start}
-                      x2={bounds.end}
-                      fill="rgba(239, 68, 68, 0.07)"
-                      strokeOpacity={0}
-                    />
-                  );
-                })}
-                <ReferenceLine
-                  x={currentTimelineFrame.lecture_seconds}
-                  stroke="var(--primary)"
-                  strokeWidth={2}
-                />
-                <XAxis
-                  dataKey="lecture_seconds"
-                  type="number"
-                  domain={["dataMin", "dataMax"]}
-                  tick={{ fontSize: 12, fill: "var(--text-muted)" }}
-                  tickFormatter={(value) => {
-                    const minutes = Math.floor(Number(value) / 60);
-                    const seconds = Math.floor(Number(value) % 60);
-                    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-                  }}
-                />
-                <YAxis domain={[0, 100]} tick={{ fontSize: 12, fill: "var(--text-muted)" }} />
-                <Tooltip
-                  formatter={(value, key) => {
-                    const numeric = typeof value === "number" ? value : Number(value ?? 0);
-                    return [`${numeric.toFixed(1)}`, String(key)];
-                  }}
-                  labelFormatter={(label) => {
-                    const minutes = Math.floor(Number(label) / 60);
-                    const seconds = Math.floor(Number(label) % 60);
-                    return `재생 위치 ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-                  }}
-                />
-                <Line type="basis" dataKey="attention_display" stroke="var(--primary)" strokeWidth={2.5} dot={false} name="Attention" connectNulls />
-                <Line type="basis" dataKey="load_display" stroke="#ef4444" strokeWidth={2} dot={false} name="Load" connectNulls />
-                <Line type="basis" dataKey="novelty_display" stroke="#0f172a" strokeWidth={2} dot={false} name="Novelty" connectNulls />
-              </LineChart>
-            </ResponsiveContainer>
           </div>
 
           <div className="simulation-callout" style={{ marginTop: 18 }}>
@@ -457,7 +472,7 @@ export default function LectureSimulationLivePage() {
           <div className="card card-padded">
             <div className="simulation-panel-header">
               <div>
-                <p className="text-section">지금 설명 중인 줄</p>
+                <p className="text-section">현재 줄</p>
                 <p className="text-caption">{currentSegment.segment_id} · {currentLine.timestamp}</p>
               </div>
               <span className="simulation-state-dot" style={{ background: segmentTone(currentSegment) }} />
@@ -466,10 +481,16 @@ export default function LectureSimulationLivePage() {
             <div className="simulation-live-now-card">
               <p className="text-body">{currentLine.text}</p>
             </div>
-            <div className="simulation-panel-header" style={{ marginTop: 18 }}>
+
+            <div className="simulation-callout" style={{ marginTop: 16 }}>
+              <ScanText size={16} />
+              <p><strong>{lineInterpretation.dominantSignal}</strong> — {lineInterpretation.microSummary}</p>
+            </div>
+
+            <div className="simulation-panel-header" style={{ marginTop: 20 }}>
               <div>
                 <p className="text-section">지금 읽히는 패턴</p>
-                <p className="text-caption">현재 줄에서 왜 이렇게 보이는지 바로 읽어요.</p>
+                <p className="text-caption">현재 줄에서 왜 이렇게 읽히는지 한 문단으로 요약합니다.</p>
               </div>
               <Link
                 to={`/lectures/${date}/simulation/live/transcript?segment=${currentSegment.segment_id}`}
@@ -480,29 +501,14 @@ export default function LectureSimulationLivePage() {
               </Link>
             </div>
 
-            <div className="simulation-combo-card" style={{
-              marginTop: 16,
-              background: comboInterpretation.severity === "success" ? "rgba(34,197,94,0.06)" :
-                comboInterpretation.severity === "warning" ? "rgba(239,68,68,0.06)" :
-                comboInterpretation.severity === "caution" ? "rgba(245,158,11,0.06)" : "var(--grey-50)",
-              borderColor: comboInterpretation.severity === "success" ? "rgba(34,197,94,0.2)" :
-                comboInterpretation.severity === "warning" ? "rgba(239,68,68,0.2)" :
-                comboInterpretation.severity === "caution" ? "rgba(245,158,11,0.2)" : "var(--border)",
-            }}>
+            <div className="simulation-combo-card" style={{ marginTop: 16 }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                  <span className="simulation-combo-badge" style={{
-                    color: comboInterpretation.severity === "success" ? "var(--color-flow)" :
-                      comboInterpretation.severity === "warning" ? "var(--color-risk)" :
-                      comboInterpretation.severity === "caution" ? "var(--color-caution)" : "var(--grey-700)",
-                    background: comboInterpretation.severity === "success" ? "rgba(34,197,94,0.12)" :
-                      comboInterpretation.severity === "warning" ? "rgba(239,68,68,0.12)" :
-                      comboInterpretation.severity === "caution" ? "rgba(245,158,11,0.12)" : "rgba(51,65,85,0.08)",
-                  }}>
+                  <span className="simulation-combo-badge" style={{ color: "var(--primary)", background: "rgba(255,107,0,0.12)" }}>
                     {comboInterpretation.pattern}
                   </span>
                   {currentFlowZone && (
-                    <span className="simulation-flow-indicator" style={{ color: "var(--color-flow)", borderColor: "rgba(34,197,94,0.3)" }}>
+                    <span className="simulation-flow-indicator" style={{ color: "var(--primary)", borderColor: "rgba(255,107,0,0.22)" }}>
                       <Sparkles size={12} />
                       Flow
                     </span>
@@ -523,13 +529,13 @@ export default function LectureSimulationLivePage() {
 
             {derivedMetrics && (
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 12 }}>
-                <div style={{ padding: "10px 14px", borderRadius: "var(--radius-inner)", background: "var(--grey-50)" }}>
+                <div style={{ padding: "10px 14px", borderRadius: "var(--radius-inner)", background: "var(--grey-50)", border: "1px solid rgba(17,17,17,0.05)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span className="text-label">리듬 변이</span>
                     <span style={{
                       fontSize: 11, fontWeight: 700, padding: "2px 7px", borderRadius: 999,
-                      color: derivedMetrics.pacing >= 35 ? "var(--color-flow)" : "var(--color-caution)",
-                      background: derivedMetrics.pacing >= 35 ? "rgba(34,197,94,0.10)" : "rgba(245,158,11,0.10)",
+                      color: derivedMetrics.pacing >= 35 ? "var(--primary)" : "var(--grey-600)",
+                      background: derivedMetrics.pacing >= 35 ? "rgba(255,107,0,0.10)" : "rgba(100,116,139,0.10)",
                     }}>
                       {derivedMetrics.pacingLabel}
                     </span>
@@ -538,13 +544,13 @@ export default function LectureSimulationLivePage() {
                     문장 길이 변이 — {derivedMetrics.pacing >= 35 ? "설명에 강약이 있어요" : "단조로운 흐름이에요"}
                   </p>
                 </div>
-                <div style={{ padding: "10px 14px", borderRadius: "var(--radius-inner)", background: "var(--grey-50)" }}>
+                <div style={{ padding: "10px 14px", borderRadius: "var(--radius-inner)", background: "var(--grey-50)", border: "1px solid rgba(17,17,17,0.05)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <span className="text-label">참여 유도</span>
                     <span style={{
                       fontSize: 11, fontWeight: 700, padding: "2px 7px", borderRadius: 999,
-                      color: derivedMetrics.engagementCue >= 20 ? "var(--color-flow)" : "var(--color-caution)",
-                      background: derivedMetrics.engagementCue >= 20 ? "rgba(34,197,94,0.10)" : "rgba(245,158,11,0.10)",
+                      color: derivedMetrics.engagementCue >= 20 ? "var(--primary)" : "var(--grey-600)",
+                      background: derivedMetrics.engagementCue >= 20 ? "rgba(255,107,0,0.10)" : "rgba(100,116,139,0.10)",
                     }}>
                       {derivedMetrics.engagementLabel}
                     </span>
@@ -561,18 +567,13 @@ export default function LectureSimulationLivePage() {
                 <span key={tag} className="simulation-pill">{tag}</span>
               ))}
             </div>
-
-            <div className="simulation-callout" style={{ marginTop: 18 }}>
-              <ScanText size={16} />
-              <p><strong>{lineInterpretation.dominantSignal}</strong> — {lineInterpretation.microSummary}</p>
-            </div>
           </div>
 
           <div className="card card-padded">
             <div className="simulation-panel-header">
               <div>
                 <p className="text-section">뇌 기능 프로필</p>
-                <p className="text-caption">단순 크기가 아니라 어떤 뇌 영역이 활발한지 보여줘요.</p>
+                <p className="text-caption">ROI 이름보다 지금 강의가 어떤 기능 패턴으로 읽히는지 보여줍니다.</p>
               </div>
               <span className="simulation-pill">
                 <Brain size={14} />
@@ -587,11 +588,7 @@ export default function LectureSimulationLivePage() {
               );
               return (
                 <>
-                  <div className="simulation-combo-card" style={{
-                    marginTop: 14,
-                    background: "rgba(255,107,0,0.04)",
-                    borderColor: "rgba(255,107,0,0.15)",
-                  }}>
+                  <div className="simulation-combo-card" style={{ marginTop: 14 }}>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                         <span className="simulation-combo-badge" style={{
@@ -615,7 +612,7 @@ export default function LectureSimulationLivePage() {
                         padding: "8px 12px",
                         borderRadius: "var(--radius-sm)",
                         background: cat.isTop ? "rgba(255,107,0,0.06)" : "var(--grey-50)",
-                        border: cat.isTop ? "1px solid rgba(255,107,0,0.15)" : "1px solid transparent",
+                        border: cat.isTop ? "1px solid rgba(255,107,0,0.15)" : "1px solid rgba(17,17,17,0.04)",
                       }}>
                         <span style={{
                           fontSize: 12, fontWeight: cat.isTop ? 800 : 600,

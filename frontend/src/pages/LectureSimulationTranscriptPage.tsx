@@ -133,7 +133,7 @@ export default function LectureSimulationTranscriptPage() {
   return (
     <div className="page-content">
       <div className="simulation-hero">
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div className="card card-padded simulation-summary-stage">
           <div className="simulation-pill-row">
             <span className="simulation-pill simulation-pill-primary">
               <Sparkles size={14} />
@@ -144,13 +144,13 @@ export default function LectureSimulationTranscriptPage() {
               라인 단위 동기화
             </span>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div className="simulation-article-header">
             <Link to={`/lectures/${date}/simulation/live?segment=${currentSegment.segment_id}`} className="simulation-inline-link">
               <ArrowLeft size={16} />
               실시간 보기로 돌아가기
             </Link>
             <h1 className="simulation-title">{simulation.metadata.subject} 원문 브라우저</h1>
-            <p className="text-body" style={{ maxWidth: 740 }}>
+            <p className="simulation-article-lead">
               지금 읽는 줄이 어느 구간에 있는지 바로 확인하고, 같은 위치의 반응 요약을 함께 따라갈 수 있어요.
             </p>
             <div className="simulation-meta-row">
@@ -163,33 +163,23 @@ export default function LectureSimulationTranscriptPage() {
           </div>
         </div>
 
-        <div className="card card-padded simulation-side-card">
+        <aside className="simulation-aside-card">
           <div className="simulation-panel-header">
             <div>
-              <p className="text-label">Brain Sync Summary</p>
+              <p className="simulation-aside-heading">읽는 방법</p>
               <p className="text-caption">{currentSegment.segment_id} · {currentLine.timestamp}</p>
             </div>
-            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <button className="btn-secondary" onClick={() => setIsPlaying((prev) => !prev)}>
                 {isPlaying ? <Pause size={16} /> : <Play size={16} />}
                 {isPlaying ? "정지" : "재생"}
               </button>
-              <div style={{ display: "flex", gap: 2 }}>
+              <div className="simulation-speed-group">
                 {[0.5, 1, 2].map((speed) => (
                   <button
                     key={speed}
                     onClick={() => setPlaybackSpeed(speed)}
-                    style={{
-                      padding: "4px 8px",
-                      fontSize: 11,
-                      fontWeight: playbackSpeed === speed ? 800 : 600,
-                      borderRadius: "var(--radius-sm)",
-                      border: "1px solid",
-                      borderColor: playbackSpeed === speed ? "var(--primary)" : "var(--border)",
-                      background: playbackSpeed === speed ? "var(--primary-light)" : "var(--surface)",
-                      color: playbackSpeed === speed ? "var(--primary)" : "var(--text-secondary)",
-                      cursor: "pointer",
-                    }}
+                    className={`simulation-speed-button ${playbackSpeed === speed ? "simulation-speed-button-active" : ""}`}
                   >
                     {speed}x
                   </button>
@@ -198,6 +188,11 @@ export default function LectureSimulationTranscriptPage() {
             </div>
           </div>
 
+          <div className="simulation-aside-list" style={{ marginTop: 18 }}>
+            <div className="simulation-aside-item">왼쪽 세그먼트 이동으로 원하는 구간에 바로 점프할 수 있습니다.</div>
+            <div className="simulation-aside-item">활성 줄만 강하게 강조해서 현재 읽는 위치를 바로 찾게 했습니다.</div>
+            <div className="simulation-aside-item">같은 위치의 ROI 해석은 아래 요약 카드 한 장으로만 압축했습니다.</div>
+          </div>
           <div className="simulation-metric-grid" style={{ marginTop: 18 }}>
             <MetricGauge label="Attention" value={currentSegment.proxies.attention_proxy} metric="attention" compact />
             <MetricGauge label="Load" value={currentSegment.proxies.load_proxy} metric="load" compact />
@@ -209,7 +204,7 @@ export default function LectureSimulationTranscriptPage() {
             ))}
           </div>
           <p className="text-body" style={{ marginTop: 18 }}>{currentSegment.roi_insights?.summary_text}</p>
-        </div>
+        </aside>
       </div>
 
       <div className="tab-bar" role="tablist">
@@ -222,12 +217,12 @@ export default function LectureSimulationTranscriptPage() {
         <button className="tab-item active" aria-selected="true">원문 보기</button>
       </div>
 
-      <div className="simulation-transcript-grid">
-        <aside className="card card-padded simulation-segment-nav">
+      <div className="simulation-reading-grid">
+        <aside className="card card-padded simulation-reading-nav">
           <div className="simulation-panel-header">
             <div>
               <p className="text-section">세그먼트 이동</p>
-              <p className="text-caption">구간별로 원문을 빠르게 이동할 수 있어요.</p>
+              <p className="text-caption">읽고 싶은 구간으로 바로 이동해 맥락을 따라갑니다.</p>
             </div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 18 }}>
@@ -245,7 +240,7 @@ export default function LectureSimulationTranscriptPage() {
                   className="simulation-segment-button"
                   style={{
                     borderColor: active ? "var(--primary)" : "var(--border)",
-                    background: active ? "var(--primary-light)" : "var(--surface)",
+                    background: active ? "rgba(255, 107, 0, 0.08)" : "var(--surface)",
                   }}
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
@@ -261,17 +256,32 @@ export default function LectureSimulationTranscriptPage() {
           </div>
         </aside>
 
-        <section className="simulation-transcript-reader">
-          <div className="card card-padded">
+        <section style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          <div className="card card-padded simulation-reading-summary">
             <div className="simulation-panel-header">
               <div>
-                <p className="text-section">현재 구간 해석</p>
-                <p className="text-caption">라인 위치와 같은 구간의 영역 패턴을 같이 봐요.</p>
+                <p className="text-section">현재 줄 해석</p>
+                <p className="text-caption">현재 위치의 반응 해석만 짧게 읽고 바로 본문으로 내려갑니다.</p>
               </div>
               <Link to={`/lectures/${date}/simulation/live?segment=${currentSegment.segment_id}`} className="simulation-inline-link">
                 <Brain size={16} />
                 3D로 보기
               </Link>
+            </div>
+            <div className="simulation-live-now-card" style={{ marginTop: 18 }}>
+              <p className="simulation-mini-meta">{currentSegment.segment_id} · {currentLine.timestamp}</p>
+              <p className="text-body" style={{ marginTop: 10 }}>{currentLine.text}</p>
+            </div>
+            <div className="simulation-callout" style={{ marginTop: 16 }}>
+              <Brain size={16} />
+              <div>
+                <p>{currentSegment.roi_insights?.summary_text}</p>
+                {currentSegment.roi_insights?.top_active_rois[0] && (
+                  <p style={{ marginTop: 6, fontSize: 12, color: "var(--text-muted)" }}>
+                    {roiNeuroscienceHint(currentSegment.roi_insights?.top_active_rois[0].functional_hint)}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="simulation-roi-grid" style={{ marginTop: 18 }}>
               <div className="simulation-roi-card">
@@ -316,24 +326,13 @@ export default function LectureSimulationTranscriptPage() {
                 </div>
               </div>
             </div>
-            <div className="simulation-callout" style={{ marginTop: 18 }}>
-              <Brain size={16} />
-              <div>
-                <p>{currentSegment.roi_insights?.summary_text}</p>
-                {currentSegment.roi_insights?.top_active_rois[0] && (
-                  <p style={{ marginTop: 6, fontSize: 12, color: "var(--text-muted)" }}>
-                    {roiNeuroscienceHint(currentSegment.roi_insights?.top_active_rois[0].functional_hint)}
-                  </p>
-                )}
-              </div>
-            </div>
           </div>
 
-          <div className="card card-padded" style={{ marginTop: 20 }}>
+          <div className="card card-padded simulation-reading-lines">
             <div className="simulation-panel-header">
               <div>
                 <p className="text-section">Transcript Reader</p>
-                <p className="text-caption">현재 줄을 기준으로 자동 스크롤과 하이라이트가 같이 움직여요.</p>
+                <p className="text-caption">현재 줄을 기준으로 자동 스크롤과 하이라이트가 같이 움직입니다.</p>
               </div>
             </div>
 
@@ -341,7 +340,7 @@ export default function LectureSimulationTranscriptPage() {
               {transcript.segments.map((segment, segmentIndex) => (
                 <div
                   key={segment.segment_id}
-                  className="simulation-transcript-card"
+                  className="simulation-reading-section"
                   style={{
                     borderColor: segmentIndex === currentLine.segment_index ? "var(--primary)" : "var(--border)",
                     background: segmentIndex === currentLine.segment_index ? "linear-gradient(180deg, rgba(255,244,235,0.8), rgba(255,255,255,1))" : "var(--surface)",
@@ -369,18 +368,16 @@ export default function LectureSimulationTranscriptPage() {
                           ref={(element) => {
                             lineRefs.current[refKey] = element;
                           }}
-                          className="simulation-live-line-button"
-                          style={{
-                            borderColor: active ? "rgba(255, 107, 0, 0.22)" : "transparent",
-                            background: active ? "rgba(255, 107, 0, 0.08)" : "transparent",
+                          className={`simulation-line-row ${active ? "simulation-line-row-active" : ""}`}
+                          onClick={() => {
+                            jumpToFrame(line.frame_index ?? 0);
                           }}
-                      onClick={() => {
-                        jumpToFrame(line.frame_index ?? 0);
-                      }}
-                    >
-                          <span className="simulation-transcript-time">{line.timestamp}</span>
-                          <span className="simulation-transcript-speaker">{line.speaker}</span>
-                          <p className="text-body" style={{ flex: 1 }}>{line.text}</p>
+                        >
+                          <div className="simulation-line-row-copy">
+                            <span className="simulation-line-row-time">{line.timestamp}</span>
+                            <span className="simulation-line-row-speaker">{line.speaker}</span>
+                            <p className="simulation-line-row-text">{line.text}</p>
+                          </div>
                         </button>
                       );
                     })}
