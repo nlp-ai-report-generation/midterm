@@ -61,7 +61,7 @@ export default function MetricGauge({ label, value, metric, compact }: MetricGau
           style={{ width: `${barPercent}%`, background: color }}
         />
       </div>
-      <p className="metric-gauge-desc">{level.description}</p>
+      <p className="metric-gauge-description">{level.description}</p>
     </div>
   );
 }

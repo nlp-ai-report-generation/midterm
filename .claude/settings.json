@@ -55,7 +55,10 @@
       "Bash(find /Users/youngjinson/멋사-인턴/frontend -name *tailwind* -o -name postcss.config.*)",
       "Bash(git checkout:*)",
       "Bash(git merge:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "mcp__figma__get_design_context",
+      "mcp__figma__get_variable_defs",
+      "mcp__figma__get_screenshot"
     ],
     "additionalDirectories": [
       "/Users/youngjinson/멋사-인턴",
@@ -65,7 +68,8 @@
       "/tmp/midterm-submit/presentation/remotion/public/assets",
       "/private/tmp/midterm-submit/presentation/remotion/public/assets",
       "/tmp/midterm-submit",
-      "/private/tmp/midterm-submit"
+      "/private/tmp/midterm-submit",
+      "/tmp"
     ]
   }
 }

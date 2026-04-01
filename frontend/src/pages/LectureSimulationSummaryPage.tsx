@@ -106,7 +106,7 @@ export default function LectureSimulationSummaryPage() {
 
   if (loading) {
     return (
-      <div className="card card-padded" style={{ minHeight: 280, display: "grid", placeItems: "center" }}>
+      <div className="card card-padded sim-empty-state">
         <div className="text-body">시뮬레이션 요약을 불러오는 중이에요...</div>
       </div>
     );
@@ -114,7 +114,7 @@ export default function LectureSimulationSummaryPage() {
 
   if (error || !simulation || !summaryVisual || !selectedFrame) {
     return (
-      <div className="card card-padded" style={{ minHeight: 280, display: "grid", placeItems: "center", gap: 12 }}>
+      <div className="card card-padded sim-empty-state">
         <div className="text-body">{error || "시뮬레이션 요약이 아직 준비되지 않았어요"}</div>
         <Link to={`/lectures/${date}`} className="btn-secondary">
           강의 상세로 돌아가기
@@ -173,15 +173,15 @@ export default function LectureSimulationSummaryPage() {
             <div className="simulation-summary-stack">
               <div className="simulation-summary-card simulation-summary-card-strong">
                 <p className="text-label">지금 먼저 볼 구간</p>
-                <p className="text-section" style={{ marginTop: 8, fontSize: 22, lineHeight: 1.4 }}>{selectedFrame.title}</p>
-                <p className="text-body" style={{ marginTop: 10 }}>{selectedFrame.subtitle}</p>
-                <div className="simulation-pill-row" style={{ marginTop: 14 }}>
+                <p className="sim-hero-subtitle">{selectedFrame.title}</p>
+                <p className="text-body">{selectedFrame.subtitle}</p>
+                <div className="simulation-pill-row">
                   {selectedFrame.labels.map((label) => (
                     <span key={label} className="simulation-pill">{label}</span>
                   ))}
                 </div>
                 {selectedSegment ? (
-                  <div className="simulation-metric-grid" style={{ marginTop: 18 }}>
+                  <div className="simulation-metric-grid">
                     <MetricGauge label="Attention" value={selectedSegment.proxies.attention_proxy} metric="attention" compact />
                     <MetricGauge label="Load" value={selectedSegment.proxies.load_proxy} metric="load" compact />
                     <MetricGauge label="Novelty" value={selectedSegment.proxies.novelty_proxy} metric="novelty" compact />
@@ -191,7 +191,7 @@ export default function LectureSimulationSummaryPage() {
               <div className="simulation-summary-link-card">
                 <div>
                   <p className="text-section">상세 해석은 실시간 화면에서 읽어요</p>
-                  <p className="text-body" style={{ marginTop: 6 }}>
+                  <p className="text-body">
                     뇌 반응, playhead, 원문 위치를 같은 화면에서 따라가면서 왜 이런 해석이 나왔는지 볼 수 있어요.
                   </p>
                 </div>
@@ -225,12 +225,12 @@ export default function LectureSimulationSummaryPage() {
       </div>
 
       <div className="tab-bar" role="tablist">
-        <button className="tab-item active" aria-selected="true">요약 보기</button>
-        <Link to={`/lectures/${date}/simulation/live`} className="tab-item" style={{ display: "inline-flex", alignItems: "center" }}>
-          실시간 보기
+        <button className="tab-item active" aria-selected="true">요약</button>
+        <Link to={`/lectures/${date}/simulation/live`} className="tab-item">
+          실시간
         </Link>
-        <Link to={`/lectures/${date}/simulation/live/transcript`} className="tab-item" style={{ display: "inline-flex", alignItems: "center" }}>
-          원문 보기
+        <Link to={`/lectures/${date}/simulation/live/transcript`} className="tab-item">
+          원문
         </Link>
       </div>
 
@@ -243,7 +243,7 @@ export default function LectureSimulationSummaryPage() {
             </div>
             <span className="simulation-pill">결론 먼저</span>
           </div>
-          <div className="simulation-feature-list" style={{ marginTop: 22 }}>
+          <div className="simulation-feature-list">
             {simulation.summary_visual?.highlight_cards.map((card) => (
               <button
                 key={card.kind}
@@ -260,18 +260,18 @@ export default function LectureSimulationSummaryPage() {
                     </span>
                     <span className="simulation-pill">{highlightLabel(card.kind)}</span>
                   </div>
-                  <p className="text-section" style={{ marginTop: 2, fontSize: 20, lineHeight: 1.45 }}>{card.summary}</p>
+                  <p className="sim-feature-title">{card.summary}</p>
                   <p className="text-body">
                     {card.segment_id} 구간을 먼저 눌러 고정하고, 실시간 보기에서 같은 위치를 이어서 읽을 수 있어요.
                   </p>
                 </div>
-                <div className="simulation-feature-row-figure" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 18 }}>
+                <div className="simulation-feature-row-figure sim-feature-figure">
                   <span className={`simulation-pill ${card.segment_id === selectedFrame.segment_id ? "simulation-pill-primary" : ""}`}>
                     {card.kind === "attention" ? "attention" : card.kind === "load" ? "load" : "novelty"}
                   </span>
-                  <div style={{ display: "grid", gap: 4 }}>
+                  <div className="sim-feature-figure-detail">
                     <p className="text-label">segment</p>
-                    <p className="text-section" style={{ fontSize: 18 }}>{card.segment_id}</p>
+                    <p className="sim-feature-title">{card.segment_id}</p>
                     <p className="text-caption">proxy score {card.value.toFixed(1)}</p>
                   </div>
                 </div>
@@ -283,13 +283,13 @@ export default function LectureSimulationSummaryPage() {
         <div className="simulation-aside-card">
           <p className="simulation-aside-heading">현재 선택한 구간 해석</p>
           {selectedCombo ? (
-            <div className="simulation-summary-selected" style={{ marginTop: 0 }}>
+            <div className="simulation-summary-selected">
               <div className="simulation-pill-row">
                 <span className="simulation-pill simulation-pill-primary">{selectedCombo.pattern}</span>
                 {selectedFlowZone ? <span className="simulation-pill">flow candidate</span> : null}
               </div>
-              <p className="text-body" style={{ marginTop: 12 }}>{selectedCombo.diagnosis}</p>
-              <p className="text-caption" style={{ marginTop: 8 }}>{selectedCombo.suggestion}</p>
+              <p className="text-body">{selectedCombo.diagnosis}</p>
+              <p className="text-caption">{selectedCombo.suggestion}</p>
             </div>
           ) : null}
           {selectedSegment ? (
@@ -309,10 +309,10 @@ export default function LectureSimulationSummaryPage() {
                   return (
                     <div key={`${roi.hemisphere}-${roi.roi_name}`} className="simulation-roi-item">
                       <div>
-                        <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
+                        <p className="text-section">{hintLabel(roi.functional_hint)}</p>
                         <p className="text-caption">{roiHintDescription(roi.functional_hint)}</p>
                       </div>
-                      <span className="text-caption" style={{ flexShrink: 0 }}>{level.label}</span>
+                      <span className="text-caption sim-flex-shrink-0">{level.label}</span>
                     </div>
                   );
                 })}

@@ -1,38 +1,43 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Brain, FileText, Layers3, Pause, Play, Sparkles, Waypoints } from "lucide-react";
+import { ArrowLeft, Brain, Pause, Play } from "lucide-react";
 import { getSimulation, getSimulationLiveFrames, getSimulationTranscript } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
-import {
-  buildSegmentTags,
-  deduplicateRois,
-  flattenTranscript,
-  hintLabel,
-  roiNeuroscienceHint,
-  roiResponseLevel,
-} from "@/lib/simulation";
-import MetricGauge from "@/components/simulation/MetricGauge";
+import { flattenTranscript } from "@/lib/simulation";
 import type { LiveBrainFramePayload, SimulationResult, TranscriptBrowserData } from "@/types/simulation";
 
-function playbackIntervalMs(currentRelativeSeconds: number, nextRelativeSeconds: number | undefined) {
-  if (typeof nextRelativeSeconds !== "number") return 900;
-  const delta = Math.max(1, nextRelativeSeconds - currentRelativeSeconds);
+/* ─── Constants ─── */
+
+const PLAYBACK_SPEEDS = [0.5, 1, 2] as const;
+
+/* ─── Helpers ─── */
+
+function playbackIntervalMs(currentSec: number, nextSec: number | undefined): number {
+  if (typeof nextSec !== "number") return 900;
+  const delta = Math.max(1, nextSec - currentSec);
   return Math.min(1600, Math.max(650, delta * 130));
 }
+
+/* ─── Component ─── */
 
 export default function LectureSimulationTranscriptPage() {
   const { date = "" } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [initialSegment] = useState(() => searchParams.get("segment"));
+
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [transcript, setTranscript] = useState<TranscriptBrowserData | null>(null);
   const [liveFrames, setLiveFrames] = useState<LiveBrainFramePayload | null>(null);
+
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const lineRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  /* ── Data fetch ── */
 
   useEffect(() => {
     if (!date) return;
@@ -41,79 +46,63 @@ export default function LectureSimulationTranscriptPage() {
     setError("");
 
     Promise.all([getSimulation(date), getSimulationTranscript(date)])
-      .then(async ([simulationResult, transcriptResult]) => {
-        if (!simulationResult.live_assets) throw new Error("live_assets missing");
-        const liveFramePayload = await getSimulationLiveFrames(simulationResult.live_assets.brain_frames_json);
+      .then(async ([sim, trans]) => {
+        if (!sim.live_assets) throw new Error("live_assets missing");
+        const payload = await getSimulationLiveFrames(sim.live_assets.brain_frames_json);
         if (cancelled) return;
-        setSimulation(simulationResult);
-        setTranscript(transcriptResult);
-        setLiveFrames(liveFramePayload);
+
+        setSimulation(sim);
+        setTranscript(trans);
+        setLiveFrames(payload);
 
         if (initialSegment) {
-          const frameIndex = liveFramePayload.frames.findIndex((frame) => frame.segment_id === initialSegment);
-          setCurrentFrameIndex(frameIndex >= 0 ? frameIndex : 0);
-        } else {
-          setCurrentFrameIndex(0);
+          const idx = payload.frames.findIndex((f) => f.segment_id === initialSegment);
+          setCurrentFrameIndex(idx >= 0 ? idx : 0);
         }
       })
       .catch(() => {
-        if (!cancelled) setError("원문 브라우저를 불러오지 못했어요");
+        if (!cancelled) setError("데이터를 불러오지 못했습니다");
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
 
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [date, initialSegment]);
 
-  const flattenedLines = useMemo(() => {
-    if (!transcript || !simulation) return [];
-    return flattenTranscript(transcript, simulation);
-  }, [simulation, transcript]);
+  /* ── Derived state ── */
+
+  const flattenedLines = useMemo(
+    () => (transcript && simulation ? flattenTranscript(transcript, simulation) : []),
+    [simulation, transcript],
+  );
 
   const currentLine = flattenedLines[currentFrameIndex];
   const currentSegment = simulation?.segments[currentLine?.segment_index ?? 0];
 
+  /* ── Auto-scroll to active line ── */
+
   useEffect(() => {
     if (!currentLine) return;
     const key = `${currentLine.segment_id}-${currentLine.line_index}`;
-    lineRefs.current[key]?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-    });
+    lineRefs.current[key]?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [currentLine]);
 
+  /* ── Playback ── */
+
   useEffect(() => {
-    if (!isPlaying || !liveFrames || liveFrames.frames.length === 0) return;
+    if (!isPlaying || !liveFrames || !liveFrames.frames.length) return;
     const frame = liveFrames.frames[currentFrameIndex];
-    const nextFrame = liveFrames.frames[currentFrameIndex + 1];
-    const baseMs = playbackIntervalMs(frame?.relative_seconds ?? 0, nextFrame?.relative_seconds);
-    const timer = window.setTimeout(() => {
-      setCurrentFrameIndex((prev) => (prev + 1) % liveFrames.frames.length);
-    }, baseMs / playbackSpeed);
+    const next = liveFrames.frames[currentFrameIndex + 1];
+    const ms = playbackIntervalMs(frame?.relative_seconds ?? 0, next?.relative_seconds);
+    const timer = window.setTimeout(
+      () => setCurrentFrameIndex((prev) => (prev + 1) % liveFrames.frames.length),
+      ms / playbackSpeed,
+    );
     return () => window.clearTimeout(timer);
   }, [currentFrameIndex, isPlaying, liveFrames, playbackSpeed]);
 
-  if (loading) {
-    return (
-      <div className="card card-padded" style={{ minHeight: 280, display: "grid", placeItems: "center" }}>
-        <div className="text-body">원문 브라우저를 준비하는 중이에요...</div>
-      </div>
-    );
-  }
-
-  if (error || !simulation || !transcript || !liveFrames || !currentLine || !currentSegment) {
-    return (
-      <div className="card card-padded" style={{ minHeight: 280, display: "grid", placeItems: "center", gap: 12 }}>
-        <div className="text-body">{error || "원문 브라우저가 아직 준비되지 않았어요"}</div>
-        <Link to={`/lectures/${date}/simulation`} className="btn-secondary">
-          요약 화면으로 돌아가기
-        </Link>
-      </div>
-    );
-  }
+  /* ── Navigation ── */
 
   const syncSegmentParam = (segmentId: string) => {
     const next = new URLSearchParams(searchParams);
@@ -121,260 +110,159 @@ export default function LectureSimulationTranscriptPage() {
     setSearchParams(next, { replace: true });
   };
 
-  const jumpToFrame = (frameIndex: number, syncUrl = true) => {
-    const nextIndex = Math.max(0, Math.min(frameIndex, liveFrames.frames.length - 1));
+  const jumpToFrame = (idx: number) => {
+    if (!liveFrames) return;
+    const clamped = Math.max(0, Math.min(idx, liveFrames.frames.length - 1));
     setIsPlaying(false);
-    setCurrentFrameIndex(nextIndex);
-    if (syncUrl) {
-      syncSegmentParam(liveFrames.frames[nextIndex].segment_id);
-    }
+    setCurrentFrameIndex(clamped);
+    syncSegmentParam(liveFrames.frames[clamped].segment_id);
   };
+
+  /* ── Loading / Error ── */
+
+  if (loading) {
+    return (
+      <div className="sim-empty-state">
+        <p className="text-body">준비 중...</p>
+      </div>
+    );
+  }
+
+  if (error || !simulation || !transcript || !liveFrames || !currentLine || !currentSegment) {
+    return (
+      <div className="sim-empty-state">
+        <p className="text-body">{error || "데이터가 준비되지 않았습니다"}</p>
+        <Link to={`/lectures/${date}/simulation`} className="btn-secondary">돌아가기</Link>
+      </div>
+    );
+  }
+
+  /* ── Render ── */
 
   return (
     <div className="page-content">
-      <div className="simulation-hero">
-        <div className="card card-padded simulation-summary-stage">
-          <div className="simulation-pill-row">
-            <span className="simulation-pill simulation-pill-primary">
-              <Sparkles size={14} />
-              원문 보기
-            </span>
-            <span className="simulation-pill">
-              <FileText size={14} />
-              라인 단위 동기화
-            </span>
-          </div>
-          <div className="simulation-article-header">
-            <Link to={`/lectures/${date}/simulation/live?segment=${currentSegment.segment_id}`} className="simulation-inline-link">
-              <ArrowLeft size={16} />
-              실시간 보기로 돌아가기
-            </Link>
-            <h1 className="simulation-title">{simulation.metadata.subject} 원문 브라우저</h1>
-            <p className="simulation-article-lead">
-              지금 읽는 줄이 어느 구간에 있는지 바로 확인하고, 같은 위치의 반응 요약을 함께 따라갈 수 있어요.
-            </p>
-            <div className="simulation-meta-row">
-              <span>{formatDate(simulation.lecture_date)}</span>
-              <span>·</span>
-              <span>{simulation.metadata.instructor}</span>
-              <span>·</span>
-              <span>{liveFrames.frames.length}개 라인 프레임</span>
-            </div>
-          </div>
-        </div>
-
-        <aside className="simulation-aside-card">
-          <div className="simulation-panel-header">
-            <div>
-              <p className="simulation-aside-heading">읽는 방법</p>
-              <p className="text-caption">{currentSegment.segment_id} · {currentLine.timestamp}</p>
-            </div>
-            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <button className="btn-secondary" onClick={() => setIsPlaying((prev) => !prev)}>
-                {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-                {isPlaying ? "정지" : "재생"}
-              </button>
-              <div className="simulation-speed-group">
-                {[0.5, 1, 2].map((speed) => (
-                  <button
-                    key={speed}
-                    onClick={() => setPlaybackSpeed(speed)}
-                    className={`simulation-speed-button ${playbackSpeed === speed ? "simulation-speed-button-active" : ""}`}
-                  >
-                    {speed}x
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="simulation-aside-list" style={{ marginTop: 18 }}>
-            <div className="simulation-aside-item">왼쪽 세그먼트 이동으로 원하는 구간에 바로 점프할 수 있습니다.</div>
-            <div className="simulation-aside-item">활성 줄만 강하게 강조해서 현재 읽는 위치를 바로 찾게 했습니다.</div>
-            <div className="simulation-aside-item">같은 위치의 ROI 해석은 아래 요약 카드 한 장으로만 압축했습니다.</div>
-          </div>
-          <div className="simulation-metric-grid" style={{ marginTop: 18 }}>
-            <MetricGauge label="Attention" value={currentSegment.proxies.attention_proxy} metric="attention" compact />
-            <MetricGauge label="Load" value={currentSegment.proxies.load_proxy} metric="load" compact />
-            <MetricGauge label="Novelty" value={currentSegment.proxies.novelty_proxy} metric="novelty" compact />
-          </div>
-          <div className="simulation-pill-row" style={{ marginTop: 18 }}>
-            {buildSegmentTags(simulation, currentLine.segment_index).map((tag) => (
-              <span key={tag} className="simulation-pill">{tag}</span>
-            ))}
-          </div>
-          <p className="text-body" style={{ marginTop: 18 }}>{currentSegment.roi_insights?.summary_text}</p>
-        </aside>
-      </div>
-
-      <div className="tab-bar" role="tablist">
-        <Link to={`/lectures/${date}/simulation`} className="tab-item" style={{ display: "inline-flex", alignItems: "center" }}>
-          요약 보기
-        </Link>
-        <Link to={`/lectures/${date}/simulation/live?segment=${currentSegment.segment_id}`} className="tab-item" style={{ display: "inline-flex", alignItems: "center" }}>
+      {/* Header */}
+      <div className="sim-header">
+        <Link
+          to={`/lectures/${date}/simulation/live?segment=${currentSegment.segment_id}`}
+          className="simulation-inline-link"
+        >
+          <ArrowLeft size={16} />
           실시간 보기
         </Link>
-        <button className="tab-item active" aria-selected="true">원문 보기</button>
+        <h1 className="simulation-title">{simulation.metadata.subject} 원문</h1>
+        <div className="simulation-meta-row">
+          <span>{formatDate(simulation.lecture_date)}</span>
+          <span>·</span>
+          <span>{simulation.metadata.instructor}</span>
+        </div>
       </div>
 
+      {/* Tab bar + playback controls */}
+      <div className="sim-tab-row">
+        <div className="tab-bar" role="tablist">
+          <Link to={`/lectures/${date}/simulation`} className="tab-item">요약</Link>
+          <Link
+            to={`/lectures/${date}/simulation/live?segment=${currentSegment.segment_id}`}
+            className="tab-item"
+          >
+            실시간
+          </Link>
+          <button className="tab-item active" aria-selected="true">원문</button>
+        </div>
+        <div className="sim-playback">
+          <button className="btn-secondary" onClick={() => setIsPlaying((p) => !p)}>
+            {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+            {isPlaying ? "정지" : "재생"}
+          </button>
+          <div className="simulation-speed-group">
+            {PLAYBACK_SPEEDS.map((spd) => (
+              <button
+                key={spd}
+                onClick={() => setPlaybackSpeed(spd)}
+                className={`simulation-speed-button${playbackSpeed === spd ? " simulation-speed-button-active" : ""}`}
+              >
+                {spd}x
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Two-column layout */}
       <div className="simulation-reading-grid">
-        <aside className="card card-padded simulation-reading-nav">
-          <div className="simulation-panel-header">
-            <div>
-              <p className="text-section">세그먼트 이동</p>
-              <p className="text-caption">읽고 싶은 구간으로 바로 이동해 맥락을 따라갑니다.</p>
-            </div>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 18 }}>
-            {transcript.segments.map((segment, segmentIndex) => {
-              const active = segmentIndex === currentLine.segment_index;
-              return (
-                <button
-                  key={segment.segment_id}
-                  onClick={() => {
-                    const nextFrameIndex = liveFrames.frames.findIndex((frame) => frame.segment_id === segment.segment_id);
-                    if (nextFrameIndex >= 0) {
-                      jumpToFrame(nextFrameIndex);
-                    }
-                  }}
-                  className="simulation-segment-button"
-                  style={{
-                    borderColor: active ? "var(--primary)" : "var(--border)",
-                    background: active ? "rgba(255, 107, 0, 0.08)" : "var(--surface)",
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-                    <span style={{ fontWeight: 700, color: "var(--text-primary)" }}>{segment.segment_id}</span>
-                    <span className="text-caption">{segment.start_time}</span>
-                  </div>
-                  <p className="text-caption" style={{ marginTop: 4 }}>
-                    {segment.lines.length}줄 · {segment.start_time} - {segment.end_time}
-                  </p>
-                </button>
-              );
-            })}
-          </div>
+        {/* Left: Segment nav */}
+        <aside className="sim-segment-nav">
+          {transcript.segments.map((seg, i) => {
+            const active = i === currentLine.segment_index;
+            return (
+              <button
+                key={seg.segment_id}
+                className={`sim-segment-item${active ? " sim-segment-item-active" : ""}`}
+                onClick={() => {
+                  const idx = liveFrames.frames.findIndex((f) => f.segment_id === seg.segment_id);
+                  if (idx >= 0) jumpToFrame(idx);
+                }}
+              >
+                <span className="sim-segment-item-id">{seg.segment_id}</span>
+                <span className="text-caption">{seg.lines.length}줄</span>
+              </button>
+            );
+          })}
         </aside>
 
-        <section style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <div className="card card-padded simulation-reading-summary">
-            <div className="simulation-panel-header">
-              <div>
-                <p className="text-section">현재 줄 해석</p>
-                <p className="text-caption">현재 위치의 반응 해석만 짧게 읽고 바로 본문으로 내려갑니다.</p>
-              </div>
-              <Link to={`/lectures/${date}/simulation/live?segment=${currentSegment.segment_id}`} className="simulation-inline-link">
-                <Brain size={16} />
-                3D로 보기
+        {/* Right: Content */}
+        <div className="sim-transcript-main">
+          {/* Current line card */}
+          <div className="sim-current-line-card">
+            <div className="sim-section-header">
+              <span className="text-section">현재 줄</span>
+              <Link
+                to={`/lectures/${date}/simulation/live?segment=${currentSegment.segment_id}`}
+                className="simulation-inline-link"
+              >
+                <Brain size={14} />
+                3D 보기
               </Link>
             </div>
-            <div className="simulation-live-now-card" style={{ marginTop: 18 }}>
-              <p className="simulation-mini-meta">{currentSegment.segment_id} · {currentLine.timestamp}</p>
-              <p className="text-body" style={{ marginTop: 10 }}>{currentLine.text}</p>
+            <div className="simulation-live-now-card">
+              <span className="simulation-mini-meta">{currentSegment.segment_id} · {currentLine.timestamp}</span>
+              <p className="sim-current-text">{currentLine.text}</p>
             </div>
-            <div className="simulation-callout" style={{ marginTop: 16 }}>
-              <Brain size={16} />
-              <div>
-                <p>{currentSegment.roi_insights?.summary_text}</p>
-                {currentSegment.roi_insights?.top_active_rois[0] && (
-                  <p style={{ marginTop: 6, fontSize: 12, color: "var(--text-muted)" }}>
-                    {roiNeuroscienceHint(currentSegment.roi_insights?.top_active_rois[0].functional_hint)}
-                  </p>
-                )}
-              </div>
-            </div>
-            <div className="simulation-roi-grid" style={{ marginTop: 18 }}>
-              <div className="simulation-roi-card">
-                <div className="simulation-panel-header">
-                  <p className="text-label">활성 ROI</p>
-                  <Waypoints size={16} color="var(--primary)" />
-                </div>
-                <div className="simulation-roi-list" style={{ marginTop: 14 }}>
-                  {deduplicateRois(currentSegment.roi_insights?.top_active_rois, "mean_abs_response").slice(0, 3).map((roi) => {
-                    const level = roiResponseLevel(roi.mean_abs_response);
-                    return (
-                      <div key={`active-${roi.functional_hint}`} className="simulation-roi-item">
-                        <div style={{ minWidth: 0 }}>
-                          <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
-                          <p className="text-caption">반응 {level.label}</p>
-                        </div>
-                        <span className="text-caption" style={{ flexShrink: 0 }}>{level.label}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="simulation-roi-card">
-                <div className="simulation-panel-header">
-                  <p className="text-label">변화 ROI</p>
-                  <Layers3 size={16} color="var(--grey-700)" />
-                </div>
-                <div className="simulation-roi-list" style={{ marginTop: 14 }}>
-                  {deduplicateRois(currentSegment.roi_insights?.top_changed_rois, "delta_abs_response").slice(0, 3).map((roi) => {
-                    const level = roiResponseLevel(roi.delta_abs_response);
-                    return (
-                      <div key={`changed-${roi.functional_hint}`} className="simulation-roi-item">
-                        <div style={{ minWidth: 0 }}>
-                          <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
-                          <p className="text-caption">변화 {level.label}</p>
-                        </div>
-                        <span className="text-caption" style={{ flexShrink: 0 }}>{level.label}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+            {currentSegment.roi_insights?.summary_text && (
+              <p className="text-caption">{currentSegment.roi_insights.summary_text}</p>
+            )}
           </div>
 
-          <div className="card card-padded simulation-reading-lines">
-            <div className="simulation-panel-header">
-              <div>
-                <p className="text-section">Transcript Reader</p>
-                <p className="text-caption">현재 줄을 기준으로 자동 스크롤과 하이라이트가 같이 움직입니다.</p>
-              </div>
-            </div>
+          {/* Transcript reader */}
+          <div className="sim-transcript-reader">
+            <span className="text-section">전체 원문</span>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginTop: 20 }}>
-              {transcript.segments.map((segment, segmentIndex) => (
+            {transcript.segments.map((seg, segIdx) => {
+              const isActiveSeg = segIdx === currentLine.segment_index;
+              return (
                 <div
-                  key={segment.segment_id}
-                  className="simulation-reading-section"
-                  style={{
-                    borderColor: segmentIndex === currentLine.segment_index ? "var(--primary)" : "var(--border)",
-                    background: segmentIndex === currentLine.segment_index ? "linear-gradient(180deg, rgba(255,244,235,0.8), rgba(255,255,255,1))" : "var(--surface)",
-                  }}
+                  key={seg.segment_id}
+                  className={`sim-transcript-segment${isActiveSeg ? " sim-transcript-segment-active" : ""}`}
                 >
-                  <div className="simulation-panel-header">
-                    <div>
-                      <p className="text-section">{segment.segment_id}</p>
-                      <p className="text-caption">{segment.start_time} - {segment.end_time}</p>
-                    </div>
-                    <div className="simulation-pill-row">
-                      {buildSegmentTags(simulation, segmentIndex).map((tag) => (
-                        <span key={`${segment.segment_id}-${tag}`} className="simulation-pill">{tag}</span>
-                      ))}
-                    </div>
+                  <div className="sim-section-header">
+                    <span className="text-section">{seg.segment_id}</span>
+                    <span className="text-caption">{seg.start_time} – {seg.end_time}</span>
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10, marginTop: 18 }}>
-                    {segment.lines.map((line, lineIndex) => {
+                  <div className="sim-transcript-lines">
+                    {seg.lines.map((line, lineIdx) => {
                       const active = (line.frame_index ?? 0) === currentFrameIndex;
-                      const refKey = `${segment.segment_id}-${lineIndex}`;
+                      const refKey = `${seg.segment_id}-${lineIdx}`;
                       return (
                         <button
-                          key={`${segment.segment_id}-${lineIndex}`}
-                          ref={(element) => {
-                            lineRefs.current[refKey] = element;
-                          }}
-                          className={`simulation-line-row ${active ? "simulation-line-row-active" : ""}`}
-                          onClick={() => {
-                            jumpToFrame(line.frame_index ?? 0);
-                          }}
+                          key={refKey}
+                          ref={(el) => { lineRefs.current[refKey] = el; }}
+                          className={`simulation-line-row${active ? " simulation-line-row-active" : ""}`}
+                          onClick={() => jumpToFrame(line.frame_index ?? 0)}
                         >
+                          <span className="simulation-line-row-time">{line.timestamp}</span>
                           <div className="simulation-line-row-copy">
-                            <span className="simulation-line-row-time">{line.timestamp}</span>
                             <span className="simulation-line-row-speaker">{line.speaker}</span>
                             <p className="simulation-line-row-text">{line.text}</p>
                           </div>
@@ -383,10 +271,10 @@ export default function LectureSimulationTranscriptPage() {
                     })}
                   </div>
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
-        </section>
+        </div>
       </div>
     </div>
   );

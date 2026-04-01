@@ -16,7 +16,6 @@ import SettingsPage from "@/pages/SettingsPage";
 import IntegrationsPage from "@/pages/IntegrationsPage";
 import AboutPage from "@/pages/AboutPage";
 import ValidationPage from "@/pages/ValidationPage";
-import PresentationPage from "@/pages/PresentationPage";
 import LectureSimulationPage from "@/pages/LectureSimulationPage";
 import LectureSimulationLivePage from "@/pages/LectureSimulationLivePage";
 import LectureSimulationTranscriptPage from "@/pages/LectureSimulationTranscriptPage";
@@ -36,7 +35,6 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<RoleSelectPage />} />
-      <Route path="/presentation" element={<PresentationPage />} />
       <Route
         element={
           <RequireRole>
