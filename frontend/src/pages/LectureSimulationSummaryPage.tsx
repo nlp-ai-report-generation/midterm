@@ -229,9 +229,6 @@ export default function LectureSimulationSummaryPage() {
         <Link to={`/lectures/${date}/simulation/live`} className="tab-item">
           실시간
         </Link>
-        <Link to={`/lectures/${date}/simulation/live/transcript`} className="tab-item">
-          원문
-        </Link>
       </div>
 
       <div className="simulation-summary-grid">

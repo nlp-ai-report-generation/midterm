@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Brain, FileText, Pause, Play } from "lucide-react";
+import { ArrowLeft, Brain, Pause, Play } from "lucide-react";
 import {
   CartesianGrid,
   Line,
@@ -28,7 +28,10 @@ import {
   interpretLineHeuristics,
   interpretMetricCombo,
   isFlowZone,
+  learningEfficiency,
+  mindWanderingRisk,
   roiNeuroscienceHint,
+  segmentHealthScore,
 } from "@/lib/simulation";
 import MetricGauge from "@/components/simulation/MetricGauge";
 import type {
@@ -40,443 +43,238 @@ import type {
 } from "@/types/simulation";
 
 /* ─── Constants ─── */
-
-const PLAYBACK_SPEEDS = [0.5, 1, 2] as const;
-const MAX_SEGMENT_JUMPS = 4;
-const CHART_HEIGHT = 220;
+const SPEEDS = [0.5, 1, 2] as const;
+const MAX_JUMPS = 4;
 const CHART_MARGIN = { top: 10, right: 8, left: -20, bottom: 0 };
 
-/* ─── Helpers ─── */
-
-function playbackIntervalMs(
-  currentSec: number,
-  nextSec: number | undefined,
-): number {
-  if (typeof nextSec !== "number") return 900;
-  const delta = Math.max(1, nextSec - currentSec);
-  return Math.min(1600, Math.max(650, delta * 130));
+function pbMs(cur: number, nxt: number | undefined): number {
+  if (typeof nxt !== "number") return 900;
+  return Math.min(1600, Math.max(650, Math.max(1, nxt - cur) * 130));
 }
-
-function formatSeconds(totalSeconds: number): string {
-  const m = Math.floor(totalSeconds / 60);
-  const s = Math.floor(totalSeconds % 60);
-  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+function fmtSec(s: number): string {
+  return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 }
 
 /* ─── Component ─── */
-
 export default function LectureSimulationLivePage() {
   const { date = "" } = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [initialSegment] = useState(() => searchParams.get("segment"));
+  const [sp, setSp] = useSearchParams();
+  const [initSeg] = useState(() => sp.get("segment"));
 
-  const [simulation, setSimulation] = useState<SimulationResult | null>(null);
-  const [transcript, setTranscript] = useState<TranscriptBrowserData | null>(null);
+  const [sim, setSim] = useState<SimulationResult | null>(null);
+  const [trans, setTrans] = useState<TranscriptBrowserData | null>(null);
   const [colors, setColors] = useState<SegmentColorPayload | null>(null);
   const [liveFrames, setLiveFrames] = useState<LiveBrainFramePayload | null>(null);
-  const [timelineFrames, setTimelineFrames] = useState<LiveTimelineFramePayload | null>(null);
-
-  const [currentFrameIndex, setCurrentFrameIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const [tlFrames, setTlFrames] = useState<LiveTimelineFramePayload | null>(null);
+  const [fi, setFi] = useState(0); // frame index
+  const [playing, setPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [err, setErr] = useState("");
 
-  /* ── Data fetch ── */
-
+  /* ── fetch ── */
   useEffect(() => {
     if (!date) return;
-    let cancelled = false;
+    let c = false;
     setLoading(true);
-    setError("");
-
+    setErr("");
     Promise.all([getSimulation(date), getSimulationTranscript(date)])
-      .then(async ([sim, trans]) => {
-        if (!sim.live_assets) throw new Error("live_assets missing");
-        const [colorPayload, livePayload, timelinePayload] = await Promise.all([
-          getSimulationColors(sim.assets.segment_colors_json),
-          getSimulationLiveFrames(sim.live_assets.brain_frames_json),
-          getSimulationTimelineFrames(sim.live_assets.timeline_frames_json),
+      .then(async ([s, t]) => {
+        if (!s.live_assets) throw new Error("live_assets missing");
+        const [cp, lp, tp] = await Promise.all([
+          getSimulationColors(s.assets.segment_colors_json),
+          getSimulationLiveFrames(s.live_assets.brain_frames_json),
+          getSimulationTimelineFrames(s.live_assets.timeline_frames_json),
         ]);
-        if (cancelled) return;
-
-        setSimulation(sim);
-        setTranscript(trans);
-        setColors(colorPayload);
-        setLiveFrames(livePayload);
-        setTimelineFrames(timelinePayload);
-
-        if (initialSegment) {
-          const idx = livePayload.frames.findIndex((f) => f.segment_id === initialSegment);
-          setCurrentFrameIndex(idx >= 0 ? idx : 0);
-        }
+        if (c) return;
+        setSim(s); setTrans(t); setColors(cp); setLiveFrames(lp); setTlFrames(tp);
+        if (initSeg) { const i = lp.frames.findIndex((f) => f.segment_id === initSeg); setFi(i >= 0 ? i : 0); }
       })
-      .catch(() => {
-        if (!cancelled) setError("데이터를 불러오지 못했습니다");
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
+      .catch(() => { if (!c) setErr("데이터를 불러오지 못했습니다"); })
+      .finally(() => { if (!c) setLoading(false); });
+    return () => { c = true; };
+  }, [date, initSeg]);
 
-    return () => { cancelled = true; };
-  }, [date, initialSegment]);
-
-  /* ── Derived state ── */
-
-  const flattenedLines = useMemo(
-    () => (transcript && simulation ? flattenTranscript(transcript, simulation) : []),
-    [simulation, transcript],
-  );
-
-  const currentLine = flattenedLines[currentFrameIndex];
-  const currentFrame = liveFrames?.frames[currentFrameIndex];
-  const currentTimelineFrame = timelineFrames?.frames[currentFrameIndex];
-  const currentSegment = simulation?.segments[currentLine?.segment_index ?? 0];
-  const currentColorSegment =
-    colors?.segments[currentFrame?.color_segment_index ?? currentLine?.segment_index ?? 0];
-  const timelineData = timelineFrames?.frames ?? [];
-
-  const lectureStats = useMemo(
-    () => (timelineData.length ? computeLectureStats(timelineData) : undefined),
-    [timelineData],
-  );
-
-  const segmentFrameBounds = useMemo(() => {
+  /* ── derived ── */
+  const lines = useMemo(() => (trans && sim ? flattenTranscript(trans, sim) : []), [sim, trans]);
+  const line = lines[fi];
+  const frame = liveFrames?.frames[fi];
+  const tlFrame = tlFrames?.frames[fi];
+  const seg = sim?.segments[line?.segment_index ?? 0];
+  const colorSeg = colors?.segments[frame?.color_segment_index ?? line?.segment_index ?? 0];
+  const tlData = tlFrames?.frames ?? [];
+  const stats = useMemo(() => (tlData.length ? computeLectureStats(tlData) : undefined), [tlData]);
+  const bounds = useMemo(() => {
     if (!liveFrames) return new Map<string, { start: number; end: number }>();
-    const bounds = new Map<string, { start: number; end: number }>();
-    for (const frame of liveFrames.frames) {
-      const existing = bounds.get(frame.segment_id);
-      if (!existing) {
-        bounds.set(frame.segment_id, { start: frame.lecture_seconds, end: frame.lecture_seconds });
-      } else {
-        existing.start = Math.min(existing.start, frame.lecture_seconds);
-        existing.end = Math.max(existing.end, frame.lecture_seconds);
-      }
-    }
-    return bounds;
+    const m = new Map<string, { start: number; end: number }>();
+    for (const f of liveFrames.frames) { const e = m.get(f.segment_id); if (!e) m.set(f.segment_id, { start: f.lecture_seconds, end: f.lecture_seconds }); else { e.start = Math.min(e.start, f.lecture_seconds); e.end = Math.max(e.end, f.lecture_seconds); } }
+    return m;
   }, [liveFrames]);
+  const jumpIds = useMemo(() => sim ? [...sim.lecture_summary.strongest_segment_ids, ...sim.lecture_summary.risk_segment_ids].slice(0, MAX_JUMPS) : [], [sim]);
 
-  const jumpSegmentIds = useMemo(() => {
-    if (!simulation) return [];
-    return simulation.lecture_summary.strongest_segment_ids
-      .concat(simulation.lecture_summary.risk_segment_ids)
-      .slice(0, MAX_SEGMENT_JUMPS);
-  }, [simulation]);
-
-  /* ── Playback ── */
-
+  /* ── playback ── */
   useEffect(() => {
-    if (!isPlaying || !liveFrames || !liveFrames.frames.length) return;
-    const frame = liveFrames.frames[currentFrameIndex];
-    const next = liveFrames.frames[currentFrameIndex + 1];
-    const ms = playbackIntervalMs(frame?.relative_seconds ?? 0, next?.relative_seconds);
-    const timer = window.setTimeout(
-      () => setCurrentFrameIndex((prev) => (prev + 1) % liveFrames.frames.length),
-      ms / playbackSpeed,
-    );
-    return () => window.clearTimeout(timer);
-  }, [currentFrameIndex, isPlaying, liveFrames, playbackSpeed]);
+    if (!playing || !liveFrames?.frames.length) return;
+    const f = liveFrames.frames[fi]; const n = liveFrames.frames[fi + 1];
+    const t = window.setTimeout(() => setFi((p) => (p + 1) % liveFrames.frames.length), pbMs(f?.relative_seconds ?? 0, n?.relative_seconds) / speed);
+    return () => window.clearTimeout(t);
+  }, [fi, playing, liveFrames, speed]);
 
-  /* ── Navigation helpers ── */
-
-  const syncSegmentParam = (segmentId: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("segment", segmentId);
-    setSearchParams(next, { replace: true });
+  const jump = (idx: number) => {
+    if (!liveFrames) return;
+    const v = Math.max(0, Math.min(idx, liveFrames.frames.length - 1));
+    setPlaying(false); setFi(v);
+    const p = new URLSearchParams(sp); p.set("segment", liveFrames.frames[v].segment_id); setSp(p, { replace: true });
   };
 
-  const jumpToFrame = (idx: number) => {
-    const clamped = Math.max(0, Math.min(idx, (liveFrames?.frames.length ?? 1) - 1));
-    setIsPlaying(false);
-    setCurrentFrameIndex(clamped);
-    if (liveFrames) syncSegmentParam(liveFrames.frames[clamped].segment_id);
-  };
+  /* ── guards ── */
+  if (loading) return <div className="sim-empty"><p>준비 중...</p></div>;
+  if (err || !sim || !trans || !colors || !liveFrames || !tlFrames || !line || !frame || !tlFrame || !seg || !colorSeg)
+    return <div className="sim-empty"><p>{err || "데이터가 준비되지 않았습니다"}</p><Link to={`/lectures/${date}`} className="btn-secondary">돌아가기</Link></div>;
 
-  /* ── Loading / Error ── */
-
-  if (loading) {
-    return (
-      <div className="sim-empty-state">
-        <p className="text-body">준비 중...</p>
-      </div>
-    );
-  }
-
-  if (
-    error || !simulation || !transcript || !colors || !liveFrames || !timelineFrames ||
-    !currentLine || !currentFrame || !currentTimelineFrame || !currentSegment || !currentColorSegment
-  ) {
-    return (
-      <div className="sim-empty-state">
-        <p className="text-body">{error || "데이터가 준비되지 않았습니다"}</p>
-        <Link to={`/lectures/${date}/simulation`} className="btn-secondary">돌아가기</Link>
-      </div>
-    );
-  }
-
-  /* ── Interpretation ── */
-
-  const lineInterp = interpretLineHeuristics(currentFrame);
-  const metrics = {
-    attention: currentTimelineFrame.attention_display ?? currentSegment.proxies.attention_proxy,
-    load: currentTimelineFrame.load_display ?? currentSegment.proxies.load_proxy,
-    novelty: currentTimelineFrame.novelty_display ?? currentSegment.proxies.novelty_proxy,
-  };
-  const combo = interpretMetricCombo(metrics.attention, metrics.load, metrics.novelty, lectureStats);
-  const inFlowZone = isFlowZone(metrics.attention, metrics.load, metrics.novelty);
-
-  /* ── Render ── */
+  /* ── compute ── */
+  const interp = interpretLineHeuristics(frame);
+  const a = tlFrame.attention_display ?? seg.proxies.attention_proxy;
+  const l = tlFrame.load_display ?? seg.proxies.load_proxy;
+  const n = tlFrame.novelty_display ?? seg.proxies.novelty_proxy;
+  const combo = interpretMetricCombo(a, l, n, stats);
+  const flow = isFlowZone(a, l, n);
+  const profile = computeFunctionalProfile(seg.roi_insights?.top_active_rois, seg.roi_insights?.top_changed_rois);
+  const efficiency = learningEfficiency(a, l);
+  const wandering = mindWanderingRisk(a, l);
+  const health = segmentHealthScore(seg);
 
   return (
-    <div className="page-content">
-      {/* Header */}
-      <div className="sim-header">
-        <Link to={`/lectures/${date}/simulation`} className="simulation-inline-link">
-          <ArrowLeft size={16} />
-          요약
-        </Link>
-        <h1 className="simulation-title">{simulation.metadata.subject}</h1>
-        <div className="simulation-meta-row">
-          <span>{formatDate(simulation.lecture_date)}</span>
-          <span>·</span>
-          <span>{simulation.metadata.instructor}</span>
-          <span>·</span>
-          <span>{liveFrames.frames.length}줄</span>
+    <div className="sim-page">
+      {/* ─── Header ─── */}
+      <header className="sim-hdr">
+        <Link to={`/lectures/${date}`} className="sim-back"><ArrowLeft size={16} />강의 상세</Link>
+        <h1 className="sim-title">{sim.metadata.subject}</h1>
+        <p className="sim-meta">{formatDate(sim.lecture_date)} · {sim.metadata.instructor} · {liveFrames.frames.length}줄</p>
+      </header>
+
+      {/* ─── Brain 3D ─── */}
+      <section className="sim-sec">
+        <div className="sim-brain">
+          <BrainCanvas meshUrl={sim.assets.mesh_glb} colors={colorSeg.hemispheres} intensity={frame.heuristic_intensity} changeBoost={frame.heuristic_change_boost} />
         </div>
-      </div>
+      </section>
 
-      {/* Tab bar */}
-      <div className="tab-bar" role="tablist">
-        <Link to={`/lectures/${date}/simulation`} className="tab-item">요약</Link>
-        <button className="tab-item active" aria-selected="true">실시간</button>
-        <Link
-          to={`/lectures/${date}/simulation/live/transcript?segment=${currentSegment.segment_id}`}
-          className="tab-item"
-        >
-          원문
-        </Link>
-      </div>
+      {/* ─── Controls ─── */}
+      <section className="sim-sec sim-ctrl">
+        <div className="sim-ctrl-bar">
+          <div className="sim-ctrl-left">
+            <button className="sim-play" onClick={() => setPlaying((p) => !p)}>{playing ? <Pause size={16} /> : <Play size={16} />}</button>
+            <div className="sim-speeds">{SPEEDS.map((s) => <button key={s} onClick={() => setSpeed(s)} className={`sim-spd${speed === s ? " on" : ""}`}>{s}x</button>)}</div>
+            <span className="sim-seg-pill">{seg.segment_id}</span>
+            <span className="sim-ts">{line.timestamp}</span>
+          </div>
+          <span className="sim-counter">{fi + 1} / {liveFrames.frames.length}</span>
+        </div>
+        <input className="sim-scrub" type="range" min={0} max={liveFrames.frames.length - 1} value={fi} onChange={(e) => jump(Number(e.target.value))} />
+        <div className="sim-jumps">{jumpIds.map((id) => <button key={id} className={`sim-jmp${id === seg.segment_id ? " on" : ""}`} onClick={() => { const i = liveFrames.frames.findIndex((f) => f.segment_id === id); if (i >= 0) jump(i); }}>{id}</button>)}</div>
+      </section>
 
-      {/* Main two-column layout */}
-      <div className="simulation-main-grid">
+      {/* ─── Current Text + Signal ─── */}
+      <section className="sim-sec">
+        <div className="sim-now-card">
+          <p className="sim-now-text">{line.text}</p>
+          <p className="sim-now-signal"><strong>{interp.dominantSignal}</strong> — {interp.microSummary}</p>
+        </div>
+      </section>
 
-        {/* Left: Brain + Controls */}
-        <div className="sim-stage">
-          {/* Brain 3D */}
-          <div className="simulation-brain-shell">
-            <BrainCanvas
-              meshUrl={simulation.assets.mesh_glb}
-              colors={currentColorSegment.hemispheres}
-              intensity={currentFrame.heuristic_intensity}
-              changeBoost={currentFrame.heuristic_change_boost}
-            />
+      {/* ─── Insight Grid: 3 columns ─── */}
+      <section className="sim-sec">
+        <div className="sim-grid3">
+          {/* 패턴 진단 */}
+          <div className="sim-card">
+            <p className="sim-card-lbl">패턴 진단</p>
+            <div className="sim-card-badge-row">
+              <span className="sim-badge-accent">{combo.pattern}</span>
+              {flow && <span className="sim-badge-flow">Flow</span>}
+            </div>
+            <p className="sim-card-desc">{combo.diagnosis}</p>
+            {combo.suggestion && <p className="sim-card-sub">{combo.suggestion}</p>}
           </div>
 
-          {/* Controls */}
-          <div className="sim-controls">
-            <div className="sim-controls-top">
-              <div className="sim-playback">
-                <button
-                  className="btn-secondary"
-                  onClick={() => setIsPlaying((p) => !p)}
-                >
-                  {isPlaying ? <Pause size={14} /> : <Play size={14} />}
-                  {isPlaying ? "정지" : "재생"}
-                </button>
-                <div className="simulation-speed-group">
-                  {PLAYBACK_SPEEDS.map((spd) => (
-                    <button
-                      key={spd}
-                      onClick={() => setPlaybackSpeed(spd)}
-                      className={`simulation-speed-button${playbackSpeed === spd ? " simulation-speed-button-active" : ""}`}
-                    >
-                      {spd}x
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <span className="sim-frame-counter">
-                {currentFrameIndex + 1} / {liveFrames.frames.length}
-              </span>
+          {/* 뇌 기능 프로필 */}
+          <div className="sim-card">
+            <div className="sim-card-badge-row">
+              <p className="sim-card-lbl">뇌 기능 프로필</p>
+              <Brain size={14} />
             </div>
-            <input
-              className="progress-bar"
-              type="range"
-              min={0}
-              max={liveFrames.frames.length - 1}
-              value={currentFrameIndex}
-              onChange={(e) => jumpToFrame(Number(e.target.value))}
-            />
-            <div className="sim-segment-jumps">
-              {jumpSegmentIds.map((id) => (
-                <button
-                  key={id}
-                  className={`simulation-pill-button${id === currentSegment.segment_id ? " simulation-pill-button-active" : ""}`}
-                  onClick={() => {
-                    const idx = liveFrames.frames.findIndex((f) => f.segment_id === id);
-                    if (idx >= 0) jumpToFrame(idx);
-                  }}
-                >
-                  {id}
-                </button>
+            <span className="sim-badge-accent">{profile.profilePattern}</span>
+            <p className="sim-card-desc">{profile.dominantInterpretation}</p>
+            <div className="sim-bars">
+              {profile.categories.map((c) => (
+                <div key={c.key} className={`sim-bar-row${c.isTop ? " top" : ""}`}>
+                  <span className="sim-bar-lbl">{c.label}</span>
+                  <div className="sim-bar-track"><div className="sim-bar-fill" style={{ width: `${Math.max(3, c.value)}%` }} /></div>
+                  <span className="sim-bar-val">{c.value}</span>
+                </div>
               ))}
             </div>
+            {seg.roi_insights?.top_active_rois?.[0] && (
+              <p className="sim-card-sub sim-faint">{roiNeuroscienceHint(seg.roi_insights.top_active_rois[0].functional_hint)}</p>
+            )}
           </div>
 
-          {/* Divider */}
-          <hr className="sim-divider" />
-
-          {/* Timeline Chart */}
-          <div className="sim-timeline-section">
-            <div className="sim-section-header">
-              <span className="text-section">타임라인</span>
-              <Link
-                to={`/lectures/${date}/simulation/live/transcript?segment=${currentSegment.segment_id}`}
-                className="simulation-inline-link"
-              >
-                <FileText size={14} />
-                원문
-              </Link>
+          {/* 학습 상태 */}
+          <div className="sim-card">
+            <p className="sim-card-lbl">학습 상태</p>
+            <div className="sim-status-grid">
+              <div className="sim-status-item">
+                <span className="sim-status-label">구간 건강도</span>
+                <span className="sim-status-val" style={{ color: health.color }}>{health.score}</span>
+                <span className="sim-status-badge" style={{ color: health.color }}>{health.label}</span>
+              </div>
+              <div className="sim-status-item">
+                <span className="sim-status-label">학습 효율 지수</span>
+                <span className="sim-status-val">{efficiency >= 0 ? "+" : ""}{efficiency.toFixed(2)}</span>
+                <span className="sim-status-badge">{efficiency >= 0.5 ? "효율적" : efficiency >= 0 ? "균형" : "비효율"}</span>
+              </div>
+              <div className="sim-status-item">
+                <span className="sim-status-label">이탈 위험</span>
+                <span className={`sim-status-val sim-wander-${wandering}`}>{wandering === "high" ? "높음" : wandering === "moderate" ? "보통" : "낮음"}</span>
+                <span className="sim-status-badge">{wandering === "low" ? "집중 유지" : wandering === "moderate" ? "주의 필요" : "개입 필요"}</span>
+              </div>
             </div>
-            <div className="sim-chart-container">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={timelineData}
-                  margin={CHART_MARGIN}
-                  onClick={(state) => {
-                    const idx = (state as { activePayload?: Array<{ payload?: { line_index?: number } }> } | undefined)
-                      ?.activePayload?.[0]?.payload?.line_index;
-                    if (typeof idx === "number") jumpToFrame(idx);
-                  }}
-                >
-                  <CartesianGrid stroke="var(--chart-grid)" vertical={false} />
-                  {simulation.lecture_summary.strongest_segment_ids.map((id) => {
-                    const b = segmentFrameBounds.get(id);
-                    return b ? (
-                      <ReferenceArea key={`s-${id}`} x1={b.start} x2={b.end} fill="var(--chart-strong-fill)" strokeOpacity={0} />
-                    ) : null;
-                  })}
-                  {simulation.lecture_summary.risk_segment_ids.map((id) => {
-                    const b = segmentFrameBounds.get(id);
-                    return b ? (
-                      <ReferenceArea key={`r-${id}`} x1={b.start} x2={b.end} fill="var(--chart-risk-fill)" strokeOpacity={0} />
-                    ) : null;
-                  })}
-                  <ReferenceLine x={currentTimelineFrame.lecture_seconds} stroke="var(--primary)" strokeWidth={2} />
-                  <XAxis
-                    dataKey="lecture_seconds"
-                    type="number"
-                    domain={["dataMin", "dataMax"]}
-                    tick={{ fontSize: 11, fill: "var(--chart-tick)" }}
-                    tickFormatter={formatSeconds}
-                  />
-                  <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: "var(--chart-tick)" }} />
-                  <Tooltip
-                    formatter={(v, k) => [`${(typeof v === "number" ? v : Number(v ?? 0)).toFixed(1)}`, String(k)]}
-                    labelFormatter={(l) => formatSeconds(Number(l))}
-                  />
-                  <Line type="basis" dataKey="attention_display" stroke="var(--primary)" strokeWidth={2} dot={false} name="Attention" connectNulls />
-                  <Line type="basis" dataKey="load_display" stroke="var(--grey-800)" strokeWidth={1.5} dot={false} name="Load" connectNulls />
-                  <Line type="basis" dataKey="novelty_display" stroke="var(--grey-400)" strokeWidth={1.5} dot={false} name="Novelty" connectNulls />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+            {seg.roi_insights?.summary_text && (
+              <p className="sim-card-sub">{seg.roi_insights.summary_text}</p>
+            )}
           </div>
         </div>
+      </section>
 
-        {/* Right: Insight panel */}
-        <aside className="sim-insight">
-          {/* Current text */}
-          <section className="sim-insight-section">
-            <div className="sim-section-header">
-              <span className="simulation-pill simulation-pill-primary">{currentSegment.segment_id}</span>
-              <span className="text-caption">{currentLine.timestamp}</span>
-            </div>
-            <div className="simulation-live-now-card">
-              <p className="text-body">{currentLine.text}</p>
-            </div>
-            <p className="text-caption">
-              <strong>{lineInterp.dominantSignal}</strong> — {lineInterp.microSummary}
-            </p>
-          </section>
+      {/* ─── Metrics Row ─── */}
+      <section className="sim-sec">
+        <div className="sim-grid3">
+          <MetricGauge label="Attention" value={a} metric="attention" />
+          <MetricGauge label="Load" value={l} metric="load" />
+          <MetricGauge label="Novelty" value={n} metric="novelty" />
+        </div>
+      </section>
 
-          <hr className="sim-divider" />
-
-          {/* Pattern diagnosis */}
-          <section className="sim-insight-section">
-            <div className="sim-section-header">
-              <span className="text-section">패턴</span>
-              {inFlowZone && <span className="sim-flow-badge">Flow</span>}
-            </div>
-            <div className="sim-pattern-card">
-              <span className="sim-pattern-label">{combo.pattern}</span>
-              <p className="text-body">{combo.diagnosis}</p>
-              {combo.suggestion && <p className="text-caption">{combo.suggestion}</p>}
-            </div>
-          </section>
-
-          <hr className="sim-divider" />
-
-          {/* Metrics */}
-          <section className="sim-insight-section">
-            <span className="text-section">지표</span>
-            <div className="simulation-metric-grid">
-              <MetricGauge label="Attention" value={metrics.attention} metric="attention" />
-              <MetricGauge label="Load" value={metrics.load} metric="load" />
-              <MetricGauge label="Novelty" value={metrics.novelty} metric="novelty" />
-            </div>
-          </section>
-
-          <hr className="sim-divider" />
-
-          {/* Brain functional profile */}
-          <section className="sim-insight-section">
-            <div className="sim-section-header">
-              <span className="text-section">뇌 기능 프로필</span>
-              <Brain size={14} className="text-muted" />
-            </div>
-
-            {(() => {
-              const profile = computeFunctionalProfile(
-                currentSegment.roi_insights?.top_active_rois,
-                currentSegment.roi_insights?.top_changed_rois,
-              );
-              return (
-                <>
-                  <div className="sim-pattern-card">
-                    <span className="sim-pattern-label">{profile.profilePattern}</span>
-                    <p className="text-body">{profile.dominantInterpretation}</p>
-                  </div>
-
-                  <div className="sim-roi-bars">
-                    {profile.categories.map((cat) => (
-                      <div key={cat.key} className={`sim-roi-bar-row${cat.isTop ? " sim-roi-bar-row-top" : ""}`}>
-                        <span className="sim-roi-bar-label">{cat.label}</span>
-                        <div className="sim-roi-bar-track">
-                          <div
-                            className="sim-roi-bar-fill"
-                            style={{ width: `${Math.max(3, cat.value)}%` }}
-                          />
-                        </div>
-                        <span className="sim-roi-bar-value">{cat.value}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {currentSegment.roi_insights?.summary_text && (
-                    <p className="text-caption">{currentSegment.roi_insights.summary_text}</p>
-                  )}
-                  {currentSegment.roi_insights?.top_active_rois?.[0] && (
-                    <p className="text-caption" style={{ opacity: 0.7 }}>
-                      {roiNeuroscienceHint(currentSegment.roi_insights.top_active_rois[0].functional_hint)}
-                    </p>
-                  )}
-                </>
-              );
-            })()}
-          </section>
-        </aside>
-      </div>
+      {/* ─── Timeline ─── */}
+      <section className="sim-sec">
+        <p className="sim-sec-title">타임라인</p>
+        <div className="sim-chart">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={tlData} margin={CHART_MARGIN} onClick={(st) => { const i = (st as { activePayload?: Array<{ payload?: { line_index?: number } }> } | undefined)?.activePayload?.[0]?.payload?.line_index; if (typeof i === "number") jump(i); }}>
+              <CartesianGrid stroke="var(--chart-grid)" vertical={false} />
+              {sim.lecture_summary.strongest_segment_ids.map((id) => { const b = bounds.get(id); return b ? <ReferenceArea key={`s-${id}`} x1={b.start} x2={b.end} fill="var(--chart-strong-fill)" strokeOpacity={0} /> : null; })}
+              {sim.lecture_summary.risk_segment_ids.map((id) => { const b = bounds.get(id); return b ? <ReferenceArea key={`r-${id}`} x1={b.start} x2={b.end} fill="var(--chart-risk-fill)" strokeOpacity={0} /> : null; })}
+              <ReferenceLine x={tlFrame.lecture_seconds} stroke="var(--primary)" strokeWidth={2} />
+              <XAxis dataKey="lecture_seconds" type="number" domain={["dataMin", "dataMax"]} tick={{ fontSize: 11, fill: "var(--chart-tick)" }} tickFormatter={fmtSec} />
+              <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: "var(--chart-tick)" }} />
+              <Tooltip formatter={(v, k) => [`${(typeof v === "number" ? v : Number(v ?? 0)).toFixed(1)}`, String(k)]} labelFormatter={(lb) => fmtSec(Number(lb))} />
+              <Line type="basis" dataKey="attention_display" stroke="var(--primary)" strokeWidth={2} dot={false} name="Attention" connectNulls />
+              <Line type="basis" dataKey="load_display" stroke="var(--grey-700)" strokeWidth={1.5} dot={false} name="Load" connectNulls />
+              <Line type="basis" dataKey="novelty_display" stroke="var(--grey-400)" strokeWidth={1.5} dot={false} name="Novelty" connectNulls />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,1 +1,1 @@
-export { default } from "./LectureSimulationSummaryPage";
+export { default } from "./LectureSimulationLivePage";
