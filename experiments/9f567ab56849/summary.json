@@ -1,0 +1,12 @@
+{
+  "experiment_id": "9f567ab56849",
+  "name": "window_60m_h30m",
+  "total_lectures": 3,
+  "total_passes": 1,
+  "results_count": 3,
+  "average_scores": {
+    "2026-02-02": 3.1777777777777776,
+    "2026-02-09": 3.577777777777778,
+    "2026-02-24": 3.4444444444444446
+  }
+}
