@@ -271,7 +271,7 @@ mean_pred = preds.mean(axis=0).astype("float32")
 
 ## 8. raw output을 어떻게 해석하는가
 
-TRIBE raw output은 세그먼트당 10,242개 정점의 반응 배열이다. 이 프로젝트에서는 이를 3개 프록시 + 2개 파생 지표로 축약한다.
+TRIBE raw output은 세그먼트당 10,242개 정점의 반응 배열이다. 이 프로젝트에서는 이를 3개 프록시 + 3개 추가 분석 지표 + ROI 기반 자동 처방으로 축약한다.
 
 ### 3개 프록시 (TRIBE 출력 기반)
 
@@ -283,7 +283,42 @@ TRIBE raw output은 세그먼트당 10,242개 정점의 반응 배열이다. 이
 
 프론트엔드에서는 각 프록시에 **강의별 상대 백분위수 기반 해석**을 적용한다. 이는 TRIBE 출력의 right-skewed 분포와 min-max 정규화의 outlier 민감성을 보완하기 위한 것이다.
 
-### 2개 파생 지표 (transcript 텍스트 기반)
+### 3개 추가 분석 지표 (v2 업데이트)
+
+| 지표 | 산출 공식 | 의미 | 해석 프레임워크 |
+|--------|----------|------|---------------|
+| **반구 활성도 비율** | `mean(lh_vertices) / mean(rh_vertices)` | 좌반구(언어 처리 우세)와 우반구(공간/정서 처리 우세)의 활성 비율. 1.0에 가까우면 균형, 좌편향이면 언어 집중 구간, 우편향이면 공간/정서 처리 구간 | 반구 기능 비대칭성 (Geschwind & Galaburda, 1985) |
+| **인지 부하 회복도** | Load 프록시가 상위 20%를 넘은 이후, 하위 50%로 돌아오는 데 걸리는 세그먼트 수 | 과부하 후 회복 속도. 빠른 회복 = 강의가 적절히 속도를 조절함. 느린 회복 = 고밀도 구간이 연속됨 | Cognitive Load Theory의 recovery dynamics (Sweller, 2010) |
+| **세그먼트 전환 유사도** | `cosine_similarity(segment[i], segment[i+1])` on raw vertex vectors | 인접 세그먼트 간 cortical response 패턴의 유사도. 낮으면 급격한 전환(맥락 끊김 위험), 높으면 자연스러운 흐름 연결 | Predictive Coding (Friston, 2010) — 예측 오차가 클수록 전환 부담 증가 |
+
+### ROI 기반 자동 처방 시스템
+
+ROI별 활성 패턴을 규칙 기반으로 매핑하여, 세그먼트마다 강사에게 자동 개선 제안을 생성한다.
+
+```
+ROI 활성 패턴 분석
+    → 지배적 영역 판별 (언어/실행통제/시각/주의전환/DMN)
+    → 프로필 패턴 매칭 (능동적 이해, 수동적 청취, 인지적 통합 등)
+    → 규칙 기반 처방 생성 (콤보 패턴 + 뇌 기능 프로필 교차)
+```
+
+예시:
+- 언어 처리만 높고 실행 통제가 낮음 → "핵심 개념을 정리하는 질문을 추가하세요"
+- DMN이 지배적 → "구체적 예시나 실습으로 주의를 환기하세요"
+- Load 고점 + 느린 회복 → "중간 요약을 넣고 속도를 줄이세요"
+
+기존 콤보 패턴(9가지)이 3개 프록시의 상대 위치만 보았다면, ROI 기반 처방은 **어떤 뇌 영역이 활성화되었는지**까지 고려하여 더 구체적인 제안을 제공한다.
+
+### 제거된 지표
+
+v2 업데이트에서 아래 2개 지표는 제거되었다.
+
+| 지표 | 제거 이유 |
+|------|----------|
+| **학습 효율 지수 (Paas)** | Paas의 Instructional Efficiency 모델은 주관적 mental effort 보고를 전제로 하며, TRIBE 출력만으로는 이 주관 값을 대체할 수 없다. 반구 활성도와 부하 회복도가 더 직접적인 신경 데이터 기반 해석을 제공한다. |
+| **이탈 위험 (mind-wandering)** | DMN 활성만으로 mind-wandering을 단정하는 것은 과잉 해석이다. DMN은 맥락 연결, 자기 참조적 사고에도 관여하므로, 뇌 기능 프로필의 "맥락 연결 / 이탈 가능" 패턴으로 대체하여 해석 범위를 명시적으로 제한한다. |
+
+### 부속 지표 (transcript 텍스트 기반)
 
 | 지표 | 산출 방법 | 의미 |
 |------|----------|------|
@@ -476,12 +511,16 @@ saved raw output for 2026-02-02 (n_segments, n_vertices)
 
 ### 완료
 
-- 프론트에 `/lectures/:date/simulation` 추가
-- 프론트에 `/lectures/:date/simulation/transcript` 추가
+- 프론트에 `/lectures/:date` 강의 상세 페이지 (평가 | 시뮬레이션 | 리포트 탭 전환)
+- 15개 → 7개 페이지 정보 아키텍처 통합
+- Apple macOS 12 디자인 시스템 적용 (SF Pro, 8px radius, segmented control)
 - 파일럿 3강의용 정적 시드 데이터 생성
 - 실제 `fsaverage5` cortical mesh GLB 자산 연결
 - 코랩 노트북 4종과 Drive 템플릿 구성
 - `01_run_tribev2.ipynb`를 실제 `TribeModel` 추론 경로로 연결
+- 반구 활성도 비율, 인지 부하 회복도, 세그먼트 전환 유사도 지표 추가
+- ROI 기반 자동 처방 시스템 설계
+- macOS Quick Look 리포트 프리뷰 + Google Drive/Notion 내보내기
 
 ### 남은 것
 
@@ -495,7 +534,9 @@ saved raw output for 2026-02-02 (n_segments, n_vertices)
 
 - 단순 LLM 평가를 넘어서 **신경 반응 기반 시뮬레이션 레이어**를 별도로 설계했다
 - 텍스트를 바로 넣는 것이 아니라 `text -> TTS -> word events -> cortical response` 경로를 이해하고 활용했다
-- raw neural signal을 제품에서 쓸 수 있는 `attention/load/novelty` 지표로 다시 설계했다
+- raw neural signal을 제품에서 쓸 수 있는 `attention/load/novelty` + 반구 활성도/부하 회복도/전환 유사도 지표로 다시 설계했다
+- ROI 기반 자동 처방 시스템으로 뇌 영역별 활성 패턴에서 강사 행동 제안까지 연결했다
+- 15개 → 7개 페이지 통합, macOS 12 디자인 시스템, 탭 전환 UX로 강사 중심 정보 아키텍처를 설계했다
 - 3D brain heatmap과 transcript browser를 세그먼트 단위로 동기화해 **해석 가능한 인터랙션 UX**로 연결했다
 - 단순 분석이 아니라 **코랩 추론 파이프라인, 후처리, 프론트 시각화, 문서화**까지 한 흐름으로 묶었다
 
@@ -511,6 +552,8 @@ saved raw output for 2026-02-02 (n_segments, n_vertices)
 ### 지표 해석 프레임워크
 
 - Sweller, J. (1988). Cognitive Load During Problem Solving: Effects on Learning. *Cognitive Science, 12*(2), 257-285. — Cognitive Load Theory 원저
+- Sweller, J., van Merriënboer, J.J.G., & Paas, F. (2019). Cognitive Architecture and Instructional Design: 20 Years Later. *Educational Psychology Review, 31*(2), 261-292. — Cognitive Load Theory recovery dynamics
+- Geschwind, N. & Galaburda, A.M. (1985). Cerebral lateralization: Biological mechanisms, associations, and pathology. *Archives of Neurology, 42*(5), 428-459. — 반구 기능 비대칭성
 - Paas, F. & van Merriënboer, J. (1993). The efficiency of instructional conditions. *Human Factors, 35*(4), 737-743. — Instructional Efficiency 모델
 - Bjork, R.A. (1994). Memory and metamemory considerations in the training of human beings. In *Metacognition: Knowing about knowing.* — Desirable Difficulty 이론
 - Csikszentmihalyi, M. (1990). *Flow: The psychology of optimal experience.* Harper & Row. — Flow 이론
