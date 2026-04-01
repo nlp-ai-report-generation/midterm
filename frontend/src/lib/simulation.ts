@@ -15,7 +15,7 @@ export function metricTone(value: number, metric?: "attention" | "load" | "novel
     return "var(--grey-500)";
   }
   if (value >= 85) return "var(--primary)";
-  if (value >= 70) return "#E55F00";
+  if (value >= 70) return "var(--primary-hover)";
   if (value >= 50) return "var(--grey-700)";
   if (value >= 25) return "var(--grey-500)";
   return "var(--grey-400)";
@@ -164,25 +164,25 @@ export interface MetricLevel {
  */
 export function metricLevel(value: number, metric: MetricType): MetricLevel {
   if (metric === "attention") {
-    if (value >= 85) return { label: "최고 집중", description: "설명을 밀착 추적하는 중이에요", color: "var(--primary)", bgColor: "rgba(255,107,0,0.12)" };
-    if (value >= 70) return { label: "밀착 참여", description: "설명에 능동적으로 반응하고 있어요", color: "#E55F00", bgColor: "rgba(229,95,0,0.10)" };
+    if (value >= 85) return { label: "최고 집중", description: "설명을 밀착 추적하는 중이에요", color: "var(--primary)", bgColor: "rgba(0,122,255,0.12)" };
+    if (value >= 70) return { label: "밀착 참여", description: "설명에 능동적으로 반응하고 있어요", color: "var(--primary-hover)", bgColor: "rgba(0,98,204,0.10)" };
     if (value >= 50) return { label: "능동 추적", description: "흐름을 따라가고 있는 적절한 수준", color: "var(--grey-700)", bgColor: "rgba(51,65,85,0.08)" };
     if (value >= 25) return { label: "수동 수신", description: "듣고 있으나 깊은 처리가 약해요", color: "var(--grey-500)", bgColor: "rgba(100,116,139,0.08)" };
     return { label: "이탈 위험", description: "집중이 풀리고 있을 가능성이 높아요", color: "var(--grey-500)", bgColor: "rgba(100,116,139,0.10)" };
   }
 
   if (metric === "load") {
-    if (value >= 85) return { label: "과부하", description: "정보가 너무 많아 처리 한계에 가까워요", color: "var(--primary-hover)", bgColor: "rgba(229,95,0,0.12)" };
-    if (value >= 70) return { label: "높은 밀도", description: "정보 밀도가 높아 부하가 커지는 중", color: "var(--primary)", bgColor: "rgba(255,107,0,0.10)" };
+    if (value >= 85) return { label: "과부하", description: "정보가 너무 많아 처리 한계에 가까워요", color: "var(--primary-hover)", bgColor: "rgba(0,98,204,0.12)" };
+    if (value >= 70) return { label: "높은 밀도", description: "정보 밀도가 높아 부하가 커지는 중", color: "var(--primary)", bgColor: "rgba(0,122,255,0.10)" };
     if (value >= 45) return { label: "최적 도전", description: "적절한 어려움 — 학습에 가장 좋은 구간", color: "var(--grey-800)", bgColor: "rgba(17,17,17,0.05)" };
     if (value >= 25) return { label: "여유", description: "쉬운 내용 — 부하가 낮은 구간", color: "var(--grey-600)", bgColor: "rgba(71,85,105,0.08)" };
     return { label: "너무 쉬움", description: "자극이 부족해 깊은 학습이 어려워요", color: "var(--grey-500)", bgColor: "rgba(100,116,139,0.08)" };
   }
 
   // novelty
-  if (value >= 85) return { label: "맥락 끊김", description: "변화가 너무 커서 혼란이 올 수 있어요", color: "var(--primary-hover)", bgColor: "rgba(229,95,0,0.12)" };
-  if (value >= 70) return { label: "급변", description: "큰 변화 — 잘 연결해주면 학습에 도움돼요", color: "var(--primary)", bgColor: "rgba(255,107,0,0.10)" };
-  if (value >= 45) return { label: "전환 중", description: "새로운 내용 도입 — 생산적 자극 구간", color: "var(--primary)", bgColor: "rgba(255,107,0,0.10)" };
+  if (value >= 85) return { label: "맥락 끊김", description: "변화가 너무 커서 혼란이 올 수 있어요", color: "var(--primary-hover)", bgColor: "rgba(0,98,204,0.12)" };
+  if (value >= 70) return { label: "급변", description: "큰 변화 — 잘 연결해주면 학습에 도움돼요", color: "var(--primary)", bgColor: "rgba(0,122,255,0.10)" };
+  if (value >= 45) return { label: "전환 중", description: "새로운 내용 도입 — 생산적 자극 구간", color: "var(--primary)", bgColor: "rgba(0,122,255,0.10)" };
   if (value >= 20) return { label: "점진 변화", description: "안정적으로 흐름이 이어지는 중", color: "var(--grey-700)", bgColor: "rgba(51,65,85,0.08)" };
   return { label: "안정", description: "기존 흐름 유지 — 변화 없음", color: "var(--grey-500)", bgColor: "rgba(100,116,139,0.08)" };
 }

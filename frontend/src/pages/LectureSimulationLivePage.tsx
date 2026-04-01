@@ -146,48 +146,46 @@ export default function LectureSimulationLivePage() {
 
   return (
     <div className="sim-page">
-      {/* ─── Header ─── */}
-      <header className="sim-hdr">
-        <Link to={`/lectures/${date}`} className="sim-back"><ArrowLeft size={16} />강의 상세</Link>
-        <h1 className="sim-title">{sim.metadata.subject}</h1>
-        <p className="sim-meta">{formatDate(sim.lecture_date)} · {sim.metadata.instructor} · {liveFrames.frames.length}줄</p>
-      </header>
-
-      {/* ─── Brain 3D ─── */}
-      <section className="sim-sec">
-        <div className="sim-brain">
-          <BrainCanvas meshUrl={sim.assets.mesh_glb} colors={colorSeg.hemispheres} intensity={frame.heuristic_intensity} changeBoost={frame.heuristic_change_boost} />
+      {/* ─── macOS Toolbar ─── */}
+      <div className="sim-toolbar">
+        <Link to={`/lectures/${date}`} className="sim-back"><ArrowLeft size={14} /> 강의 상세</Link>
+        <span className="sim-toolbar-title">{sim.metadata.subject}</span>
+        <div className="sim-toolbar-controls">
+          <button className="sim-play" onClick={() => setPlaying((p) => !p)}>{playing ? <Pause size={14} /> : <Play size={14} />}</button>
+          <div className="sim-speeds">{SPEEDS.map((s) => <button key={s} onClick={() => setSpeed(s)} className={`sim-spd${speed === s ? " on" : ""}`}>{s}x</button>)}</div>
+          <span className="sim-counter">{fi + 1}/{liveFrames.frames.length}</span>
         </div>
-      </section>
+      </div>
 
-      {/* ─── Controls ─── */}
-      <section className="sim-sec sim-ctrl">
-        <div className="sim-ctrl-bar">
-          <div className="sim-ctrl-left">
-            <button className="sim-play" onClick={() => setPlaying((p) => !p)}>{playing ? <Pause size={16} /> : <Play size={16} />}</button>
-            <div className="sim-speeds">{SPEEDS.map((s) => <button key={s} onClick={() => setSpeed(s)} className={`sim-spd${speed === s ? " on" : ""}`}>{s}x</button>)}</div>
-            <span className="sim-seg-pill">{seg.segment_id}</span>
-            <span className="sim-ts">{line.timestamp}</span>
+      {/* ─── Main 2-column layout ─── */}
+      <div className="sim-main">
+        {/* Left: Brain 3D + controls */}
+        <div className="sim-brain-panel">
+          <div className="sim-brain">
+            <BrainCanvas meshUrl={sim.assets.mesh_glb} colors={colorSeg.hemispheres} intensity={frame.heuristic_intensity} changeBoost={frame.heuristic_change_boost} />
           </div>
-          <span className="sim-counter">{fi + 1} / {liveFrames.frames.length}</span>
+          <div className="sim-brain-controls">
+            <div className="sim-ctrl-bar">
+              <span className="sim-seg-pill">{seg.segment_id}</span>
+              <span className="sim-ts">{line.timestamp}</span>
+              <span className="sim-meta-date">{formatDate(sim.lecture_date)}</span>
+            </div>
+            <input className="sim-scrub" type="range" min={0} max={liveFrames.frames.length - 1} value={fi} onChange={(e) => jump(Number(e.target.value))} />
+            <div className="sim-jumps">{jumpIds.map((id) => <button key={id} className={`sim-jmp${id === seg.segment_id ? " on" : ""}`} onClick={() => { const i = liveFrames.frames.findIndex((f) => f.segment_id === id); if (i >= 0) jump(i); }}>{id}</button>)}</div>
+          </div>
         </div>
-        <input className="sim-scrub" type="range" min={0} max={liveFrames.frames.length - 1} value={fi} onChange={(e) => jump(Number(e.target.value))} />
-        <div className="sim-jumps">{jumpIds.map((id) => <button key={id} className={`sim-jmp${id === seg.segment_id ? " on" : ""}`} onClick={() => { const i = liveFrames.frames.findIndex((f) => f.segment_id === id); if (i >= 0) jump(i); }}>{id}</button>)}</div>
-      </section>
 
-      {/* ─── Current Text + Signal ─── */}
-      <section className="sim-sec">
-        <div className="sim-now-card">
-          <p className="sim-now-text">{line.text}</p>
-          <p className="sim-now-signal"><strong>{interp.dominantSignal}</strong> — {interp.microSummary}</p>
-        </div>
-      </section>
+        {/* Right: Insight panel (scrollable) */}
+        <div className="sim-insight-panel">
+          {/* 현재 텍스트 + 신호 */}
+          <div className="sim-insight-section">
+            <p className="sim-card-lbl">현재 텍스트</p>
+            <p className="sim-now-text">{line.text}</p>
+            <p className="sim-now-signal"><strong>{interp.dominantSignal}</strong> — {interp.microSummary}</p>
+          </div>
 
-      {/* ─── Insight Grid: 3 columns ─── */}
-      <section className="sim-sec">
-        <div className="sim-grid3">
           {/* 패턴 진단 */}
-          <div className="sim-card">
+          <div className="sim-insight-section">
             <p className="sim-card-lbl">패턴 진단</p>
             <div className="sim-card-badge-row">
               <span className="sim-badge-accent">{combo.pattern}</span>
@@ -198,7 +196,7 @@ export default function LectureSimulationLivePage() {
           </div>
 
           {/* 뇌 기능 프로필 */}
-          <div className="sim-card">
+          <div className="sim-insight-section">
             <div className="sim-card-badge-row">
               <p className="sim-card-lbl">뇌 기능 프로필</p>
               <Brain size={14} />
@@ -220,7 +218,7 @@ export default function LectureSimulationLivePage() {
           </div>
 
           {/* 학습 상태 */}
-          <div className="sim-card">
+          <div className="sim-insight-section">
             <p className="sim-card-lbl">학습 상태</p>
             <div className="sim-status-grid">
               <div className="sim-status-item">
@@ -244,19 +242,17 @@ export default function LectureSimulationLivePage() {
             )}
           </div>
         </div>
-      </section>
+      </div>
 
       {/* ─── Metrics Row ─── */}
-      <section className="sim-sec">
-        <div className="sim-grid3">
-          <MetricGauge label="Attention" value={a} metric="attention" />
-          <MetricGauge label="Load" value={l} metric="load" />
-          <MetricGauge label="Novelty" value={n} metric="novelty" />
-        </div>
-      </section>
+      <div className="sim-metrics-row">
+        <MetricGauge label="Attention" value={a} metric="attention" />
+        <MetricGauge label="Load" value={l} metric="load" />
+        <MetricGauge label="Novelty" value={n} metric="novelty" />
+      </div>
 
-      {/* ─── Timeline ─── */}
-      <section className="sim-sec">
+      {/* ─── Timeline (full width) ─── */}
+      <div className="sim-timeline-section">
         <p className="sim-sec-title">타임라인</p>
         <div className="sim-chart">
           <ResponsiveContainer width="100%" height="100%">
@@ -274,7 +270,7 @@ export default function LectureSimulationLivePage() {
             </LineChart>
           </ResponsiveContainer>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
