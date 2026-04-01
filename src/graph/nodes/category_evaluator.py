@@ -155,6 +155,7 @@ def make_evaluator(harness_path: str | Path) -> Callable:
 
         # 항목별 chunk_focus에 따라 평가
         all_chunk_results: list[list[ItemScore]] = []
+        chunk_detail_results: list[dict] = []
 
         # 모든 항목의 chunk_focus가 동일한지 확인
         focus_groups: dict[str, list[HarnessItem]] = {}
@@ -176,6 +177,15 @@ def make_evaluator(harness_path: str | Path) -> Callable:
                     item_ids = {i.item_id for i in items}
                     filtered = [s for s in chunk_scores if s.item_id in item_ids]
                     all_chunk_results.append(filtered)
+
+                    # 청크별 개별 점수 기록 (hop 실험용)
+                    chunk_detail_results.append({
+                        "chunk_id": chunk.chunk_id,
+                        "start_time": chunk.start_time,
+                        "end_time": chunk.end_time,
+                        "focus": focus,
+                        "scores": [s.model_dump() for s in filtered],
+                    })
                 except Exception:
                     logger.exception(
                         "Failed to evaluate chunk %s for %s",
@@ -195,6 +205,7 @@ def make_evaluator(harness_path: str | Path) -> Callable:
 
         return {
             "category_scores": {harness.category: merged_scores},
+            "chunk_scores_detail": {harness.category: chunk_detail_results},
         }
 
     def evaluate(state: EvaluationState) -> dict:

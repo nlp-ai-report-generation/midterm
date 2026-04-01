@@ -105,6 +105,7 @@ def run_experiment(config: ExperimentConfig) -> Path:
                 "transcript_path": str(transcript_path),
                 "experiment_config": config.to_dict(),
                 "category_scores": {},
+                "chunk_scores_detail": {},
             }
 
             result = graph.invoke(initial_state)
@@ -132,6 +133,7 @@ def run_experiment(config: ExperimentConfig) -> Path:
                 "recommendations": result.get("recommendations", []),
                 "token_usage": result.get("token_usage", {}),
                 "cost_usd": result.get("cost_usd", 0),
+                "chunk_scores_detail": result.get("chunk_scores_detail", {}),
             }
 
             with open(result_file, "w", encoding="utf-8") as f:

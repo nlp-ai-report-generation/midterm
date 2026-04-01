@@ -37,6 +37,9 @@ class EvaluationState(TypedDict):
     # 카테고리별 평가 결과 (병렬 노드가 각각 채움)
     category_scores: Annotated[dict[str, list[ItemScore]], _merge_category_scores]
 
+    # 청크별 개별 점수 (hop 실험용)
+    chunk_scores_detail: Annotated[dict[str, list[dict]], _merge_category_scores]
+
     # 집계 결과
     weighted_total: float
     weighted_average: float

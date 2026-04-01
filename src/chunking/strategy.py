@@ -6,8 +6,6 @@
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
-
 from src.models import ChunkInfo, TranscriptLine
 
 # <HH:MM:SS> speaker_id: text 형식 파싱
@@ -60,14 +58,18 @@ def parse_transcript(raw_text: str) -> list[TranscriptLine]:
 def chunk_by_time_window(
     lines: list[TranscriptLine],
     window_minutes: int = 30,
-    overlap_minutes: int = 5,
+    hop_minutes: int | None = None,
+    overlap_minutes: int | None = None,
 ) -> list[ChunkInfo]:
-    """타임스탬프 기반 시간 윈도우 청킹.
+    """타임스탬프 기반 슬라이딩 윈도우 청킹.
 
     Args:
         lines: 파싱된 스크립트 라인 리스트
-        window_minutes: 윈도우 크기 (분)
-        overlap_minutes: 윈도우 간 오버랩 (분)
+        window_minutes: 윈도우 크기 (분). 각 청크가 커버하는 시간 범위.
+        hop_minutes: 슬라이딩 간격 (분). 다음 청크의 시작 위치까지의 이동 거리.
+                     hop < window 이면 오버랩 발생, hop == window 이면 오버랩 없음.
+        overlap_minutes: (하위 호환) 기존 오버랩 기반 API. 제공되면
+                         hop_minutes = window_minutes - overlap_minutes로 계산.
 
     Returns:
         ChunkInfo 리스트
@@ -75,9 +77,16 @@ def chunk_by_time_window(
     if not lines:
         return []
 
+    if hop_minutes is None:
+        if overlap_minutes is None:
+            overlap_minutes = 5
+        hop_minutes = window_minutes - overlap_minutes
+
+    if hop_minutes <= 0:
+        raise ValueError("hop_minutes must be positive")
+
     window_sec = window_minutes * 60
-    overlap_sec = overlap_minutes * 60
-    step_sec = window_sec - overlap_sec
+    step_sec = hop_minutes * 60
 
     start_sec = lines[0].seconds
     end_sec = lines[-1].seconds

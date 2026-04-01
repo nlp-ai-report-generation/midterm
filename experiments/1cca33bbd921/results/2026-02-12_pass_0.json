@@ -1,0 +1,78 @@
+{
+  "lecture_date": "2026-02-12",
+  "pass_num": 0,
+  "transcript_path": "C:\\Users\\myhom\\Jihoon\\bootcamp\\intern\\init\\NLP 과제 1 - AI 강의 분석 리포트 생성기\\강의 스크립트\\2026-02-12_kdt-backendj-21th.txt",
+  "metadata": {
+    "course_id": "",
+    "course_name": "백엔드 부트캠프 21기: Java",
+    "date": "2026-02-12",
+    "subjects": [
+      "Front-End Programming"
+    ],
+    "contents": [
+      "React.js 기반의 웹 사이트 구현",
+      "컴포넌트 스타일링(테일윈드 등)"
+    ],
+    "instructor": "김영아",
+    "sub_instructors": [
+      "김다은",
+      "정석현"
+    ]
+  },
+  "category_results": [
+    {
+      "category_name": "1. 언어 표현 품질",
+      "items": [],
+      "weighted_average": 0.0
+    },
+    {
+      "category_name": "2. 강의 도입 및 구조",
+      "items": [],
+      "weighted_average": 0.0
+    },
+    {
+      "category_name": "3. 개념 설명 명확성",
+      "items": [],
+      "weighted_average": 0.0
+    },
+    {
+      "category_name": "4. 예시 및 실습 연계",
+      "items": [],
+      "weighted_average": 0.0
+    },
+    {
+      "category_name": "5. 수강생 상호작용",
+      "items": [],
+      "weighted_average": 0.0
+    }
+  ],
+  "weighted_average": 0.0,
+  "weighted_total": 0,
+  "category_averages": {
+    "1. 언어 표현 품질": 0.0,
+    "2. 강의 도입 및 구조": 0.0,
+    "3. 개념 설명 명확성": 0.0,
+    "4. 예시 및 실습 연계": 0.0,
+    "5. 수강생 상호작용": 0.0
+  },
+  "category_scores": {
+    "1. 언어 표현 품질": [],
+    "2. 강의 도입 및 구조": [],
+    "3. 개념 설명 명확성": [],
+    "4. 예시 및 실습 연계": [],
+    "5. 수강생 상호작용": []
+  },
+  "report_markdown": "# 리포트 생성 실패\n\n리포트 생성 중 오류가 발생했습니다.",
+  "strengths": [],
+  "improvements": [],
+  "recommendations": [],
+  "token_usage": {},
+  "cost_usd": 0,
+  "chunk_scores_detail": {
+    "1. 언어 표현 품질": [],
+    "2. 강의 도입 및 구조": [],
+    "3. 개념 설명 명확성": [],
+    "4. 예시 및 실습 연계": [],
+    "5. 수강생 상호작용": []
+  }
+}

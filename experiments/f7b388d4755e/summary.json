@@ -1,0 +1,11 @@
+{
+  "experiment_id": "f7b388d4755e",
+  "name": "hop_75pct_w30",
+  "total_lectures": 2,
+  "total_passes": 1,
+  "results_count": 2,
+  "average_scores": {
+    "2026-02-02": 3.111111111111111,
+    "2026-02-12": 3.1333333333333333
+  }
+}

@@ -6,6 +6,13 @@
 
 ## 최근 완료
 
+- window 길이 민감도 실험 자동화 스크립트 추가: hop 비율 50% 고정(30/15, 60/30, 120/60) + 파일럿 3강의(2026-02-02, 2026-02-09, 2026-02-24) 고정 실행/비교 지원 (`scripts/run_window_experiment.py`)
+- window 비교 리포트 모듈 추가: Markdown + JSON 동시 생성, 필수 섹션 `사용 데이터`, `실험 설정`, `관찰된 사실`, `해석`, `개선 제안` 포함 (`src/experiment/window_comparator.py`)
+- 공용 실험 CLI에 window 비교 옵션 추가 (`scripts/run_experiment.py --window-compare`)
+- window 실험 테스트 3종 추가(조건 생성, 비교 정렬/필수 섹션, compare-only 흐름) 및 전체 테스트 재검증 통과 (`tests/test_window_experiment.py`)
+- `chunk_by_time_window`를 `hop_minutes` 중심 API로 유지하면서 `overlap_minutes` 하위 호환을 추가해 기존 테스트/호출부가 깨지지 않도록 보정 (`src/chunking/strategy.py`)
+- preprocessor와 실험 설정 로딩에서 `chunk_overlap_minutes` 구설정 JSON도 자동 해석해 `chunk_hop_minutes`로 변환하도록 호환성 처리 (`src/graph/nodes/preprocessor.py`, `src/experiment/config.py`)
+- 변경 반영 후 백엔드 테스트 재검증 완료: `capstone` 인터프리터 기준 `python -m pytest -q` 51개 통과, 변경 스크립트 CLI help 동작 확인 (`scripts/run_experiment.py`, `scripts/run_hop_experiment.py`)
 - 강의 상세 페이지의 시뮬레이션 카드에서 중복 `요약 보기` CTA를 제거하고, 카드 시각화를 평면 brain icon 대신 summary와 같은 축약 3D mesh 톤으로 교체 (`frontend/src/app/lectures/[date]/page.tsx`)
 - `/lectures/:date/simulation` 요약 탭의 대표 시각화를 실제 `fsaverage5` mesh 기반 축약 3D로 전환하고, summary 전용 색 대비/자동 회전/flat shading을 적용 (`frontend/src/pages/LectureSimulationSummaryPage.tsx`, `frontend/src/components/simulation/BrainCanvas.tsx`, `frontend/src/app/globals.css`)
 - `/lectures/:date/simulation/live` 우측 레일을 `현재 줄 + 지금 읽히는 패턴 + 지금 반응하는 영역 + 왜 이렇게 해석해요` 구조로 재정리하고, 앞뒤 줄 다중 박스 의존도를 줄임 (`frontend/src/pages/LectureSimulationLivePage.tsx`, `frontend/src/app/globals.css`)
@@ -87,7 +94,7 @@
 - 평가 파이프라인: **구현 완료** (`src/graph/`, `src/harnesses/`, `src/chunking/`, `src/scoring/`)
 - 실험 프레임워크: **구현 완료** (`src/experiment/`)
 - 기존 코드(src/preprocessing, src/rule_analysis 등): 유지, 하이브리드 활용 가능
-- 테스트: 46개 통과 (chunking, scoring, metrics, harness loading)
+- 테스트: 54개 통과 (window 실험 비교 테스트 포함 전체 단위 테스트)
 - 프론트 UI: Apple 스타일 rail + 플로팅 내비 패널 + 모바일 하단 탭 + 공통 hero/panel 체계 기준으로 재정비 완료 (`frontend/`)
 - 프론트 시뮬레이션 UI: 파일럿 3강의 대상 실험용 3D 뇌 시각화/원문 브라우저 라우트 추가 완료, `fsaverage5` cortical mesh GLB 자산 연결 완료 (`frontend/src/pages/LectureSimulationPage.tsx`, `frontend/src/pages/LectureSimulationTranscriptPage.tsx`, `frontend/public/data/simulations/brain-mesh.glb`)
 - 정적 평가 데이터: 실제 분석 결과 1건 반영, 나머지 강의는 배치 실행 필요
