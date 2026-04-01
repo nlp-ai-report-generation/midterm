@@ -11,15 +11,14 @@ import {
 } from "recharts";
 import { Brain, ChevronRight, FileText, Sparkles } from "lucide-react";
 import { useRole } from "@/contexts/RoleContext";
-import { getEvaluationByModel, getSimulation, getSimulationColors, getSimulationSummaryVisual, MODEL_LABELS, type ModelKey } from "@/lib/data";
+import { getEvaluationByModel, getSimulation, MODEL_LABELS, type ModelKey } from "@/lib/data";
 import { formatDate, scoreColor, scoreBadgeTextColor, scoreLabel, weightLabel } from "@/lib/utils";
 import { exportToNotion } from "@/lib/api";
 import ReportModal from "@/components/shared/ReportModal";
-import BrainCanvas from "@/components/simulation/BrainCanvas";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import FeedbackCard from "@/components/shared/FeedbackCard";
 import type { EvaluationResult, CategoryResult, ItemScore } from "@/types/evaluation";
-import type { BrainIconFramePayload, SegmentColorPayload, SimulationResult } from "@/types/simulation";
+import type { SimulationResult } from "@/types/simulation";
 
 export default function LectureDetailPage() {
   const params = useParams();
@@ -28,8 +27,6 @@ export default function LectureDetailPage() {
   const [model, setModel] = useState<ModelKey>("gpt4o-mini");
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
   const [simulation, setSimulation] = useState<SimulationResult | null>(null);
-  const [summaryVisual, setSummaryVisual] = useState<BrainIconFramePayload | null>(null);
-  const [segmentColors, setSegmentColors] = useState<SegmentColorPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
@@ -49,22 +46,11 @@ export default function LectureDetailPage() {
     let cancelled = false;
 
     getSimulation(date)
-      .then(async (result) => {
-        const [visual, colorPayload] = await Promise.all([
-          result.summary_visual ? getSimulationSummaryVisual(result.summary_visual.brain_icon_frames_json) : Promise.resolve(null),
-          getSimulationColors(result.assets.segment_colors_json),
-        ]);
-        if (cancelled) return;
-        setSimulation(result);
-        setSummaryVisual(visual);
-        setSegmentColors(colorPayload);
+      .then((result) => {
+        if (!cancelled) setSimulation(result);
       })
       .catch(() => {
-        if (!cancelled) {
-          setSimulation(null);
-          setSummaryVisual(null);
-          setSegmentColors(null);
-        }
+        if (!cancelled) setSimulation(null);
       });
 
     return () => {
@@ -113,12 +99,6 @@ export default function LectureDetailPage() {
     score: value,
     fullMark: 5,
   }));
-  const firstSummaryFrame = summaryVisual?.frames[0] ?? null;
-  const firstColorSegment =
-    segmentColors && firstSummaryFrame
-      ? segmentColors.segments.find((segment) => segment.segment_id === firstSummaryFrame.segment_id) ?? null
-      : null;
-
   // Role-dependent feedback config
   const feedbackConfig = isOperator
     ? {
@@ -320,18 +300,16 @@ export default function LectureDetailPage() {
             <p className="text-caption">3D 반응 시각화와 원문 동기화를 한 화면 흐름으로 볼 수 있어요.</p>
           </div>
         </div>
-        {simulation && firstSummaryFrame ? (
+        {simulation ? (
           <div className="lecture-simulation-card-body">
-            <div className="lecture-simulation-card-visual">
-              {firstColorSegment ? (
-                <BrainCanvas
-                  meshUrl={simulation.assets.mesh_glb}
-                  colors={firstColorSegment.hemispheres}
-                  intensity={Math.min(1, 0.54 + firstSummaryFrame.proxies.attention / 140)}
-                  changeBoost={Math.min(1, 0.42 + firstSummaryFrame.proxies.novelty / 140)}
-                  variant="summary"
-                />
-              ) : null}
+            <div className="lecture-simulation-card-visual" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <img
+                src={`${import.meta.env.BASE_URL}emoji/exploding-head.png`}
+                alt="뇌 시뮬레이션"
+                width={80}
+                height={80}
+                style={{ objectFit: "contain" }}
+              />
             </div>
             <div className="lecture-simulation-card-copy">
               <div className="simulation-pill-row">

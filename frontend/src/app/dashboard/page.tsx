@@ -92,11 +92,14 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
   return (
     <div className="page-content">
       {/* Page Header */}
-      <div>
-        <h1 className="text-title">강의 평가 현황</h1>
-        <p className="text-caption" style={{ marginTop: 4 }}>
-          전체 강의의 품질 현황을 한눈에 볼 수 있어요
-        </p>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <img src={`${import.meta.env.BASE_URL}emoji/books.png`} alt="" width={36} height={36} style={{ objectFit: "contain" }} />
+        <div>
+          <h1 className="text-title">강의 평가 현황</h1>
+          <p className="text-caption" style={{ marginTop: 4 }}>
+            전체 강의의 품질 현황을 한눈에 볼 수 있어요
+          </p>
+        </div>
       </div>
 
       {/* 핵심 지표 */}
@@ -110,7 +113,10 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
 
       {/* 카테고리별 평균 점수 */}
       <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 4 }}>카테고리별 평균</h2>
+        <h2 className="text-section" style={{ marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+          <img src={`${import.meta.env.BASE_URL}emoji/sparkles.png`} alt="" width={22} height={22} style={{ objectFit: "contain" }} />
+          카테고리별 평균
+        </h2>
         <p className="text-caption" style={{ marginBottom: 24 }}>
           5개 영역별 전체 강의 평균이에요. 바가 긴 영역이 잘하고 있는 부분이에요
         </p>
@@ -279,11 +285,14 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
   return (
     <div className="page-content">
       {/* Page Header */}
-      <div>
-        <h1 className="text-title">{displayTitle}</h1>
-        <p className="text-caption" style={{ marginTop: 4 }}>
-          수업을 돌아보고 다음 강의를 준비해보세요
-        </p>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <img src={`${import.meta.env.BASE_URL}emoji/books.png`} alt="" width={36} height={36} style={{ objectFit: "contain" }} />
+        <div>
+          <h1 className="text-title">{displayTitle}</h1>
+          <p className="text-caption" style={{ marginTop: 4 }}>
+            수업을 돌아보고 다음 강의를 준비해보세요
+          </p>
+        </div>
       </div>
 
       {/* KPI Cards */}

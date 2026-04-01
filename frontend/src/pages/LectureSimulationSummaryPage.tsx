@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { AlertTriangle, ArrowLeft, Brain, ChevronRight, Sparkles, Waypoints } from "lucide-react";
-import BrainCanvas from "@/components/simulation/BrainCanvas";
 import { getSimulation, getSimulationColors, getSimulationSummaryVisual } from "@/lib/data";
 import { formatDate } from "@/lib/utils";
 import {
@@ -76,10 +75,6 @@ export default function LectureSimulationSummaryPage() {
     if (!simulation || !selectedFrame) return null;
     return simulation.segments.find((segment) => segment.segment_id === selectedFrame.segment_id) ?? null;
   }, [selectedFrame, simulation]);
-  const selectedColorSegment = useMemo(() => {
-    if (!segmentColors || !selectedFrame) return null;
-    return segmentColors.segments.find((segment) => segment.segment_id === selectedFrame.segment_id) ?? null;
-  }, [segmentColors, selectedFrame]);
   const selectedCombo = useMemo(() => {
     if (!selectedSegment) return null;
     return interpretMetricCombo(
@@ -159,16 +154,14 @@ export default function LectureSimulationSummaryPage() {
           </div>
 
           <div className="simulation-summary-stage-grid">
-            <div className="simulation-summary-mesh-shell">
-              {selectedColorSegment ? (
-                <BrainCanvas
-                  meshUrl={simulation.assets.mesh_glb}
-                  colors={selectedColorSegment.hemispheres}
-                  intensity={Math.min(1, 0.54 + selectedFrame.proxies.attention / 140)}
-                  changeBoost={Math.min(1, 0.42 + selectedFrame.proxies.novelty / 140)}
-                  variant="summary"
-                />
-              ) : null}
+            <div className="simulation-summary-mesh-shell" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <img
+                src={`${import.meta.env.BASE_URL}emoji/exploding-head.png`}
+                alt="뇌 시뮬레이션"
+                width={80}
+                height={80}
+                style={{ objectFit: "contain" }}
+              />
             </div>
             <div className="simulation-summary-stack">
               <div className="simulation-summary-card simulation-summary-card-strong">
