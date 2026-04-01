@@ -102,7 +102,7 @@ export default function ReportModal({
         <div className="report-body">
           {/* Header */}
           <div className="report-header">
-            <img src="/emoji/exploding-head.png" alt="" width={40} height={40} />
+            <img src="/emoji/sparkles.png" alt="" width={40} height={40} />
             <div>
               <p className="report-title">{subject} 강의 분석 리포트</p>
               <p className="report-meta">{lectureDate} · {instructor}</p>

@@ -156,7 +156,7 @@ export default function LectureSimulationSummaryPage() {
           <div className="simulation-summary-stage-grid">
             <div className="simulation-summary-mesh-shell" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
               <img
-                src={`${import.meta.env.BASE_URL}emoji/exploding-head.png`}
+                src={`${import.meta.env.BASE_URL}emoji/sparkles.png`}
                 alt="뇌 시뮬레이션"
                 width={80}
                 height={80}

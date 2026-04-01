@@ -794,3 +794,204 @@ export function roiPrescription(profile: FunctionalProfile): RoiPrescription {
     urgency: "info",
   };
 }
+
+/* ─── ROI Direct Interpretation (A-grade, Destrieux atlas) ─── */
+
+/**
+ * Destrieux ROI를 8가지 뇌 기능 카테고리로 분류.
+ * 기존 5카테고리(functional_hint)보다 세밀한 분류.
+ * 각 카테고리는 수십 년간의 fMRI/lesion 연구에 기반.
+ */
+export type BrainFunction =
+  | "auditory"    // 청각 처리 (Heschl, STG)
+  | "language"    // 언어 이해 (Wernicke, MTG, IFG)
+  | "executive"   // 실행 기능/작업기억 (DLPFC, SFG)
+  | "attention"   // 주의 집중 (SPL, IPS, SMG)
+  | "visual"      // 시각 처리 (V1, cuneus, occipital)
+  | "memory"      // 기억 부호화 (parahippocampal, fusiform, angular)
+  | "conflict"    // 인지 갈등/현저성 (ACC, insula)
+  | "dmn";        // 내적 사고/이탈 (precuneus, PCC)
+
+const ROI_TO_FUNCTION: Record<string, { fn: BrainFunction; label: string; interpretation: string }> = {
+  // 청각
+  S_temporal_transverse:     { fn: "auditory",   label: "청각 피질",      interpretation: "음성 자극에 반응 중 — 강의 음성을 처리하고 있어요" },
+  "G_temp_sup-G_T_transv":  { fn: "auditory",   label: "1차 청각피질",   interpretation: "소리의 시간적 특성을 분석하고 있어요" },
+  // 언어 이해
+  "G_temp_sup-Lateral":     { fn: "language",    label: "언어 이해",      interpretation: "설명의 언어적 내용을 따라가고 있어요 (Wernicke 영역)" },
+  "G_temp_sup-Plan_tempo":  { fn: "language",    label: "음운 처리",      interpretation: "음운 구조를 분석 중 — 새로운 용어 등장 시 상승" },
+  "G_temp_sup-Plan_polar":  { fn: "language",    label: "운율 처리",      interpretation: "화자의 톤/억양 변화에 반응하고 있어요" },
+  S_temporal_sup:            { fn: "language",    label: "의미 통합",      interpretation: "말의 의미를 적극적으로 해석하고 있어요" },
+  G_temporal_middle:         { fn: "language",    label: "개념 처리",      interpretation: "개념/용어의 의미를 처리하고 있어요 (중측두회)" },
+  G_temporal_inf:            { fn: "language",    label: "의미 기억",      interpretation: "시각적 개념 이미지나 의미 기억을 연결 중이에요" },
+  Pole_temporal:             { fn: "language",    label: "서사 이해",      interpretation: "이야기의 흐름을 연결하고 있어요 (측두극)" },
+  // 실행 기능
+  "G_front_inf-Opercular":  { fn: "executive",   label: "구문 분석",      interpretation: "문장 구조를 분석하거나 내적으로 정리하고 있어요 (Broca BA44)" },
+  "G_front_inf-Triangul":   { fn: "executive",   label: "의미 선택",      interpretation: "여러 의미 중 적절한 해석을 선택하고 있어요 (Broca BA45)" },
+  G_front_middle:            { fn: "executive",   label: "작업기억",       interpretation: "정보를 머릿속에 유지하며 조작하고 있어요 (DLPFC)" },
+  G_front_sup:               { fn: "executive",   label: "계획/조직화",    interpretation: "정보를 능동적으로 조직화하고 계획하고 있어요" },
+  G_and_S_frontomargin:      { fn: "executive",   label: "추상적 통합",    interpretation: "여러 정보를 동시에 비교·통합하고 있어요 (전두극)" },
+  G_and_S_transv_frontopol:  { fn: "executive",   label: "메타인지",       interpretation: "자기 이해를 점검하거나 대안적 해석을 탐색하고 있어요" },
+  // 주의
+  G_parietal_sup:            { fn: "attention",   label: "하향식 주의",    interpretation: "주의를 의도적으로 집중하고 있어요 (상두정소엽)" },
+  S_intrapariet_and_P_trans: { fn: "attention",   label: "주의 전환",      interpretation: "주의를 전환하거나 수량 정보를 처리하고 있어요 (IPS)" },
+  "G_pariet_inf-Supramar":   { fn: "attention",   label: "음운 유지",      interpretation: "들은 정보를 단기 기억에 유지하며 처리 중이에요 (연상회)" },
+  // 시각
+  S_calcarine:               { fn: "visual",      label: "1차 시각",       interpretation: "시각 자극이 강하게 입력되고 있어요 (V1)" },
+  G_cuneus:                  { fn: "visual",      label: "시각 처리",      interpretation: "기본 시각 패턴을 처리하고 있어요" },
+  G_occipital_sup:           { fn: "visual",      label: "공간 시각",      interpretation: "시각적 공간 배치를 처리하고 있어요 (다이어그램/레이아웃)" },
+  G_occipital_middle:        { fn: "visual",      label: "형태 인식",      interpretation: "시각적 형태/패턴을 분석하고 있어요" },
+  G_and_S_occipital_inf:     { fn: "visual",      label: "객체 식별",      interpretation: "시각적 객체를 식별하고 있어요" },
+  Pole_occipital:            { fn: "visual",      label: "중심시야",       interpretation: "화면 중앙을 주시하며 세밀하게 보고 있어요" },
+  // 기억
+  "G_oc-temp_lat-fusifor":   { fn: "memory",      label: "글자/얼굴 인식", interpretation: "텍스트나 글자를 시각적으로 처리하고 있어요 (방추회)" },
+  "G_oc-temp_med-Lingual":   { fn: "memory",      label: "시각 기억",      interpretation: "시각적 세부사항을 기억에 연결하고 있어요 (설회)" },
+  "G_oc-temp_med-Parahip":   { fn: "memory",      label: "기억 부호화",    interpretation: "장면/맥락 정보를 기억에 부호화하고 있어요 (해마방회)" },
+  "G_pariet_inf-Angular":    { fn: "memory",      label: "의미 통합 허브", interpretation: "여러 정보를 종합하여 이해하고 있어요 (각회)" },
+  // 인지 갈등
+  "G_and_S_cingul-Ant":      { fn: "conflict",    label: "갈등 감지",      interpretation: "예상과 다른 정보를 감지했어요 — 인지적 갈등 상태 (ACC)" },
+  "G_and_S_cingul-Mid-Ant":  { fn: "conflict",    label: "인지 노력",      interpretation: "인지적 노력을 기울이고 있어요" },
+  G_insular_short:           { fn: "conflict",    label: "현저성 감지",    interpretation: "감정적으로 현저한 자극에 반응하고 있어요 (전방 도피질)" },
+  // DMN (내적 사고/이탈)
+  G_precuneus:               { fn: "dmn",         label: "자기참조/심상",  interpretation: "과거 경험과 연결하거나 시각적으로 상상하고 있어요 (쐐기앞소엽)" },
+  "G_cingul-Post-dorsal":    { fn: "dmn",         label: "내적 성찰",      interpretation: "내적 성찰 중이거나 주의가 이탈하고 있을 수 있어요 (PCC)" },
+  "G_cingul-Post-ventral":   { fn: "dmn",         label: "기억 인출",      interpretation: "기억을 인출하거나 공간 기억을 처리하고 있어요" },
+};
+
+/** ROI 하나를 직접 해석 (A등급) */
+export function interpretRoiDirectly(roi: RoiMetricSummary): {
+  function: BrainFunction;
+  label: string;
+  interpretation: string;
+} | null {
+  const entry = ROI_TO_FUNCTION[roi.roi_name];
+  if (!entry) return null;
+  return { function: entry.fn, label: entry.label, interpretation: entry.interpretation };
+}
+
+/** Segment의 활성 ROI를 직접 해석하여 상위 3개 반환 */
+export function interpretTopRois(segment: SimulationSegment): Array<{
+  roiName: string;
+  hemisphere: string;
+  response: number;
+  function: BrainFunction;
+  label: string;
+  interpretation: string;
+}> {
+  const rois = segment.roi_insights?.top_active_rois ?? [];
+  return rois
+    .map((roi) => {
+      const info = ROI_TO_FUNCTION[roi.roi_name];
+      if (!info) return null;
+      return {
+        roiName: roi.roi_display_name,
+        hemisphere: roi.hemisphere,
+        response: roi.mean_abs_response ?? 0,
+        function: info.fn,
+        label: info.label,
+        interpretation: info.interpretation,
+      };
+    })
+    .filter((x): x is NonNullable<typeof x> => x !== null)
+    .slice(0, 3);
+}
+
+/** 8카테고리 뇌 기능 프로필 (A등급 ROI 기반) */
+export interface BrainProfile8 {
+  categories: Array<{
+    key: BrainFunction;
+    label: string;
+    value: number; // 0-100 정규화
+    isTop: boolean;
+  }>;
+  dominantFunction: BrainFunction;
+  interpretation: string;
+}
+
+const FUNCTION_LABELS: Record<BrainFunction, string> = {
+  auditory: "청각 처리",
+  language: "언어 이해",
+  executive: "실행 기능",
+  attention: "주의 집중",
+  visual: "시각 처리",
+  memory: "기억 부호화",
+  conflict: "인지 갈등",
+  dmn: "내적 사고",
+};
+
+const FUNCTION_INTERPRETATIONS: Record<BrainFunction, string> = {
+  auditory: "음성 자극을 적극적으로 처리하고 있어요",
+  language: "언어적 설명을 따라가며 의미를 해석하고 있어요",
+  executive: "정보를 능동적으로 정리하고 통합하고 있어요 — 가장 이상적인 학습 상태",
+  attention: "주의를 의도적으로 집중하거나 전환하고 있어요",
+  visual: "시각 자료를 처리하고 있어요",
+  memory: "정보를 기억에 부호화하거나 기존 지식과 연결하고 있어요",
+  conflict: "인지적 갈등이 감지됐어요 — 혼란이거나 깊은 사고일 수 있어요",
+  dmn: "내적 사고 중이에요 — 맥락 연결이거나 주의 이탈 가능성",
+};
+
+export function computeBrainProfile8(segment: SimulationSegment): BrainProfile8 {
+  const allRois = [
+    ...(segment.roi_insights?.top_active_rois ?? []),
+    ...(segment.roi_insights?.top_changed_rois ?? []),
+  ];
+
+  const sums: Record<BrainFunction, number> = {
+    auditory: 0, language: 0, executive: 0, attention: 0,
+    visual: 0, memory: 0, conflict: 0, dmn: 0,
+  };
+  const counts: Record<BrainFunction, number> = { ...sums };
+
+  for (const roi of allRois) {
+    const info = ROI_TO_FUNCTION[roi.roi_name];
+    if (!info) continue;
+    const val = roi.mean_abs_response ?? 0;
+    sums[info.fn] += val;
+    counts[info.fn] += 1;
+  }
+
+  // 평균값 계산 후 0-100 정규화
+  const avgs: Record<BrainFunction, number> = {} as any;
+  let maxAvg = 0;
+  for (const fn of Object.keys(sums) as BrainFunction[]) {
+    avgs[fn] = counts[fn] > 0 ? sums[fn] / counts[fn] : 0;
+    maxAvg = Math.max(maxAvg, avgs[fn]);
+  }
+
+  const categories = (Object.keys(sums) as BrainFunction[]).map((fn) => ({
+    key: fn,
+    label: FUNCTION_LABELS[fn],
+    value: maxAvg > 0 ? Math.round((avgs[fn] / maxAvg) * 100) : 0,
+    isTop: false,
+  }));
+
+  // 상위 2개 isTop
+  categories.sort((a, b) => b.value - a.value);
+  if (categories[0]) categories[0].isTop = true;
+  if (categories[1]) categories[1].isTop = true;
+
+  const dominant = categories[0]?.key ?? "language";
+
+  return {
+    categories,
+    dominantFunction: dominant,
+    interpretation: FUNCTION_INTERPRETATIONS[dominant],
+  };
+}
+
+/* ─── TRIBE Response Intensity (전체 ROI 평균 반응 강도, 0~10 척도) ─── */
+
+export function tribeResponseIntensity(segment: SimulationSegment): number {
+  const rois = segment.roi_insights?.top_active_rois ?? [];
+  if (rois.length === 0) return 0;
+  const avg = rois.reduce((s, r) => s + (r.mean_abs_response ?? 0), 0) / rois.length;
+  return Math.min(10, avg * 100); // 0.10 → 10
+}
+
+/* ─── TRIBE Response Change (전체 ROI 평균 변화량, 0~10 척도) ─── */
+
+export function tribeResponseChange(segment: SimulationSegment): number {
+  const rois = segment.roi_insights?.top_changed_rois ?? [];
+  if (rois.length === 0) return 0;
+  const avg = rois.reduce((s, r) => s + (r.delta_abs_response ?? 0), 0) / rois.length;
+  return Math.min(10, avg * 100);
+}

@@ -1975,6 +1975,74 @@ body {
   border-left: 3px solid #FF3B30;
 }
 
+/* ─── Simulation: ROI Direct Interpretation ─── */
+.sim-roi-direct {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  background: var(--grey-50);
+}
+.sim-roi-direct-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sim-roi-direct-label {
+  font-size: 12px;
+  font-weight: 590;
+  color: var(--primary);
+}
+.sim-roi-direct-hemi {
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(0,0,0,0.25);
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(0,0,0,0.04);
+}
+.sim-roi-direct-val {
+  font-size: 11px;
+  font-weight: 590;
+  color: rgba(0,0,0,0.5);
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+.sim-roi-direct-interp {
+  font-size: 11px;
+  color: rgba(0,0,0,0.5);
+  line-height: 1.4;
+}
+
+/* Text analysis reference (collapsible) */
+.sim-text-ref {
+  border-bottom: none;
+}
+.sim-text-ref summary {
+  cursor: pointer;
+  list-style: none;
+}
+.sim-text-ref summary::-webkit-details-marker { display: none; }
+.sim-text-ref-content {
+  padding: 8px 0;
+  font-size: 11px;
+  color: rgba(0,0,0,0.25);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Good pattern badge (green) */
+.sim-badge-good {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius);
+  background: rgba(52,199,89,0.08);
+  color: #34C759;
+  font-size: 11px;
+  font-weight: 590;
+  align-self: flex-start;
+}
+
 /* Hemisphere bar */
 .sim-hemisphere-bar {
   flex: 1;
