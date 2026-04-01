@@ -4,12 +4,14 @@ import { getAllEvaluations } from "@/lib/data";
 import { listDriveFiles } from "@/lib/api";
 import { formatDateShort } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
+import { useRole } from "@/contexts/RoleContext";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import type { EvaluationResult } from "@/types/evaluation";
 
 type SortKey = "latest" | "highest" | "lowest";
 
 export default function LecturesPage() {
+  const { isOperator } = useRole();
   const [evaluations, setEvaluations] = useState<EvaluationResult[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState<SortKey>("latest");
@@ -549,7 +551,28 @@ export default function LecturesPage() {
           <p className="text-section" style={{ marginBottom: 8 }}>아직 강의가 없어요</p>
           <p className="text-body">파일을 드래그하거나 클릭해서 업로드해보세요</p>
         </div>
+      ) : !isOperator ? (
+        /* 강사 모드: 카드 그리드 */
+        <div className="lecture-card-grid">
+          {displayed.map((evaluation) => (
+            <div key={evaluation.lecture_date} className="lecture-card">
+              <div className="lecture-card-header">
+                <span className="lecture-card-subject">{evaluation.metadata.subjects?.[0] ?? "강의"}</span>
+                <span className="lecture-card-score">{evaluation.weighted_average.toFixed(1)}</span>
+              </div>
+              <p className="lecture-card-meta">{formatDateShort(evaluation.lecture_date)} · {evaluation.metadata.instructor ?? "-"}</p>
+              {evaluation.improvements?.[0] && (
+                <p className="lecture-card-improvement">⚠ {evaluation.improvements[0]}</p>
+              )}
+              <div className="lecture-card-actions">
+                <Link to={`/lectures/${evaluation.lecture_date}`} className="btn-secondary">상세</Link>
+                <Link to={`/lectures/${evaluation.lecture_date}?tab=sim`} className="btn-primary">시뮬레이션</Link>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
+        /* 운영자 모드: 기존 테이블 */
         <div className="card" style={{ overflow: "hidden" }}>
           <div className="lecture-list-header">
             <span className="text-label">날짜</span>

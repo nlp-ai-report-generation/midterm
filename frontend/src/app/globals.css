@@ -1671,6 +1671,42 @@ body {
 .sim-wander-moderate { color: var(--color-caution); }
 .sim-wander-low { color: var(--color-flow); }
 
+/* Prescription */
+.sim-prescription {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.sim-prescription-info {
+  background: var(--surface);
+  color: var(--text-secondary);
+}
+.sim-prescription-caution {
+  background: color-mix(in srgb, var(--color-caution) 10%, transparent);
+  color: var(--color-caution);
+}
+.sim-prescription-warning {
+  background: color-mix(in srgb, var(--color-risk) 10%, transparent);
+  color: var(--color-risk);
+}
+
+/* Hemisphere bar */
+.sim-hemisphere-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--grey-200);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.sim-hemisphere-left {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
 /* Chart */
 .sim-chart {
   height: 200px;
@@ -1692,6 +1728,14 @@ body {
   .sim-brain { min-height: 250px; }
   .sim-metrics-row { grid-template-columns: 1fr; }
   .sim-chart { height: 150px; }
+}
+
+/* ─── Report Inline ─── */
+.report-inline {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 12px);
+  padding: 28px;
 }
 
 /* ─── Report Modal (macOS Quick Look) ─── */
@@ -1892,6 +1936,108 @@ body {
   display: flex;
   gap: 6px;
   margin-left: auto;
+}
+
+/* ─── Report Inline (tab version) ─── */
+.report-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 640px;
+}
+.report-inline .report-body {
+  padding: 0;
+  overflow: visible;
+}
+.report-inline .report-footer {
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding: 16px 0 0;
+}
+
+/* ─── Simulation: Prescription ─── */
+.sim-prescription {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(0,0,0,0.7);
+}
+.sim-prescription-info {
+  background: rgba(52,199,89,0.06);
+  border-left: 3px solid #34C759;
+}
+.sim-prescription-caution {
+  background: rgba(255,149,0,0.06);
+  border-left: 3px solid #FF9500;
+}
+.sim-prescription-warning {
+  background: rgba(255,59,48,0.06);
+  border-left: 3px solid #FF3B30;
+}
+
+/* Hemisphere bar */
+.sim-hemisphere-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(0,0,0,0.06);
+  overflow: hidden;
+  min-width: 60px;
+}
+.sim-hemisphere-left {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--primary);
+  transition: width 0.3s;
+}
+
+/* ─── Lecture Cards (instructor) ─── */
+.lecture-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.lecture-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: var(--radius);
+  border: 1px solid rgba(0,0,0,0.08);
+  background: var(--surface);
+}
+.lecture-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.lecture-card-subject {
+  font-size: 15px;
+  font-weight: 590;
+  color: rgba(0,0,0,0.85);
+}
+.lecture-card-score {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+.lecture-card-meta {
+  font-size: 11px;
+  color: rgba(0,0,0,0.5);
+}
+.lecture-card-improvement {
+  font-size: 12px;
+  color: rgba(255,149,0,0.9);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,149,0,0.06);
+  line-height: 1.4;
+}
+.lecture-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
 }
 
 /* Active pill button */

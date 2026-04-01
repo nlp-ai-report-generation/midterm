@@ -25,13 +25,15 @@ import {
   computeFunctionalProfile,
   computeLectureStats,
   flattenTranscript,
+  hemisphereBalance,
   interpretLineHeuristics,
   interpretMetricCombo,
   isFlowZone,
-  learningEfficiency,
-  mindWanderingRisk,
+  loadRecovery,
   roiNeuroscienceHint,
+  roiPrescription,
   segmentHealthScore,
+  segmentSimilarity,
 } from "@/lib/simulation";
 import MetricGauge from "@/components/simulation/MetricGauge";
 import type {
@@ -143,8 +145,10 @@ export default function SimulationView({ date }: SimulationViewProps) {
   const combo = interpretMetricCombo(a, l, n, stats);
   const flow = isFlowZone(a, l, n);
   const profile = computeFunctionalProfile(seg.roi_insights?.top_active_rois, seg.roi_insights?.top_changed_rois);
-  const efficiency = learningEfficiency(a, l);
-  const wandering = mindWanderingRisk(a, l);
+  const hemisphere = hemisphereBalance(seg);
+  const recovery = loadRecovery(tlData, fi);
+  const similarity = segmentSimilarity(sim.segments, line?.segment_index ?? 0);
+  const prescription = roiPrescription(profile);
   const health = segmentHealthScore(seg);
 
   return (
@@ -219,26 +223,46 @@ export default function SimulationView({ date }: SimulationViewProps) {
             )}
           </div>
 
-          {/* 학습 상태 */}
+          {/* 학습 상태 → 강사 인사이트 */}
           <div className="sim-insight-section">
-            <p className="sim-card-lbl">학습 상태</p>
+            <p className="sim-card-lbl">강사 인사이트</p>
+
+            {/* ROI 처방 */}
+            <div className={`sim-prescription sim-prescription-${prescription.urgency}`}>
+              <p>{prescription.prescription}</p>
+            </div>
+
+            {/* 구간 건강도 */}
             <div className="sim-status-grid">
               <div className="sim-status-item">
                 <span className="sim-status-label">구간 건강도</span>
                 <span className="sim-status-val" style={{ color: health.color }}>{health.score}</span>
                 <span className="sim-status-badge" style={{ color: health.color }}>{health.label}</span>
               </div>
+
+              {/* 반구 활성도 */}
               <div className="sim-status-item">
-                <span className="sim-status-label">학습 효율 지수</span>
-                <span className="sim-status-val">{efficiency >= 0 ? "+" : ""}{efficiency.toFixed(2)}</span>
-                <span className="sim-status-badge">{efficiency >= 0.5 ? "효율적" : efficiency >= 0 ? "균형" : "비효율"}</span>
+                <span className="sim-status-label">반구 활성도</span>
+                <div className="sim-hemisphere-bar">
+                  <div className="sim-hemisphere-left" style={{ width: `${hemisphere.left}%` }} />
+                </div>
+                <span className="sim-status-badge">{hemisphere.label}</span>
               </div>
+
+              {/* 부하 회복도 */}
               <div className="sim-status-item">
-                <span className="sim-status-label">이탈 위험</span>
-                <span className={`sim-status-val sim-wander-${wandering}`}>{wandering === "high" ? "높음" : wandering === "moderate" ? "보통" : "낮음"}</span>
-                <span className="sim-status-badge">{wandering === "low" ? "집중 유지" : wandering === "moderate" ? "주의 필요" : "개입 필요"}</span>
+                <span className="sim-status-label">부하 회복</span>
+                <span className="sim-status-val">{recovery.label}</span>
+              </div>
+
+              {/* 전환 유사도 */}
+              <div className="sim-status-item">
+                <span className="sim-status-label">전환 유사도</span>
+                <span className="sim-status-val">{similarity < 0.85 ? "급전환" : similarity < 0.95 ? "전환" : "연속"}</span>
+                <span className="sim-status-badge">{(similarity * 100).toFixed(0)}%</span>
               </div>
             </div>
+
             {seg.roi_insights?.summary_text && (
               <p className="sim-card-sub">{seg.roi_insights.summary_text}</p>
             )}

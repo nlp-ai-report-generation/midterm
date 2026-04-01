@@ -536,16 +536,7 @@ function ReportInline({
   }, [lectureDate, reportMarkdown]);
 
   return (
-    <div className="card card-padded" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      {/* Header */}
-      <div className="report-header" style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <img src={`${import.meta.env.BASE_URL}emoji/exploding-head.png`} alt="" width={40} height={40} />
-        <div>
-          <p className="text-section">{subject} 강의 분석 리포트</p>
-          <p className="text-caption">{lectureDate} · {instructor}</p>
-        </div>
-      </div>
-
+    <div className="report-inline" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
       {/* Score */}
       <div className="report-section">
         <p className="report-section-title">종합 점수</p>

@@ -639,3 +639,158 @@ export function computeFunctionalProfile(
 
   return { categories, dominantInterpretation, profilePattern };
 }
+
+/* ─── Hemisphere Balance (반구 활성도 비율) ─── */
+
+export interface HemisphereBalance {
+  left: number;
+  right: number;
+  dominant: "left" | "right" | "balanced";
+  label: string;
+}
+
+export function hemisphereBalance(segment: SimulationSegment): HemisphereBalance {
+  const rois = segment.roi_insights?.top_active_rois ?? [];
+  const leftRois = rois.filter((r) => r.hemisphere === "left");
+  const rightRois = rois.filter((r) => r.hemisphere === "right");
+  const leftAvg = leftRois.length
+    ? leftRois.reduce((s, r) => s + (r.mean_abs_response ?? 0), 0) / leftRois.length
+    : 0;
+  const rightAvg = rightRois.length
+    ? rightRois.reduce((s, r) => s + (r.mean_abs_response ?? 0), 0) / rightRois.length
+    : 0;
+  const total = leftAvg + rightAvg || 1;
+  const leftPct = Math.round((leftAvg / total) * 100);
+  const rightPct = 100 - leftPct;
+  const dominant: "left" | "right" | "balanced" =
+    Math.abs(leftPct - 50) < 8 ? "balanced" : leftPct > 50 ? "left" : "right";
+  const label =
+    dominant === "balanced"
+      ? "균형"
+      : dominant === "left"
+        ? "좌뇌 우세 (분석적)"
+        : "우뇌 우세 (직관적)";
+  return { left: leftPct, right: rightPct, dominant, label };
+}
+
+/* ─── Load Recovery (인지 부하 회복도) ─── */
+
+export interface LoadRecoveryState {
+  recovering: boolean;
+  speed: "fast" | "slow" | "none";
+  label: string;
+}
+
+export function loadRecovery(
+  frames: Array<{ load_display: number }>,
+  currentIndex: number,
+): LoadRecoveryState {
+  const start = Math.max(0, currentIndex - 5);
+  const window = frames.slice(start, currentIndex + 1);
+  if (window.length < 2) return { recovering: false, speed: "none", label: "측정 불가" };
+  const peak = Math.max(...window.map((f) => f.load_display));
+  if (peak < 70) return { recovering: false, speed: "none", label: "부하 안정" };
+  const current = frames[currentIndex]?.load_display ?? 0;
+  const drop = peak - current;
+  if (drop < 5) return { recovering: false, speed: "none", label: "부하 지속" };
+  return {
+    recovering: true,
+    speed: drop > 20 ? "fast" : "slow",
+    label: drop > 20 ? "빠른 회복" : "느린 회복",
+  };
+}
+
+/* ─── Segment Similarity (세그먼트 전환 유사도) ─── */
+
+export function segmentSimilarity(
+  segments: SimulationSegment[],
+  currentIndex: number,
+): number {
+  if (currentIndex === 0 || !segments[currentIndex - 1]) return 1;
+  const prev = segments[currentIndex - 1].proxies;
+  const curr = segments[currentIndex].proxies;
+  const dot =
+    prev.attention_proxy * curr.attention_proxy +
+    prev.load_proxy * curr.load_proxy +
+    prev.novelty_proxy * curr.novelty_proxy;
+  const magPrev = Math.sqrt(
+    prev.attention_proxy ** 2 + prev.load_proxy ** 2 + prev.novelty_proxy ** 2,
+  );
+  const magCurr = Math.sqrt(
+    curr.attention_proxy ** 2 + curr.load_proxy ** 2 + curr.novelty_proxy ** 2,
+  );
+  return magPrev && magCurr ? Math.round((dot / (magPrev * magCurr)) * 100) / 100 : 1;
+}
+
+/* ─── ROI Prescription (ROI 기반 자동 처방) ─── */
+
+export interface RoiPrescription {
+  prescription: string;
+  urgency: "info" | "caution" | "warning";
+}
+
+export function roiPrescription(profile: FunctionalProfile): RoiPrescription {
+  const cats = profile.categories;
+  const top1 = cats[0];
+  const top2 = cats[1];
+
+  // DMN 최고 → 이탈 신호
+  if (top1?.key === "association_or_default_mode_related" && top1.value > 40) {
+    return {
+      prescription:
+        "학생들의 주의가 내용에서 벗어나고 있을 수 있어요. 핵심을 2-3문장으로 단순화하거나 '여기서 당신이라면?' 같은 개인적 질문으로 재진입을 유도하세요.",
+      urgency: "warning",
+    };
+  }
+
+  // 언어만 높고 실행 낮음 → 수동적 청취
+  if (
+    top1?.key === "auditory_or_language_related" &&
+    top1.value > 40 &&
+    cats.find((c) => c.key === "frontal_control_or_action_related")?.value
+      ? (cats.find((c) => c.key === "frontal_control_or_action_related")?.value ?? 0) < 20
+      : true
+  ) {
+    return {
+      prescription:
+        "듣고는 있지만 깊이 처리하지 않는 상태예요. 핵심 개념의 예시를 추가하거나, '방금 배운 걸 한 문장으로 정리하면?' 같은 메타인지 질문을 넣어보세요.",
+      urgency: "caution",
+    };
+  }
+
+  // 시각 과부하 (시각 + 실행 모두 높음)
+  if (
+    cats.find((c) => c.key === "visual_processing_related")?.isTop &&
+    cats.find((c) => c.key === "frontal_control_or_action_related")?.isTop
+  ) {
+    return {
+      prescription:
+        "시각 정보와 인지 부하가 동시에 높아요. 슬라이드당 텍스트를 줄이거나, 복잡한 다이어그램을 단계별로 보여주세요.",
+      urgency: "caution",
+    };
+  }
+
+  // 주의 전환 높음 → 혼란 가능
+  if (top1?.key === "sensorimotor_or_attention_related" && top1.value > 45) {
+    return {
+      prescription:
+        "주의가 자주 전환되는 구간이에요. 시각 자료를 순차적으로 드러내거나, 목소리 톤으로 리듬감을 만들어 안정시키세요.",
+      urgency: "caution",
+    };
+  }
+
+  // 실행 통제 최고 → 능동적 통합 (좋음)
+  if (top1?.key === "frontal_control_or_action_related" && top1.value > 35) {
+    return {
+      prescription:
+        "학생들이 적극적으로 개념을 정리하고 통합하는 중이에요. 이 흐름을 유지하세요.",
+      urgency: "info",
+    };
+  }
+
+  // 기본
+  return {
+    prescription: "현재 구간은 일반적인 학습 패턴을 보이고 있어요.",
+    urgency: "info",
+  };
+}
