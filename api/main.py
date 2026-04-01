@@ -450,3 +450,177 @@ async def create_notion_page(req: NotionExportRequest):
             "id": data.get("id", ""),
             "error": data.get("message", "") if resp.status_code != 200 else "",
         }
+
+
+# --- Google Drive Upload ---
+
+
+class DriveUploadRequest(BaseModel):
+    token: str
+    filename: str
+    content: str
+    mimeType: str = "text/markdown"
+
+
+@app.post("/api/drive/upload")
+async def upload_to_drive(req: DriveUploadRequest):
+    """Upload a file to Google Drive."""
+    metadata = {"name": req.filename, "mimeType": req.mimeType}
+    async with httpx.AsyncClient() as client:
+        # Multipart upload
+        boundary = "----ReportBoundary"
+        body = (
+            f"--{boundary}\r\n"
+            f"Content-Type: application/json; charset=UTF-8\r\n\r\n"
+            f'{{"name": "{req.filename}", "mimeType": "application/vnd.google-apps.document"}}\r\n'
+            f"--{boundary}\r\n"
+            f"Content-Type: {req.mimeType}\r\n\r\n"
+            f"{req.content}\r\n"
+            f"--{boundary}--"
+        )
+        resp = await client.post(
+            "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart",
+            headers={
+                "Authorization": f"Bearer {req.token}",
+                "Content-Type": f"multipart/related; boundary={boundary}",
+            },
+            content=body.encode("utf-8"),
+        )
+        data = resp.json()
+        file_id = data.get("id", "")
+        return {
+            "success": resp.status_code == 200,
+            "fileId": file_id,
+            "url": f"https://docs.google.com/document/d/{file_id}" if file_id else "",
+            "error": data.get("error", {}).get("message", "") if resp.status_code != 200 else "",
+        }
+
+
+# --- Report Generation ---
+
+
+class ReportRequest(BaseModel):
+    lecture_date: str
+    model: str = "gpt-4o-mini"
+
+
+@app.post("/api/report/generate")
+async def generate_report(req: ReportRequest):
+    """Generate a comprehensive lecture report (stub: returns data from evaluation files)."""
+    import json
+    from pathlib import Path
+
+    data_dir = Path(os.getenv("DATA_DIR", "./data"))
+    eval_path = data_dir / "evaluations" / req.lecture_date / f"{req.model}.json"
+
+    if not eval_path.exists():
+        return {"markdown": "", "strengths": [], "improvements": [], "recommendations": []}
+
+    with open(eval_path) as f:
+        evaluation = json.load(f)
+
+    strengths = evaluation.get("strengths", [])
+    improvements = evaluation.get("improvements", [])
+    recommendations = evaluation.get("recommendations", [])
+
+    markdown_lines = [
+        f"# {evaluation.get('subject', '')} 강의 분석 리포트",
+        f"\n**날짜**: {req.lecture_date} | **모델**: {req.model}\n",
+        f"## 종합 점수: {evaluation.get('total_score', 0):.1f} / 5.0\n",
+    ]
+
+    if strengths:
+        markdown_lines.append("## 잘한 점\n")
+        markdown_lines.extend(f"- {s}" for s in strengths)
+        markdown_lines.append("")
+
+    if improvements:
+        markdown_lines.append("## 개선할 점\n")
+        markdown_lines.extend(f"- s" for s in improvements)
+        markdown_lines.append("")
+
+    if recommendations:
+        markdown_lines.append("## 추천 액션\n")
+        markdown_lines.extend(f"- {s}" for s in recommendations)
+        markdown_lines.append("")
+
+    return {
+        "markdown": "\n".join(markdown_lines),
+        "strengths": strengths,
+        "improvements": improvements,
+        "recommendations": recommendations,
+        "simulation_summary": evaluation.get("simulation_summary"),
+    }
+
+
+# --- Notion Comprehensive Report ---
+
+
+class NotionReportRequest(BaseModel):
+    token: str
+    database_id: str
+    lecture_date: str
+    score: float
+    model: str = ""
+    subject: str = ""
+    report_markdown: str = ""
+    strengths: list[str] = []
+    improvements: list[str] = []
+    recommendations: list[str] = []
+    simulation_summary: str = ""
+
+
+@app.post("/api/notion/create-report")
+async def create_notion_report(req: NotionReportRequest):
+    """Create a comprehensive report page in Notion."""
+    children = []
+
+    def add_heading(text: str):
+        children.append({"object": "block", "type": "heading_2", "heading_2": {"rich_text": [{"text": {"content": text}}]}})
+
+    def add_bullets(items: list[str]):
+        for item in items:
+            children.append({"object": "block", "type": "bulleted_list_item", "bulleted_list_item": {"rich_text": [{"text": {"content": item}}]}})
+
+    def add_paragraph(text: str):
+        children.append({"object": "block", "type": "paragraph", "paragraph": {"rich_text": [{"text": {"content": text[:2000]}}]}})
+
+    add_heading("잘한 점")
+    add_bullets(req.strengths)
+
+    add_heading("개선할 점")
+    add_bullets(req.improvements)
+
+    add_heading("추천 액션")
+    add_bullets(req.recommendations)
+
+    if req.simulation_summary:
+        add_heading("뇌 반응 시뮬레이션 요약")
+        add_paragraph(req.simulation_summary)
+
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            "https://api.notion.com/v1/pages",
+            headers={
+                "Authorization": f"Bearer {req.token}",
+                "Content-Type": "application/json",
+                "Notion-Version": "2022-06-28",
+            },
+            json={
+                "parent": {"database_id": req.database_id},
+                "properties": {
+                    "강의 날짜": {"date": {"start": req.lecture_date}},
+                    "점수": {"number": req.score},
+                    "모델": {"rich_text": [{"text": {"content": req.model}}]},
+                    "과목": {"rich_text": [{"text": {"content": f"[리포트] {req.subject}"}}]},
+                },
+                "children": children,
+            },
+        )
+        data = resp.json()
+        return {
+            "success": resp.status_code == 200,
+            "url": data.get("url", ""),
+            "id": data.get("id", ""),
+            "error": data.get("message", "") if resp.status_code != 200 else "",
+        }

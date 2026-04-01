@@ -9,11 +9,12 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import { Brain, ChevronRight, Sparkles } from "lucide-react";
+import { Brain, ChevronRight, FileText, Sparkles } from "lucide-react";
 import { useRole } from "@/contexts/RoleContext";
 import { getEvaluationByModel, getSimulation, getSimulationColors, getSimulationSummaryVisual, MODEL_LABELS, type ModelKey } from "@/lib/data";
 import { formatDate, scoreColor, scoreBadgeTextColor, scoreLabel, weightLabel } from "@/lib/utils";
 import { exportToNotion } from "@/lib/api";
+import ReportModal from "@/components/shared/ReportModal";
 import BrainCanvas from "@/components/simulation/BrainCanvas";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import FeedbackCard from "@/components/shared/FeedbackCard";
@@ -31,6 +32,7 @@ export default function LectureDetailPage() {
   const [segmentColors, setSegmentColors] = useState<SegmentColorPayload | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   useEffect(() => {
     if (!date) return;
@@ -204,15 +206,23 @@ export default function LectureDetailPage() {
           </div>
         </div>
 
-        {/* 노션 내보내기 */}
-        <NotionExportButton
+        {/* 리포트 생성 */}
+        <button className="btn-primary" onClick={() => setReportOpen(true)}>
+          <FileText size={14} /> 리포트
+        </button>
+        <ReportModal
+          open={reportOpen}
+          onClose={() => setReportOpen(false)}
           lectureDate={evaluation.lecture_date}
+          subject={metadata.subjects?.[0] ?? ""}
+          instructor={metadata.instructor ?? ""}
           score={weighted_average}
           model={model}
-          subject={metadata.subjects?.[0] ?? ""}
+          categories={evaluation.category_results.map((c: CategoryResult) => ({ name: c.category_name, score: c.weighted_average }))}
           strengths={evaluation.strengths ?? []}
           improvements={evaluation.improvements ?? []}
           recommendations={evaluation.recommendations ?? []}
+          simulationSummary={simulation?.lecture_summary?.summary_text}
         />
       </div>
 

@@ -147,3 +147,59 @@ export async function downloadDriveFile(
   );
   return res.json();
 }
+
+/** Upload a file to Google Drive */
+export async function uploadToDrive(params: {
+  token: string;
+  filename: string;
+  content: string;
+  mimeType?: string;
+}): Promise<{ success: boolean; fileId: string; url: string; error?: string }> {
+  const res = await fetch(`${API_BASE_URL}/api/drive/upload`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
+  });
+  return res.json();
+}
+
+/** Generate a comprehensive lecture report */
+export async function generateReport(params: {
+  lecture_date: string;
+  model?: string;
+}): Promise<{
+  markdown: string;
+  strengths: string[];
+  improvements: string[];
+  recommendations: string[];
+  simulation_summary?: string;
+}> {
+  const res = await fetch(`${API_BASE_URL}/api/report/generate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
+  });
+  return res.json();
+}
+
+/** Export comprehensive report to Notion */
+export async function exportReportToNotion(params: {
+  token: string;
+  database_id: string;
+  lecture_date: string;
+  score: number;
+  model?: string;
+  subject?: string;
+  report_markdown: string;
+  strengths?: string[];
+  improvements?: string[];
+  recommendations?: string[];
+  simulation_summary?: string;
+}): Promise<{ success: boolean; url: string; id: string; error?: string }> {
+  const res = await fetch(`${API_BASE_URL}/api/notion/create-report`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
+  });
+  return res.json();
+}
