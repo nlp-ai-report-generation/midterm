@@ -49,7 +49,7 @@ export default function LectureDetailPage() {
     getSimulation(date)
       .then(async (result) => {
         const [visual, colorPayload] = await Promise.all([
-          getSimulationSummaryVisual(result.summary_visual.brain_icon_frames_json),
+          result.summary_visual ? getSimulationSummaryVisual(result.summary_visual.brain_icon_frames_json) : Promise.resolve(null),
           getSimulationColors(result.assets.segment_colors_json),
         ]);
         if (cancelled) return;
@@ -334,7 +334,7 @@ export default function LectureDetailPage() {
                   실시간 Deep View 지원
                 </span>
               </div>
-              <p className="text-section" style={{ marginTop: 14 }}>{simulation.summary_visual.hero_statement}</p>
+              <p className="text-section" style={{ marginTop: 14 }}>{simulation.summary_visual?.hero_statement}</p>
               <p className="text-body" style={{ marginTop: 10 }}>{simulation.lecture_summary.summary_text}</p>
               <div className="simulation-pill-row" style={{ marginTop: 14 }}>
                 <span className="simulation-pill">강한 구간 {simulation.lecture_summary.strongest_segment_ids.length}개</span>

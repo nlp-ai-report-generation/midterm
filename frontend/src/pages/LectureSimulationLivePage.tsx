@@ -33,6 +33,7 @@ import {
 import { formatDate } from "@/lib/utils";
 import {
   buildSegmentTags,
+  computeFunctionalProfile,
   computeLectureStats,
   computeSegmentDerivedMetrics,
   deduplicateRois,
@@ -88,6 +89,7 @@ export default function LectureSimulationLivePage() {
       getSimulationTranscript(date),
     ])
       .then(async ([simulationResult, transcriptResult]) => {
+        if (!simulationResult.live_assets) throw new Error("live_assets missing");
         const [colorPayload, liveFramePayload, timelinePayload] = await Promise.all([
           getSimulationColors(simulationResult.assets.segment_colors_json),
           getSimulationLiveFrames(simulationResult.live_assets.brain_frames_json),
@@ -575,64 +577,85 @@ export default function LectureSimulationLivePage() {
           <div className="card card-padded">
             <div className="simulation-panel-header">
               <div>
-                <p className="text-section">지금 반응하는 영역</p>
-                <p className="text-caption">기술명 대신 지금 읽히는 역할과 이유만 보여줘요.</p>
+                <p className="text-section">뇌 기능 프로필</p>
+                <p className="text-caption">단순 크기가 아니라 어떤 뇌 영역이 활발한지 보여줘요.</p>
               </div>
               <span className="simulation-pill">
-                <Layers3 size={14} />
-                쉬운 해석
+                <Brain size={14} />
+                영역별 해석
               </span>
             </div>
-            <div className="simulation-roi-grid" style={{ marginTop: 18 }}>
-              <div className="simulation-roi-card">
-                <div className="simulation-panel-header">
-                  <p className="text-label">지금 크게 읽히는 영역</p>
-                  <Waypoints size={16} color="var(--primary)" />
-                </div>
-                <div className="simulation-roi-list" style={{ marginTop: 14 }}>
-                  {deduplicateRois(currentSegment.roi_insights.top_active_rois, "mean_abs_response").slice(0, 3).map((roi) => {
-                    const level = roiResponseLevel(roi.mean_abs_response);
-                    return (
-                      <div key={`active-${roi.functional_hint}`} className="simulation-roi-item">
-                        <div style={{ minWidth: 0 }}>
-                          <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
-                          <p className="text-caption">{roiHintDescription(roi.functional_hint)}</p>
-                        </div>
-                        <span className="text-caption" style={{ flexShrink: 0 }}>{level.label}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
 
-              <div className="simulation-roi-card">
-                <div className="simulation-panel-header">
-                  <p className="text-label">지금 빠르게 바뀌는 영역</p>
-                  <Waypoints size={16} color="var(--grey-700)" />
-                </div>
-                <div className="simulation-roi-list" style={{ marginTop: 14 }}>
-                  {deduplicateRois(currentSegment.roi_insights.top_changed_rois, "delta_abs_response").slice(0, 3).map((roi) => {
-                    const level = roiResponseLevel(roi.delta_abs_response);
-                    return (
-                      <div key={`changed-${roi.functional_hint}`} className="simulation-roi-item">
-                        <div style={{ minWidth: 0 }}>
-                          <p className="text-section" style={{ fontSize: 14 }}>{hintLabel(roi.functional_hint)}</p>
-                          <p className="text-caption">직전 대비 변화 {level.label}</p>
-                        </div>
-                        <span className="text-caption" style={{ flexShrink: 0 }}>{level.label}</span>
+            {(() => {
+              const profile = computeFunctionalProfile(
+                currentSegment.roi_insights?.top_active_rois,
+                currentSegment.roi_insights?.top_changed_rois,
+              );
+              return (
+                <>
+                  <div className="simulation-combo-card" style={{
+                    marginTop: 14,
+                    background: "rgba(255,107,0,0.04)",
+                    borderColor: "rgba(255,107,0,0.15)",
+                  }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                        <span className="simulation-combo-badge" style={{
+                          color: "var(--primary)",
+                          background: "rgba(255,107,0,0.12)",
+                        }}>
+                          {profile.profilePattern}
+                        </span>
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+                      <p className="text-body">{profile.dominantInterpretation}</p>
+                    </div>
+                  </div>
 
-            <div className="simulation-summary-selected" style={{ marginTop: 18 }}>
-              <p className="text-label">왜 이렇게 해석해요</p>
-              <p className="text-body" style={{ marginTop: 8 }}>{currentSegment.roi_insights.summary_text}</p>
-              {currentSegment.roi_insights.top_active_rois[0] && (
-                <p className="text-caption" style={{ marginTop: 8 }}>
-                  {roiNeuroscienceHint(currentSegment.roi_insights.top_active_rois[0].functional_hint)}
+                  <div style={{ display: "grid", gap: 8, marginTop: 14 }}>
+                    {profile.categories.map((cat) => (
+                      <div key={cat.key} style={{
+                        display: "grid",
+                        gridTemplateColumns: "90px minmax(0, 1fr) 40px",
+                        gap: 10,
+                        alignItems: "center",
+                        padding: "8px 12px",
+                        borderRadius: "var(--radius-sm)",
+                        background: cat.isTop ? "rgba(255,107,0,0.06)" : "var(--grey-50)",
+                        border: cat.isTop ? "1px solid rgba(255,107,0,0.15)" : "1px solid transparent",
+                      }}>
+                        <span style={{
+                          fontSize: 12, fontWeight: cat.isTop ? 800 : 600,
+                          color: cat.isTop ? "var(--primary)" : "var(--text-secondary)",
+                        }}>
+                          {cat.label}
+                        </span>
+                        <div style={{ height: 6, borderRadius: 999, background: "var(--grey-200)", overflow: "hidden" }}>
+                          <div style={{
+                            height: "100%", borderRadius: 999,
+                            width: `${Math.max(3, cat.value)}%`,
+                            background: cat.isTop ? "var(--primary)" : "var(--grey-400)",
+                            transition: "width 0.3s ease",
+                          }} />
+                        </div>
+                        <span style={{
+                          fontSize: 12, fontWeight: 700, textAlign: "right",
+                          color: cat.isTop ? "var(--primary)" : "var(--text-muted)",
+                        }}>
+                          {cat.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              );
+            })()}
+
+            <div className="simulation-summary-selected" style={{ marginTop: 14 }}>
+              <p className="text-label">영역별 해석 근거</p>
+              <p className="text-body" style={{ marginTop: 8 }}>{currentSegment.roi_insights?.summary_text}</p>
+              {currentSegment.roi_insights?.top_active_rois[0] && (
+                <p className="text-caption" style={{ marginTop: 6 }}>
+                  {roiNeuroscienceHint(currentSegment.roi_insights?.top_active_rois[0].functional_hint)}
                 </p>
               )}
             </div>
