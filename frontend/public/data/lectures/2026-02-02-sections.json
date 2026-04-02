@@ -1,0 +1,83 @@
+{
+  "lecture_date": "2026-02-02",
+  "sections": [
+    {
+      "start": "09:11:17",
+      "end": "09:15:00",
+      "label": "Java I/O·NIO·NIO2 개요",
+      "type": "intro"
+    },
+    {
+      "start": "09:15:00",
+      "end": "09:21:27",
+      "label": "JDK21 튜토리얼과 코어 라이브러리",
+      "type": "concept"
+    },
+    {
+      "start": "09:21:27",
+      "end": "09:28:18",
+      "label": "코어 라이브러리에서 Collections 보기",
+      "type": "concept"
+    },
+    {
+      "start": "09:28:18",
+      "end": "09:33:33",
+      "label": "JShell로 Java 셸 실습",
+      "type": "practice"
+    },
+    {
+      "start": "09:33:33",
+      "end": "09:40:46",
+      "label": "Java I/O·NIO·NIO2 차이 비교",
+      "type": "concept"
+    },
+    {
+      "start": "09:40:46",
+      "end": "09:47:16",
+      "label": "바이트·캐릭터·오브젝트 구분",
+      "type": "concept"
+    },
+    {
+      "start": "09:47:16",
+      "end": "09:55:46",
+      "label": "스트림 기반 블로킹과 직렬화",
+      "type": "concept"
+    },
+    {
+      "start": "09:55:46",
+      "end": "10:05:22",
+      "label": "InputStream·OutputStream 구조 읽기",
+      "type": "practice"
+    },
+    {
+      "start": "10:05:22",
+      "end": "10:12:44",
+      "label": "FileWriter·FileReader 코드 작성",
+      "type": "practice"
+    },
+    {
+      "start": "10:12:44",
+      "end": "10:18:30",
+      "label": "읽기 루프와 append 옵션 확인",
+      "type": "practice"
+    },
+    {
+      "start": "10:18:30",
+      "end": "03:49:06",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "03:49:06",
+      "end": "03:55:41",
+      "label": "MySQL 커뮤니티·엔터프라이즈 안내",
+      "type": "concept"
+    },
+    {
+      "start": "03:55:41",
+      "end": "03:58:34",
+      "label": "LTS 8.4.8 설치 버전 선택",
+      "type": "wrapup"
+    }
+  ]
+}

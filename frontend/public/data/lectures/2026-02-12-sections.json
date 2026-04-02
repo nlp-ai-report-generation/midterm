@@ -1,0 +1,71 @@
+{
+  "lecture_date": "2026-02-12",
+  "sections": [
+    {
+      "start": "09:11:19",
+      "end": "09:21:23",
+      "label": "CTE와 재귀 서브쿼리 기초 복습",
+      "type": "review"
+    },
+    {
+      "start": "09:21:23",
+      "end": "09:45:30",
+      "label": "서브쿼리 용도와 VALUES 테이블",
+      "type": "concept"
+    },
+    {
+      "start": "09:45:30",
+      "end": "10:13:45",
+      "label": "TABLE·VALUES와 스칼라 서브쿼리",
+      "type": "concept"
+    },
+    {
+      "start": "10:13:45",
+      "end": "10:26:30",
+      "label": "재귀 CTE와 WITH문 선언 구조",
+      "type": "concept"
+    },
+    {
+      "start": "10:26:30",
+      "end": "11:11:44",
+      "label": "재귀 CTE 예제와 계층 구조",
+      "type": "practice"
+    },
+    {
+      "start": "11:11:44",
+      "end": "11:44:09",
+      "label": "CTE 별칭 비교와 도움말 탐색",
+      "type": "concept"
+    },
+    {
+      "start": "11:44:09",
+      "end": "01:13:20",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "01:13:20",
+      "end": "01:21:25",
+      "label": "SYSTEM·INFORMATION_SCHEMA 개요",
+      "type": "concept"
+    },
+    {
+      "start": "01:21:25",
+      "end": "01:29:14",
+      "label": "TABLES 메타데이터와 제약 확인",
+      "type": "practice"
+    },
+    {
+      "start": "01:29:14",
+      "end": "01:37:22",
+      "label": "TABLE_CONSTRAINTS와 CHECK 제약",
+      "type": "concept"
+    },
+    {
+      "start": "01:37:22",
+      "end": "01:38:18",
+      "label": "COLUMNS 메타데이터와 컬럼 속성",
+      "type": "wrapup"
+    }
+  ]
+}

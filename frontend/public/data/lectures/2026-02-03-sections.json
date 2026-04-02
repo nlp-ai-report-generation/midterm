@@ -1,0 +1,71 @@
+{
+  "lecture_date": "2026-02-03",
+  "sections": [
+    {
+      "start": "09:11:04",
+      "end": "09:13:48",
+      "label": "I/O와 데이터 흐름 구조 복습",
+      "type": "intro"
+    },
+    {
+      "start": "09:13:48",
+      "end": "09:17:36",
+      "label": "버퍼 스트림과 데이터 타입 처리",
+      "type": "concept"
+    },
+    {
+      "start": "09:17:36",
+      "end": "09:20:28",
+      "label": "문자 인코딩과 메서드 선택 기준",
+      "type": "concept"
+    },
+    {
+      "start": "09:20:28",
+      "end": "09:24:27",
+      "label": "NIO2 Files·Path와 디렉터리",
+      "type": "concept"
+    },
+    {
+      "start": "09:24:27",
+      "end": "09:29:07",
+      "label": "FileVisitor와 파일 속성 인터페이스",
+      "type": "concept"
+    },
+    {
+      "start": "09:29:07",
+      "end": "09:34:37",
+      "label": "CRD 관점과 데이터베이스 역할",
+      "type": "concept"
+    },
+    {
+      "start": "09:34:37",
+      "end": "09:41:43",
+      "label": "정형·비정형 데이터와 SQL 분류",
+      "type": "concept"
+    },
+    {
+      "start": "09:41:43",
+      "end": "09:47:07",
+      "label": "DDL·DML·DCL·TCL 구조",
+      "type": "concept"
+    },
+    {
+      "start": "09:47:07",
+      "end": "09:54:37",
+      "label": "정형·비정형 데이터와 엔티티 변환",
+      "type": "concept"
+    },
+    {
+      "start": "09:54:37",
+      "end": "04:09:59",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "04:09:59",
+      "end": "04:10:39",
+      "label": "MySQL 설치 구성요소 확인",
+      "type": "practice"
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "lecture_date": "2026-02-24",
+  "sections": [
+    {
+      "start": "09:10:21",
+      "end": "09:16:06",
+      "label": "프로시저 예외 처리와 SQLSTATE 복습",
+      "type": "review"
+    },
+    {
+      "start": "09:16:06",
+      "end": "09:42:34",
+      "label": "서버 오류 레퍼런스와 에러 코드",
+      "type": "concept"
+    },
+    {
+      "start": "09:42:34",
+      "end": "10:39:02",
+      "label": "HANDLER와 커스텀 에러 메시지 실습",
+      "type": "practice"
+    },
+    {
+      "start": "10:39:02",
+      "end": "11:00:25",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "11:00:25",
+      "end": "11:43:00",
+      "label": "DIAGNOSTICS와 CONTINUE HANDLER",
+      "type": "practice"
+    },
+    {
+      "start": "11:43:00",
+      "end": "11:50:00",
+      "label": "커서 반복과 NOT FOUND 종료 처리",
+      "type": "practice"
+    },
+    {
+      "start": "11:50:00",
+      "end": "01:11:43",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "01:11:43",
+      "end": "01:36:48",
+      "label": "함수 DETERMINISTIC과 INVOKER",
+      "type": "concept"
+    },
+    {
+      "start": "01:36:48",
+      "end": "02:10:00",
+      "label": "CREATE FUNCTION과 SELECT 호출",
+      "type": "practice"
+    },
+    {
+      "start": "02:10:00",
+      "end": "03:00:05",
+      "label": "함수 RETURNS와 권한 속성 정리",
+      "type": "concept"
+    },
+    {
+      "start": "03:00:05",
+      "end": "03:55:08",
+      "label": "파티션 조회와 EXPLAIN 실습",
+      "type": "practice"
+    },
+    {
+      "start": "03:55:08",
+      "end": "04:00:46",
+      "label": "워크숍 범위와 내일 학습 안내",
+      "type": "wrapup"
+    },
+    {
+      "start": "04:00:46",
+      "end": "05:50:13",
+      "label": "(쉬는시간)",
+      "type": "break"
+    }
+  ]
+}

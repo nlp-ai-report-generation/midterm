@@ -1,0 +1,83 @@
+{
+  "lecture_date": "2026-02-04",
+  "sections": [
+    {
+      "start": "09:10:22",
+      "end": "09:12:35",
+      "label": "MySQL 설치 구조와 로그",
+      "type": "intro"
+    },
+    {
+      "start": "09:12:35",
+      "end": "09:18:25",
+      "label": "INI 설정과 Workbench 역할",
+      "type": "concept"
+    },
+    {
+      "start": "09:18:25",
+      "end": "09:24:11",
+      "label": "워크벤치 화면 구조와 스키마",
+      "type": "concept"
+    },
+    {
+      "start": "09:24:11",
+      "end": "09:29:57",
+      "label": "스키마·메타데이터·IBD 파일",
+      "type": "concept"
+    },
+    {
+      "start": "09:29:57",
+      "end": "09:37:44",
+      "label": "Temp 디렉터리와 로그 파일",
+      "type": "concept"
+    },
+    {
+      "start": "09:37:44",
+      "end": "09:44:29",
+      "label": "계정 생성과 퍼미션 권한 설정",
+      "type": "practice"
+    },
+    {
+      "start": "09:44:29",
+      "end": "09:50:39",
+      "label": "상태·시스템 변수 편집 실습",
+      "type": "practice"
+    },
+    {
+      "start": "09:50:39",
+      "end": "09:56:17",
+      "label": "오토커밋과 문자셋 상태 확인",
+      "type": "concept"
+    },
+    {
+      "start": "09:56:17",
+      "end": "10:06:50",
+      "label": "데이터 익스포트와 대시보드 확인",
+      "type": "concept"
+    },
+    {
+      "start": "10:06:50",
+      "end": "04:07:57",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "04:07:57",
+      "end": "04:14:32",
+      "label": "LOAD DATA와 SOURCE 명령",
+      "type": "practice"
+    },
+    {
+      "start": "04:14:32",
+      "end": "04:19:07",
+      "label": "워크숍 예고와 테이블 삭제 안내",
+      "type": "wrapup"
+    },
+    {
+      "start": "04:19:07",
+      "end": "05:50:20",
+      "label": "(쉬는시간)",
+      "type": "break"
+    }
+  ]
+}

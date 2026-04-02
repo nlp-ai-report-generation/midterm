@@ -1,11 +1,13 @@
 # 현재 상태
 
-- 기준일: `2026-03-30`
+- 기준일: `2026-04-02`
 - 현재 운영 목표: LangGraph 기반 평가 결과를 실제 데이터로 축적하는 동시에, TRIBE v2 기반 수강자 반응 시뮬레이션 실험 기능을 정적 프론트 UX로 연결한다.
 - 프로젝트 목표: 강의 스크립트와 품질 기준을 바탕으로 강사 개선 인사이트를 자동 생성하는 분석 리포트 시스템을 만든다.
 
 ## 최근 완료
 
+- 원문 기반 강의 구간 분류 15일치 완료: `2026-02-02`~`2026-02-27` 강의 스크립트를 직접 읽어 주제 전환/실습 전환/긴 시간 갭 기준으로 섹션 JSON 생성 (`frontend/public/data/lectures/*-sections.json`)
+- 구간 JSON 검수/보정 완료: 라벨 길이 15~30자 범위로 조정, 오후 구간은 원문 12시간제 타임스탬프(`01:xx`, `03:xx`)를 그대로 유지, 회고/팀이동 전 긴 공백도 `break` 섹션으로 명시
 - window 길이 민감도 실험 자동화 스크립트 추가: hop 비율 50% 고정(30/15, 60/30, 120/60) + 파일럿 3강의(2026-02-02, 2026-02-09, 2026-02-24) 고정 실행/비교 지원 (`scripts/run_window_experiment.py`)
 - window 비교 리포트 모듈 추가: Markdown + JSON 동시 생성, 필수 섹션 `사용 데이터`, `실험 설정`, `관찰된 사실`, `해석`, `개선 제안` 포함 (`src/experiment/window_comparator.py`)
 - 공용 실험 CLI에 window 비교 옵션 추가 (`scripts/run_experiment.py --window-compare`)
@@ -91,6 +93,7 @@
 
 ## 현재 저장소 상태
 
+- 강의 섹션 정적 데이터: **15개 강의 수작업 구간화 완료** (`frontend/public/data/lectures/*.json`)
 - 평가 파이프라인: **구현 완료** (`src/graph/`, `src/harnesses/`, `src/chunking/`, `src/scoring/`)
 - 실험 프레임워크: **구현 완료** (`src/experiment/`)
 - 기존 코드(src/preprocessing, src/rule_analysis 등): 유지, 하이브리드 활용 가능

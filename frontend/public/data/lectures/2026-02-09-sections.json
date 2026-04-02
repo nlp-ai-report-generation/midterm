@@ -1,0 +1,65 @@
+{
+  "lecture_date": "2026-02-09",
+  "sections": [
+    {
+      "start": "09:10:24",
+      "end": "09:14:14",
+      "label": "수업 시작과 문자열 함수 복습",
+      "type": "intro"
+    },
+    {
+      "start": "09:14:14",
+      "end": "10:23:35",
+      "label": "CONCAT·SUBSTR·TRIM·LOCATE 설명",
+      "type": "concept"
+    },
+    {
+      "start": "10:23:35",
+      "end": "10:39:49",
+      "label": "REPLACE INTO와 문자열 대체 저장",
+      "type": "practice"
+    },
+    {
+      "start": "10:39:49",
+      "end": "11:03:40",
+      "label": "AUTO_INCREMENT와 PK 생성 규칙",
+      "type": "concept"
+    },
+    {
+      "start": "11:03:40",
+      "end": "11:50:06",
+      "label": "LOAD_FILE과 BLOB·TEXT 저장",
+      "type": "practice"
+    },
+    {
+      "start": "11:50:06",
+      "end": "01:11:42",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "01:11:42",
+      "end": "02:43:15",
+      "label": "문자셋·콜레이션과 인코딩 설정",
+      "type": "concept"
+    },
+    {
+      "start": "02:43:15",
+      "end": "03:10:16",
+      "label": "UNICODE와 weight string 비교",
+      "type": "concept"
+    },
+    {
+      "start": "03:10:16",
+      "end": "04:07:13",
+      "label": "식별·비식별 관계와 부모 테이블",
+      "type": "concept"
+    },
+    {
+      "start": "04:07:13",
+      "end": "04:10:46",
+      "label": "ERD 관계도와 다음날 조인 안내",
+      "type": "wrapup"
+    }
+  ]
+}

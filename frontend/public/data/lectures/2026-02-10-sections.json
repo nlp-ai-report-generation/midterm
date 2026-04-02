@@ -1,0 +1,77 @@
+{
+  "lecture_date": "2026-02-10",
+  "sections": [
+    {
+      "start": "09:10:30",
+      "end": "09:14:31",
+      "label": "조인 학습 목표와 관계형 테이블 복습",
+      "type": "intro"
+    },
+    {
+      "start": "09:14:31",
+      "end": "09:50:00",
+      "label": "INNER JOIN과 ON·USING 차이",
+      "type": "concept"
+    },
+    {
+      "start": "09:50:00",
+      "end": "10:27:10",
+      "label": "LEFT·RIGHT OUTER JOIN 정리",
+      "type": "concept"
+    },
+    {
+      "start": "10:27:10",
+      "end": "10:50:50",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "10:50:50",
+      "end": "11:50:06",
+      "label": "SELF JOIN·NATURAL JOIN·등가조인",
+      "type": "concept"
+    },
+    {
+      "start": "11:50:06",
+      "end": "01:11:42",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "01:11:42",
+      "end": "01:31:46",
+      "label": "UNION·CROSS JOIN과 집합 연산",
+      "type": "concept"
+    },
+    {
+      "start": "01:31:46",
+      "end": "02:04:09",
+      "label": "JOIN 문법과 ON·USING 비교",
+      "type": "concept"
+    },
+    {
+      "start": "02:04:09",
+      "end": "02:48:58",
+      "label": "EXPLAIN과 옵티마이저 실행 계획",
+      "type": "concept"
+    },
+    {
+      "start": "02:48:58",
+      "end": "03:10:19",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "03:10:19",
+      "end": "04:08:47",
+      "label": "조인 워크숍과 테이블 명세 정리",
+      "type": "practice"
+    },
+    {
+      "start": "04:08:47",
+      "end": "05:50:53",
+      "label": "조인 정리와 서브쿼리·워크숍 예고",
+      "type": "wrapup"
+    }
+  ]
+}

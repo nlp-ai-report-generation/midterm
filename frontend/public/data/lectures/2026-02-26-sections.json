@@ -1,0 +1,71 @@
+{
+  "lecture_date": "2026-02-26",
+  "sections": [
+    {
+      "start": "09:10:27",
+      "end": "09:12:16",
+      "label": "권한 구조와 트리거 복습 정리",
+      "type": "review"
+    },
+    {
+      "start": "09:12:16",
+      "end": "09:48:46",
+      "label": "시스템 스키마와 권한 테이블 구조",
+      "type": "concept"
+    },
+    {
+      "start": "09:48:46",
+      "end": "10:00:00",
+      "label": "GRANT로 사용자 계정 생성 실습",
+      "type": "practice"
+    },
+    {
+      "start": "10:00:00",
+      "end": "11:04:39",
+      "label": "REVOKE로 권한 회수하기 실습",
+      "type": "practice"
+    },
+    {
+      "start": "11:04:39",
+      "end": "11:18:35",
+      "label": "오브젝트 권한과 권한 확인 방법",
+      "type": "practice"
+    },
+    {
+      "start": "11:18:35",
+      "end": "12:02:01",
+      "label": "호스트 와일드카드와 접근 범위",
+      "type": "concept"
+    },
+    {
+      "start": "12:02:01",
+      "end": "01:21:35",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "01:21:35",
+      "end": "01:40:00",
+      "label": "CREATE USER와 JSON 속성 실습",
+      "type": "practice"
+    },
+    {
+      "start": "01:40:00",
+      "end": "01:56:49",
+      "label": "유저 메타데이터와 프로필 저장",
+      "type": "concept"
+    },
+    {
+      "start": "01:56:49",
+      "end": "02:00:55",
+      "label": "트리거 시점과 NEW·OLD 키워드",
+      "type": "concept"
+    },
+    {
+      "start": "02:00:55",
+      "end": "05:50:44",
+      "label": "(쉬는시간)",
+      "type": "break"
+    }
+  ]
+}

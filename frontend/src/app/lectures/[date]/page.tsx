@@ -17,7 +17,7 @@ import { exportReportToNotion, uploadToDrive } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import FeedbackCard from "@/components/shared/FeedbackCard";
-import TimelineBar from "@/components/timeline/TimelineBar";
+import TimelineBar, { type Section } from "@/components/timeline/TimelineBar";
 import SegmentDrawer from "@/components/timeline/SegmentDrawer";
 import {
   segmentHealthScore,
@@ -41,9 +41,9 @@ export default function LectureDetailPage() {
   const [error, setError] = useState(false);
   const [tab, setTab] = useState<"eval" | "sim" | "report">("eval");
   const [simLoaded, setSimLoaded] = useState(false);
-  const [phases, setPhases] = useState<Record<string, string>>({});
+  const [sections, setSections] = useState<Section[]>([]);
   const [transcript, setTranscript] = useState<TranscriptBrowserData | null>(null);
-  const [selectedSegIdx, setSelectedSegIdx] = useState<number | null>(null);
+  const [selectedSectionIdx, setSelectedSectionIdx] = useState<number | null>(null);
 
   useEffect(() => {
     if (!date) return;
@@ -72,25 +72,27 @@ export default function LectureDetailPage() {
     };
   }, [date]);
 
-  // Fetch phases JSON and transcript for timeline
+  // Fetch sections JSON and transcript for timeline
   useEffect(() => {
     if (!date) return;
     const base = import.meta.env.BASE_URL;
-    fetch(`${base}data/simulations/${date}-phases.json`)
-      .then((r) => (r.ok ? r.json() : {}))
-      .then(setPhases)
-      .catch(() => setPhases({}));
+    fetch(`${base}data/lectures/${date}-sections.json`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data: Section[] | { sections?: Section[] }) =>
+        setSections(Array.isArray(data) ? data : data.sections ?? []),
+      )
+      .catch(() => setSections([]));
     fetch(`${base}data/transcripts/${date}-transcript-browser.json`)
       .then((r) => (r.ok ? r.json() : null))
       .then(setTranscript)
       .catch(() => setTranscript(null));
   }, [date]);
 
-  // Evidence-to-segment mapping
+  // Evidence-to-section mapping
   const evidenceMap = useMemo(() => {
-    if (!evaluation || !simulation) return new Map<string, Array<{ itemName: string; score: number; text: string }>>();
-    return mapEvidenceToSegments(evaluation, simulation.segments);
-  }, [evaluation, simulation]);
+    if (!evaluation || sections.length === 0) return new Map<number, Array<{ itemName: string; score: number; text: string }>>();
+    return mapEvidenceToSections(evaluation, sections);
+  }, [evaluation, sections]);
 
   if (loading) {
     return (
@@ -272,46 +274,52 @@ export default function LectureDetailPage() {
             ))}
           </div>
 
-          {/* Timeline Bar (sticky) — only when simulation data exists */}
-          {simulation && simulation.segments.length > 0 && (
+          {/* Timeline Bar (sticky) — only when sections data exists */}
+          {sections.length > 0 && (
             <div className="timeline-bar-sticky">
               <TimelineBar
-                segments={simulation.segments}
-                phases={phases}
-                selectedIndex={selectedSegIdx}
-                onSelect={setSelectedSegIdx}
+                sections={sections}
+                selectedIndex={selectedSectionIdx}
+                onSelect={setSelectedSectionIdx}
               />
             </div>
           )}
 
-          {/* Segment Drawer — when a segment is selected */}
-          {simulation && selectedSegIdx !== null && simulation.segments[selectedSegIdx] && (() => {
-            const seg = simulation.segments[selectedSegIdx];
-            const health = segmentHealthScore(seg);
-            const profile8 = computeBrainProfile8(seg);
-            const funcProfile = computeFunctionalProfile(
-              seg.roi_insights?.top_active_rois,
-              seg.roi_insights?.top_changed_rois,
+          {/* Section Drawer — when a section is selected */}
+          {selectedSectionIdx !== null && sections[selectedSectionIdx] && (() => {
+            const section = sections[selectedSectionIdx];
+            const evs = evidenceMap.get(selectedSectionIdx) ?? [];
+
+            // Find matching simulation segment for brain data
+            const matchingSegment = simulation?.segments.find(
+              (seg) => seg.start_time >= section.start && seg.start_time < section.end,
             );
-            const rx = roiPrescription(funcProfile);
-            const transcriptSeg = transcript?.segments.find((t) => t.segment_id === seg.segment_id);
-            const evs = evidenceMap.get(seg.segment_id) ?? [];
+            const health = matchingSegment ? segmentHealthScore(matchingSegment) : undefined;
+            const profile8 = matchingSegment ? computeBrainProfile8(matchingSegment) : undefined;
+            const rx = matchingSegment
+              ? (() => {
+                  const funcProfile = computeFunctionalProfile(
+                    matchingSegment.roi_insights?.top_active_rois,
+                    matchingSegment.roi_insights?.top_changed_rois,
+                  );
+                  return roiPrescription(funcProfile);
+                })()
+              : undefined;
+
             return (
               <SegmentDrawer
-                segment={seg}
-                phase={phases[seg.segment_id]}
-                transcript={transcriptSeg}
+                section={section}
                 evidences={evs}
                 brainProfile={profile8}
                 health={health}
-                prescription={{ text: rx.prescription, urgency: rx.urgency }}
-                onClose={() => setSelectedSegIdx(null)}
+                prescription={rx ? { text: rx.prescription, urgency: rx.urgency } : undefined}
+                onClose={() => setSelectedSectionIdx(null)}
               />
             );
           })()}
 
-          {/* Default view: Radar + categories + feedback (when no segment selected) */}
-          {selectedSegIdx === null && (
+          {/* Default view: Radar + categories + feedback (when no section selected) */}
+          {selectedSectionIdx === null && (
             <>
               {/* Radar Chart */}
               <div className="card card-padded">
@@ -764,24 +772,24 @@ function buildReportMarkdown(data: {
   return lines.join("\n");
 }
 
-/* ─── Evidence → Segment Mapping ─── */
+/* ─── Evidence → Section Mapping ─── */
 
-function mapEvidenceToSegments(
+function mapEvidenceToSections(
   evaluation: EvaluationResult,
-  segments: SimulationResult["segments"],
-): Map<string, Array<{ itemName: string; score: number; text: string }>> {
-  const result = new Map<string, Array<{ itemName: string; score: number; text: string }>>();
+  sections: Section[],
+): Map<number, Array<{ itemName: string; score: number; text: string }>> {
+  const result = new Map<number, Array<{ itemName: string; score: number; text: string }>>();
   for (const cat of evaluation.category_results) {
     for (const item of cat.items) {
       for (const ev of item.evidence) {
         const match = ev.match(/<(\d{2}:\d{2}:\d{2})>/);
         if (!match) continue;
         const time = match[1];
-        const seg = segments.find((s) => time >= s.start_time && time <= s.end_time);
-        if (!seg) continue;
-        const existing = result.get(seg.segment_id) ?? [];
-        existing.push({ itemName: item.item_name, score: item.score, text: ev });
-        result.set(seg.segment_id, existing);
+        const secIdx = sections.findIndex((s) => time >= s.start && time <= s.end);
+        if (secIdx < 0) continue;
+        const arr = result.get(secIdx) ?? [];
+        arr.push({ itemName: item.item_name, score: item.score, text: ev });
+        result.set(secIdx, arr);
       }
     }
   }

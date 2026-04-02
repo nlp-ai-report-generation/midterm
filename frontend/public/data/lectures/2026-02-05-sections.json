@@ -1,0 +1,101 @@
+{
+  "lecture_date": "2026-02-05",
+  "sections": [
+    {
+      "start": "09:11:48",
+      "end": "09:15:04",
+      "label": "RDBMS와 정형 데이터 복습",
+      "type": "intro"
+    },
+    {
+      "start": "09:15:04",
+      "end": "09:18:30",
+      "label": "정형·반정형·비정형 데이터 구분",
+      "type": "concept"
+    },
+    {
+      "start": "09:18:30",
+      "end": "09:21:35",
+      "label": "JSON·XML과 MySQL 변환",
+      "type": "concept"
+    },
+    {
+      "start": "09:21:35",
+      "end": "09:25:00",
+      "label": "엔티티와 컬럼·로우 구조 개념",
+      "type": "concept"
+    },
+    {
+      "start": "09:25:00",
+      "end": "09:29:43",
+      "label": "DDL·DML·DCL·TCL 분류",
+      "type": "concept"
+    },
+    {
+      "start": "09:29:43",
+      "end": "09:36:48",
+      "label": "CREATE·ALTER·DROP와 제약조건",
+      "type": "concept"
+    },
+    {
+      "start": "09:36:48",
+      "end": "09:41:43",
+      "label": "ALTER TABLE과 DROP 명령",
+      "type": "concept"
+    },
+    {
+      "start": "09:41:43",
+      "end": "09:47:15",
+      "label": "기본키·외래키와 무결성 규칙",
+      "type": "concept"
+    },
+    {
+      "start": "09:47:15",
+      "end": "09:50:52",
+      "label": "데이터 타입과 공간 데이터 분류",
+      "type": "concept"
+    },
+    {
+      "start": "09:50:52",
+      "end": "09:54:20",
+      "label": "정수·문자·날짜 타입 비교",
+      "type": "concept"
+    },
+    {
+      "start": "09:54:20",
+      "end": "09:58:04",
+      "label": "BLOB·TEXT와 블록 단위",
+      "type": "concept"
+    },
+    {
+      "start": "09:58:04",
+      "end": "03:34:16",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "03:34:16",
+      "end": "03:39:58",
+      "label": "IFNULL과 COALESCE 비교",
+      "type": "concept"
+    },
+    {
+      "start": "03:39:58",
+      "end": "03:46:48",
+      "label": "NULL 대체값과 연락처 예시",
+      "type": "concept"
+    },
+    {
+      "start": "03:46:48",
+      "end": "03:51:37",
+      "label": "SELECT 워크숍과 팀별 과제 안내",
+      "type": "wrapup"
+    },
+    {
+      "start": "03:51:37",
+      "end": "05:50:10",
+      "label": "(쉬는시간)",
+      "type": "break"
+    }
+  ]
+}

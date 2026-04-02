@@ -1,87 +1,104 @@
 import { useMemo } from "react";
-import type { SimulationSegment } from "@/types/simulation";
-import { segmentHealthScore } from "@/lib/simulation";
+
+export interface Section {
+  start: string; // "09:11:17"
+  end: string;   // "09:15:00"
+  label: string; // "Java I/O·NIO·NIO2 개요"
+  type: string;  // "intro" | "concept" | "practice" | "review" | "break" | "wrapup"
+}
 
 interface TimelineBarProps {
-  segments: SimulationSegment[];
-  phases: Record<string, string>; // seg-01 → "intro" etc
+  sections: Section[];
   selectedIndex: number | null;
   onSelect: (index: number) => void;
 }
 
-const PHASE_LABELS: Record<string, string> = {
-  intro: "도입",
-  concept: "개념",
-  practice: "실습",
-  review: "복습",
-  wrap: "마무리",
-};
-
-/** Merge consecutive segments with the same phase into label spans */
-function mergePhaseLabels(
-  segments: SimulationSegment[],
-  phases: Record<string, string>,
-): Array<{ label: string; startIdx: number; span: number }> {
-  const result: Array<{ label: string; startIdx: number; span: number }> = [];
-  let prev = "";
-  for (let i = 0; i < segments.length; i++) {
-    const phase = phases[segments[i].segment_id] ?? "";
-    if (phase === prev && result.length > 0) {
-      result[result.length - 1].span += 1;
-    } else {
-      result.push({ label: PHASE_LABELS[phase] ?? phase, startIdx: i, span: 1 });
-      prev = phase;
-    }
-  }
-  return result;
+function timeToSeconds(t: string): number {
+  const [h, m, s] = t.split(":").map(Number);
+  return h * 3600 + m * 60 + s;
 }
 
-export default function TimelineBar({ segments, phases, selectedIndex, onSelect }: TimelineBarProps) {
-  const phaseLabels = useMemo(() => mergePhaseLabels(segments, phases), [segments, phases]);
+const TYPE_COLORS: Record<string, string> = {
+  concept: "#1d1d1f",
+  practice: "#0071e3",
+  intro: "#86868b",
+  review: "#86868b",
+  break: "#f5f5f7",
+  wrapup: "#86868b",
+};
 
-  /** Compute max attention for height scaling */
-  const maxAttention = useMemo(() => {
-    let max = 1;
-    for (const s of segments) {
-      if (s.proxies.attention_proxy > max) max = s.proxies.attention_proxy;
+export default function TimelineBar({ sections, selectedIndex, onSelect }: TimelineBarProps) {
+  const totalDuration = useMemo(() => {
+    if (sections.length === 0) return 1;
+    const first = timeToSeconds(sections[0].start);
+    const last = timeToSeconds(sections[sections.length - 1].end);
+    return last - first || 1;
+  }, [sections]);
+
+  const originSeconds = useMemo(
+    () => (sections.length > 0 ? timeToSeconds(sections[0].start) : 0),
+    [sections],
+  );
+
+  // Build hour markers for the time axis
+  const timeMarkers = useMemo(() => {
+    if (sections.length === 0) return [];
+    const endSec = originSeconds + totalDuration;
+    const markers: string[] = [];
+    // start from next full hour after originSeconds, or originSeconds itself if it's exact
+    let cursor = Math.ceil(originSeconds / 3600) * 3600;
+    if (cursor > originSeconds) {
+      // add the origin as "0:00"-style
+      const oh = Math.floor(originSeconds / 3600);
+      const om = Math.floor((originSeconds % 3600) / 60);
+      markers.push(`${oh}:${String(om).padStart(2, "0")}`);
     }
-    return max;
-  }, [segments]);
+    while (cursor <= endSec) {
+      const h = Math.floor(cursor / 3600);
+      const m = Math.floor((cursor % 3600) / 60);
+      markers.push(`${h}:${String(m).padStart(2, "0")}`);
+      cursor += 3600;
+    }
+    return markers;
+  }, [originSeconds, totalDuration, sections.length]);
+
+  // Minimum width in percentage to show label text
+  const MIN_LABEL_WIDTH_PCT = 8;
 
   return (
-    <div className="timeline-bar">
-      {/* Segment blocks */}
-      <div className="timeline-bar-segments">
-        {segments.map((seg, idx) => {
-          const health = segmentHealthScore(seg);
-          const intensity = seg.proxies.attention_proxy / maxAttention;
-          const height = Math.round(20 + intensity * 30); // 20~50px
+    <div className="timeline-container">
+      {/* Continuous strip */}
+      <div className="timeline-strip">
+        {sections.map((sec, idx) => {
+          const startSec = timeToSeconds(sec.start) - originSeconds;
+          const endSec = timeToSeconds(sec.end) - originSeconds;
+          const widthPct = ((endSec - startSec) / totalDuration) * 100;
+          const color = TYPE_COLORS[sec.type] ?? "#86868b";
+          const isBreak = sec.type === "break";
+          const textColor = isBreak ? "#86868b" : "rgba(255,255,255,0.85)";
+
           return (
-            <button
-              key={seg.segment_id}
-              className={`timeline-seg ${selectedIndex === idx ? "timeline-seg-selected" : ""}`}
+            <div
+              key={idx}
+              className={`timeline-section ${selectedIndex === idx ? "timeline-section-selected" : ""}`}
               style={{
-                backgroundColor: health.color,
-                height,
-                opacity: 0.5 + intensity * 0.5,
+                width: `${widthPct}%`,
+                backgroundColor: color,
+                color: textColor,
               }}
               onClick={() => onSelect(idx)}
-              title={`${seg.start_time}~${seg.end_time}`}
-            />
+              title={`${sec.start}~${sec.end} ${sec.label}`}
+            >
+              {widthPct >= MIN_LABEL_WIDTH_PCT ? sec.label : ""}
+            </div>
           );
         })}
       </div>
 
-      {/* Phase labels row */}
-      <div className="timeline-bar-phases">
-        {phaseLabels.map((ph, i) => (
-          <span
-            key={i}
-            className="timeline-phase-label"
-            style={{ flex: ph.span }}
-          >
-            {ph.label}
-          </span>
+      {/* Time axis */}
+      <div className="timeline-times">
+        {timeMarkers.map((t, i) => (
+          <span key={i}>{t}</span>
         ))}
       </div>
     </div>

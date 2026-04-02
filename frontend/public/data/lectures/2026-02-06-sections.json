@@ -1,0 +1,89 @@
+{
+  "lecture_date": "2026-02-06",
+  "sections": [
+    {
+      "start": "09:14:40",
+      "end": "09:15:56",
+      "label": "CONCAT과 정렬 기준 복습",
+      "type": "intro"
+    },
+    {
+      "start": "09:15:56",
+      "end": "09:21:25",
+      "label": "DATE_FORMAT·CASE·HAVING 정리",
+      "type": "concept"
+    },
+    {
+      "start": "09:21:25",
+      "end": "09:34:06",
+      "label": "문자열 함수와 윈도우 함수",
+      "type": "concept"
+    },
+    {
+      "start": "09:34:06",
+      "end": "09:45:06",
+      "label": "LIKE·REGEXP와 패턴 매칭",
+      "type": "concept"
+    },
+    {
+      "start": "09:45:06",
+      "end": "10:20:48",
+      "label": "REGEXP 패턴과 줄바꿈 탐색",
+      "type": "practice"
+    },
+    {
+      "start": "10:20:48",
+      "end": "10:36:48",
+      "label": "정규식 변수와 이스케이프 처리",
+      "type": "concept"
+    },
+    {
+      "start": "10:36:48",
+      "end": "10:46:39",
+      "label": "INSTR·REPLACE와 캐릭터셋",
+      "type": "concept"
+    },
+    {
+      "start": "10:46:39",
+      "end": "11:06:41",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "11:06:41",
+      "end": "11:13:21",
+      "label": "UTF8MB4와 VARCHAR 길이",
+      "type": "concept"
+    },
+    {
+      "start": "11:13:21",
+      "end": "11:17:08",
+      "label": "PK·UK와 오토인크리먼트 키",
+      "type": "concept"
+    },
+    {
+      "start": "11:17:08",
+      "end": "03:46:47",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "03:46:47",
+      "end": "03:49:00",
+      "label": "윈도우 함수와 GROUP_CONCAT",
+      "type": "concept"
+    },
+    {
+      "start": "03:49:00",
+      "end": "03:56:58",
+      "label": "SELECT 풀이와 스키마 역공학",
+      "type": "practice"
+    },
+    {
+      "start": "03:56:58",
+      "end": "05:50:14",
+      "label": "ERD 관계도와 워크숍 마무리 안내",
+      "type": "wrapup"
+    }
+  ]
+}

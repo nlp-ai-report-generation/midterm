@@ -1,0 +1,107 @@
+{
+  "lecture_date": "2026-02-13",
+  "sections": [
+    {
+      "start": "09:10:38",
+      "end": "09:15:46",
+      "label": "정보 스키마와 트랜잭션 제어 개요",
+      "type": "review"
+    },
+    {
+      "start": "09:15:46",
+      "end": "09:25:45",
+      "label": "제약조건과 CRUD·트랜잭션 계획",
+      "type": "concept"
+    },
+    {
+      "start": "09:25:45",
+      "end": "10:01:58",
+      "label": "부모·자식 관계와 ON DELETE CASCADE",
+      "type": "concept"
+    },
+    {
+      "start": "10:01:58",
+      "end": "10:11:27",
+      "label": "식별·비식별 관계와 자식 테이블 도식",
+      "type": "concept"
+    },
+    {
+      "start": "10:11:27",
+      "end": "10:39:05",
+      "label": "REFERENTIAL ACTION 옵션 정리",
+      "type": "concept"
+    },
+    {
+      "start": "10:39:05",
+      "end": "11:03:56",
+      "label": "CREATE TABLE 선언부와 컬럼 옵션",
+      "type": "concept"
+    },
+    {
+      "start": "11:03:56",
+      "end": "11:44:31",
+      "label": "TABLES·KEY_COLUMN_USAGE 조회",
+      "type": "practice"
+    },
+    {
+      "start": "11:44:31",
+      "end": "01:11:16",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "01:11:16",
+      "end": "01:18:56",
+      "label": "INSERT·UPDATE·ROLLBACK 개요",
+      "type": "concept"
+    },
+    {
+      "start": "01:18:56",
+      "end": "01:25:56",
+      "label": "ACID 원칙과 동시성 제어",
+      "type": "concept"
+    },
+    {
+      "start": "01:25:56",
+      "end": "01:45:56",
+      "label": "AUTOCOMMIT과 세션 변수 설정",
+      "type": "concept"
+    },
+    {
+      "start": "01:45:56",
+      "end": "02:23:56",
+      "label": "COMMIT·ROLLBACK과 세션 잠금 실습",
+      "type": "practice"
+    },
+    {
+      "start": "02:23:56",
+      "end": "02:39:10",
+      "label": "SAVEPOINT와 부분 롤백 실습",
+      "type": "practice"
+    },
+    {
+      "start": "02:39:10",
+      "end": "03:00:26",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "03:00:26",
+      "end": "03:25:21",
+      "label": "ACID 원칙과 DML 동시성 연습",
+      "type": "practice"
+    },
+    {
+      "start": "03:25:21",
+      "end": "03:54:15",
+      "label": "INNODB_TRX와 바이너리 로그",
+      "type": "concept"
+    },
+    {
+      "start": "03:54:15",
+      "end": "05:50:25",
+      "label": "트랜잭션 정리와 다음 학습 안내",
+      "type": "wrapup"
+    }
+  ]
+}

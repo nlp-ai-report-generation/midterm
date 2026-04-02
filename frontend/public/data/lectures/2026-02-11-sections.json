@@ -1,0 +1,71 @@
+{
+  "lecture_date": "2026-02-11",
+  "sections": [
+    {
+      "start": "09:10:28",
+      "end": "09:39:06",
+      "label": "조인·집합연산·서브쿼리 복습",
+      "type": "review"
+    },
+    {
+      "start": "09:39:06",
+      "end": "10:18:40",
+      "label": "UNION·INTERSECT·EXCEPT 정리",
+      "type": "concept"
+    },
+    {
+      "start": "10:18:40",
+      "end": "10:49:26",
+      "label": "CHAR·VARCHAR와 DECIMAL·DOUBLE",
+      "type": "concept"
+    },
+    {
+      "start": "10:49:26",
+      "end": "11:10:37",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "11:10:37",
+      "end": "11:29:08",
+      "label": "단일행 서브쿼리와 비교 연산",
+      "type": "concept"
+    },
+    {
+      "start": "11:29:08",
+      "end": "11:50:32",
+      "label": "다중행 서브쿼리와 ANY·ALL",
+      "type": "concept"
+    },
+    {
+      "start": "11:50:32",
+      "end": "01:11:06",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "01:11:06",
+      "end": "02:53:05",
+      "label": "인라인 뷰와 계산별칭 재구성",
+      "type": "concept"
+    },
+    {
+      "start": "02:53:05",
+      "end": "03:25:21",
+      "label": "상관 서브쿼리와 EXISTS 판별",
+      "type": "concept"
+    },
+    {
+      "start": "03:25:21",
+      "end": "03:55:00",
+      "label": "EXISTS·NOT EXISTS와 결과 유무",
+      "type": "practice"
+    },
+    {
+      "start": "03:55:00",
+      "end": "05:50:20",
+      "label": "워크숍 안내와 서브쿼리 정리",
+      "type": "wrapup"
+    }
+  ]
+}

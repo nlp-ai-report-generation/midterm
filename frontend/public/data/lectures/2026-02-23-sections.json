@@ -1,0 +1,83 @@
+{
+  "lecture_date": "2026-02-23",
+  "sections": [
+    {
+      "start": "09:10:06",
+      "end": "09:16:11",
+      "label": "이번 주 DB 마무리와 뷰·트리거 계획",
+      "type": "intro"
+    },
+    {
+      "start": "09:16:11",
+      "end": "09:37:43",
+      "label": "뷰 가상 테이블과 접근 제어 구조",
+      "type": "concept"
+    },
+    {
+      "start": "09:37:43",
+      "end": "10:18:28",
+      "label": "CREATE VIEW와 쿼리 단순화 실습",
+      "type": "practice"
+    },
+    {
+      "start": "10:18:28",
+      "end": "10:39:02",
+      "label": "WITH CHECK OPTION과 수정 제한 조건",
+      "type": "concept"
+    },
+    {
+      "start": "10:39:02",
+      "end": "11:00:25",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "11:00:25",
+      "end": "11:51:54",
+      "label": "조인 뷰와 캐스케이드 체크옵션 실습",
+      "type": "practice"
+    },
+    {
+      "start": "11:51:54",
+      "end": "01:10:20",
+      "label": "(점심시간)",
+      "type": "break"
+    },
+    {
+      "start": "01:10:20",
+      "end": "01:34:40",
+      "label": "프로시저·펑션 RETURNS 비교",
+      "type": "concept"
+    },
+    {
+      "start": "01:34:40",
+      "end": "02:18:55",
+      "label": "CREATE PROCEDURE와 IN·OUT 실습",
+      "type": "practice"
+    },
+    {
+      "start": "02:18:55",
+      "end": "03:10:00",
+      "label": "SQLSTATE와 사용자 예외 처리",
+      "type": "concept"
+    },
+    {
+      "start": "03:10:00",
+      "end": "03:57:28",
+      "label": "커서 루프와 JDBC ResultSet",
+      "type": "practice"
+    },
+    {
+      "start": "03:57:28",
+      "end": "04:00:05",
+      "label": "커서 복습과 예외 처리 예고",
+      "type": "wrapup"
+    },
+    {
+      "start": "04:00:05",
+      "end": "05:50:09",
+      "label": "(쉬는시간)",
+      "type": "break"
+    }
+  ]
+}
