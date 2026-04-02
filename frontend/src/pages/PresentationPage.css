@@ -492,6 +492,128 @@
   background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
 }
 
+/* ─ Detail / Expandable ─ */
+
+.pres-detail {
+  margin-top: 28px;
+  border-radius: 18px;
+  background: var(--pres-dark-card);
+  border: 1px solid var(--pres-dark-border);
+  overflow: hidden;
+}
+
+.pres-section--light .pres-detail {
+  background: var(--pres-white);
+  border-color: rgba(0, 0, 0, 0.04);
+}
+
+.pres-detail summary {
+  padding: 22px 28px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.15s;
+}
+
+.pres-detail summary::-webkit-details-marker {
+  display: none;
+}
+
+.pres-detail summary::after {
+  content: "+";
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--pres-light-dim);
+  flex-shrink: 0;
+}
+
+.pres-section--light .pres-detail summary::after {
+  color: var(--pres-text-tertiary);
+}
+
+.pres-detail[open] summary::after {
+  content: "−";
+}
+
+.pres-detail summary:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.pres-section--light .pres-detail summary:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.pres-detail__body {
+  padding: 0 28px 28px;
+}
+
+.pres-detail__body p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--pres-light-muted);
+  margin-bottom: 16px;
+}
+
+.pres-section--light .pres-detail__body p {
+  color: var(--pres-text-secondary);
+}
+
+.pres-detail__body code {
+  font-size: 13px;
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  font-family: "SF Mono", "JetBrains Mono", monospace;
+}
+
+.pres-section--light .pres-detail__body code {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.pres-detail__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pres-detail__step {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.pres-detail__step strong {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.pres-detail__step p {
+  margin-bottom: 0;
+  font-size: 14px;
+  padding-top: 5px;
+}
+
+.pres-detail__note {
+  font-size: 14px;
+  font-style: italic;
+  opacity: 0.8;
+}
+
 /* ═══ CATEGORIES ═══ */
 
 .pres-categories {

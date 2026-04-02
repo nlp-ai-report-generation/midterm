@@ -391,6 +391,33 @@ export default function PresentationPage() {
             <div className="pres-connector-line" />
             <span>출력 — 리포트 + Notion 내보내기</span>
           </div>
+
+          <details className="pres-detail reveal" style={{ animationDelay: "640ms" }}>
+            <summary>하네스 구조 — 평가 기준이 코드가 아니라 문서예요</summary>
+            <div className="pres-detail__body">
+              <p>
+                각 평가자는 자기 카테고리의 <strong>하네스(harness)</strong>를 읽어요.
+                마크다운 파일에 YAML 프론트매터(설정)와 본문(LLM 시스템 프롬프트)이 들어 있어요.
+              </p>
+              <div className="pres-detail__steps">
+                <div className="pres-detail__step">
+                  <strong>01</strong>
+                  <p>하네스의 <code>chunk_focus</code>에 따라 청크를 골라요 — <code>first</code>면 도입부만, <code>last</code>면 마무리만, <code>all</code>이면 전체</p>
+                </div>
+                <div className="pres-detail__step">
+                  <strong>02</strong>
+                  <p>고른 청크마다 LLM을 호출해서 점수(1~5), 근거, 추론, 신뢰도를 JSON으로 받아요</p>
+                </div>
+                <div className="pres-detail__step">
+                  <strong>03</strong>
+                  <p>여러 청크에서 받은 점수를 평균 내서 최종 항목 점수를 만들어요</p>
+                </div>
+              </div>
+              <p className="pres-detail__note">
+                하네스가 마크다운이라서 <code>category_3_clarity.md</code> 파일 하나만 수정하면 평가 기준이 바뀌어요. 코드를 고칠 필요가 없어요.
+              </p>
+            </div>
+          </details>
         </div>
       </section>
 
