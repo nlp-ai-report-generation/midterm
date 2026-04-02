@@ -1,0 +1,233 @@
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - link "AI Lecture Report" [ref=e5] [cursor=pointer]:
+      - /url: /
+    - generic [ref=e6]:
+      - link "보고서 샘플" [ref=e7] [cursor=pointer]:
+        - /url: https://www.notion.so/syjin1999/AI-33626a79dcd3812abf6ceac2397e2fb3
+        - text: 보고서 샘플
+        - img [ref=e8]
+      - link "공개 발표 덱 열기" [ref=e11] [cursor=pointer]:
+        - /url: /presentation/index.html
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - paragraph [ref=e14]: PROJECT INTRODUCTION
+      - heading "강의 피드백을 점수에서 근거로 바꿔요" [level=1] [ref=e15]:
+        - text: 강의 피드백을
+        - text: 점수에서 근거로
+        - text: 바꿔요
+      - paragraph [ref=e16]: AI가 강의 원문을 처음부터 끝까지 읽고 18개 항목으로 평가해요. 여기에 TRIBE v2 시뮬레이션을 더해, 어느 구간이 따라가기 쉬웠고 어디서 설명 리듬이 무너졌는지 시간축으로 보여줘요.
+      - generic [ref=e17]:
+        - link "공개 발표 덱 보기" [ref=e18] [cursor=pointer]:
+          - /url: /presentation/index.html
+        - link "Notion 보고서 보기" [ref=e19] [cursor=pointer]:
+          - /url: https://www.notion.so/syjin1999/AI-33626a79dcd3812abf6ceac2397e2fb3
+        - link "서비스 보기" [ref=e20] [cursor=pointer]:
+          - /url: /
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]: 이번 발표에서 보여주는 것
+        - strong [ref=e24]: 신뢰도 + UX + 실데이터
+      - generic [ref=e25]:
+        - article [ref=e26]:
+          - strong [ref=e27]: "15"
+          - generic [ref=e28]: 강의를 끝까지 읽고 평가해요
+        - article [ref=e29]:
+          - strong [ref=e30]: "18"
+          - generic [ref=e31]: 체크리스트 항목을 남겨요
+        - article [ref=e32]:
+          - strong [ref=e33]: "0.877"
+          - generic [ref=e34]: 평균 ICC로 신뢰도를 봤어요
+        - article [ref=e35]:
+          - strong [ref=e36]: "4"
+          - generic [ref=e37]: 실험으로 설정을 검증했어요
+      - generic [ref=e38]:
+        - paragraph [ref=e39]: 22,756줄 원문과 15개 강의 구간을 다시 정리했어요.
+        - paragraph [ref=e40]: 평가 데이터는 non-break 섹션 coverage 0건을 없애고 다시 맞췄어요.
+  - generic [ref=e41]:
+    - generic [ref=e42]:
+      - paragraph [ref=e43]: FLOW
+      - heading "발표는 이 흐름으로 읽으면 돼요" [level=2] [ref=e44]
+      - paragraph [ref=e45]: README와 최종 보고서 내용을 발표에 맞게 줄이고, 심사자가 바로 이해할 수 있는 장면 중심으로 다시 배치했어요.
+    - generic [ref=e46]:
+      - article [ref=e47]:
+        - generic [ref=e48]: "01"
+        - heading "문제를 다시 정의했어요" [level=3] [ref=e49]
+        - paragraph [ref=e50]: 점수만 주는 평가가 아니라, 강사가 다음 수업에서 바로 바꿀 수 있는 근거형 피드백으로 풀었어요.
+      - article [ref=e51]:
+        - generic [ref=e52]: "02"
+        - heading "원문과 기준을 같이 읽어요" [level=3] [ref=e53]
+        - paragraph [ref=e54]: 15개 강의 스크립트와 품질 기준을 같이 묶어 감상평이 아니라 기준 기반 평가가 되게 했어요.
+      - article [ref=e55]:
+        - generic [ref=e56]: "03"
+        - heading "평가 파이프라인을 시간축으로 묶었어요" [level=3] [ref=e57]
+        - paragraph [ref=e58]: 강의를 30분 윈도우로 자르고, 5개 카테고리가 병렬로 읽고, 가중 평균과 리포트까지 한 흐름으로 이어가요.
+      - article [ref=e59]:
+        - generic [ref=e60]: "04"
+        - heading "실험으로 흔들림을 확인했어요" [level=3] [ref=e61]
+        - paragraph [ref=e62]: 같은 강의를 세 번 읽었을 때 얼마나 비슷한지, 청크 크기와 윈도우가 점수를 얼마나 바꾸는지 직접 검증했어요.
+      - article [ref=e63]:
+        - generic [ref=e64]: "05"
+        - heading "수강자 반응도 시간축으로 보여줘요" [level=3] [ref=e65]
+        - paragraph [ref=e66]: TRIBE v2로 구간별 뇌 반응을 예측해, 어느 설명에서 따라오고 어느 장면에서 이탈하는지 시각화했어요.
+      - article [ref=e67]:
+        - generic [ref=e68]: "06"
+        - heading "리포트는 행동 단위로 마무리해요" [level=3] [ref=e69]
+        - paragraph [ref=e70]: 관찰된 사실, 해석, 다음 액션을 분리해서 강사가 바로 적용할 수 있는 언어로 정리했어요.
+  - generic [ref=e71]:
+    - generic [ref=e72]:
+      - paragraph [ref=e73]: SYSTEM
+      - heading "평가와 리포트를 한 장면으로 묶었어요" [level=2] [ref=e74]
+      - paragraph [ref=e75]: 토큰이 아니라 시간 기준으로 청킹하고, 카테고리별 하네스를 분리해서 바뀐 기준도 추적할 수 있게 했어요.
+    - generic [ref=e76]:
+      - generic [ref=e77]:
+        - text: "01"
+        - strong [ref=e78]: 강의 STT 원문
+      - generic [ref=e79]:
+        - text: "02"
+        - strong [ref=e80]: 시간 윈도우 청킹
+      - generic [ref=e81]:
+        - text: "03"
+        - strong [ref=e82]: 5개 카테고리 병렬 평가
+      - generic [ref=e83]:
+        - text: "04"
+        - strong [ref=e84]: 18개 항목 집계
+      - generic [ref=e85]:
+        - text: "05"
+        - strong [ref=e86]: 리포트 생성
+    - generic [ref=e87]:
+      - article [ref=e88]:
+        - paragraph [ref=e89]: FACT
+        - heading "하네스는 코드가 아니라 문서에 있어요" [level=3] [ref=e90]
+        - paragraph [ref=e91]: 평가 기준, 5점 앵커, chunk focus, 출력 JSON 형식을 MD로 관리해서 기준 변경 이유를 남기고 빠르게 보정할 수 있어요.
+      - article [ref=e92]:
+        - paragraph [ref=e93]: INTERPRETATION
+        - heading "리포트의 핵심은 채점이 아니라 다음 액션이에요" [level=3] [ref=e94]
+        - paragraph [ref=e95]: 점수만 주지 않고 관찰된 사실, 해석, 개선 제안을 따로 써서 강의 설계로 바로 이어지게 만들었어요.
+  - generic [ref=e96]:
+    - generic [ref=e97]:
+      - paragraph [ref=e98]: VALIDATION
+      - heading "이 점수를 믿어도 되는지 먼저 확인했어요" [level=2] [ref=e99]
+      - paragraph [ref=e100]: 반복 평가 신뢰도와 청크 민감도를 같이 보여줘야, 발표가 기능 소개에 머물지 않고 측정 도구의 설득력까지 전달돼요.
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - article [ref=e103]:
+          - text: ICC
+          - strong [ref=e104]: "0.877"
+          - paragraph [ref=e105]: Good
+        - article [ref=e106]:
+          - text: Kappa
+          - strong [ref=e107]: "0.883"
+          - paragraph [ref=e108]: Almost Perfect
+        - article [ref=e109]:
+          - text: Alpha
+          - strong [ref=e110]: "0.873"
+          - paragraph [ref=e111]: Reliable
+        - article [ref=e112]:
+          - text: SSI
+          - strong [ref=e113]: "0.974"
+          - paragraph [ref=e114]: Very Stable
+      - generic [ref=e115]:
+        - generic [ref=e116]:
+          - generic [ref=e117]:
+            - paragraph [ref=e118]: ICC DISTRIBUTION
+            - heading "15개 강의 중 13개가 Good 이상이었어요" [level=3] [ref=e119]
+          - generic [ref=e120]: 평균 ICC 0.877
+        - generic [ref=e121]:
+          - generic [ref=e123]:
+            - generic [ref=e124]: Excellent
+            - strong [ref=e125]: "8"
+          - generic [ref=e129]:
+            - generic [ref=e130]: Good
+            - strong [ref=e131]: "5"
+          - generic [ref=e135]:
+            - generic [ref=e136]: Moderate
+            - strong [ref=e137]: "2"
+          - generic [ref=e141]:
+            - generic [ref=e142]: Poor
+            - strong [ref=e143]: "0"
+    - generic [ref=e146]:
+      - article [ref=e147]:
+        - text: 반복 평가 신뢰도
+        - strong [ref=e148]: 13 / 15
+        - paragraph [ref=e149]: 15개 강의 중 13개가 Good 이상이었어요.
+      - article [ref=e150]:
+        - text: 청크 크기 민감도
+        - strong [ref=e151]: "+0.212"
+        - paragraph [ref=e152]: 30분 청크가 15분 청크보다 평균 점수가 높았어요.
+      - article [ref=e153]:
+        - text: 효과 크기
+        - strong [ref=e154]: "1.142"
+        - paragraph [ref=e155]: 청크 차이가 작지 않다는 점을 실험으로 확인했어요.
+      - article [ref=e156]:
+        - text: 권장 운영 설정
+        - strong [ref=e157]: 60 / 30
+        - paragraph [ref=e158]: 60분 윈도우와 30분 hop 조합이 균형이 좋았어요.
+  - generic [ref=e159]:
+    - generic [ref=e160]:
+      - paragraph [ref=e161]: REPORT SAMPLES
+      - heading "실제 강의는 이런 식으로 요약해요" [level=2] [ref=e162]
+      - paragraph [ref=e163]: 최종 보고서에서 대표 장면만 골라서, 어떤 설명이 잘 먹혔고 어디서 리듬이 무너졌는지 발표용 문장으로 다시 압축했어요.
+    - generic [ref=e164]:
+      - article [ref=e165]:
+        - generic [ref=e166]: sample
+        - heading "2026-02-02 Java I/O" [level=3] [ref=e167]
+        - paragraph [ref=e168]: 버퍼드 리더/라이터 설명과 파일 방문자 패턴 구간을 비교해서 설명 속도와 실습 전환을 같이 짚었어요.
+      - article [ref=e169]:
+        - generic [ref=e170]: sample
+        - heading "2026-02-09 Front-End" [level=3] [ref=e171]
+        - paragraph [ref=e172]: 문자열 함수 실습은 반응이 좋았고, INFORMATION_SCHEMA 설명 구간은 시각 보조가 더 필요하다는 흐름으로 정리했어요.
+      - article [ref=e173]:
+        - generic [ref=e174]: sample
+        - heading "2026-02-24 MySQL" [level=3] [ref=e175]
+        - paragraph [ref=e176]: 트랜잭션 롤백 실습은 강점으로, 파티션 유형 설명은 압축이 심한 구간으로 읽어 마무리 요약 부족까지 연결했어요.
+  - generic [ref=e177]:
+    - generic [ref=e178]:
+      - paragraph [ref=e179]: SIMULATION
+      - heading "TRIBE v2는 어느 구간에서 따라오고 이탈하는지 보여줘요" [level=2] [ref=e180]
+      - paragraph [ref=e181]: 정적 점수만으로는 놓치는 시간축 변화를 3D 뇌 반응과 설명 리듬으로 같이 보여줘서, 문제 구간을 더 구체적으로 읽게 했어요.
+    - generic [ref=e182]:
+      - generic [ref=e183]:
+        - paragraph [ref=e184]: WHY IT MATTERS
+        - heading "평가가 전체 요약이라면, 시뮬레이션은 구간 처방이에요" [level=3] [ref=e185]
+      - list [ref=e186]:
+        - listitem [ref=e187]: 강점, 개선점, 다음 액션을 따로 보여줘요.
+        - listitem [ref=e188]: 근거 타임스탬프를 남겨서 다시 확인할 수 있어요.
+        - listitem [ref=e189]: 시뮬레이션은 구간별 반응과 설명 리듬을 같이 보여줘요.
+    - generic [ref=e190]:
+      - article [ref=e191]:
+        - img "Dashboard" [ref=e193]
+        - generic [ref=e194]:
+          - generic [ref=e195]: Dashboard
+          - paragraph [ref=e196]: 심사자는 먼저 전체 강의 흐름과 주요 지표를 봐요.
+      - article [ref=e197]:
+        - img "Lecture Detail" [ref=e199]
+        - generic [ref=e200]:
+          - generic [ref=e201]: Lecture Detail
+          - paragraph [ref=e202]: 날짜별 강의에서 점수, 근거, 시뮬레이션 흐름을 같이 읽어요.
+      - article [ref=e203]:
+        - img "EDA" [ref=e205]
+        - generic [ref=e206]:
+          - generic [ref=e207]: EDA
+          - paragraph [ref=e208]: 분포와 카테고리 차이를 한눈에 비교해요.
+      - article [ref=e209]:
+        - img "Experiments" [ref=e211]
+        - generic [ref=e212]:
+          - generic [ref=e213]: Experiments
+          - paragraph [ref=e214]: 신뢰도와 변수 민감도 결과를 별도 화면에서 확인해요.
+  - generic [ref=e216]:
+    - generic [ref=e217]:
+      - paragraph [ref=e218]: NEXT
+      - heading "이번 발표는 기능보다 운영 완성도를 설득하는 장면이에요" [level=2] [ref=e219]
+      - paragraph [ref=e220]: 지금은 전체 sections와 evaluations를 원문 기준으로 다시 맞췄고, 발표용 소개 페이지와 공개 덱 흐름까지 같은 톤으로 정리했어요. 다음 단계는 실데이터 연결 범위를 넓히고, 발표 리허설 기준으로 시뮬레이션 화면을 더 다듬는 일이에요.
+      - list [ref=e221]:
+        - listitem [ref=e222]: 텍스트 기반 평가라 제스처와 표정 같은 비언어 신호는 아직 반영하지 못해요.
+        - listitem [ref=e223]: TRIBE v2 시뮬레이션은 현재 3개 강의를 중심으로 실데이터 검증을 진행했어요.
+        - listitem [ref=e224]: 한국어 강의 전반에 대한 외부 검증은 앞으로 더 쌓아야 해요.
+    - generic [ref=e225]:
+      - link "새 탭에서 발표 자료 열기" [ref=e226] [cursor=pointer]:
+        - /url: /presentation/index.html
+      - link "Notion 열기" [ref=e227] [cursor=pointer]:
+        - /url: https://www.notion.so/syjin1999/AI-33626a79dcd3812abf6ceac2397e2fb3
+      - link "첫 화면으로 돌아가기" [ref=e228] [cursor=pointer]:
+        - /url: /
