@@ -14,7 +14,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/items": "항목별 분석",
   "/settings": "설정",
   "/integrations": "연동 설정",
-  "/presentation": "중간발표 자료",
+  "/presentation": "프로젝트 소개",
   "/about": "프로젝트 소개",
 };
 

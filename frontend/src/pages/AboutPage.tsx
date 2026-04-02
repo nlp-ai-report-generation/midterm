@@ -207,7 +207,7 @@ export default function AboutPage() {
                 padding: "14px 32px",
               }}
             >
-              중간발표 보기
+              소개 페이지 가기
             </Link>
           </div>
         </div>

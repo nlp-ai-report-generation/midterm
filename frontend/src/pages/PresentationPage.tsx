@@ -130,8 +130,8 @@ export default function PresentationPage() {
           AI Lecture Report
         </Link>
         <div className="presentation-topbar-actions">
-          <Link to="/dashboard" className="btn-secondary">
-            대시보드 보기
+          <Link to="/" className="btn-secondary">
+            서비스 입구 보기
           </Link>
           <a href={deckSrc} target="_blank" rel="noreferrer" className="btn-primary">
             발표 덱 열기
@@ -156,8 +156,8 @@ export default function PresentationPage() {
             <a href={deckSrc} target="_blank" rel="noreferrer" className="btn-primary">
               발표 자료 보기
             </a>
-            <Link to="/lectures" className="btn-secondary">
-              강의 데이터 둘러보기
+            <Link to="/" className="btn-secondary">
+              서비스 들어가기
             </Link>
           </div>
         </div>

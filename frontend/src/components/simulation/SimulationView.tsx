@@ -283,6 +283,29 @@ export default function SimulationView({ date }: SimulationViewProps) {
             </div>
           </div>
 
+          {/* 평가 항목 점수 */}
+          <div className="sim-insight-section">
+            <p style={{ fontSize: 11, fontWeight: 600, color: "#86868b", textTransform: "uppercase" as const, letterSpacing: "0.02em", marginBottom: 4 }}>평가 항목</p>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 12px" }}>
+              {[
+                { label: "언어", score: seg.proxies.attention_proxy },
+                { label: "구조", score: seg.proxies.load_proxy },
+                { label: "개념", score: Math.round(((seg.proxies.attention_proxy + seg.proxies.load_proxy) / 2) * 10) / 10 },
+                { label: "예시", score: seg.proxies.novelty_proxy },
+                { label: "상호작용", score: Math.round(((seg.proxies.attention_proxy + seg.proxies.novelty_proxy) / 2) * 10) / 10 },
+              ].map((item) => {
+                const v = item.score / 20; // 0-100 → 0-5 scale
+                const color = v >= 4 ? "#34C759" : v >= 3 ? "#FF9500" : "#FF3B30";
+                return (
+                  <span key={item.label} style={{ fontSize: 12, color: "#1d1d1f", display: "flex", alignItems: "center", gap: 4 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: 2, background: color, flexShrink: 0 }} />
+                    {item.label} <span style={{ fontWeight: 600 }}>{v.toFixed(1)}</span>
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+
           {/* 강사 처방 */}
           <div className="sim-insight-section">
             <div className={`sim-prescription sim-prescription-${rx.urgency}`}>
