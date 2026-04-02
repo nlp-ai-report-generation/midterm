@@ -212,11 +212,6 @@
   border-color: rgba(255, 107, 0, 0.15);
 }
 
-.pres-banner__emoji {
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
 .pres-banner__text {
   font-size: 14px;
   font-weight: 600;
@@ -289,12 +284,6 @@
   padding: 28px 16px;
   background: var(--pres-dark-surface);
   text-align: center;
-}
-
-.pres-stat__emoji {
-  display: block;
-  font-size: 24px;
-  margin-bottom: 8px;
 }
 
 .pres-stat strong {
@@ -518,24 +507,42 @@
 }
 
 .pres-cat {
-  display: grid;
-  grid-template-columns: 240px 1fr auto;
-  gap: 20px;
-  align-items: center;
-  padding: 22px 28px;
   border-radius: 16px;
   background: var(--pres-white);
+  overflow: hidden;
 }
 
-.pres-cat__head {
+.pres-cat__summary {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  padding: 22px 28px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: background 0.15s;
 }
 
-.pres-cat__emoji {
-  font-size: 22px;
+.pres-cat__summary::-webkit-details-marker {
+  display: none;
+}
+
+.pres-cat__summary:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.pres-cat__summary::after {
+  content: "+";
+  margin-left: auto;
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--pres-text-tertiary);
+  transition: transform 0.25s;
   flex-shrink: 0;
+}
+
+.pres-cat[open] .pres-cat__summary::after {
+  content: "−";
 }
 
 .pres-cat__num {
@@ -556,14 +563,7 @@
   font-size: 16px;
   font-weight: 700;
   color: var(--pres-text);
-  white-space: nowrap;
   letter-spacing: -0.01em;
-}
-
-.pres-cat__details {
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--pres-text-secondary);
 }
 
 .pres-cat__weight {
@@ -571,6 +571,13 @@
   font-weight: 600;
   color: var(--pres-text-tertiary);
   white-space: nowrap;
+}
+
+.pres-cat__details {
+  padding: 0 28px 22px 78px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--pres-text-secondary);
 }
 
 /* ═══ RELIABILITY ═══ */
@@ -594,11 +601,6 @@
   align-items: center;
   gap: 14px;
   margin-bottom: 24px;
-}
-
-.pres-exp__emoji {
-  font-size: 28px;
-  flex-shrink: 0;
 }
 
 .pres-exp__head h3 {
@@ -710,11 +712,6 @@
   gap: 4px;
 }
 
-.pres-optimal__emoji {
-  font-size: 22px;
-  margin-bottom: 4px;
-}
-
 .pres-optimal__item span {
   font-size: 12px;
   font-weight: 500;
@@ -743,12 +740,6 @@
   padding: 32px 28px;
   border-radius: 20px;
   background: var(--pres-white);
-}
-
-.pres-tribe-block__emoji {
-  display: block;
-  font-size: 32px;
-  margin-bottom: 12px;
 }
 
 .pres-tribe-block h3 {
@@ -818,16 +809,18 @@
   padding: 0 12px;
 }
 
-.pres-flow-step__emoji {
+.pres-flow-step__num {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   margin: 0 auto 12px;
-  font-size: 24px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
   background: var(--accent-soft);
-  border-radius: 14px;
+  border-radius: 12px;
 }
 
 .pres-flow-step strong {
@@ -871,15 +864,10 @@
 .pres-brain-card__header {
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: space-between;
   padding-bottom: 16px;
   margin-bottom: 16px;
   border-bottom: 2px solid;
-}
-
-.pres-brain-card__emoji {
-  font-size: 32px;
-  flex-shrink: 0;
 }
 
 .pres-brain-card__header h4 {
@@ -1071,13 +1059,7 @@
   border-bottom: none;
 }
 
-.pres-tech__emoji {
-  font-size: 18px;
-  flex-shrink: 0;
-  line-height: 1;
-}
-
-.pres-tech__row > span:not(.pres-tech__emoji) {
+.pres-tech__row span {
   flex-shrink: 0;
   width: 72px;
   font-size: 13px;
@@ -1116,10 +1098,6 @@
   font-size: 15px;
   line-height: 1.6;
   color: var(--pres-light-muted);
-}
-
-.pres-list li span {
-  margin-right: 8px;
 }
 
 .pres-list--ordered {
@@ -1217,9 +1195,8 @@
     grid-column: auto;
   }
 
-  .pres-cat {
-    grid-template-columns: 1fr;
-    gap: 8px;
+  .pres-cat__details {
+    padding-left: 28px;
   }
 
   .pres-optimal__grid {
@@ -1243,7 +1220,7 @@
     padding: 0;
   }
 
-  .pres-flow-step__emoji {
+  .pres-flow-step__num {
     margin: 0;
     flex-shrink: 0;
   }
@@ -1360,10 +1337,6 @@
 
   .pres-brain-card {
     padding: 22px 20px;
-  }
-
-  .pres-brain-card__emoji {
-    font-size: 26px;
   }
 
   .pres-brain-card__header h4 {
