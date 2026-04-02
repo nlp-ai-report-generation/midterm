@@ -6,6 +6,11 @@
 
 ## 최근 완료
 
+- Claude 인계용 요약 문서 추가: sections/evaluations 재작업 범위, 검증 결과, 강의별 1~2문장 흐름 요약을 한 파일에 정리 (`memory/handoff-2026-04-03-sections-evaluations.md`)
+- evaluation JSON 전수 재평가 완료: `2026-02-02`~`2026-02-27` 15개 강의의 `frontend/public/data/evaluations/*.json`을 원문 txt, sections JSON, `강의 품질 기준.md` 기준으로 다시 손봐 18개 항목 구조와 `break` 제외 섹션 coverage 0건 해소까지 완료
+- evaluation JSON 재평가 완료: `2026-02-23`~`2026-02-27` 5개 파일을 원문 txt, sections JSON, `강의 품질 기준.md` 기준으로 다시 써서, `break` 제외 섹션 coverage가 0이 아니도록 보정하고 strengths/improvements/recommendations/report_markdown을 날짜별로 갱신
+- evaluation JSON 재평가 확장: `2026-02-09`~`2026-02-13` 5개 파일을 원문 txt, sections JSON, `강의 품질 기준.md` 기준으로 다시 써서, `break` 제외 섹션 coverage가 0이 아니도록 보정하고 strengths/improvements/recommendations/report_markdown을 갱신
+- 프론트 강의 상세 타임라인 보정: `frontend/src/app/lectures/[date]/page.tsx`에서 시뮬레이션 세그먼트와 섹션 매칭이 문자열 시간 비교로 흔들리던 부분을 12시간제 보정 초 비교로 수정하고, `npm run build` 재검증 완료
 - sections JSON 전수 재검산 완료: `2026-02-02`~`2026-02-27` 15개 강의의 `frontend/public/data/lectures/*-sections.json`을 원문 txt 기준으로 다시 점검해, 누락 구간 복원, 실제 공백 기준 `break` 재배치, 원문 첫/끝 타임스탬프 정렬까지 완료
 - 원문 기반 강의 구간 재보정 완료: `2026-02-02`~`2026-02-06` 5개 파일을 전체 타임라인 기준으로 다시 분할하고 라벨 길이/휴식 구간을 재정렬 (`frontend/public/data/lectures/2026-02-02-sections.json`~`2026-02-06-sections.json`)
 - 원문 기반 강의 구간 재보정 완료: `2026-02-23`~`2026-02-27` 5개 강의를 처음부터 끝까지 다시 읽어 누락 구간을 채우고, `frontend/public/data/lectures/YYYY-MM-DD-sections.json`을 전체 타임라인 기준으로 확장 저장
@@ -81,7 +86,7 @@
 
 1. 중간발표 덱 카피와 실제 발표 멘트 1차 합 맞추기
 2. Remotion 영상 자막·음성 타이밍 미세 조정 및 발표 리허설 반영
-3. 전체 15개 배치 평가 실행 후 프론트 정적 evaluation JSON 전체 교체
+3. 수작업 재평가된 evaluation JSON과 LangGraph 배치 결과를 어떻게 병행 운영할지 정리
 4. 반복 실행(3패스) → IRR 메트릭 확인 → 신뢰도 임계값 달성 여부 확인
 5. A/B 실험 설계 및 실행 (모델, 온도, 청킹 변수)
 6. 실험 결과 기반 `/experiments` 페이지 실데이터 연결
@@ -98,13 +103,14 @@
 ## 현재 저장소 상태
 
 - 강의 섹션 정적 데이터: **15개 강의 전체 타임라인 커버 재검산 완료, 원문 첫/끝 시각과 실제 쉬는시간 경계까지 재정렬 완료** (`frontend/public/data/lectures/*.json`)
+- 평가 정적 데이터: **15개 강의 evaluation JSON을 원문 기준으로 재평가했고, 모든 파일이 18개 항목 구조와 break 제외 섹션 coverage 0건 기준을 통과함** (`frontend/public/data/evaluations/*.json`)
 - 평가 파이프라인: **구현 완료** (`src/graph/`, `src/harnesses/`, `src/chunking/`, `src/scoring/`)
 - 실험 프레임워크: **구현 완료** (`src/experiment/`)
 - 기존 코드(src/preprocessing, src/rule_analysis 등): 유지, 하이브리드 활용 가능
 - 테스트: 54개 통과 (window 실험 비교 테스트 포함 전체 단위 테스트)
 - 프론트 UI: Apple 스타일 rail + 플로팅 내비 패널 + 모바일 하단 탭 + 공통 hero/panel 체계 기준으로 재정비 완료 (`frontend/`)
 - 프론트 시뮬레이션 UI: 파일럿 3강의 대상 실험용 3D 뇌 시각화/원문 브라우저 라우트 추가 완료, `fsaverage5` cortical mesh GLB 자산 연결 완료 (`frontend/src/pages/LectureSimulationPage.tsx`, `frontend/src/pages/LectureSimulationTranscriptPage.tsx`, `frontend/public/data/simulations/brain-mesh.glb`)
-- 정적 평가 데이터: 실제 분석 결과 1건 반영, 나머지 강의는 배치 실행 필요
+- 정적 평가 데이터: `2026-02-02`~`2026-02-27` 15개 evaluation JSON을 원문 기준으로 재평가해 반영 완료
 - 정적 시뮬레이션 데이터: `2026-02-02`는 실제 TRIBE raw 기반 ROI 해석 결과로 교체 완료, 나머지 파일럿 날짜는 추가 실데이터 확보 필요
 - 정적 시뮬레이션 데이터 계약: `2026-02-02`는 summary/live 자산과 transcript line mapping까지 확장 완료. 다만 live frame은 현재 세그먼트 평균 반응을 라인 timestamp에 매핑한 fallback이며 진짜 timestep raw는 아직 저장되지 않음
 - TRIBE 코랩 노트북: audio-only fallback을 실제 audio-only preprocessing으로 최적화했고, worker 수를 0으로 낮췄으며 날짜별 partial resume 저장을 지원함 (`colab/tribev2-student-reaction/01_run_tribev2.ipynb`)

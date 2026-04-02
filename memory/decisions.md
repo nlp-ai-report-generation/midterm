@@ -2,6 +2,24 @@
 
 ## 2026-04-03
 
+### evaluation JSON은 non-break 섹션마다 최소 1개 evidence를 남기도록 다시 쓴다
+
+- 결정: `frontend/public/data/evaluations/YYYY-MM-DD.json`을 손으로 재평가할 때는 `break`를 제외한 각 섹션마다 최소 1개 이상의 evidence timestamp가 매핑되도록 채운다.
+- 이유: 프론트 타임라인에서 "평가 데이터 없음"이 뜨는 주된 원인이 파일 부재보다 섹션 coverage 공백이기 때문이다.
+- 결과: 이후 evaluation JSON 재작성은 점수·근거·이유를 원문 기반으로 정리하되, coverage 검산을 마지막 단계에 반드시 포함한다.
+
+### 2026-02-23~2026-02-27 evaluation JSON은 원문 기준으로 재평가해 coverage를 채운다
+
+- 결정: `2026-02-23`~`2026-02-27`의 evaluation JSON은 sections JSON과 강의 원문을 다시 읽고, break 제외 섹션마다 최소 1개 이상의 evidence가 남도록 수작업으로 덮어쓴다.
+- 이유: 중간 구간 coverage가 0인 상태로는 프론트에서 "평가 데이터 없음" 경고가 계속 노출되고, 실제 강의 흐름보다 비어 보이는 구간이 생긴다.
+- 결과: 해당 5개 파일은 evidence를 보강하고 strengths/improvements/recommendations/report_markdown까지 날짜별 주제에 맞게 다시 정리했다.
+
+### 프론트 시간 매핑도 문자열 비교 대신 12시간제 보정 초 비교를 사용한다
+
+- 결정: 프론트에서 강의 section, evaluation evidence, simulation segment를 서로 매핑할 때는 `HH:MM:SS` 문자열 비교를 쓰지 않고, `06:00` 미만을 오후로 보정한 초 단위 값으로 비교한다.
+- 이유: 원문과 정적 JSON이 12시간제 타임스탬프를 그대로 유지하므로, `11:50 -> 01:10` 같은 경계는 문자열 비교로는 올바르게 포함 판정할 수 없다.
+- 결과: 강의 상세 타임라인 drawer와 리포트용 section 라벨 조회도 같은 보정 규칙을 사용한다.
+
 ### sections JSON은 원문 첫/끝 시각과 실제 공백까지 함께 검증한다
 
 - 결정: `frontend/public/data/lectures/YYYY-MM-DD-sections.json`을 저장할 때는 원문 txt의 첫 타임스탬프와 마지막 타임스탬프를 그대로 덮어야 하고, `break` 구간 안에 실제 발화가 남아 있지 않은지까지 함께 검산한다.
