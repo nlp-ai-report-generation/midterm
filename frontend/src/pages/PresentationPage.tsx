@@ -64,11 +64,11 @@ const PAIN_SOLVE = [
 ];
 
 const PIPELINE = [
-  { step: "01", title: "원문 수집", desc: "3~4시간 강의 STT 원문 22,756줄을 타임스탬프와 함께 파싱해요." },
-  { step: "02", title: "시간 윈도우 청킹", desc: "60분 윈도우, 30분 hop으로 맥락이 끊기지 않게 나눠요." },
-  { step: "03", title: "5개 카테고리 병렬 채점", desc: "LangGraph가 카테고리별 에이전트를 동시에 돌려요." },
-  { step: "04", title: "가중 평균 집계", desc: "HIGH 3 · MEDIUM 2 · LOW 1 가중치로 WAS를 계산해요." },
-  { step: "05", title: "리포트 생성", desc: "잘한 점, 고칠 점, 구체적 행동 제안을 한 장에 정리해요." },
+  { step: "01", icon: "icons/database.png", title: "원문 수집", desc: "3~4시간 강의 STT 원문 22,756줄을 타임스탬프와 함께 파싱해요." },
+  { step: "02", icon: "icons/diagram.png", title: "시간 윈도우 청킹", desc: "60분 윈도우, 30분 hop으로 맥락이 끊기지 않게 나눠요." },
+  { step: "03", icon: "icons/lightning.png", title: "5개 카테고리 병렬 채점", desc: "LangGraph가 카테고리별 에이전트를 동시에 돌려요." },
+  { step: "04", icon: "icons/chart.png", title: "가중 평균 집계", desc: "HIGH 3 · MEDIUM 2 · LOW 1 가중치로 WAS를 계산해요." },
+  { step: "05", icon: "icons/page.png", title: "리포트 생성", desc: "잘한 점, 고칠 점, 구체적 행동 제안을 한 장에 정리해요." },
 ];
 
 const CATEGORIES = [
@@ -81,7 +81,7 @@ const CATEGORIES = [
 
 const EXPERIMENTS = [
   {
-    id: "exp-1", title: "평가 일관성", subtitle: "Test-Retest Reliability",
+    id: "exp-1", icon: "icons/refresh.png", title: "평가 일관성", subtitle: "Test-Retest Reliability",
     metrics: [
       { label: "ICC", value: "0.877", pct: 88 },
       { label: "Kappa", value: "0.883", pct: 88 },
@@ -91,7 +91,7 @@ const EXPERIMENTS = [
     conclusion: "15개 강의 중 13개가 Good 이상으로 수렴했어요",
   },
   {
-    id: "exp-2", title: "청크 크기", subtitle: "30분 vs 15분",
+    id: "exp-2", icon: "icons/ruler.png", title: "청크 크기", subtitle: "30분 vs 15분",
     metrics: [
       { label: "30분", value: "3.245", pct: 65 },
       { label: "15분", value: "3.033", pct: 61 },
@@ -99,7 +99,7 @@ const EXPERIMENTS = [
     conclusion: "p = 0.0006 — 비교할 때는 같은 크기로 맞춰야 해요",
   },
   {
-    id: "exp-3", title: "윈도우 길이", subtitle: "30 · 60 · 120분",
+    id: "exp-3", icon: "icons/window.png", title: "윈도우 길이", subtitle: "30 · 60 · 120분",
     metrics: [
       { label: "가장 민감", value: "예시·실습", pct: 67 },
       { label: "가장 안정", value: "언어 품질", pct: 24 },
@@ -107,7 +107,7 @@ const EXPERIMENTS = [
     conclusion: "60분이 세밀도와 맥락의 균형점이에요",
   },
   {
-    id: "exp-4", title: "Hop 크기", subtitle: "50 · 75 · 90%",
+    id: "exp-4", icon: "icons/shuffle.png", title: "Hop 크기", subtitle: "50 · 75 · 90%",
     metrics: [
       { label: "Hop 50%", value: "77.8%", pct: 78 },
       { label: "Hop 75%", value: "72.2%", pct: 72 },
@@ -183,11 +183,11 @@ const TRIBE_OVERVIEW = {
 };
 
 const TRIBE_FLOW = [
-  { label: "강의 텍스트 입력", desc: "STT 원문을 5분 단위로 나눠요" },
-  { label: "TRIBE v2 추론", desc: "10,242개 뇌 정점의 반응을 예측해요" },
-  { label: "ROI 매핑", desc: "148개 영역 중 유의미한 활성화를 잡아요" },
-  { label: "상태 판정", desc: "뇌 영역 조합으로 학생 상태를 읽어요" },
-  { label: "처방 생성", desc: "구간별 교수법 개선안을 제안해요" },
+  { icon: "icons/pen.png", label: "강의 텍스트 입력", desc: "STT 원문을 5분 단위로 나눠요" },
+  { icon: "icons/robot.png", label: "TRIBE v2 추론", desc: "10,242개 뇌 정점의 반응을 예측해요" },
+  { icon: "icons/pin.png", label: "ROI 매핑", desc: "148개 영역 중 유의미한 활성화를 잡아요" },
+  { icon: "icons/chart.png", label: "상태 판정", desc: "뇌 영역 조합으로 학생 상태를 읽어요" },
+  { icon: "icons/medicine.png", label: "처방 생성", desc: "구간별 교수법 개선안을 제안해요" },
 ];
 
 const REPORT_SAMPLES = [
@@ -212,12 +212,12 @@ const REPORT_SAMPLES = [
 ];
 
 const TECH_STACK = [
-  { label: "Frontend", value: "React 19 · TypeScript · Vite" },
-  { label: "3D", value: "Three.js · React Three Fiber" },
-  { label: "Chart", value: "Recharts" },
-  { label: "Backend", value: "FastAPI · LangGraph" },
-  { label: "Brain", value: "Meta TRIBE v2 (fMRI)" },
-  { label: "Auth", value: "Supabase (Google · Notion)" },
+  { icon: "icons/code.png", label: "Frontend", value: "React 19 · TypeScript · Vite" },
+  { icon: "icons/globe.png", label: "3D", value: "Three.js · React Three Fiber" },
+  { icon: "icons/chart.png", label: "Chart", value: "Recharts" },
+  { icon: "icons/gear.png", label: "Backend", value: "FastAPI · LangGraph" },
+  { icon: "icons/lightbulb.png", label: "Brain", value: "Meta TRIBE v2 (fMRI)" },
+  { icon: "icons/lock.png", label: "Auth", value: "Supabase (Google · Notion)" },
 ];
 
 const LIMITATIONS = [
@@ -371,7 +371,9 @@ export default function PresentationPage() {
           <div className="pres-pipeline">
             {PIPELINE.map((s, i) => (
               <div key={s.step} className="pres-pipeline__step reveal" style={{ animationDelay: `${120 + i * 90}ms` }}>
-                <div className="pres-pipeline__num">{s.step}</div>
+                <div className="pres-pipeline__num">
+                  <img src={withBase(s.icon)} alt="" className="pres-pipeline__icon" />
+                </div>
                 <div>
                   <h3>{s.title}</h3>
                   <p>{s.desc}</p>
@@ -425,8 +427,11 @@ export default function PresentationPage() {
             {EXPERIMENTS.map((exp, i) => (
               <article key={exp.id} className="pres-exp reveal" style={{ animationDelay: `${140 + i * 110}ms` }}>
                 <div className="pres-exp__head">
-                  <h3>{exp.title}</h3>
-                  <span>{exp.subtitle}</span>
+                  <img src={withBase(exp.icon)} alt="" className="pres-exp__icon" />
+                  <div>
+                    <h3>{exp.title}</h3>
+                    <span>{exp.subtitle}</span>
+                  </div>
                 </div>
                 <div className="pres-exp__bars">
                   {exp.metrics.map((m) => (
@@ -484,7 +489,7 @@ export default function PresentationPage() {
             <div className="pres-flow-steps">
               {TRIBE_FLOW.map((step, i) => (
                 <div key={i} className="pres-flow-step">
-                  <span className="pres-flow-step__num">{String(i + 1).padStart(2, "0")}</span>
+                  <img src={withBase(step.icon)} alt="" className="pres-flow-step__icon" />
                   <strong>{step.label}</strong>
                   <p>{step.desc}</p>
                   {i < TRIBE_FLOW.length - 1 && <span className="pres-flow-step__arrow">→</span>}
@@ -564,6 +569,7 @@ export default function PresentationPage() {
           <div className="pres-tech reveal" style={{ animationDelay: "160ms" }}>
             {TECH_STACK.map((t) => (
               <div key={t.label} className="pres-tech__row">
+                <img src={withBase(t.icon)} alt="" className="pres-tech__icon" />
                 <span>{t.label}</span>
                 <strong>{t.value}</strong>
               </div>

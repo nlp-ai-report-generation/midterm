@@ -446,21 +446,16 @@
 .pres-pipeline__num {
   width: 48px;
   height: 48px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  place-items: center;
   border-radius: 14px;
   background: var(--accent-soft);
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--accent);
-  gap: 2px;
 }
 
-.pres-pipeline__emoji {
-  font-size: 18px;
-  line-height: 1;
+.pres-pipeline__icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 
 .pres-pipeline__step h3 {
@@ -601,6 +596,13 @@
   align-items: center;
   gap: 14px;
   margin-bottom: 24px;
+}
+
+.pres-exp__icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .pres-exp__head h3 {
@@ -809,18 +811,12 @@
   padding: 0 12px;
 }
 
-.pres-flow-step__num {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.pres-flow-step__icon {
+  display: block;
   width: 40px;
   height: 40px;
   margin: 0 auto 12px;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--accent);
-  background: var(--accent-soft);
-  border-radius: 12px;
+  object-fit: contain;
 }
 
 .pres-flow-step strong {
@@ -1047,9 +1043,16 @@
   flex-direction: column;
 }
 
+.pres-tech__icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 .pres-tech__row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 16px;
   padding: 16px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -1220,7 +1223,7 @@
     padding: 0;
   }
 
-  .pres-flow-step__num {
+  .pres-flow-step__icon {
     margin: 0;
     flex-shrink: 0;
   }
