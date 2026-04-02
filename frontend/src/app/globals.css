@@ -1611,8 +1611,7 @@ body {
   font-size: 13px;
   line-height: 1.6;
   color: rgba(0,0,0,0.85);
-  padding-left: 10px;
-  border-left: 2px solid var(--primary);
+  padding-left: 0;
 }
 .sim-now-signal {
   font-size: 11px;
@@ -1997,15 +1996,12 @@ body {
 }
 .sim-prescription-info {
   background: rgba(52,199,89,0.06);
-  border-left: 3px solid #34C759;
 }
 .sim-prescription-caution {
   background: rgba(255,149,0,0.06);
-  border-left: 3px solid #FF9500;
 }
 .sim-prescription-warning {
   background: rgba(255,59,48,0.06);
-  border-left: 3px solid #FF3B30;
 }
 
 /* ─── Simulation: ROI Direct Interpretation ─── */
@@ -2249,20 +2245,18 @@ body {
 }
 
 /* ─── Timeline v2 (sections-based) ─── */
-.tl-wrap { display: flex; flex-direction: column; gap: 0; }
-.tl-strip { display: flex; height: 32px; }
-.tl-block { cursor: pointer; transition: opacity 0.15s; min-width: 2px; }
-.tl-block:hover { opacity: 0.8; }
-.tl-selected { box-shadow: inset 0 -3px 0 #FF6B00; }
-.tl-labels { display: flex; }
-.tl-label {
-  display: flex; flex-direction: column; align-items: flex-start;
-  padding: 4px 4px 0; cursor: pointer; overflow: hidden; min-width: 0;
+.tl-wrap { display: flex; flex-direction: column; }
+.tl-sections { display: flex; gap: 2px; min-height: 56px; }
+.tl-sec {
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  padding: 6px 8px; border: none; border-radius: 8px; cursor: pointer;
+  transition: all 0.15s; min-width: 0; overflow: hidden;
+  font-family: inherit;
 }
-.tl-label-selected { background: rgba(255,107,0,0.06); }
-.tl-label-type { font-size: 9px; font-weight: 600; color: #86868b; text-transform: uppercase; letter-spacing: 0.04em; }
-.tl-label-text { font-size: 10px; color: #1d1d1f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.tl-times { display: flex; justify-content: space-between; padding: 2px 0; font-size: 9px; color: #86868b; }
+.tl-sec:hover { opacity: 0.85; }
+.tl-sec-on { box-shadow: none; }
+.tl-sec-label { font-size: 11px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.tl-sec-meta { font-size: 9px; opacity: 0.6; white-space: nowrap; }
 
 /* ─── Timeline (Apple style) ─── */
 .timeline-container { position: sticky; top: 0; z-index: 10; background: #fff; padding: 16px 0 8px; }

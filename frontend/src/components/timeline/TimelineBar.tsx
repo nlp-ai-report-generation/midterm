@@ -13,23 +13,33 @@ interface TimelineBarProps {
   onSelect: (index: number) => void;
 }
 
+/** 12시간제 타임스탬프를 순서 보정된 초로 변환.
+ *  강의는 09:xx에 시작해서 오후(01:xx~05:xx)까지 이어짐.
+ *  12시 이전 → 그대로, 06:00 미만 → +12시간 보정 */
 function timeToSeconds(t: string): number {
   const [h, m, s] = t.split(":").map(Number);
-  return h * 3600 + m * 60 + s;
+  const base = h * 3600 + m * 60 + (s || 0);
+  // 06:00 미만이면 오후 (01:00 = 13:00, 05:50 = 17:50)
+  if (h < 6) return base + 12 * 3600;
+  return base;
 }
 
-const TYPE_COLORS: Record<string, string> = {
-  concept: "#1d1d1f",
-  practice: "#FF6B00",
-  intro: "#6e6e73",
-  review: "#6e6e73",
-  break: "#e8e8ed",
-  wrapup: "#6e6e73",
+function fmtTime(t: string): string {
+  return t.slice(0, 5);
+}
+
+const TYPE_STYLES: Record<string, { bg: string; color: string }> = {
+  concept:  { bg: "#f5f5f7", color: "#1d1d1f" },
+  practice: { bg: "#FFF4EB", color: "#FF6B00" },
+  intro:    { bg: "#f0f0f5", color: "#6e6e73" },
+  review:   { bg: "#f0f0f5", color: "#6e6e73" },
+  break:    { bg: "#fff",    color: "#d2d2d7" },
+  wrapup:   { bg: "#f0f0f5", color: "#6e6e73" },
 };
 
 const TYPE_LABELS: Record<string, string> = {
   intro: "도입",
-  concept: "개념",
+  concept: "개념설명",
   practice: "실습",
   review: "복습",
   break: "쉬는시간",
@@ -37,60 +47,57 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 export default function TimelineBar({ sections, selectedIndex, onSelect }: TimelineBarProps) {
-  const totalDuration = useMemo(() => {
-    if (!sections.length) return 1;
-    return timeToSeconds(sections[sections.length - 1].end) - timeToSeconds(sections[0].start) || 1;
+  // 각 섹션의 초 변환 + 전체 duration 계산
+  const { secData, totalDuration } = useMemo(() => {
+    if (!sections.length) return { secData: [], totalDuration: 1 };
+    const data = sections.map((s) => ({
+      startSec: timeToSeconds(s.start),
+      endSec: timeToSeconds(s.end),
+    }));
+    const total = data[data.length - 1].endSec - data[0].startSec;
+    return { secData: data, totalDuration: total || 1 };
   }, [sections]);
-
-  const originSec = useMemo(() => (sections.length ? timeToSeconds(sections[0].start) : 0), [sections]);
 
   if (!sections.length) return null;
 
+  const originSec = secData[0].startSec;
+
   return (
     <div className="tl-wrap">
-      {/* 색상 띠 */}
-      <div className="tl-strip">
+      {/* 섹션 리스트 — 가로 스크롤 가능 */}
+      <div className="tl-sections">
         {sections.map((sec, i) => {
-          const w = ((timeToSeconds(sec.end) - timeToSeconds(sec.start)) / totalDuration) * 100;
-          const bg = TYPE_COLORS[sec.type] ?? "#6e6e73";
-          const selected = selectedIndex === i;
-          return (
-            <div
-              key={i}
-              className={`tl-block${selected ? " tl-selected" : ""}`}
-              style={{ width: `${w}%`, backgroundColor: bg }}
-              onClick={() => onSelect(i)}
-              title={`${sec.start.slice(0, 5)}~${sec.end.slice(0, 5)} ${sec.label}`}
-            />
-          );
-        })}
-      </div>
-
-      {/* 라벨 행 — 항상 표시 */}
-      <div className="tl-labels">
-        {sections.map((sec, i) => {
-          const w = ((timeToSeconds(sec.end) - timeToSeconds(sec.start)) / totalDuration) * 100;
+          const duration = secData[i].endSec - secData[i].startSec;
+          const widthPct = (duration / totalDuration) * 100;
+          const style = TYPE_STYLES[sec.type] ?? TYPE_STYLES.concept;
           const selected = selectedIndex === i;
           const isBreak = sec.type === "break";
+
           return (
-            <div
+            <button
               key={i}
-              className={`tl-label${selected ? " tl-label-selected" : ""}`}
-              style={{ width: `${w}%` }}
+              className={`tl-sec${selected ? " tl-sec-on" : ""}`}
+              style={{
+                width: `${Math.max(widthPct, 2)}%`,
+                background: selected ? (isBreak ? "#f5f5f7" : "#FF6B00") : style.bg,
+                color: selected ? (isBreak ? "#86868b" : "#fff") : style.color,
+              }}
               onClick={() => onSelect(i)}
+              title={`${fmtTime(sec.start)}~${fmtTime(sec.end)} ${sec.label}`}
             >
-              <span className="tl-label-type">{TYPE_LABELS[sec.type] ?? sec.type}</span>
-              {!isBreak && w > 5 && <span className="tl-label-text">{sec.label}</span>}
-            </div>
+              {widthPct > 4 && (
+                <span className="tl-sec-label">
+                  {isBreak ? "쉬는시간" : sec.label}
+                </span>
+              )}
+              {widthPct > 7 && (
+                <span className="tl-sec-meta">
+                  {fmtTime(sec.start)} · {TYPE_LABELS[sec.type] ?? sec.type}
+                </span>
+              )}
+            </button>
           );
         })}
-      </div>
-
-      {/* 시간축 */}
-      <div className="tl-times">
-        {sections.filter((_, i) => i % Math.max(1, Math.floor(sections.length / 6)) === 0 || i === sections.length - 1).map((sec, i) => (
-          <span key={i}>{sec.start.slice(0, 5)}</span>
-        ))}
       </div>
     </div>
   );
