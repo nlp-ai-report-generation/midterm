@@ -299,6 +299,7 @@ export default function LectureDetailPage() {
             return (
               <SegmentDrawer
                 segment={seg}
+                phase={phases[seg.segment_id]}
                 transcript={transcriptSeg}
                 evidences={evs}
                 brainProfile={profile8}

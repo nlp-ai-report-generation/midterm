@@ -66,7 +66,7 @@ export default function TimelineBar({ segments, phases, selectedIndex, onSelect 
                 opacity: 0.5 + intensity * 0.5,
               }}
               onClick={() => onSelect(idx)}
-              title={`${seg.segment_id} (${seg.start_time}~${seg.end_time}) ${health.label}`}
+              title={`${seg.start_time}~${seg.end_time}`}
             />
           );
         })}

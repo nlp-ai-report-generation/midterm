@@ -12,7 +12,6 @@ import {
 import { useRole } from "@/contexts/RoleContext";
 import { getAllEvaluations } from "@/lib/data";
 import { scoreColor, scoreBadgeTextColor, formatDateShort } from "@/lib/utils";
-import InsightCard from "@/components/shared/InsightCard";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import FeedbackCard from "@/components/shared/FeedbackCard";
 import type { EvaluationResult } from "@/types/evaluation";
@@ -50,7 +49,7 @@ export default function DashboardPage() {
   return <InstructorDashboard evaluations={evaluations} />;
 }
 
-/* ─── Operator Dashboard ─── */
+/* ─── Helpers ─── */
 
 function generateIssueSummary(e: EvaluationResult): string {
   const weak = e.category_results
@@ -60,40 +59,54 @@ function generateIssueSummary(e: EvaluationResult): string {
   return weak.length ? weak.join(" · ") + " 약함" : "전반적으로 보통";
 }
 
+/* ─── Operator Dashboard ─── */
+
 function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] }) {
-  const navigate = useNavigate();
   const totalLectures = evaluations.length;
   const avgScore =
     totalLectures > 0
       ? evaluations.reduce((sum, e) => sum + e.weighted_average, 0) / totalLectures
       : 0;
+  const bestLecture = evaluations.reduce(
+    (best, e) => (e.weighted_average > (best?.weighted_average ?? 0) ? e : best),
+    evaluations[0]
+  );
+  const worstLecture = evaluations.reduce(
+    (worst, e) => (e.weighted_average < (worst?.weighted_average ?? 5) ? e : worst),
+    evaluations[0]
+  );
+
+  const analysisRange =
+    totalLectures > 0
+      ? `${evaluations[0]?.lecture_date.slice(5).replace("-", ".")} ~ ${evaluations[totalLectures - 1]?.lecture_date.slice(5).replace("-", ".")}`
+      : "-";
 
   const trendData = evaluations.map((e) => ({
     date: e.lecture_date,
     score: e.weighted_average,
   }));
 
+  const heatmapRows = CATEGORY_NAMES.map((catName) => {
+    const scores = evaluations.map((e) => ({
+      date: e.lecture_date,
+      score: e.category_averages[catName] ?? 0,
+    }));
+    return { name: catName, scores };
+  });
+
+  const sortedByScore = [...evaluations].sort((a, b) => a.weighted_average - b.weighted_average);
+  const attentionLectures = sortedByScore.slice(0, 3);
+  const otherLectures = sortedByScore.slice(3);
+
   const issueEvals = evaluations.filter((e) => e.weighted_average < 3.2);
   const goodEvals = evaluations.filter((e) => e.weighted_average >= 3.2);
-  const issueCount = issueEvals.length;
 
   return (
     <div className="page-content">
-      {/* Page Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <img src={`${import.meta.env.BASE_URL}emoji/books.png`} alt="" width={36} height={36} style={{ objectFit: "contain" }} />
-        <div>
-          <h1 className="text-title">강의 평가 현황</h1>
-          <p className="text-caption" style={{ marginTop: 4 }}>
-            전체 강의의 품질 현황을 한눈에 볼 수 있어요
-          </p>
-        </div>
-      </div>
-
-      {/* KPI 카드 4개 */}
+      {/* KPI 카드 */}
       <div className="kpi-row">
         <div className="kpi-card">
-          <span className="kpi-value">{evaluations.length}</span>
+          <span className="kpi-value">{totalLectures}</span>
           <span className="kpi-label">총 강의</span>
         </div>
         <div className="kpi-card">
@@ -101,7 +114,7 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
           <span className="kpi-label">평균 점수</span>
         </div>
         <div className="kpi-card">
-          <span className="kpi-value" style={{ color: "var(--color-risk)" }}>{issueCount}</span>
+          <span className="kpi-value" style={{ color: issueEvals.length > 0 ? "var(--color-risk)" : "var(--color-flow)" }}>{issueEvals.length}</span>
           <span className="kpi-label">주의 필요</span>
         </div>
         <div className="kpi-card">
@@ -110,75 +123,36 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
         </div>
       </div>
 
-      {/* 이슈 보드 — 주의 필요한 강의 */}
+      {/* 이슈 보드 */}
       {issueEvals.length > 0 && (
-        <div className="card card-padded">
-          <h2 className="text-section" style={{ marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-            <img src={`${import.meta.env.BASE_URL}emoji/sparkles.png`} alt="" width={22} height={22} style={{ objectFit: "contain" }} />
-            주의 필요한 강의
-          </h2>
-          <p className="text-caption" style={{ marginBottom: 16 }}>
-            종합 점수 3.2 미만 강의예요. 클릭하면 상세를 확인할 수 있어요
-          </p>
+        <div>
+          <h2 className="text-section" style={{ marginBottom: 12 }}>⚠ 주의가 필요한 강의 ({issueEvals.length}건)</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {issueEvals.map((e) => (
-              <div
-                key={e.lecture_date}
-                className="issue-card"
-                onClick={() => navigate(`/lectures/${e.lecture_date}`)}
-              >
-                <ScoreBadge score={e.weighted_average} />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text-primary)" }}>
-                    {formatDateShort(e.lecture_date)}
-                    {e.metadata?.subjects?.[0] && (
-                      <span style={{ fontWeight: 400, marginLeft: 6, color: "var(--text-secondary)" }}>
-                        {e.metadata.subjects[0]}
-                      </span>
-                    )}
-                  </div>
-                  <div className="issue-summary">{generateIssueSummary(e)}</div>
+              <Link key={e.lecture_date} to={`/lectures/${e.lecture_date}`} className="issue-card">
+                <ScoreBadge score={e.weighted_average} size="sm" />
+                <div style={{ flex: 1 }}>
+                  <span style={{ fontSize: 14, fontWeight: 600 }}>{formatDateShort(e.lecture_date)} · {e.metadata.subjects?.[0] ?? "강의"}</span>
+                  <p className="issue-summary">{generateIssueSummary(e)}</p>
                 </div>
-                <span style={{ fontSize: 16, color: "var(--text-muted)", flexShrink: 0 }}>&rarr;</span>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
       )}
 
-      {/* 양호한 강의 미니 그리드 */}
-      {goodEvals.length > 0 && (
-        <div className="card card-padded">
-          <h2 className="text-section" style={{ marginBottom: 4 }}>양호한 강의</h2>
-          <p className="text-caption" style={{ marginBottom: 16 }}>
-            점수 3.2 이상의 강의예요
-          </p>
-          <div className="mini-grid">
-            {goodEvals.map((e) => (
-              <div
-                key={e.lecture_date}
-                className="mini-card"
-                onClick={() => navigate(`/lectures/${e.lecture_date}`)}
-              >
-                <span style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 13 }}>
-                  {formatDateShort(e.lecture_date)}
-                </span>
-                <span
-                  style={{
-                    marginTop: 4,
-                    fontSize: 16,
-                    fontWeight: 700,
-                    color: scoreColor(e.weighted_average),
-                    fontVariantNumeric: "tabular-nums",
-                  }}
-                >
-                  {e.weighted_average.toFixed(1)}
-                </span>
-              </div>
-            ))}
-          </div>
+      {/* 양호한 강의 */}
+      <div>
+        <h2 className="text-section" style={{ marginBottom: 12 }}>✅ 양호한 강의 ({goodEvals.length}건)</h2>
+        <div className="mini-grid">
+          {goodEvals.map((e) => (
+            <Link key={e.lecture_date} to={`/lectures/${e.lecture_date}`} className="mini-card">
+              <span style={{ fontWeight: 600 }}>{formatDateShort(e.lecture_date)}</span>
+              <span style={{ fontSize: 16, fontWeight: 700, color: "var(--primary)" }}>{e.weighted_average.toFixed(1)}</span>
+            </Link>
+          ))}
         </div>
-      )}
+      </div>
 
       {/* Score Trend */}
       <ScoreTrendChart data={trendData} count={evaluations.length} evaluations={evaluations} />
@@ -280,26 +254,27 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
       </div>
 
       {/* KPI Cards */}
-      <div
-        className="card-grid"
-        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))" }}
-      >
-        <InsightCard label="총 강의" value={totalLectures} subtitle="내가 진행한 강의예요" />
-        <InsightCard label="내 평균" value={avgScore.toFixed(2)} subtitle="5점 만점 기준이에요" accent />
-        <InsightCard
-          label="가장 잘한 강의"
-          value={bestLecture ? bestLecture.weighted_average.toFixed(2) : "-"}
-          subtitle={bestLecture ? (bestLecture.metadata.subjects?.[0] ?? formatDateShort(bestLecture.lecture_date)) : "-"}
-        />
-        <InsightCard
-          label="개선 기회"
-          value={worstLecture ? worstLecture.weighted_average.toFixed(2) : "-"}
-          subtitle={worstLecture ? (worstLecture.metadata.subjects?.[0] ?? formatDateShort(worstLecture.lecture_date)) : "-"}
-        />
+      <div className="kpi-row">
+        <div className="kpi-card">
+          <span className="kpi-value">{totalLectures}</span>
+          <span className="kpi-label">내 강의</span>
+        </div>
+        <div className="kpi-card">
+          <span className="kpi-value">{avgScore.toFixed(1)}</span>
+          <span className="kpi-label">평균 점수</span>
+        </div>
+        <div className="kpi-card">
+          <span className="kpi-value" style={{ color: "var(--primary)" }}>{bestLecture ? bestLecture.weighted_average.toFixed(1) : "-"}</span>
+          <span className="kpi-label">최고 점수</span>
+        </div>
+        <div className="kpi-card">
+          <span className="kpi-value" style={{ color: worstLecture && worstLecture.weighted_average < 3.2 ? "var(--color-risk)" : "var(--text-primary)" }}>{worstLecture ? worstLecture.weighted_average.toFixed(1) : "-"}</span>
+          <span className="kpi-label">개선 기회</span>
+        </div>
       </div>
 
       {/* Score Trend */}
-      <ScoreTrendChart data={trendData} count={filtered.length} />
+      <ScoreTrendChart data={trendData} count={filtered.length} evaluations={filtered} />
 
       {/* 캘린더 뷰 */}
       <div className="card card-padded">

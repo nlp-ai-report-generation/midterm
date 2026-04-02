@@ -1,8 +1,17 @@
 import type { SimulationSegment } from "@/types/simulation";
 import type { SegmentHealth, BrainProfile8 } from "@/lib/simulation";
 
+const PHASE_LABELS: Record<string, string> = {
+  intro: "도입",
+  concept: "개념설명",
+  practice: "실습",
+  review: "복습",
+  wrap: "마무리",
+};
+
 interface SegmentDrawerProps {
   segment: SimulationSegment;
+  phase?: string;
   transcript?: { lines: Array<{ text: string }> };
   evidences: Array<{ itemName: string; score: number; text: string }>;
   brainProfile: BrainProfile8;
@@ -13,6 +22,7 @@ interface SegmentDrawerProps {
 
 export default function SegmentDrawer({
   segment,
+  phase,
   transcript,
   evidences,
   brainProfile,
@@ -21,6 +31,7 @@ export default function SegmentDrawer({
   onClose,
 }: SegmentDrawerProps) {
   const firstLine = transcript?.lines[0]?.text ?? segment.interpretation;
+  const phaseLabel = phase ? PHASE_LABELS[phase] ?? phase : "";
 
   return (
     <div className="seg-drawer seg-drawer-open">
@@ -28,7 +39,7 @@ export default function SegmentDrawer({
       <div className="seg-drawer-header">
         <div>
           <p className="text-label" style={{ marginBottom: 4 }}>
-            {segment.segment_id} &middot; {segment.start_time} ~ {segment.end_time}
+            {segment.start_time}~{segment.end_time}{phaseLabel ? ` \u00b7 ${phaseLabel}` : ""}
           </p>
           <span
             className="seg-drawer-health"
