@@ -317,7 +317,7 @@ export default function PresentationPage() {
       {/* ═══ HERO ═══ */}
       <section className="pres-hero">
         <div className="pres-container">
-          <p className="pres-kicker reveal">LIKELION AI SCHOOL · KDT BACKEND JAVA 21</p>
+          <p className="pres-kicker reveal">LIKELION · NLP 자연어처리 심화 부트캠프 3기 인턴십</p>
           <h1 className="reveal" style={{ animationDelay: "100ms" }}>
             강의를 읽고,<br />근거를 남겨요.
           </h1>
@@ -633,7 +633,7 @@ export default function PresentationPage() {
           <p className="pres-kicker reveal">THANK YOU</p>
           <h2 className="reveal" style={{ animationDelay: "80ms" }}>AI 강의 분석 리포트</h2>
           <p className="pres-cta__sub reveal" style={{ animationDelay: "140ms" }}>
-            멋쟁이사자처럼 AI 스쿨 · KDT 백엔드 자바 21기
+            멋쟁이사자처럼 · NLP 자연어처리 심화 부트캠프 3기 인턴십
           </p>
           <div className="pres-cta__actions reveal" style={{ animationDelay: "220ms" }}>
             <Link to="/" className="pres-btn-primary">서비스 바로가기 →</Link>
