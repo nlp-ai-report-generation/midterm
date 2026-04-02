@@ -171,15 +171,25 @@ export default function SimulationView({ date }: SimulationViewProps) {
       </div>
 
       {/* ─── 강의 요약 배너 ─── */}
-      <div className="sim-summary-banner">
-        <img src={`${import.meta.env.BASE_URL}emoji/dna.png`} alt="" width={18} height={18} />
-        <div className="sim-summary-text">
-          <p className="sim-summary-main">
-            <strong>{sim.lecture_summary?.strongest_segment_ids?.[0]}</strong> 구간에서 반응이 가장 크고, <strong>{sim.lecture_summary?.risk_segment_ids?.[0]}</strong> 구간은 주의가 필요해요.
-          </p>
-          <p className="sim-summary-sub">{sim.lecture_summary?.caution_text}</p>
-        </div>
-      </div>
+      {(() => {
+        const strongId = sim.lecture_summary?.strongest_segment_ids?.[0];
+        const riskId = sim.lecture_summary?.risk_segment_ids?.[0];
+        const strongSeg = trans?.segments.find((s) => s.segment_id === strongId);
+        const riskSeg = trans?.segments.find((s) => s.segment_id === riskId);
+        const strongText = strongSeg?.lines?.[0]?.text?.slice(0, 40) ?? "";
+        const riskText = riskSeg?.lines?.[0]?.text?.slice(0, 40) ?? "";
+        return (
+          <div className="sim-summary-banner">
+            <img src={`${import.meta.env.BASE_URL}emoji/dna.png`} alt="" width={18} height={18} />
+            <div className="sim-summary-text">
+              <p className="sim-summary-main">
+                반응이 가장 큰 구간은 <strong>"{strongText}..."</strong>이고, <strong>"{riskText}..."</strong> 구간은 주의가 필요해요.
+              </p>
+              <p className="sim-summary-sub">{sim.lecture_summary?.caution_text}</p>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* ─── Main 2-column layout ─── */}
       <div className="sim-main">
