@@ -178,19 +178,17 @@ export default function SimulationView({ date }: SimulationViewProps) {
         const riskSeg = sim.segments.find((s) => s.segment_id === riskId);
         const strongProfile = strongSeg ? computeBrainProfile8(strongSeg) : null;
         const riskProfile = riskSeg ? computeBrainProfile8(riskSeg) : null;
-        const strongContent = strongSeg?.interpretation?.slice(0, 40) ?? strongSeg?.labels?.[0] ?? "";
-        const riskContent = riskSeg?.interpretation?.slice(0, 40) ?? riskSeg?.labels?.[0] ?? "";
         return (
           <div className="sim-summary-banner">
             <div className="sim-summary-text">
-              {strongSeg && (
+              {strongSeg && strongProfile && (
                 <p className="sim-summary-main">
-                  <strong>{strongContent}</strong> 구간에서 뇌 반응이 가장 높아요{strongProfile ? ` — ${strongProfile.interpretation}` : ""}.
+                  <strong>{strongSeg.start_time.slice(0, 5)}~{strongSeg.end_time.slice(0, 5)}</strong> 구간에서 반응이 가장 높아요 — {strongProfile.interpretation}
                 </p>
               )}
-              {riskSeg && (
+              {riskSeg && riskProfile && (
                 <p className="sim-summary-main" style={{ marginTop: 4, opacity: 0.7 }}>
-                  <strong>{riskContent}</strong> 구간은 주의가 필요해요{riskProfile ? ` — ${riskProfile.interpretation}` : ""}.
+                  <strong>{riskSeg.start_time.slice(0, 5)}~{riskSeg.end_time.slice(0, 5)}</strong> 구간은 주의가 필요해요 — {riskProfile.interpretation}
                 </p>
               )}
             </div>

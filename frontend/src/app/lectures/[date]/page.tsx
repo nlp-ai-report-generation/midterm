@@ -816,18 +816,27 @@ function buildReportMarkdown(data: {
 
 /* ─── Evidence → Section Mapping ─── */
 
+/** 12시간제 타임스탬프를 보정된 초로 변환 (06:00 미만 = +12시간) */
+function timeToSec(t: string): number {
+  const [h, m, s] = t.split(":").map(Number);
+  const base = h * 3600 + m * 60 + (s || 0);
+  return h < 6 ? base + 12 * 3600 : base;
+}
+
 function mapEvidenceToSections(
   evaluation: EvaluationResult,
   sections: Section[],
 ): Map<number, Array<{ itemName: string; score: number; text: string }>> {
   const result = new Map<number, Array<{ itemName: string; score: number; text: string }>>();
+  // 섹션별 보정된 시간 범위 미리 계산
+  const secRanges = sections.map((s) => ({ start: timeToSec(s.start), end: timeToSec(s.end) }));
   for (const cat of evaluation.category_results) {
     for (const item of cat.items) {
       for (const ev of item.evidence) {
         const match = ev.match(/<(\d{2}:\d{2}:\d{2})>/);
         if (!match) continue;
-        const time = match[1];
-        const secIdx = sections.findIndex((s) => time >= s.start && time <= s.end);
+        const evSec = timeToSec(match[1]);
+        const secIdx = secRanges.findIndex((r) => evSec >= r.start && evSec < r.end);
         if (secIdx < 0) continue;
         const arr = result.get(secIdx) ?? [];
         arr.push({ itemName: item.item_name, score: item.score, text: ev });
