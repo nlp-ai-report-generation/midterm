@@ -19,6 +19,10 @@ const PAGE_TITLES: Record<string, string> = {
 };
 
 function getPageTitle(pathname: string): string {
+  if (pathname.endsWith("/simulation/live/transcript")) return "실시간 원문 브라우저";
+  if (pathname.endsWith("/simulation/live")) return "실시간 시뮬레이션";
+  if (pathname.endsWith("/simulation/transcript")) return "실시간 원문 브라우저";
+  if (pathname.endsWith("/simulation")) return "수강자 반응 요약";
   if (pathname.startsWith("/lectures/")) return "강의 상세";
   return PAGE_TITLES[pathname] ?? "대시보드";
 }

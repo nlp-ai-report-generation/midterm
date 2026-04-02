@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import { Link, useParams } from "react-router-dom";
 import {
   RadarChart,
   PolarGrid,
@@ -9,13 +9,18 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { FileText, Download } from "lucide-react";
 import { useRole } from "@/contexts/RoleContext";
-import { getEvaluationByModel, MODEL_LABELS, type ModelKey } from "@/lib/data";
-import { formatDate, scoreColor, scoreBadgeTextColor, scoreLabel, weightLabel } from "@/lib/utils";
-import { exportToNotion } from "@/lib/api";
+import { getEvaluationByModel, getSimulation, MODEL_LABELS, type ModelKey } from "@/lib/data";
+import { formatDate, scoreColor, scoreLabel, weightLabel } from "@/lib/utils";
+import { exportReportToNotion, uploadToDrive } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import FeedbackCard from "@/components/shared/FeedbackCard";
 import type { EvaluationResult, CategoryResult, ItemScore } from "@/types/evaluation";
+import type { SimulationResult } from "@/types/simulation";
+
+const SimulationView = lazy(() => import("@/components/simulation/SimulationView"));
 
 export default function LectureDetailPage() {
   const params = useParams();
@@ -23,8 +28,11 @@ export default function LectureDetailPage() {
   const { isOperator } = useRole();
   const [model, setModel] = useState<ModelKey>("gpt4o-mini");
   const [evaluation, setEvaluation] = useState<EvaluationResult | null>(null);
+  const [simulation, setSimulation] = useState<SimulationResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [tab, setTab] = useState<"eval" | "sim" | "report">("eval");
+  const [simLoaded, setSimLoaded] = useState(false);
 
   useEffect(() => {
     if (!date) return;
@@ -35,6 +43,23 @@ export default function LectureDetailPage() {
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, [date, model]);
+
+  useEffect(() => {
+    if (!date) return;
+    let cancelled = false;
+
+    getSimulation(date)
+      .then((result) => {
+        if (!cancelled) setSimulation(result);
+      })
+      .catch(() => {
+        if (!cancelled) setSimulation(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [date]);
 
   if (loading) {
     return (
@@ -77,7 +102,6 @@ export default function LectureDetailPage() {
     score: value,
     fullMark: 5,
   }));
-
   // Role-dependent feedback config
   const feedbackConfig = isOperator
     ? {
@@ -97,23 +121,28 @@ export default function LectureDetailPage() {
         recommendationSubtitle: "바로 실행할 수 있는 다음 단계를 정리했어요",
       };
 
-  return (
-    <div style={{ maxWidth: 1080, margin: "0 auto", display: "flex", flexDirection: "column", gap: 32 }}>
-      {/* Model Selector */}
-      <div className="tab-bar" role="tablist" style={{ marginBottom: 16 }}>
-        {(["gpt4o-mini", "opus", "sonnet"] as const).map((m) => (
-          <button
-            key={m}
-            role="tab"
-            aria-selected={model === m}
-            onClick={() => setModel(m)}
-            className="tab-item"
-          >
-            {MODEL_LABELS[m]}
-          </button>
-        ))}
-      </div>
+  // Lazy-load simulation tab on first click
+  const handleTabChange = (t: "eval" | "sim" | "report") => {
+    setTab(t);
+    if (t === "sim") setSimLoaded(true);
+  };
 
+  // Report helpers (inline instead of modal)
+  const reportMarkdown = buildReportMarkdown({
+    lectureDate: evaluation.lecture_date,
+    subject: metadata.subjects?.[0] ?? "",
+    instructor: metadata.instructor ?? "",
+    score: weighted_average,
+    model,
+    categories: category_results.map((c: CategoryResult) => ({ name: c.category_name, score: c.weighted_average })),
+    strengths: strengths ?? [],
+    improvements: improvements ?? [],
+    recommendations: recommendations ?? [],
+    simulationSummary: simulation?.lecture_summary?.summary_text,
+  });
+
+  return (
+    <div style={{ maxWidth: 1080, margin: "0 auto", display: "flex", flexDirection: "column", gap: 24 }}>
       {/* Header */}
       <div className="card card-padded">
         <Link
@@ -164,105 +193,166 @@ export default function LectureDetailPage() {
             </p>
           </div>
         </div>
+      </div>
 
-        {/* 노션 내보내기 */}
-        <NotionExportButton
+      {/* ─── Page Tabs ─── */}
+      <div className="tab-bar" role="tablist">
+        <button
+          role="tab"
+          aria-selected={tab === "eval"}
+          onClick={() => handleTabChange("eval")}
+          className="tab-item"
+        >
+          평가
+        </button>
+        <button
+          role="tab"
+          aria-selected={tab === "sim"}
+          onClick={() => handleTabChange("sim")}
+          className="tab-item"
+        >
+          시뮬레이션
+        </button>
+        <button
+          role="tab"
+          aria-selected={tab === "report"}
+          onClick={() => handleTabChange("report")}
+          className="tab-item"
+        >
+          리포트
+        </button>
+      </div>
+
+      {/* ─── Tab: 평가 ─── */}
+      {tab === "eval" && (
+        <>
+          {/* Model Selector */}
+          <div className="tab-bar" role="tablist" style={{ marginBottom: 0 }}>
+            {(["gpt4o-mini", "opus", "sonnet"] as const).map((m) => (
+              <button
+                key={m}
+                role="tab"
+                aria-selected={model === m}
+                onClick={() => setModel(m)}
+                className="tab-item"
+              >
+                {MODEL_LABELS[m]}
+              </button>
+            ))}
+          </div>
+
+          {/* Radar Chart */}
+          <div className="card card-padded">
+            <h2 className="text-section" style={{ marginBottom: 4 }}>카테고리별 점수</h2>
+            <p className="text-caption" style={{ marginBottom: 24 }}>넓을수록 균형 잡힌 강의예요. 안쪽으로 들어간 영역이 개선 포인트예요</p>
+            <div style={{ height: 340 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="72%">
+                  <PolarGrid stroke="var(--border)" />
+                  <PolarAngleAxis
+                    dataKey="category"
+                    tick={{ fill: "var(--grey-700)", fontSize: 13, fontWeight: 600 }}
+                  />
+                  <PolarRadiusAxis
+                    angle={90}
+                    domain={[0, 5]}
+                    tick={{ fill: "var(--text-muted)", fontSize: 11 }}
+                  />
+                  <Tooltip
+                    content={({ payload }) => {
+                      if (!payload?.[0]) return null;
+                      const d = payload[0].payload;
+                      return (
+                        <div
+                          className="card"
+                          style={{ padding: "12px 16px", boxShadow: "var(--shadow-hover)" }}
+                        >
+                          <p
+                            className="font-semibold"
+                            style={{ fontSize: 13, color: "var(--text-primary)" }}
+                          >
+                            {d.fullName}
+                          </p>
+                          <p
+                            className="font-bold"
+                            style={{ fontSize: 18, marginTop: 4, color: scoreColor(d.score) }}
+                          >
+                            {d.score.toFixed(2)}
+                          </p>
+                        </div>
+                      );
+                    }}
+                  />
+                  <Radar
+                    name="점수"
+                    dataKey="score"
+                    stroke="var(--primary)"
+                    fill="var(--primary)"
+                    fillOpacity={0.1}
+                    strokeWidth={2}
+                  />
+                </RadarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Category Detail */}
+          <div>
+            <h2 className="text-section" style={{ marginBottom: 20 }}>카테고리별 상세 평가</h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              {category_results.map((cat) => (
+                <CategorySection key={cat.category_name} category={cat} />
+              ))}
+            </div>
+          </div>
+
+          {/* Feedback */}
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+            <FeedbackCard
+              title={feedbackConfig.strengthTitle}
+              subtitle={feedbackConfig.strengthSubtitle}
+              items={strengths}
+              color="var(--primary)"
+            />
+            <FeedbackCard
+              title={feedbackConfig.improvementTitle}
+              subtitle={feedbackConfig.improvementSubtitle}
+              items={improvements}
+              color="var(--score-3)"
+            />
+            <FeedbackCard
+              title={feedbackConfig.recommendationTitle}
+              subtitle={feedbackConfig.recommendationSubtitle}
+              items={recommendations}
+              color="var(--grey-500)"
+            />
+          </div>
+        </>
+      )}
+
+      {/* ─── Tab: 시뮬레이션 ─── */}
+      {tab === "sim" && (
+        <Suspense fallback={<div className="flex h-64 items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>}>
+          {simLoaded && <SimulationView date={date} />}
+        </Suspense>
+      )}
+
+      {/* ─── Tab: 리포트 ─── */}
+      {tab === "report" && (
+        <ReportInline
           lectureDate={evaluation.lecture_date}
+          subject={metadata.subjects?.[0] ?? ""}
+          instructor={metadata.instructor ?? ""}
           score={weighted_average}
           model={model}
-          subject={metadata.subjects?.[0] ?? ""}
-          strengths={evaluation.strengths ?? []}
-          improvements={evaluation.improvements ?? []}
-          recommendations={evaluation.recommendations ?? []}
+          categories={category_results.map((c: CategoryResult) => ({ name: c.category_name, score: c.weighted_average }))}
+          strengths={strengths ?? []}
+          improvements={improvements ?? []}
+          recommendations={recommendations ?? []}
+          simulationSummary={simulation?.lecture_summary?.summary_text}
+          reportMarkdown={reportMarkdown}
         />
-      </div>
-
-      {/* Radar Chart */}
-      <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 4 }}>카테고리별 점수</h2>
-        <p className="text-caption" style={{ marginBottom: 24 }}>넓을수록 균형 잡힌 강의예요. 안쪽으로 들어간 영역이 개선 포인트예요</p>
-        <div style={{ height: 340 }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="72%">
-              <PolarGrid stroke="var(--border)" />
-              <PolarAngleAxis
-                dataKey="category"
-                tick={{ fill: "var(--grey-700)", fontSize: 13, fontWeight: 600 }}
-              />
-              <PolarRadiusAxis
-                angle={90}
-                domain={[0, 5]}
-                tick={{ fill: "var(--text-muted)", fontSize: 11 }}
-              />
-              <Tooltip
-                content={({ payload }) => {
-                  if (!payload?.[0]) return null;
-                  const d = payload[0].payload;
-                  return (
-                    <div
-                      className="card"
-                      style={{ padding: "12px 16px", boxShadow: "var(--shadow-hover)" }}
-                    >
-                      <p
-                        className="font-semibold"
-                        style={{ fontSize: 13, color: "var(--text-primary)" }}
-                      >
-                        {d.fullName}
-                      </p>
-                      <p
-                        className="font-bold"
-                        style={{ fontSize: 18, marginTop: 4, color: scoreColor(d.score) }}
-                      >
-                        {d.score.toFixed(2)}
-                      </p>
-                    </div>
-                  );
-                }}
-              />
-              <Radar
-                name="점수"
-                dataKey="score"
-                stroke="var(--primary)"
-                fill="var(--primary)"
-                fillOpacity={0.1}
-                strokeWidth={2}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* Category Detail */}
-      <div>
-        <h2 className="text-section" style={{ marginBottom: 20 }}>카테고리별 상세 평가</h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {category_results.map((cat) => (
-            <CategorySection key={cat.category_name} category={cat} />
-          ))}
-        </div>
-      </div>
-
-      {/* Feedback */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-        <FeedbackCard
-          title={feedbackConfig.strengthTitle}
-          subtitle={feedbackConfig.strengthSubtitle}
-          items={strengths}
-          color="var(--primary)"
-        />
-        <FeedbackCard
-          title={feedbackConfig.improvementTitle}
-          subtitle={feedbackConfig.improvementSubtitle}
-          items={improvements}
-          color="var(--score-3)"
-        />
-        <FeedbackCard
-          title={feedbackConfig.recommendationTitle}
-          subtitle={feedbackConfig.recommendationSubtitle}
-          items={recommendations}
-          color="var(--grey-500)"
-        />
-      </div>
+      )}
     </div>
   );
 }
@@ -371,145 +461,231 @@ function ItemScoreCard({ item }: { item: ItemScore }) {
 }
 
 
-/* ─── 노션 내보내기 버튼 ─── */
+/* ─── Report Inline (replaces modal) ─── */
 
-function NotionExportButton({
-  lectureDate,
-  score,
-  model,
-  subject,
-  strengths,
-  improvements,
-  recommendations,
-}: {
+interface ReportInlineProps {
   lectureDate: string;
+  subject: string;
+  instructor: string;
   score: number;
   model: string;
-  subject: string;
+  categories: Array<{ name: string; score: number }>;
   strengths: string[];
   improvements: string[];
   recommendations: string[];
-}) {
-  const navigate = useNavigate();
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [notionUrl, setNotionUrl] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  simulationSummary?: string;
+  reportMarkdown: string;
+}
 
-  const isConnected = !!localStorage.getItem("notion-integration");
+function ReportInline({
+  lectureDate,
+  subject,
+  instructor,
+  score,
+  model,
+  categories,
+  strengths,
+  improvements,
+  recommendations,
+  simulationSummary,
+  reportMarkdown,
+}: ReportInlineProps) {
+  const [exporting, setExporting] = useState<"notion" | "drive" | null>(null);
+  const [message, setMessage] = useState("");
 
-  const handleExport = useCallback(async () => {
+  const handleDownload = useCallback(() => {
+    const blob = new Blob([reportMarkdown], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${lectureDate}-report.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [reportMarkdown, lectureDate]);
+
+  const handleNotionExport = useCallback(async () => {
     const stored = localStorage.getItem("notion-integration");
-    if (!stored) {
-      navigate("/integrations");
-      return;
-    }
-
-    let token = "";
-    let databaseId = "";
+    if (!stored) { setMessage("Notion 연동을 먼저 설정해주세요"); return; }
+    const { token, database_id } = JSON.parse(stored);
+    setExporting("notion");
+    setMessage("");
     try {
-      const parsed = JSON.parse(stored);
-      token = parsed.token ?? "";
-      databaseId = parsed.database_id ?? "";
-    } catch {
-      setErrorMsg("노션 연동 정보가 올바르지 않아요");
-      setStatus("error");
-      return;
-    }
-
-    if (!token || !databaseId) {
-      setErrorMsg("노션 토큰 또는 데이터베이스 ID가 없어요");
-      setStatus("error");
-      return;
-    }
-
-    setStatus("loading");
-    try {
-      const result = await exportToNotion({
-        token,
-        database_id: databaseId,
-        lecture_date: lectureDate,
-        score,
-        model,
-        subject,
-        strengths,
-        improvements,
-        recommendations,
+      const result = await exportReportToNotion({
+        token, database_id, lecture_date: lectureDate,
+        score, model, subject, report_markdown: reportMarkdown,
+        strengths, improvements, recommendations, simulation_summary: simulationSummary,
       });
+      setMessage(result.success ? "Notion에 저장했습니다" : result.error || "저장 실패");
+    } catch { setMessage("Notion 내보내기 실패"); }
+    finally { setExporting(null); }
+  }, [lectureDate, score, model, subject, reportMarkdown, strengths, improvements, recommendations, simulationSummary]);
 
-      if (result.success && result.url) {
-        setNotionUrl(result.url);
-        setStatus("success");
-      } else {
-        setErrorMsg(result.error || "노션에 저장하지 못했어요");
-        setStatus("error");
-      }
-    } catch {
-      setErrorMsg("네트워크 오류가 발생했어요");
-      setStatus("error");
-    }
-  }, [lectureDate, score, model, subject, strengths, improvements, recommendations]);
-
-  if (status === "success" && notionUrl) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          marginTop: 20,
-          padding: "14px 20px",
-          background: "var(--primary-light)",
-          borderRadius: "var(--radius-inner)",
-        }}
-      >
-        <span
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: "50%",
-            background: "var(--primary)",
-            flexShrink: 0,
-          }}
-        />
-        <span className="text-body" style={{ flex: 1, color: "var(--text-primary)", fontWeight: 600 }}>
-          노션에 저장했어요
-        </span>
-        <a
-          href={notionUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            fontSize: 14,
-            fontWeight: 600,
-            color: "var(--primary)",
-            textDecoration: "none",
-          }}
-        >
-          노션에서 보기 →
-        </a>
-      </div>
-    );
-  }
+  const handleDriveExport = useCallback(async () => {
+    const session = await supabase.auth.getSession();
+    const token = session.data.session?.provider_token;
+    if (!token) { setMessage("Google 로그인이 필요합니다"); return; }
+    setExporting("drive");
+    setMessage("");
+    try {
+      const result = await uploadToDrive({
+        token, filename: `${lectureDate}-report.md`, content: reportMarkdown,
+      });
+      setMessage(result.success ? "Drive에 저장했습니다" : result.error || "업로드 실패");
+    } catch { setMessage("Drive 업로드 실패"); }
+    finally { setExporting(null); }
+  }, [lectureDate, reportMarkdown]);
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 20 }}>
-      <button
-        onClick={isConnected ? handleExport : () => navigate("/integrations")}
-        disabled={status === "loading"}
-        className="btn-primary"
-        style={{ fontSize: 13, padding: "10px 18px" }}
-      >
-        {status === "loading"
-          ? "저장 중..."
-          : isConnected
-          ? "노션에 저장하기"
-          : "노션 연결하기"}
-      </button>
-      {status === "error" && (
-        <span className="text-caption" style={{ color: "var(--primary)" }}>
-          {errorMsg}
-        </span>
+    <div className="report-inline" style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      {/* Score */}
+      <div className="report-section">
+        <p className="report-section-title">종합 점수</p>
+        <div className="report-score-row">
+          <span className="report-score-value">{score.toFixed(1)}</span>
+          <span className="report-score-max">/ 5.0</span>
+          <div className="report-score-bar">
+            <div className="report-score-fill" style={{ width: `${(score / 5) * 100}%` }} />
+          </div>
+          <span className="report-score-pct">{Math.round((score / 5) * 100)}%</span>
+        </div>
+        <p className="text-body" style={{ marginTop: 4 }}>
+          {score >= 4.0 ? "전반적으로 우수한 강의예요." : score >= 3.0 ? "괜찮지만 몇 가지 개선할 점이 있어요." : "개선이 필요한 영역이 있어요."}
+        </p>
+      </div>
+
+      {/* Categories */}
+      {categories.length > 0 && (
+        <div className="report-section">
+          <p className="report-section-title">카테고리별 점수</p>
+          <div className="report-categories">
+            {categories.map((cat) => (
+              <div key={cat.name} className="report-cat-row">
+                <span className="report-cat-name">{cat.name}</span>
+                <div className="report-cat-bar">
+                  <div className="report-cat-fill" style={{ width: `${(cat.score / 5) * 100}%` }} />
+                </div>
+                <span className="report-cat-score">{cat.score.toFixed(1)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
+
+      {/* Strengths */}
+      {strengths.length > 0 && (
+        <div className="report-section">
+          <div className="report-section-header" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <img src={`${import.meta.env.BASE_URL}emoji/sparkles.png`} alt="" width={20} height={20} />
+            <p className="report-section-title">잘한 점</p>
+          </div>
+          <ul className="report-list">
+            {strengths.map((s, i) => <li key={i}>{s}</li>)}
+          </ul>
+        </div>
+      )}
+
+      {/* Improvements */}
+      {improvements.length > 0 && (
+        <div className="report-section">
+          <p className="report-section-title">개선할 점</p>
+          <ul className="report-list">
+            {improvements.map((s, i) => <li key={i}>{s}</li>)}
+          </ul>
+        </div>
+      )}
+
+      {/* Recommendations */}
+      {recommendations.length > 0 && (
+        <div className="report-section">
+          <p className="report-section-title">추천 액션</p>
+          <ul className="report-list">
+            {recommendations.map((s, i) => <li key={i}>{s}</li>)}
+          </ul>
+        </div>
+      )}
+
+      {/* Simulation summary */}
+      <div className="report-section">
+        <div className="report-section-header" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <img src={`${import.meta.env.BASE_URL}emoji/dna.png`} alt="" width={20} height={20} />
+          <p className="report-section-title">뇌 반응 시뮬레이션</p>
+        </div>
+        <p className="report-sim-text">{simulationSummary || "시뮬레이션 데이터가 아직 준비되지 않았어요."}</p>
+        <div className="report-sim-legend">
+          <p className="report-section-title" style={{ marginTop: 8 }}>뇌 활동 해석 기준</p>
+          <ul className="report-list">
+            <li><strong>개념을 정리하는 중</strong> — 전두엽(DLPFC)이 활성. API 메소드 순서 설명 등 단계적 정리 구간에서 나타남</li>
+            <li><strong>딴생각 가능성</strong> — 후대상회(DMN)가 양쪽 활성. 강의 마무리, 미래 계획 언급 구간에서 나타남</li>
+            <li><strong>설명을 이해하는 중</strong> — 상측두회(Wernicke)가 활성. 기술 용어 반복 설명 구간에서 가장 강하게 나타남</li>
+            <li><strong>화면을 보는 중</strong> — 후두엽(시각피질)이 활성. 화면 전환, 시각 자료 제시 구간에서 나타남</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        {message && <span className="report-message text-caption">{message}</span>}
+        <div style={{ display: "flex", gap: 8, marginLeft: "auto" }}>
+          <button className="btn-secondary" onClick={handleDownload} disabled={!!exporting}>
+            <Download size={14} /> 마크다운
+          </button>
+          <button className="btn-secondary" onClick={handleDriveExport} disabled={!!exporting}>
+            <FileText size={14} /> {exporting === "drive" ? "저장 중..." : "Drive"}
+          </button>
+          <button className="btn-primary" onClick={handleNotionExport} disabled={!!exporting}>
+            {exporting === "notion" ? "저장 중..." : "Notion에 저장"}
+          </button>
+        </div>
+      </div>
     </div>
   );
+}
+
+/* ─── Build Report Markdown ─── */
+
+function buildReportMarkdown(data: {
+  lectureDate: string; subject: string; instructor: string;
+  score: number; model: string;
+  categories: Array<{ name: string; score: number }>;
+  strengths: string[]; improvements: string[]; recommendations: string[];
+  simulationSummary?: string;
+}): string {
+  const lines: string[] = [];
+  lines.push(`# ${data.subject} 강의 분석 리포트`);
+  lines.push(`\n**날짜**: ${data.lectureDate} | **강사**: ${data.instructor} | **모델**: ${data.model}\n`);
+  lines.push(`## 종합 점수: ${data.score.toFixed(1)} / 5.0 (${Math.round((data.score / 5) * 100)}%)\n`);
+
+  if (data.categories.length) {
+    lines.push(`## 카테고리별 점수\n`);
+    for (const cat of data.categories) {
+      lines.push(`- **${cat.name}**: ${cat.score.toFixed(1)}`);
+    }
+    lines.push("");
+  }
+
+  if (data.strengths.length) {
+    lines.push(`## 잘한 점\n`);
+    for (const s of data.strengths) lines.push(`- ${s}`);
+    lines.push("");
+  }
+
+  if (data.improvements.length) {
+    lines.push(`## 개선할 점\n`);
+    for (const s of data.improvements) lines.push(`- ${s}`);
+    lines.push("");
+  }
+
+  if (data.recommendations.length) {
+    lines.push(`## 추천 액션\n`);
+    for (const s of data.recommendations) lines.push(`- ${s}`);
+    lines.push("");
+  }
+
+  if (data.simulationSummary) {
+    lines.push(`## 뇌 반응 시뮬레이션 요약\n`);
+    lines.push(data.simulationSummary);
+    lines.push("");
+  }
+
+  return lines.join("\n");
 }

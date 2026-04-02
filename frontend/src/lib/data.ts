@@ -9,11 +9,34 @@ import type {
   ChunkInfo,
   ChecklistItem,
 } from "@/types/evaluation";
+import type {
+  BrainIconFramePayload,
+  LiveBrainFramePayload,
+  LiveTimelineFramePayload,
+  SegmentColorPayload,
+  SimulationResult,
+  TranscriptBrowserData,
+} from "@/types/simulation";
 
 const DATA_BASE = `${import.meta.env.BASE_URL}data`;
+const BASE_DATA_PREFIX = DATA_BASE.replace(/^\//, "");
+
+function normalizeDataPath(path: string): string {
+  if (/^(https?:)?\/\//.test(path)) return path;
+  if (path.startsWith(DATA_BASE)) return path.slice(DATA_BASE.length).replace(/^\/+/, "");
+  if (path.startsWith(`/${BASE_DATA_PREFIX}`)) return path.slice(BASE_DATA_PREFIX.length + 1).replace(/^\/+/, "");
+  if (path.startsWith("/data/")) return path.replace(/^\/data\//, "");
+  if (path.startsWith("data/")) return path.replace(/^data\//, "");
+  return path.replace(/^\/+/, "");
+}
+
+export function resolveDataAssetPath(path: string): string {
+  if (/^(https?:)?\/\//.test(path)) return path;
+  return `${DATA_BASE}/${normalizeDataPath(path)}`;
+}
 
 async function fetchJSON<T>(path: string): Promise<T> {
-  const res = await fetch(`${DATA_BASE}/${path}`);
+  const res = await fetch(resolveDataAssetPath(path));
   if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
   return res.json() as Promise<T>;
 }
@@ -117,6 +140,32 @@ export async function getCurriculumFlow(): Promise<CurriculumEntry[]> {
 /** 전처리: 청킹 결과 */
 export async function getChunks(date: string): Promise<ChunkInfo[]> {
   return fetchJSON<ChunkInfo[]>(`preprocessing/${date}_chunks.json`);
+}
+
+/* ── TRIBE v2 시뮬레이션 ── */
+
+export async function getSimulation(date: string): Promise<SimulationResult> {
+  return fetchJSON<SimulationResult>(`simulations/${date}.json`);
+}
+
+export async function getSimulationTranscript(date: string): Promise<TranscriptBrowserData> {
+  return fetchJSON<TranscriptBrowserData>(`simulations/${date}-transcript.json`);
+}
+
+export async function getSimulationColors(path: string): Promise<SegmentColorPayload> {
+  return fetchJSON<SegmentColorPayload>(path);
+}
+
+export async function getSimulationSummaryVisual(path: string): Promise<BrainIconFramePayload> {
+  return fetchJSON<BrainIconFramePayload>(path);
+}
+
+export async function getSimulationLiveFrames(path: string): Promise<LiveBrainFramePayload> {
+  return fetchJSON<LiveBrainFramePayload>(path);
+}
+
+export async function getSimulationTimelineFrames(path: string): Promise<LiveTimelineFramePayload> {
+  return fetchJSON<LiveTimelineFramePayload>(path);
 }
 
 /* ── Opus 심층 분석 ── */

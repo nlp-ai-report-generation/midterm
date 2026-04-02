@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AreaChart,
   Area,
@@ -92,11 +92,14 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
   return (
     <div className="page-content">
       {/* Page Header */}
-      <div>
-        <h1 className="text-title">강의 평가 현황</h1>
-        <p className="text-caption" style={{ marginTop: 4 }}>
-          전체 강의의 품질 현황을 한눈에 볼 수 있어요
-        </p>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <img src={`${import.meta.env.BASE_URL}emoji/books.png`} alt="" width={36} height={36} style={{ objectFit: "contain" }} />
+        <div>
+          <h1 className="text-title">강의 평가 현황</h1>
+          <p className="text-caption" style={{ marginTop: 4 }}>
+            전체 강의의 품질 현황을 한눈에 볼 수 있어요
+          </p>
+        </div>
       </div>
 
       {/* 핵심 지표 */}
@@ -110,7 +113,10 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
 
       {/* 카테고리별 평균 점수 */}
       <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 4 }}>카테고리별 평균</h2>
+        <h2 className="text-section" style={{ marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+          <img src={`${import.meta.env.BASE_URL}emoji/sparkles.png`} alt="" width={22} height={22} style={{ objectFit: "contain" }} />
+          카테고리별 평균
+        </h2>
         <p className="text-caption" style={{ marginBottom: 24 }}>
           5개 영역별 전체 강의 평균이에요. 바가 긴 영역이 잘하고 있는 부분이에요
         </p>
@@ -191,7 +197,7 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
       </div>
 
       {/* Score Trend */}
-      <ScoreTrendChart data={trendData} count={evaluations.length} />
+      <ScoreTrendChart data={trendData} count={evaluations.length} evaluations={evaluations} />
 
       {/* 강의 목록 바로가기 */}
       <Link
@@ -279,11 +285,14 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
   return (
     <div className="page-content">
       {/* Page Header */}
-      <div>
-        <h1 className="text-title">{displayTitle}</h1>
-        <p className="text-caption" style={{ marginTop: 4 }}>
-          수업을 돌아보고 다음 강의를 준비해보세요
-        </p>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <img src={`${import.meta.env.BASE_URL}emoji/books.png`} alt="" width={36} height={36} style={{ objectFit: "contain" }} />
+        <div>
+          <h1 className="text-title">{displayTitle}</h1>
+          <p className="text-caption" style={{ marginTop: 4 }}>
+            수업을 돌아보고 다음 강의를 준비해보세요
+          </p>
+        </div>
       </div>
 
       {/* KPI Cards */}
@@ -358,13 +367,29 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
 
 /* ─── Shared Components ─── */
 
-function ScoreTrendChart({ data, count }: { data: { date: string; score: number }[]; count: number }) {
+function ScoreTrendChart({ data, count, evaluations }: { data: { date: string; score: number }[]; count: number; evaluations?: EvaluationResult[] }) {
+  const [trendTab, setTrendTab] = useState("전체");
+  const categoryNames = evaluations?.[0]?.category_results?.map((c) => c.category_name) ?? [];
+  const tabs = ["전체", ...categoryNames];
+
+  const chartData = trendTab === "전체" ? data : (evaluations ?? []).map((e) => {
+    const cat = e.category_results?.find((c) => c.category_name === trendTab);
+    return { date: e.lecture_date, score: cat?.weighted_average ?? 0 };
+  });
+
   return (
     <div className="card card-padded">
       <h2 className="text-section" style={{ marginBottom: 4 }}>점수 추이</h2>
-      <p className="text-caption" style={{ marginBottom: 24 }}>{count}개 강의 가중 평균</p>
+      <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 16 }}>
+        {tabs.map((t) => (
+          <button key={t} onClick={() => setTrendTab(t)} className={`tab-item${trendTab === t ? " active" : ""}`} style={{ padding: "2px 8px", fontSize: 11 }}>
+            {t}
+          </button>
+        ))}
+      </div>
+      <p className="text-caption" style={{ marginBottom: 12 }}>{count}개 강의 · {trendTab}</p>
       <ResponsiveContainer width="100%" height={280}>
-        <AreaChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+        <AreaChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
           <defs>
             <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.15} />
@@ -411,6 +436,7 @@ function ScoreTrendChart({ data, count }: { data: { date: string; score: number 
 }
 
 function LectureCalendar({ evaluations }: { evaluations: EvaluationResult[] }) {
+  const navigate = useNavigate();
   const scoreMap = new Map<number, EvaluationResult>();
   for (const e of evaluations) {
     const day = parseInt(e.lecture_date.split("-")[2], 10);
@@ -493,7 +519,7 @@ function LectureCalendar({ evaluations }: { evaluations: EvaluationResult[] }) {
               <div
                 key={dIdx}
                 onClick={() => {
-                  if (ev) window.location.href = `/lectures/${ev.lecture_date}`;
+                  if (ev) navigate(`/lectures/${ev.lecture_date}`);
                 }}
                 style={{
                   minHeight: 80,

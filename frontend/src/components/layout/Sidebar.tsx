@@ -4,16 +4,7 @@ import {
   Home,
   FileText,
   BarChart2,
-  List,
-  GitCompare,
-  GitCompareArrows,
-  TrendingUp,
-  Layers,
   ShieldCheck,
-  Settings,
-  Link2,
-  Info,
-  Presentation,
   type LucideIcon,
 } from "lucide-react";
 
@@ -25,7 +16,6 @@ interface NavItem {
 
 interface NavGroup {
   label?: string;
-  labelTo?: string;
   items: NavItem[];
 }
 
@@ -33,32 +23,14 @@ const OPERATOR_NAV: NavGroup[] = [
   {
     items: [
       { to: "/dashboard", label: "홈", icon: Home },
-      { to: "/lectures", label: "강의 목록", icon: FileText },
+      { to: "/lectures", label: "강의", icon: FileText },
     ],
   },
   {
-    label: "분석",
+    label: "도구",
     items: [
-      { to: "/eda", label: "데이터 분석", icon: BarChart2 },
-      { to: "/trends", label: "점수 추이", icon: TrendingUp },
-      { to: "/compare", label: "강의 비교", icon: GitCompareArrows },
-      { to: "/items", label: "항목별 분석", icon: Layers },
-    ],
-  },
-  {
-    label: "검증",
-    items: [
-      { to: "/experiments", label: "모델 비교", icon: GitCompare },
-      { to: "/validation", label: "신뢰성 검증", icon: ShieldCheck },
-      { to: "/checklist", label: "평가 기준", icon: List },
-    ],
-  },
-  {
-    items: [
-      { to: "/settings", label: "설정", icon: Settings },
-      { to: "/integrations", label: "연동", icon: Link2 },
-      { to: "/presentation", label: "발표 자료", icon: Presentation },
-      { to: "/about", label: "소개", icon: Info },
+      { to: "/analysis", label: "분석", icon: BarChart2 },
+      { to: "/validation", label: "검증", icon: ShieldCheck },
     ],
   },
 ];
@@ -68,14 +40,6 @@ const INSTRUCTOR_NAV: NavGroup[] = [
     items: [
       { to: "/dashboard", label: "홈", icon: Home },
       { to: "/lectures", label: "내 강의", icon: FileText },
-      { to: "/trends", label: "점수 추이", icon: TrendingUp },
-    ],
-  },
-  {
-    items: [
-      { to: "/settings", label: "설정", icon: Settings },
-      { to: "/presentation", label: "발표 자료", icon: Presentation },
-      { to: "/about", label: "소개", icon: Info },
     ],
   },
 ];
@@ -93,8 +57,8 @@ export default function Sidebar() {
         left: 0,
         bottom: 0,
         width: "var(--sidebar-width)",
-        background: "var(--surface)",
-        borderRight: "1px solid var(--border)",
+        background: "#F5F5F5",
+        borderRight: "1px solid rgba(0,0,0,0.1)",
         display: "flex",
         flexDirection: "column",
         zIndex: 30,
@@ -105,49 +69,27 @@ export default function Sidebar() {
         style={{
           padding: "32px 28px 28px",
           display: "flex",
-          alignItems: "center",
-          gap: 12,
+          flexDirection: "column",
         }}
       >
-        <div
+        <span
           style={{
-            width: 36,
-            height: 36,
-            borderRadius: 10,
-            background: "var(--primary)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "var(--surface)",
-            fontSize: 15,
-            fontWeight: 800,
-            letterSpacing: "-0.04em",
+            fontSize: 13,
+            fontWeight: 600,
+            color: "rgba(0,0,0,0.85)",
+            lineHeight: 1.2,
           }}
         >
-          LA
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <span
-            style={{
-              fontSize: 16,
-              fontWeight: 800,
-              color: "var(--text-primary)",
-              letterSpacing: "-0.03em",
-              lineHeight: 1.2,
-            }}
-          >
-            강의 분석
-          </span>
-          <span
-            style={{
-              fontSize: 11,
-              color: "var(--text-muted)",
-              letterSpacing: "0.02em",
-            }}
-          >
-            {isOperator ? "운영자 모드" : "강사 모드"}
-          </span>
-        </div>
+          강의 분석
+        </span>
+        <span
+          style={{
+            fontSize: 11,
+            color: "rgba(0,0,0,0.25)",
+          }}
+        >
+          {isOperator ? "운영자 모드" : "강사 모드"}
+        </span>
       </div>
 
       {/* Navigation */}
@@ -156,12 +98,11 @@ export default function Sidebar() {
           <div key={gIdx} style={{ marginBottom: 8 }}>
             {group.label && (
               <div
-                title={group.label === "분석" ? "강의 데이터를 다양한 관점에서 살펴볼 수 있어요" : group.label === "검증" ? "AI 평가를 믿을 수 있는지 확인해요" : ""}
                 style={{
-                  padding: "16px 12px 6px",
+                  padding: "16px 8px 6px",
                   fontSize: 11,
-                  fontWeight: 600,
-                  color: "var(--text-muted)",
+                  fontWeight: 590,
+                  color: "rgba(0,0,0,0.25)",
                   letterSpacing: "0.04em",
                   textTransform: "uppercase",
                   cursor: "default",
@@ -170,7 +111,7 @@ export default function Sidebar() {
                 {group.label}
               </div>
             )}
-            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 2 }}>
+            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 1 }}>
               {group.items.map((item) => (
                 <li key={item.to}>
                   <NavLink
@@ -178,19 +119,18 @@ export default function Sidebar() {
                     style={({ isActive }) => ({
                       display: "flex",
                       alignItems: "center",
-                      gap: 12,
-                      padding: "10px 12px",
-                      borderRadius: 10,
-                      fontSize: 14,
-                      fontWeight: 600,
-                      letterSpacing: "-0.02em",
-                      color: isActive ? "var(--primary)" : "var(--text-secondary)",
-                      background: isActive ? "var(--primary-light)" : "transparent",
+                      gap: 10,
+                      padding: "4px 8px",
+                      borderRadius: 5,
+                      fontSize: 13,
+                      fontWeight: isActive ? 500 : 400,
+                      color: "rgba(0,0,0,0.85)",
+                      background: isActive ? "rgba(0,0,0,0.05)" : "transparent",
                       textDecoration: "none",
-                      transition: "color 0.15s, background 0.15s",
+                      transition: "background 0.15s",
                     })}
                   >
-                    <item.icon size={18} />
+                    <item.icon size={16} />
                     {item.label}
                   </NavLink>
                 </li>
@@ -199,18 +139,6 @@ export default function Sidebar() {
           </div>
         ))}
       </nav>
-
-      {/* Footer */}
-      <div
-        style={{
-          padding: "20px 24px",
-          fontSize: 12,
-          color: "var(--text-tertiary)",
-          letterSpacing: "-0.02em",
-        }}
-      >
-        15개 강의 · 2026.02
-      </div>
     </aside>
   );
 }

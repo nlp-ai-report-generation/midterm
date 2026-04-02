@@ -44,22 +44,8 @@ Thumbs.db
 
 # Logs
 *.log
-
-# Node
-node_modules/
-
-# Presentation build artifacts
+presentation/remotion/node_modules/
 presentation/remotion/.tmp/
 presentation/remotion/out/
-presentation/remotion/public/manim/
-
-# Sensitive data — DO NOT COMMIT
-NLP 과제 1*/
-data/sample/
-transcripts/
-frontend/public/data/evaluations*/
-frontend/public/data/eda/
-frontend/public/data/preprocessing/
-frontend/public/data/metadata.json
-presentation/remotion/public/audio/*.mp3
-presentation/remotion/public/assets/*.png
+presentation/remotion/public/manim/videos/*/partial_movie_files/
+presentation-refer/

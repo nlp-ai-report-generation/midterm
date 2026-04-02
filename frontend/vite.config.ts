@@ -4,7 +4,7 @@ import path from "node:path";
 
 export default defineConfig({
   plugins: [react()],
-  base: process.env.GITHUB_PAGES_BASE || (process.env.GITHUB_ACTIONS ? "/" : "/"),
+  base: process.env.GITHUB_ACTIONS ? "/mutsa_nlp/" : "/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

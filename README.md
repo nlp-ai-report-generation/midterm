@@ -61,6 +61,7 @@
 - [시작하기](#-시작하기)
 - [대시보드 페이지](#%EF%B8%8F-대시보드-페이지)
 - [문서](#-문서)
+- [뇌 반응 시뮬레이션 (TRIBE v2)](#-뇌-반응-시뮬레이션-tribe-v2)
 - [고도화 로드맵](#%EF%B8%8F-고도화-로드맵)
 
 ---
@@ -212,10 +213,11 @@ GPT-4o-mini로 15개 강의를 각 3회씩 반복 평가했어요.
 - **18개 항목 자동 평가** — 언어 품질, 강의 구조, 개념 명확성, 예시/실습, 상호작용
 - **3모델 교차 평가** — GPT-4o mini, Claude Opus, Claude Sonnet
 - **역할 기반 UI** — 운영자는 전체 KPI를, 강사는 내 강의에 집중해서 볼 수 있어요
-- **데이터 분석(EDA)** — 발화량, 화자 구성, 소통 빈도, 습관 표현
-- **강의 비교** — 2개 강의를 나란히 놓고 카테고리별로 비교해요
-- **점수 추이** — 카테고리별로 시간에 따라 어떻게 변하는지 추적해요
-- **외부 연동** — 구글 드라이브에서 파일을 가져오고, 노션에 결과를 내보낼 수 있어요
+- **카드형 강의 목록** — 개선포인트가 바로 표시되고, 탭 전환으로 스크롤 최소화
+- **통합 데이터 분석** — EDA, 추이, 비교, 항목 분석을 `/analysis` 한 페이지에서
+- **TRIBE v2 수강자 반응 시뮬레이션** — 3D 뇌 히트맵 + 반구 활성도 + 인지 부하 회복도 + ROI 기반 자동 처방
+- **macOS Quick Look 리포트** — 프리뷰, Google Drive 업로드, Notion 내보내기, 마크다운 다운로드
+- **외부 연동** — 구글 드라이브에서 파일을 가져오고, 노션에 종합 리포트를 내보낼 수 있어요
 - **GitHub Actions** — 파일만 올리면 자동으로 평가하고 배포해요
 
 ---
@@ -224,7 +226,8 @@ GPT-4o-mini로 15개 강의를 각 3회씩 반복 평가했어요.
 
 | 구분 | 기술 |
 |------|------|
-| 프론트엔드 | React 19, Vite, TypeScript, Tailwind CSS v4, Recharts |
+| 프론트엔드 | React 19, Vite, TypeScript, Tailwind CSS v4, Recharts, Three.js |
+| 디자인 시스템 | Apple macOS 12 기반 (SF Pro, 8px radius, macOS segmented control, 주황 #FF6B00) |
 | 백엔드 | Python 3.11, LangGraph, FastAPI |
 | LLM | OpenAI GPT-4o mini, Claude Opus, Claude Sonnet |
 | 인증 | Supabase Auth (Google, Notion OAuth) |
@@ -236,9 +239,9 @@ GPT-4o-mini로 15개 강의를 각 3회씩 반복 평가했어요.
 ## 🔍 코드가 실제로 하는 일
 
 <details>
-<summary><b>프론트엔드 — 데이터를 보여주는 11개 화면</b></summary>
+<summary><b>프론트엔드 — 데이터를 보여주는 7개 화면</b></summary>
 
-프론트엔드는 React 19 + Vite로 빌드한 SPA예요. 평가 결과 JSON을 `public/data/`에서 가져와서 시각화해요.
+프론트엔드는 React 19 + Vite로 빌드한 SPA예요. 기존 15개 페이지를 **7개로 통합**했어요. Apple macOS 12 디자인 시스템(SF Pro, 8px radius, macOS segmented control)을 적용하고, 강사가 스크롤 없이 탭 전환으로 핵심 정보를 탐색할 수 있게 했어요.
 
 `data.ts`는 프론트엔드의 데이터 계층이에요. 모든 페이지가 이 파일의 함수로 데이터를 가져와요:
 
@@ -249,6 +252,12 @@ getEvaluationByModel()   → 모델별 평가 결과 (GPT-4o-mini / Opus / Sonne
 getTranscriptStats()     → 발화량, 발화 속도 등 정량 데이터
 getFillerWords()         → "이제", "그래서" 같은 습관 표현 빈도
 ```
+
+**정보 아키텍처 변경 (15개 → 7개)**
+- EDA / Trends / Compare / Items → `/analysis` 통합
+- Experiments / Checklist → `/validation` 통합
+- Settings / Integrations / About → 제거 (향후 모달로 전환 예정)
+- 강의 상세에서 탭 전환: 평가 | 시뮬레이션 | 리포트
 
 </details>
 
@@ -279,7 +288,14 @@ POST /api/settings    → API 키, 모델 설정 변경
 ```
 ├── frontend/              # React 대시보드 (Vite + TypeScript)
 │   └── src/
-│       ├── pages/          # 11개 페이지
+│       ├── pages/          # 7개 페이지 (15개에서 통합)
+│       │   ├── RoleSelectPage        # 역할 선택 (/)
+│       │   ├── DashboardPage         # 전체 현황 (/dashboard)
+│       │   ├── LecturesPage          # 강의 목록 (/lectures)
+│       │   ├── LectureDetailPage     # 강의 상세 — 평가|시뮬레이션|리포트 탭 (/lectures/:date)
+│       │   ├── AnalysisPage          # EDA+추이+비교+항목 통합 (/analysis)
+│       │   ├── ValidationPage        # 실험+체크리스트 통합 (/validation)
+│       │   └── PresentationPage      # 발표 자료
 │       ├── components/     # 레이아웃 + 공유 컴포넌트
 │       ├── contexts/       # AuthContext, RoleContext
 │       └── lib/            # data.ts, api.ts, utils.ts
@@ -291,6 +307,7 @@ POST /api/settings    → API 키, 모델 설정 변경
 │   └── experiment/         # 실험 러너, 신뢰도 메트릭
 ├── api/                    # FastAPI 서버
 ├── scripts/                # run_single.py, run_batch.py
+├── colab/                  # TRIBE v2 코랩 실행 템플릿
 ├── experiments/            # 실험 결과 저장소
 └── tests/                  # 단위 테스트 (46개)
 ```
@@ -335,16 +352,19 @@ python3 scripts/run_batch.py --model gpt-4o-mini --passes 3 --no-calibrator
 
 ## 🖥️ 대시보드 페이지
 
+기존 15개 페이지를 7개로 통합하고, 강의 상세 내에서 탭 전환(평가 | 시뮬레이션 | 리포트)으로 스크롤 없이 탐색할 수 있게 재설계했어요.
+
 | 페이지 | 경로 | 설명 |
 |--------|------|------|
+| 역할 선택 | / | 운영자/강사 역할 선택 |
 | 대시보드 | /dashboard | 전체 현황, KPI, 히트맵, 추이 |
-| 강의 평가 | /lectures | 15개 강의 목록 + 모델 전환 |
-| 데이터 분석 | /eda | 발화량, 화자, 소통, 습관 표현 |
-| 모델 비교 | /experiments | 3모델 점수 비교 + 카테고리 차트 |
-| 강의 비교 | /compare | 2개 강의를 나란히 비교 |
-| 점수 추이 | /trends | 카테고리별 시계열 변화 |
-| 신뢰도 검증 | /validation | ICC, Kappa, Alpha |
-| 연동 설정 | /integrations | 구글 드라이브, 노션 |
+| 강의 목록 | /lectures | 카드형 강의 목록 (개선포인트 바로 표시) |
+| 강의 상세 | /lectures/:date | **탭 전환**: 평가 (18개 항목) · 시뮬레이션 (TRIBE v2 3D 뇌 히트맵) · 리포트 (Quick Look 프리뷰) |
+| 데이터 분석 | /analysis | EDA + 추이 + 비교 + 항목 분석 통합 |
+| 신뢰도 검증 | /validation | 실험 비교 + 체크리스트 통합 (ICC, Kappa, Alpha) |
+| 발표 | /presentation | 발표 자료 |
+
+**리포트 기능**: macOS Quick Look 스타일 프리뷰, Google Drive 업로드, Notion 종합 리포트 내보내기, 마크다운 다운로드
 
 ---
 
@@ -355,7 +375,60 @@ python3 scripts/run_batch.py --model gpt-4o-mini --passes 3 --no-calibrator
 | [기획서](docs/기획서.md) | 프로젝트 배경, 목표, 아키텍처, 일정 |
 | [현재 진행상황](docs/현재-진행상황.md) | 완료/진행 중/다음 단계, 성과 수치 |
 | [실험 결과 보고서](docs/experiment_results_midterm.md) | 신뢰도 검증 실험 상세 분석 |
+| [TRIBE v2 수강자 반응 시뮬레이션](docs/TRIBE_v2_수강자_반응_시뮬레이션.md) | 원리, 코랩 실행 흐름, raw output 해석, 3D 시각화 구조 |
+| [TRIBE ROI 로컬 후처리 준비](analysis/roi/README.md) | raw output을 로컬에서 ROI 단위로 다시 묶는 준비 절차 |
 | [인터페이스 계약서](docs/interface_contract.md) | 프론트-백엔드 API 스펙 |
+
+---
+
+## 🧠 뇌 반응 시뮬레이션 (TRIBE v2)
+
+기존 18개 항목 점수 평가를 넘어서, **강의 흐름의 시간축 반응 변화**를 뇌 표면 위에 시각화하는 실험 기능이에요.
+
+### 원리
+
+[TRIBE v2](https://github.com/facebookresearch/tribev2)는 Meta AI/FAIR이 개발한 뇌 인코딩 모델이에요. **25명 피험자의 451.6시간 실제 fMRI 데이터**로 훈련되었고, Algonauts 2025 뇌 모델링 대회에서 1위를 했어요.
+
+```
+강의 텍스트 → TTS 음성 합성 → TRIBE v2 모델 → 10,242개 뇌 표면 정점별 cortical response 예측
+```
+
+모델 내부에서는 LLaMA 3.2 (텍스트) + Wav2Vec-BERT (오디오) 인코더로 특성을 추출하고, Transformer로 융합한 뒤, fMRI로 훈련된 Subject Block이 fsaverage5 뇌 표면의 각 vertex별 BOLD 반응을 예측합니다. 5초 hemodynamic delay 보정도 적용돼요.
+
+### 뇌 영역별 해석이 가능한 이유
+
+TRIBE가 "텍스트에서 만든 숫자를 뇌에 임의로 칠하는 것"이 아닌 이유:
+
+- **Audio → 측두엽, Video → 후두엽, Text → 전두/두정엽** 패턴이 학습으로 나타남 (규칙으로 넣은 것이 아님)
+- 모델 내부 ICA 분석에서 **Primary Auditory, Language, DMN, Visual** 등 5개 기능적 네트워크가 자발적으로 출현
+- FFA(방추상 얼굴 영역), Broca 영역 국소화를 in-silico로 성공적으로 재현
+
+### 프론트엔드에서 보여주는 지표
+
+**TRIBE 기반 프록시 (3개)**
+
+| 지표 | 원천 | 해석 |
+|------|------|------|
+| **Attention** | TRIBE 반응 크기 + 변화율 | 이탈위험 → 수동수신 → 능동추적 → 밀착참여 → 최고집중 |
+| **Load** | 텍스트 밀도 + 반응 크기 | 너무쉬움 → 여유 → **최적도전** → 높은밀도 → 과부하 |
+| **Novelty** | 직전 대비 반응 변화량 | 안정 → 점진변화 → **전환중** → 급변 → 맥락끊김 |
+
+**추가된 분석 지표 (v2 업데이트)**
+
+| 지표 | 원천 | 해석 |
+|------|------|------|
+| **반구 활성도 비율** | 좌/우 반구 cortical response 비율 | 언어 우세(좌) vs 공간/정서 우세(우) 균형 |
+| **인지 부하 회복도** | Load 고점 이후 회복 속도 | 과부하 후 얼마나 빨리 정상 부하로 돌아오는지 |
+| **세그먼트 전환 유사도** | 인접 세그먼트 간 cortical response 코사인 유사도 | 급격한 전환 vs 자연스러운 흐름 연결 |
+| **ROI 기반 자동 처방** | ROI별 활성 패턴 → 규칙 기반 처방 매핑 | 뇌 영역 활성 패턴에 따른 자동 강의 개선 제안 |
+
+**부속 지표 (텍스트 기반)**
+
+- 콤보 패턴 (9가지), 뇌 기능 프로필 (5카테고리), 구간 건강도
+
+> v2 업데이트에서 학습 효율 지수(Paas)와 이탈 위험(mind-wandering) 지표는 제거되었어요. 반구 활성도/부하 회복도/전환 유사도가 더 직접적인 신경 데이터 기반 해석을 제공해요.
+
+> 상세 원리, 코랩 실행 방법, 논문 인용은 [TRIBE v2 수강자 반응 시뮬레이션 문서](docs/TRIBE_v2_수강자_반응_시뮬레이션.md)를 참고하세요.
 
 ---
 

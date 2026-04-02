@@ -1,0 +1,1672 @@
+{
+  "lecture_date": "2026-02-24",
+  "segments": [
+    {
+      "segment_id": "seg-01",
+      "start_time": "09:10:21",
+      "end_time": "09:15:16",
+      "n_timesteps": 329,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 240.0,
+          "duration": 88.22399999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-02",
+      "start_time": "09:15:30",
+      "end_time": "09:20:13",
+      "n_timesteps": 343,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 240.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 300.0,
+          "duration": 42.52800000000002
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-03",
+      "start_time": "09:20:23",
+      "end_time": "09:25:15",
+      "n_timesteps": 183,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 62.928
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-04",
+      "start_time": "09:25:25",
+      "end_time": "09:30:19",
+      "n_timesteps": 320,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 240.0,
+          "duration": 79.12799999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-05",
+      "start_time": "09:30:31",
+      "end_time": "09:35:08",
+      "n_timesteps": 271,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 240.0,
+          "duration": 30.216000000000008
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-06",
+      "start_time": "09:35:22",
+      "end_time": "09:40:20",
+      "n_timesteps": 242,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 61.488
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-07",
+      "start_time": "09:40:27",
+      "end_time": "09:45:18",
+      "n_timesteps": 213,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 32.903999999999996
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-08",
+      "start_time": "09:45:31",
+      "end_time": "09:50:18",
+      "n_timesteps": 276,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 240.0,
+          "duration": 35.78399999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-09",
+      "start_time": "09:50:32",
+      "end_time": "09:55:20",
+      "n_timesteps": 262,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 81.36000000000001
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-10",
+      "start_time": "09:55:33",
+      "end_time": "10:00:15",
+      "n_timesteps": 248,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 67.32
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-11",
+      "start_time": "10:00:27",
+      "end_time": "10:05:08",
+      "n_timesteps": 292,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 240.0,
+          "duration": 51.55200000000002
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-12",
+      "start_time": "10:05:23",
+      "end_time": "10:10:19",
+      "n_timesteps": 296,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 240.0,
+          "duration": 55.77600000000001
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-13",
+      "start_time": "10:10:36",
+      "end_time": "10:14:32",
+      "n_timesteps": 138,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 77.856
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-14",
+      "start_time": "10:15:39",
+      "end_time": "10:20:18",
+      "n_timesteps": 241,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 60.45599999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-15",
+      "start_time": "10:20:26",
+      "end_time": "10:25:20",
+      "n_timesteps": 225,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 44.75999999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-16",
+      "start_time": "10:25:26",
+      "end_time": "10:30:15",
+      "n_timesteps": 170,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 49.94399999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-17",
+      "start_time": "10:30:25",
+      "end_time": "10:35:11",
+      "n_timesteps": 230,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 49.84800000000001
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-18",
+      "start_time": "10:35:30",
+      "end_time": "10:40:17",
+      "n_timesteps": 120,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 59.087999999999994
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-19",
+      "start_time": "10:40:31",
+      "end_time": "10:45:18",
+      "n_timesteps": 235,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 54.93600000000001
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-20",
+      "start_time": "10:45:30",
+      "end_time": "10:50:15",
+      "n_timesteps": 164,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 43.872000000000014
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-21",
+      "start_time": "10:50:21",
+      "end_time": "10:53:34",
+      "n_timesteps": 134,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 73.488
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-22",
+      "start_time": "11:15:45",
+      "end_time": "11:19:58",
+      "n_timesteps": 186,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 65.73599999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-23",
+      "start_time": "11:21:33",
+      "end_time": "11:25:09",
+      "n_timesteps": 171,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 50.80799999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-24",
+      "start_time": "11:25:24",
+      "end_time": "11:30:08",
+      "n_timesteps": 226,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 45.383999999999986
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-25",
+      "start_time": "11:30:22",
+      "end_time": "11:34:56",
+      "n_timesteps": 147,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 86.928
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-26",
+      "start_time": "11:35:24",
+      "end_time": "11:40:18",
+      "n_timesteps": 224,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 43.416
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-27",
+      "start_time": "11:40:31",
+      "end_time": "11:45:20",
+      "n_timesteps": 199,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 78.98400000000001
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-28",
+      "start_time": "11:45:25",
+      "end_time": "11:50:13",
+      "n_timesteps": 236,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 55.464
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-29",
+      "start_time": "11:50:22",
+      "end_time": "11:55:18",
+      "n_timesteps": 212,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 31.343999999999994
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-30",
+      "start_time": "11:55:36",
+      "end_time": "11:56:41",
+      "n_timesteps": 86,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 85.728
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-31",
+      "start_time": "01:11:43",
+      "end_time": "01:15:16",
+      "n_timesteps": 161,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 40.68000000000001
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-32",
+      "start_time": "01:15:33",
+      "end_time": "01:20:18",
+      "n_timesteps": 301,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 240.0,
+          "duration": 60.360000000000014
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-33",
+      "start_time": "01:20:26",
+      "end_time": "01:25:10",
+      "n_timesteps": 248,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 67.80000000000001
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-34",
+      "start_time": "01:25:28",
+      "end_time": "01:30:14",
+      "n_timesteps": 197,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 76.632
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-35",
+      "start_time": "01:30:28",
+      "end_time": "01:35:20",
+      "n_timesteps": 263,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 82.632
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-36",
+      "start_time": "01:35:36",
+      "end_time": "01:40:10",
+      "n_timesteps": 198,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 77.256
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-37",
+      "start_time": "01:40:25",
+      "end_time": "01:45:17",
+      "n_timesteps": 266,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 85.56
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-38",
+      "start_time": "01:45:32",
+      "end_time": "01:49:48",
+      "n_timesteps": 223,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 42.696
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-39",
+      "start_time": "01:50:27",
+      "end_time": "01:55:17",
+      "n_timesteps": 151,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 30.599999999999994
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-40",
+      "start_time": "01:55:32",
+      "end_time": "02:00:14",
+      "n_timesteps": 141,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 81.0
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-41",
+      "start_time": "02:00:35",
+      "end_time": "02:05:14",
+      "n_timesteps": 224,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 43.44
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-42",
+      "start_time": "02:05:29",
+      "end_time": "02:10:14",
+      "n_timesteps": 225,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 44.54400000000001
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-43",
+      "start_time": "02:10:32",
+      "end_time": "02:15:02",
+      "n_timesteps": 176,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 55.29599999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-44",
+      "start_time": "02:15:23",
+      "end_time": "02:20:17",
+      "n_timesteps": 202,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 81.672
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-45",
+      "start_time": "02:20:33",
+      "end_time": "02:25:12",
+      "n_timesteps": 258,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 77.68799999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-46",
+      "start_time": "02:25:27",
+      "end_time": "02:26:22",
+      "n_timesteps": 60,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 59.808
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-47",
+      "start_time": "02:46:32",
+      "end_time": "02:50:14",
+      "n_timesteps": 163,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 42.816
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-48",
+      "start_time": "02:50:23",
+      "end_time": "02:55:20",
+      "n_timesteps": 290,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 240.0,
+          "duration": 49.56
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-49",
+      "start_time": "02:55:22",
+      "end_time": "03:00:05",
+      "n_timesteps": 245,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 64.91999999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-50",
+      "start_time": "03:00:21",
+      "end_time": "03:05:18",
+      "n_timesteps": 270,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 89.66399999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-51",
+      "start_time": "03:05:24",
+      "end_time": "03:10:13",
+      "n_timesteps": 270,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 89.04000000000002
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-52",
+      "start_time": "03:10:21",
+      "end_time": "03:15:06",
+      "n_timesteps": 251,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 70.77600000000001
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-53",
+      "start_time": "03:15:21",
+      "end_time": "03:20:18",
+      "n_timesteps": 236,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 55.31999999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-54",
+      "start_time": "03:20:27",
+      "end_time": "03:25:12",
+      "n_timesteps": 230,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 49.94399999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-55",
+      "start_time": "03:25:27",
+      "end_time": "03:30:10",
+      "n_timesteps": 212,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 31.19999999999999
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-56",
+      "start_time": "03:30:26",
+      "end_time": "03:34:58",
+      "n_timesteps": 160,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 39.072
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-57",
+      "start_time": "03:35:24",
+      "end_time": "03:39:55",
+      "n_timesteps": 150,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 89.54400000000001
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-58",
+      "start_time": "03:40:29",
+      "end_time": "03:45:12",
+      "n_timesteps": 99,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 38.232
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-59",
+      "start_time": "03:45:34",
+      "end_time": "03:50:09",
+      "n_timesteps": 203,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 82.84800000000001
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-60",
+      "start_time": "03:50:27",
+      "end_time": "03:55:08",
+      "n_timesteps": 253,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 180.0,
+          "duration": 72.12
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-61",
+      "start_time": "03:55:27",
+      "end_time": "04:00:18",
+      "n_timesteps": 172,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 60.0,
+          "duration": 60.0
+        },
+        {
+          "type": "Audio",
+          "start": 120.0,
+          "duration": 51.024
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-62",
+      "start_time": "04:00:25",
+      "end_time": "04:00:46",
+      "n_timesteps": 29,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 28.968
+        }
+      ]
+    },
+    {
+      "segment_id": "seg-63",
+      "start_time": "05:50:13",
+      "end_time": "05:50:17",
+      "n_timesteps": 6,
+      "n_vertices": 20484,
+      "events_preview": [
+        {
+          "type": "Audio",
+          "start": 0.0,
+          "duration": 5.136
+        }
+      ]
+    }
+  ]
+}
