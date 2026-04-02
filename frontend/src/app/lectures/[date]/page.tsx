@@ -259,21 +259,6 @@ export default function LectureDetailPage() {
       {/* ─── Tab: 평가 ─── */}
       {tab === "eval" && (
         <>
-          {/* Model Selector */}
-          <div className="tab-bar" role="tablist" style={{ marginBottom: 0 }}>
-            {(["gpt4o-mini", "opus", "sonnet"] as const).map((m) => (
-              <button
-                key={m}
-                role="tab"
-                aria-selected={model === m}
-                onClick={() => setModel(m)}
-                className="tab-item"
-              >
-                {MODEL_LABELS[m]}
-              </button>
-            ))}
-          </div>
-
           {/* Timeline Bar (sticky) — only when sections data exists */}
           {sections.length > 0 && (
             <div className="timeline-bar-sticky">

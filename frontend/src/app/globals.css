@@ -2242,6 +2242,22 @@ body {
   }
 }
 
+/* ─── Timeline v2 (sections-based) ─── */
+.tl-wrap { display: flex; flex-direction: column; gap: 0; }
+.tl-strip { display: flex; height: 32px; }
+.tl-block { cursor: pointer; transition: opacity 0.15s; min-width: 2px; }
+.tl-block:hover { opacity: 0.8; }
+.tl-selected { box-shadow: inset 0 -3px 0 #0071e3; }
+.tl-labels { display: flex; }
+.tl-label {
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 4px 4px 0; cursor: pointer; overflow: hidden; min-width: 0;
+}
+.tl-label-selected { background: rgba(0,113,227,0.06); }
+.tl-label-type { font-size: 9px; font-weight: 600; color: #86868b; text-transform: uppercase; letter-spacing: 0.04em; }
+.tl-label-text { font-size: 10px; color: #1d1d1f; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.tl-times { display: flex; justify-content: space-between; padding: 2px 0; font-size: 9px; color: #86868b; }
+
 /* ─── Timeline (Apple style) ─── */
 .timeline-container { position: sticky; top: 0; z-index: 10; background: #fff; padding: 16px 0 8px; }
 .timeline-bar-sticky {

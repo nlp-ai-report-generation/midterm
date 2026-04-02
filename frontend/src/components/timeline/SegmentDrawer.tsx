@@ -62,26 +62,32 @@ export default function SectionDrawer({
       </div>
 
       {/* 2. Related evaluation evidence */}
-      {evidences.length > 0 && (
-        <div style={{ marginBottom: 12 }}>
-          <p style={{ fontSize: 11, fontWeight: 590, color: "#86868b", letterSpacing: "0.02em", textTransform: "uppercase" as const, marginBottom: 8 }}>
-            관련 평가 ({evidences.length})
-          </p>
-          <div className="section-evidence">
-            {evidences.map((ev, i) => (
-              <div key={i} className="section-evidence-item">
-                <span className="section-evidence-score">{ev.score.toFixed(1)}</span>
-                <div style={{ minWidth: 0 }}>
-                  <span style={{ fontWeight: 600, fontSize: 13 }}>{ev.itemName}</span>
-                  <p style={{ fontSize: 13, color: "#86868b", lineHeight: 1.47, marginTop: 2 }}>
-                    {ev.text}
-                  </p>
+      <div style={{ marginBottom: 12 }}>
+        {evidences.length > 0 ? (
+          <>
+            <p style={{ fontSize: 11, fontWeight: 590, color: "#86868b", letterSpacing: "0.02em", textTransform: "uppercase" as const, marginBottom: 8 }}>
+              관련 평가 ({evidences.length})
+            </p>
+            <div className="section-evidence">
+              {evidences.map((ev, i) => (
+                <div key={i} className="section-evidence-item">
+                  <span className="section-evidence-score">{ev.score.toFixed(1)}</span>
+                  <div style={{ minWidth: 0 }}>
+                    <span style={{ fontWeight: 600, fontSize: 13 }}>{ev.itemName}</span>
+                    <p style={{ fontSize: 13, color: "#86868b", lineHeight: 1.47, marginTop: 2 }}>
+                      {ev.text}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+              ))}
+            </div>
+          </>
+        ) : (
+          <p style={{ fontSize: 14, color: "#86868b", lineHeight: 1.47 }}>
+            이 구간에 대한 평가 증거가 아직 없어요.
+          </p>
+        )}
+      </div>
 
       {/* 3. Prescription */}
       {prescription && (

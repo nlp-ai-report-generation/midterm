@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 
 export interface Section {
-  start: string; // "09:11:17"
-  end: string;   // "09:15:00"
-  label: string; // "Java I/O·NIO·NIO2 개요"
-  type: string;  // "intro" | "concept" | "practice" | "review" | "break" | "wrapup"
+  start: string;
+  end: string;
+  label: string;
+  type: string;
 }
 
 interface TimelineBarProps {
@@ -21,84 +21,75 @@ function timeToSeconds(t: string): number {
 const TYPE_COLORS: Record<string, string> = {
   concept: "#1d1d1f",
   practice: "#0071e3",
-  intro: "#86868b",
-  review: "#86868b",
-  break: "#f5f5f7",
-  wrapup: "#86868b",
+  intro: "#6e6e73",
+  review: "#6e6e73",
+  break: "#e8e8ed",
+  wrapup: "#6e6e73",
+};
+
+const TYPE_LABELS: Record<string, string> = {
+  intro: "도입",
+  concept: "개념",
+  practice: "실습",
+  review: "복습",
+  break: "쉬는시간",
+  wrapup: "마무리",
 };
 
 export default function TimelineBar({ sections, selectedIndex, onSelect }: TimelineBarProps) {
   const totalDuration = useMemo(() => {
-    if (sections.length === 0) return 1;
-    const first = timeToSeconds(sections[0].start);
-    const last = timeToSeconds(sections[sections.length - 1].end);
-    return last - first || 1;
+    if (!sections.length) return 1;
+    return timeToSeconds(sections[sections.length - 1].end) - timeToSeconds(sections[0].start) || 1;
   }, [sections]);
 
-  const originSeconds = useMemo(
-    () => (sections.length > 0 ? timeToSeconds(sections[0].start) : 0),
-    [sections],
-  );
+  const originSec = useMemo(() => (sections.length ? timeToSeconds(sections[0].start) : 0), [sections]);
 
-  // Build hour markers for the time axis
-  const timeMarkers = useMemo(() => {
-    if (sections.length === 0) return [];
-    const endSec = originSeconds + totalDuration;
-    const markers: string[] = [];
-    // start from next full hour after originSeconds, or originSeconds itself if it's exact
-    let cursor = Math.ceil(originSeconds / 3600) * 3600;
-    if (cursor > originSeconds) {
-      // add the origin as "0:00"-style
-      const oh = Math.floor(originSeconds / 3600);
-      const om = Math.floor((originSeconds % 3600) / 60);
-      markers.push(`${oh}:${String(om).padStart(2, "0")}`);
-    }
-    while (cursor <= endSec) {
-      const h = Math.floor(cursor / 3600);
-      const m = Math.floor((cursor % 3600) / 60);
-      markers.push(`${h}:${String(m).padStart(2, "0")}`);
-      cursor += 3600;
-    }
-    return markers;
-  }, [originSeconds, totalDuration, sections.length]);
-
-  // Minimum width in percentage to show label text
-  const MIN_LABEL_WIDTH_PCT = 8;
+  if (!sections.length) return null;
 
   return (
-    <div className="timeline-container">
-      {/* Continuous strip */}
-      <div className="timeline-strip">
-        {sections.map((sec, idx) => {
-          const startSec = timeToSeconds(sec.start) - originSeconds;
-          const endSec = timeToSeconds(sec.end) - originSeconds;
-          const widthPct = ((endSec - startSec) / totalDuration) * 100;
-          const color = TYPE_COLORS[sec.type] ?? "#86868b";
-          const isBreak = sec.type === "break";
-          const textColor = isBreak ? "#86868b" : "rgba(255,255,255,0.85)";
-
+    <div className="tl-wrap">
+      {/* 색상 띠 */}
+      <div className="tl-strip">
+        {sections.map((sec, i) => {
+          const w = ((timeToSeconds(sec.end) - timeToSeconds(sec.start)) / totalDuration) * 100;
+          const bg = TYPE_COLORS[sec.type] ?? "#6e6e73";
+          const selected = selectedIndex === i;
           return (
             <div
-              key={idx}
-              className={`timeline-section ${selectedIndex === idx ? "timeline-section-selected" : ""}`}
-              style={{
-                width: `${widthPct}%`,
-                backgroundColor: color,
-                color: textColor,
-              }}
-              onClick={() => onSelect(idx)}
-              title={`${sec.start}~${sec.end} ${sec.label}`}
+              key={i}
+              className={`tl-block${selected ? " tl-selected" : ""}`}
+              style={{ width: `${w}%`, backgroundColor: bg }}
+              onClick={() => onSelect(i)}
+              title={`${sec.start.slice(0, 5)}~${sec.end.slice(0, 5)} ${sec.label}`}
+            />
+          );
+        })}
+      </div>
+
+      {/* 라벨 행 — 항상 표시 */}
+      <div className="tl-labels">
+        {sections.map((sec, i) => {
+          const w = ((timeToSeconds(sec.end) - timeToSeconds(sec.start)) / totalDuration) * 100;
+          const selected = selectedIndex === i;
+          const isBreak = sec.type === "break";
+          return (
+            <div
+              key={i}
+              className={`tl-label${selected ? " tl-label-selected" : ""}`}
+              style={{ width: `${w}%` }}
+              onClick={() => onSelect(i)}
             >
-              {widthPct >= MIN_LABEL_WIDTH_PCT ? sec.label : ""}
+              <span className="tl-label-type">{TYPE_LABELS[sec.type] ?? sec.type}</span>
+              {!isBreak && w > 5 && <span className="tl-label-text">{sec.label}</span>}
             </div>
           );
         })}
       </div>
 
-      {/* Time axis */}
-      <div className="timeline-times">
-        {timeMarkers.map((t, i) => (
-          <span key={i}>{t}</span>
+      {/* 시간축 */}
+      <div className="tl-times">
+        {sections.filter((_, i) => i % Math.max(1, Math.floor(sections.length / 6)) === 0 || i === sections.length - 1).map((sec, i) => (
+          <span key={i}>{sec.start.slice(0, 5)}</span>
         ))}
       </div>
     </div>
