@@ -95,9 +95,12 @@ def preprocess(state: EvaluationState) -> dict:
     # 청킹
     lines = parse_transcript(raw_text)
     window_min = config.get("chunk_duration_minutes", 30)
-    overlap_min = config.get("chunk_overlap_minutes", 5)
-    chunks = chunk_by_time_window(lines, window_minutes=window_min, overlap_minutes=overlap_min)
-    logger.info("Chunked into %d chunks (window=%dmin, overlap=%dmin)", len(chunks), window_min, overlap_min)
+    hop_min = config.get("chunk_hop_minutes")
+    if hop_min is None:
+        overlap_min = config.get("chunk_overlap_minutes", 5)
+        hop_min = window_min - overlap_min
+    chunks = chunk_by_time_window(lines, window_minutes=window_min, hop_minutes=hop_min)
+    logger.info("Chunked into %d chunks (window=%dmin, hop=%dmin)", len(chunks), window_min, hop_min)
 
     return {
         "raw_text": raw_text,

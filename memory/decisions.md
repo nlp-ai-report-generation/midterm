@@ -265,3 +265,17 @@
 - 결정: 현재 공개본의 live frame은 진짜 timestep cortical raw가 아니라, transcript line timestamp에 세그먼트 평균 반응을 매핑한 fallback으로 운영한다.
 - 이유: 현재 zip 산출물에는 per-timestep cortical frame 배열이 저장되어 있지 않아, line 단위 실시간 UX를 바로 만들려면 세그먼트 평균 반응을 활용한 중간 계약이 필요했다.
 - 결과: `scripts/build_simulation_playback_assets.py`가 `summary_visual`, `live_assets`, `segment.playback`, `transcript.relative_seconds/frame_index`를 생성한다. 이후 코랩 산출물에 실제 timestep raw가 추가되면 같은 프론트 계약으로 대체할 예정이다.
+
+## 2026-03-31
+
+### 청킹 파라미터는 `hop_minutes`로 전환하되 `overlap_minutes` 하위 호환을 유지
+
+- 결정: 청킹 함수의 기본 인터페이스는 `hop_minutes`를 사용하되, 기존 호출부/테스트에서 쓰던 `overlap_minutes`도 계속 허용한다.
+- 이유: 최근 hop 실험 기능 추가로 용어를 hop 중심으로 통일할 필요가 있었지만, 기존 코드와 테스트가 즉시 깨지는 회귀를 막아야 했다.
+- 결과: `src/chunking/strategy.py`에서 `overlap_minutes`를 받으면 `hop_minutes = window - overlap`으로 변환하도록 처리했고, `src/graph/nodes/preprocessor.py`와 `src/experiment/config.py`도 구설정 JSON을 자동 변환하도록 맞췄다.
+
+### window 길이 실험은 `hop=window*0.5` 고정 + 필수 리포트 섹션을 강제한다
+
+- 결정: window 비교 실험은 30/60/120분 조건과 각각의 hop 15/30/60분(비율 50%)으로 고정하고, 보고서에는 `사용 데이터`와 `실험 설정` 섹션을 반드시 포함한다.
+- 이유: 실험 재현성을 높이고, 평가자/강사가 결과 해석 전에 어떤 데이터와 설정으로 나온 결과인지 즉시 확인할 수 있어야 한다.
+- 결과: `scripts/run_window_experiment.py`를 추가해 파일럿 3강의 고정 실행/비교 흐름을 만들었고, `src/experiment/window_comparator.py`에서 Markdown/JSON 리포트 생성 시 `사용 데이터`, `실험 설정`, `관찰된 사실`, `해석`, `개선 제안` 섹션을 기본 구조로 출력한다.

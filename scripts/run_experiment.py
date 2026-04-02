@@ -3,6 +3,8 @@
 Usage:
     python scripts/run_experiment.py --config experiments/my_config.json
     python scripts/run_experiment.py --compare exp_id_1 exp_id_2
+    python scripts/run_experiment.py --hop-compare exp_id_1 exp_id_2 exp_id_3
+    python scripts/run_experiment.py --window-compare exp_id_1 exp_id_2 exp_id_3
 """
 
 from __future__ import annotations
@@ -17,6 +19,8 @@ sys.path.insert(0, str(Path(__file__).parents[1]))
 
 from src.experiment.comparator import compare_experiments, compute_reliability_metrics
 from src.experiment.config import ExperimentConfig
+from src.experiment.hop_comparator import compare_hop_experiments
+from src.experiment.window_comparator import compare_window_experiments
 from src.experiment.runner import EXPERIMENTS_DIR, run_experiment
 
 logging.basicConfig(
@@ -56,14 +60,46 @@ def compare(exp_ids: list[str]) -> None:
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
+def hop_compare(exp_ids: list[str]) -> None:
+    """Hop size 실험 결과 비교."""
+    dirs = [EXPERIMENTS_DIR / eid for eid in exp_ids]
+    missing = [d for d in dirs if not d.exists()]
+    if missing:
+        print(f"결과 디렉토리 없음: {missing}")
+        return
+
+    report_path = compare_hop_experiments(dirs)
+    print(f"\n=== Hop Size 비교 리포트 생성 ===")
+    print(f"리포트: {report_path}")
+
+
+def window_compare(exp_ids: list[str]) -> None:
+    """Window size 실험 결과 비교."""
+    dirs = [EXPERIMENTS_DIR / eid for eid in exp_ids]
+    missing = [d for d in dirs if not d.exists()]
+    if missing:
+        print(f"결과 디렉토리 없음: {missing}")
+        return
+
+    report_path = compare_window_experiments(dirs)
+    print(f"\n=== Window Size 비교 리포트 생성 ===")
+    print(f"리포트: {report_path}")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="A/B 실험 실행 및 비교")
     parser.add_argument("--config", help="실험 설정 JSON 경로")
     parser.add_argument("--compare", nargs="+", help="비교할 실험 ID들")
+    parser.add_argument("--hop-compare", nargs="+", help="Hop size 실험 비교 (2~3개 실험 ID)")
+    parser.add_argument("--window-compare", nargs="+", help="Window size 실험 비교 (2~3개 실험 ID)")
     args = parser.parse_args()
 
     if args.config:
         run_from_config(args.config)
+    elif args.hop_compare:
+        hop_compare(args.hop_compare)
+    elif args.window_compare:
+        window_compare(args.window_compare)
     elif args.compare:
         compare(args.compare)
     else:

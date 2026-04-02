@@ -25,7 +25,7 @@ class ExperimentConfig:
 
     # 청킹
     chunk_duration_minutes: int = 30
-    chunk_overlap_minutes: int = 5
+    chunk_hop_minutes: int = 25
 
     # 평가
     harness_dir: str = ""  # 빈 문자열이면 기본 하네스 디렉토리
@@ -50,7 +50,7 @@ class ExperimentConfig:
             "model": self.model,
             "temperature": self.temperature,
             "chunk_duration_minutes": self.chunk_duration_minutes,
-            "chunk_overlap_minutes": self.chunk_overlap_minutes,
+            "chunk_hop_minutes": self.chunk_hop_minutes,
             "harness_dir": self.harness_dir,
             "num_passes": self.num_passes,
             "use_calibrator": self.use_calibrator,
@@ -62,4 +62,10 @@ class ExperimentConfig:
     @classmethod
     def from_dict(cls, data: dict) -> ExperimentConfig:
         """딕셔너리에서 ExperimentConfig 생성."""
-        return cls(**{k: v for k, v in data.items() if k in cls.__dataclass_fields__})
+        normalized = dict(data)
+        if "chunk_hop_minutes" not in normalized and "chunk_overlap_minutes" in normalized:
+            window = int(normalized.get("chunk_duration_minutes", 30))
+            overlap = int(normalized["chunk_overlap_minutes"])
+            normalized["chunk_hop_minutes"] = window - overlap
+
+        return cls(**{k: v for k, v in normalized.items() if k in cls.__dataclass_fields__})

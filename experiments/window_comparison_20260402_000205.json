@@ -1,0 +1,2044 @@
+{
+  "generated_at": "2026-04-02T00:02:05.976695",
+  "used_data": {
+    "file_names": [
+      "2026-02-02_kdt-backendj-21th.txt",
+      "2026-02-09_kdt-backendj-21th.txt",
+      "2026-02-24_kdt-backendj-21th.txt"
+    ],
+    "lecture_dates": [
+      "2026-02-02",
+      "2026-02-09",
+      "2026-02-24"
+    ],
+    "lecture_count": 3
+  },
+  "experiment_settings": [
+    {
+      "experiment_id": "29e0a12ac77e",
+      "name": "window_30m_h15m",
+      "model": "gpt-4o-mini",
+      "temperature": 0.1,
+      "chunk_duration_minutes": 30,
+      "chunk_hop_minutes": 15,
+      "hop_ratio": 0.5,
+      "use_calibrator": false,
+      "num_passes": 1
+    },
+    {
+      "experiment_id": "9f567ab56849",
+      "name": "window_60m_h30m",
+      "model": "gpt-4o-mini",
+      "temperature": 0.1,
+      "chunk_duration_minutes": 60,
+      "chunk_hop_minutes": 30,
+      "hop_ratio": 0.5,
+      "use_calibrator": false,
+      "num_passes": 1
+    },
+    {
+      "experiment_id": "9c87d57126bc",
+      "name": "window_120m_h60m",
+      "model": "gpt-4o-mini",
+      "temperature": 0.1,
+      "chunk_duration_minutes": 120,
+      "chunk_hop_minutes": 60,
+      "hop_ratio": 0.5,
+      "use_calibrator": false,
+      "num_passes": 1
+    }
+  ],
+  "overall_comparison": [
+    {
+      "lecture_date": "2026-02-02",
+      "scores": [
+        {
+          "experiment_id": "29e0a12ac77e",
+          "name": "window_30m_h15m",
+          "window_minutes": 30,
+          "hop_minutes": 15,
+          "average_score": 3.111
+        },
+        {
+          "experiment_id": "9f567ab56849",
+          "name": "window_60m_h30m",
+          "window_minutes": 60,
+          "hop_minutes": 30,
+          "average_score": 3.178
+        },
+        {
+          "experiment_id": "9c87d57126bc",
+          "name": "window_120m_h60m",
+          "window_minutes": 120,
+          "hop_minutes": 60,
+          "average_score": 3.667
+        }
+      ],
+      "delta": 0.556
+    },
+    {
+      "lecture_date": "2026-02-09",
+      "scores": [
+        {
+          "experiment_id": "29e0a12ac77e",
+          "name": "window_30m_h15m",
+          "window_minutes": 30,
+          "hop_minutes": 15,
+          "average_score": 3.333
+        },
+        {
+          "experiment_id": "9f567ab56849",
+          "name": "window_60m_h30m",
+          "window_minutes": 60,
+          "hop_minutes": 30,
+          "average_score": 3.578
+        },
+        {
+          "experiment_id": "9c87d57126bc",
+          "name": "window_120m_h60m",
+          "window_minutes": 120,
+          "hop_minutes": 60,
+          "average_score": 3.511
+        }
+      ],
+      "delta": 0.244
+    },
+    {
+      "lecture_date": "2026-02-24",
+      "scores": [
+        {
+          "experiment_id": "29e0a12ac77e",
+          "name": "window_30m_h15m",
+          "window_minutes": 30,
+          "hop_minutes": 15,
+          "average_score": 3.111
+        },
+        {
+          "experiment_id": "9f567ab56849",
+          "name": "window_60m_h30m",
+          "window_minutes": 60,
+          "hop_minutes": 30,
+          "average_score": 3.444
+        },
+        {
+          "experiment_id": "9c87d57126bc",
+          "name": "window_120m_h60m",
+          "window_minutes": 120,
+          "hop_minutes": 60,
+          "average_score": 3.467
+        }
+      ],
+      "delta": 0.356
+    }
+  ],
+  "category_comparison": {
+    "2026-02-02": [
+      {
+        "category": "1. 언어 표현 품질",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.286
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.286
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.286
+          }
+        ],
+        "delta": 0.0
+      },
+      {
+        "category": "2. 강의 도입 및 구조",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.273
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.545
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.727
+          }
+        ],
+        "delta": 0.455
+      },
+      {
+        "category": "3. 개념 설명 명확성",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.4
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 2.4
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.2
+          }
+        ],
+        "delta": 0.8
+      },
+      {
+        "category": "4. 예시 및 실습 연계",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.5
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.5
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.5
+          }
+        ],
+        "delta": 1.0
+      },
+      {
+        "category": "5. 수강생 상호작용",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.273
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.273
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.818
+          }
+        ],
+        "delta": 0.545
+      }
+    ],
+    "2026-02-09": [
+      {
+        "category": "1. 언어 표현 품질",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.286
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.286
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 2.857
+          }
+        ],
+        "delta": 0.429
+      },
+      {
+        "category": "2. 강의 도입 및 구조",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.182
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.364
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.636
+          }
+        ],
+        "delta": 0.455
+      },
+      {
+        "category": "3. 개념 설명 명확성",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.9
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.2
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.2
+          }
+        ],
+        "delta": 0.3
+      },
+      {
+        "category": "4. 예시 및 실습 연계",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.5
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.5
+      },
+      {
+        "category": "5. 수강생 상호작용",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.545
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.818
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.818
+          }
+        ],
+        "delta": 0.273
+      }
+    ],
+    "2026-02-24": [
+      {
+        "category": "1. 언어 표현 품질",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.286
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.286
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.571
+          }
+        ],
+        "delta": 0.286
+      },
+      {
+        "category": "2. 강의 도입 및 구조",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.727
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.273
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.182
+          }
+        ],
+        "delta": 0.545
+      },
+      {
+        "category": "3. 개념 설명 명확성",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.7
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 2.7
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 2.7
+          }
+        ],
+        "delta": 0.0
+      },
+      {
+        "category": "4. 예시 및 실습 연계",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.5
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.5
+          }
+        ],
+        "delta": 0.5
+      },
+      {
+        "category": "5. 수강생 상호작용",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.273
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.818
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.818
+          }
+        ],
+        "delta": 0.545
+      }
+    ]
+  },
+  "item_sensitivity": {
+    "2026-02-02": [
+      {
+        "item_id": "2.3",
+        "item_name": "설명 순서",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "2.4",
+        "item_name": "핵심 내용 강조",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "2.5",
+        "item_name": "마무리 요약",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "LOW",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 1.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 2.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "3.1",
+        "item_name": "개념 정의",
+        "category": "3. 개념 설명 명확성",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "3.2",
+        "item_name": "비유 및 예시 활용",
+        "category": "3. 개념 설명 명확성",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "3.4",
+        "item_name": "발화 속도 적절성",
+        "category": "3. 개념 설명 명확성",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "4.1",
+        "item_name": "예시 적절성",
+        "category": "4. 예시 및 실습 연계",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "4.2",
+        "item_name": "실습 연계",
+        "category": "4. 예시 및 실습 연계",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 5.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "5.3",
+        "item_name": "참여 유도",
+        "category": "5. 수강생 상호작용",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "5.4",
+        "item_name": "질문 응답 충분성",
+        "category": "5. 수강생 상호작용",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "1.1",
+        "item_name": "불필요한 반복 표현",
+        "category": "1. 언어 표현 품질",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "1.2",
+        "item_name": "발화 완결성",
+        "category": "1. 언어 표현 품질",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "1.3",
+        "item_name": "언어 일관성",
+        "category": "1. 언어 표현 품질",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "2.1",
+        "item_name": "학습 목표 안내",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "2.2",
+        "item_name": "전날 복습 연계",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 5.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 5.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 5.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "3.3",
+        "item_name": "선행 개념 확인",
+        "category": "3. 개념 설명 명확성",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "5.1",
+        "item_name": "오류 대응",
+        "category": "5. 수강생 상호작용",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "5.2",
+        "item_name": "이해 확인 질문",
+        "category": "5. 수강생 상호작용",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      }
+    ],
+    "2026-02-09": [
+      {
+        "item_id": "1.1",
+        "item_name": "불필요한 반복 표현",
+        "category": "1. 언어 표현 품질",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 2.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "2.2",
+        "item_name": "전날 복습 연계",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 5.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "2.3",
+        "item_name": "설명 순서",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "3.1",
+        "item_name": "개념 정의",
+        "category": "3. 개념 설명 명확성",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "4.2",
+        "item_name": "실습 연계",
+        "category": "4. 예시 및 실습 연계",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 5.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "5.3",
+        "item_name": "참여 유도",
+        "category": "5. 수강생 상호작용",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "1.2",
+        "item_name": "발화 완결성",
+        "category": "1. 언어 표현 품질",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "1.3",
+        "item_name": "언어 일관성",
+        "category": "1. 언어 표현 품질",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "2.1",
+        "item_name": "학습 목표 안내",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "2.4",
+        "item_name": "핵심 내용 강조",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "2.5",
+        "item_name": "마무리 요약",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "LOW",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 1.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 1.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 1.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "3.2",
+        "item_name": "비유 및 예시 활용",
+        "category": "3. 개념 설명 명확성",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "3.3",
+        "item_name": "선행 개념 확인",
+        "category": "3. 개념 설명 명확성",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "3.4",
+        "item_name": "발화 속도 적절성",
+        "category": "3. 개념 설명 명확성",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "4.1",
+        "item_name": "예시 적절성",
+        "category": "4. 예시 및 실습 연계",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "5.1",
+        "item_name": "오류 대응",
+        "category": "5. 수강생 상호작용",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "5.2",
+        "item_name": "이해 확인 질문",
+        "category": "5. 수강생 상호작용",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "5.4",
+        "item_name": "질문 응답 충분성",
+        "category": "5. 수강생 상호작용",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      }
+    ],
+    "2026-02-24": [
+      {
+        "item_id": "1.2",
+        "item_name": "발화 완결성",
+        "category": "1. 언어 표현 품질",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "2.1",
+        "item_name": "학습 목표 안내",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "2.2",
+        "item_name": "전날 복습 연계",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 5.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "2.3",
+        "item_name": "설명 순서",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "4.2",
+        "item_name": "실습 연계",
+        "category": "4. 예시 및 실습 연계",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 5.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 5.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "5.3",
+        "item_name": "참여 유도",
+        "category": "5. 수강생 상호작용",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "5.4",
+        "item_name": "질문 응답 충분성",
+        "category": "5. 수강생 상호작용",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 1.0,
+        "sensitivity": "medium"
+      },
+      {
+        "item_id": "1.1",
+        "item_name": "불필요한 반복 표현",
+        "category": "1. 언어 표현 품질",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "1.3",
+        "item_name": "언어 일관성",
+        "category": "1. 언어 표현 품질",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "2.4",
+        "item_name": "핵심 내용 강조",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 2.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "2.5",
+        "item_name": "마무리 요약",
+        "category": "2. 강의 도입 및 구조",
+        "weight": "LOW",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 1.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 1.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 1.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "3.1",
+        "item_name": "개념 정의",
+        "category": "3. 개념 설명 명확성",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 2.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 2.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "3.2",
+        "item_name": "비유 및 예시 활용",
+        "category": "3. 개념 설명 명확성",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "3.3",
+        "item_name": "선행 개념 확인",
+        "category": "3. 개념 설명 명확성",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "3.4",
+        "item_name": "발화 속도 적절성",
+        "category": "3. 개념 설명 명확성",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "4.1",
+        "item_name": "예시 적절성",
+        "category": "4. 예시 및 실습 연계",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "5.1",
+        "item_name": "오류 대응",
+        "category": "5. 수강생 상호작용",
+        "weight": "MEDIUM",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 3.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 3.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      },
+      {
+        "item_id": "5.2",
+        "item_name": "이해 확인 질문",
+        "category": "5. 수강생 상호작용",
+        "weight": "HIGH",
+        "scores": [
+          {
+            "experiment_id": "29e0a12ac77e",
+            "name": "window_30m_h15m",
+            "window_minutes": 30,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9f567ab56849",
+            "name": "window_60m_h30m",
+            "window_minutes": 60,
+            "score": 4.0
+          },
+          {
+            "experiment_id": "9c87d57126bc",
+            "name": "window_120m_h60m",
+            "window_minutes": 120,
+            "score": 4.0
+          }
+        ],
+        "delta": 0.0,
+        "sensitivity": "low"
+      }
+    ]
+  },
+  "insights": {
+    "avg_overall_delta": 0.385,
+    "top_category_deltas": [
+      {
+        "category": "4. 예시 및 실습 연계",
+        "avg_delta": 0.667
+      },
+      {
+        "category": "2. 강의 도입 및 구조",
+        "avg_delta": 0.485
+      },
+      {
+        "category": "5. 수강생 상호작용",
+        "avg_delta": 0.454
+      }
+    ],
+    "item_sensitivity_count": {
+      "high": 0,
+      "medium": 23,
+      "low": 31
+    }
+  }
+}
