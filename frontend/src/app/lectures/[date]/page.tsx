@@ -29,6 +29,7 @@ import type { EvaluationResult, CategoryResult, ItemScore } from "@/types/evalua
 import type { SimulationResult, TranscriptBrowserData } from "@/types/simulation";
 
 const SimulationView = lazy(() => import("@/components/simulation/SimulationView"));
+const SimExplainerPopup = lazy(() => import("@/components/simulation/SimExplainerPopup"));
 
 export default function LectureDetailPage() {
   const params = useParams();
@@ -44,6 +45,9 @@ export default function LectureDetailPage() {
   const [sections, setSections] = useState<Section[]>([]);
   const [transcript, setTranscript] = useState<TranscriptBrowserData | null>(null);
   const [selectedSectionIdx, setSelectedSectionIdx] = useState<number | null>(null);
+  const [showExplainer, setShowExplainer] = useState(() => {
+    try { return !localStorage.getItem("sim-explainer-dismissed"); } catch { return true; }
+  });
 
   useEffect(() => {
     if (!date) return;
@@ -399,9 +403,22 @@ export default function LectureDetailPage() {
 
       {/* ─── Tab: 시뮬레이션 ─── */}
       {tab === "sim" && (
-        <Suspense fallback={<div className="flex h-64 items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>}>
-          {simLoaded && <SimulationView date={date} />}
-        </Suspense>
+        <>
+          {showExplainer && (
+            <Suspense fallback={null}>
+              <SimExplainerPopup
+                onClose={() => setShowExplainer(false)}
+                onDismiss={() => {
+                  try { localStorage.setItem("sim-explainer-dismissed", "1"); } catch {}
+                  setShowExplainer(false);
+                }}
+              />
+            </Suspense>
+          )}
+          <Suspense fallback={<div className="flex h-64 items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>}>
+            {simLoaded && <SimulationView date={date} />}
+          </Suspense>
+        </>
       )}
 
       {/* ─── Tab: 리포트 ─── */}
