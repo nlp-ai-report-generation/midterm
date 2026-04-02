@@ -27,12 +27,12 @@ function fmtTime(t: string): string {
 }
 
 const TYPE_STYLES: Record<string, { bg: string; color: string }> = {
-  concept:  { bg: "#f5f5f7", color: "#1d1d1f" },
-  practice: { bg: "#FFF4EB", color: "#FF6B00" },
-  intro:    { bg: "#f0f0f5", color: "#6e6e73" },
-  review:   { bg: "#f0f0f5", color: "#6e6e73" },
-  break:    { bg: "#fff",    color: "#d2d2d7" },
-  wrapup:   { bg: "#f0f0f5", color: "#6e6e73" },
+  concept:  { bg: "#e8e8ed", color: "#1d1d1f" },
+  practice: { bg: "#FFE0C2", color: "#CC5500" },
+  intro:    { bg: "#d8d8dd", color: "#515154" },
+  review:   { bg: "#d8d8dd", color: "#515154" },
+  break:    { bg: "#f5f5f7", color: "#b0b0b5" },
+  wrapup:   { bg: "#d8d8dd", color: "#515154" },
 };
 
 const CATEGORY_FILTERS = [
@@ -105,9 +105,9 @@ export default function TimelineBar({ sections, selectedIndex, onSelect, evaluat
       {/* 범례 + 카테고리 필터 */}
       <div className="tl-legend">
         <div className="tl-legend-colors">
-          <span className="tl-legend-item"><span className="tl-legend-dot" style={{ background: "#f5f5f7", border: "1px solid #e8e8ed" }} /> 개념설명</span>
-          <span className="tl-legend-item"><span className="tl-legend-dot" style={{ background: "#FFF4EB" }} /> 실습</span>
-          <span className="tl-legend-item"><span className="tl-legend-dot" style={{ background: "#f0f0f5" }} /> 도입/복습/마무리</span>
+          <span className="tl-legend-item"><span className="tl-legend-dot" style={{ background: "#e8e8ed" }} /> 개념설명</span>
+          <span className="tl-legend-item"><span className="tl-legend-dot" style={{ background: "#FFE0C2" }} /> 실습</span>
+          <span className="tl-legend-item"><span className="tl-legend-dot" style={{ background: "#d8d8dd" }} /> 도입/복습/마무리</span>
         </div>
         <div className="tl-filters">
           {CATEGORY_FILTERS.map((f) => (
@@ -124,27 +124,27 @@ export default function TimelineBar({ sections, selectedIndex, onSelect, evaluat
 
       {/* 점수 추이 차트 (같은 시간축) */}
       <div className="tl-chart">
-        <svg width="100%" height="48" preserveAspectRatio="none" viewBox={`0 0 ${totalDuration} 50`}>
+        <svg width="100%" height="96" preserveAspectRatio="none" viewBox={`0 0 ${totalDuration} 100`}>
           {/* 배경 기준선 */}
-          <line x1={0} y1={40} x2={totalDuration} y2={40} stroke="#e8e8ed" strokeWidth={0.5} />
-          <line x1={0} y1={20} x2={totalDuration} y2={20} stroke="#f5f5f7" strokeWidth={0.5} />
+          <line x1={0} y1={80} x2={totalDuration} y2={80} stroke="#e8e8ed" strokeWidth={0.8} />
+          <line x1={0} y1={40} x2={totalDuration} y2={40} stroke="#f5f5f7" strokeWidth={0.5} />
           {/* 점수 바 */}
           {sections.map((sec, i) => {
             if (sec.type === "break" || scoreTimeline[i] === 0) return null;
             const x = secData[i].startSec - secData[0].startSec;
             const w = secData[i].endSec - secData[i].startSec;
-            const h = (scoreTimeline[i] / maxScore) * 44;
+            const h = (scoreTimeline[i] / maxScore) * 90;
             const color = scoreTimeline[i] >= 4 ? "#34C759" : scoreTimeline[i] >= 3 ? "#FF9500" : "#FF3B30";
             return (
               <rect
                 key={i}
                 x={x}
-                y={48 - h}
+                y={96 - h}
                 width={w}
                 height={h}
                 rx={2}
                 fill={selectedIndex === i ? "#FF6B00" : color}
-                opacity={selectedIndex === i ? 1 : 0.5}
+                opacity={selectedIndex === i ? 1 : 0.7}
                 style={{ cursor: "pointer" }}
                 onClick={() => onSelect(i)}
               />

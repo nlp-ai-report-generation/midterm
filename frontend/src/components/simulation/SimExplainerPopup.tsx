@@ -1,6 +1,5 @@
-import { lazy, Suspense, useState } from "react";
-
-const BrainCanvas = lazy(() => import("@/components/simulation/BrainCanvas"));
+import { useState } from "react";
+import BrainDiagram from "./BrainDiagram";
 
 interface SimExplainerPopupProps {
   onClose: () => void;
@@ -31,31 +30,9 @@ export default function SimExplainerPopup({ onClose, onDismiss }: SimExplainerPo
           아래 지표를 클릭하면 관련 뇌 영역이 활성화됩니다.
         </p>
 
-        {/* 3D Brain — 선택한 지표에 따라 밝기 변화 */}
-        <div style={{ height: 200, marginBottom: 16, borderRadius: 12, overflow: "hidden", background: "#f5f5f7", position: "relative" }}>
-          <Suspense
-            fallback={
-              <div style={{ height: "100%", display: "grid", placeItems: "center" }}>
-                <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-              </div>
-            }
-          >
-            <BrainCanvas
-              meshUrl="simulations/brain-mesh.glb"
-              intensity={metric ? metric.intensity : 0.08}
-              changeBoost={metric ? metric.changeBoost : 0}
-            />
-          </Suspense>
-          {/* 선택된 영역 라벨 오버레이 */}
-          {metric && (
-            <div style={{
-              position: "absolute", bottom: 12, left: "50%", transform: "translateX(-50%)",
-              background: "rgba(0,0,0,0.7)", color: "#fff", padding: "4px 14px",
-              borderRadius: 20, fontSize: 13, fontWeight: 500, whiteSpace: "nowrap",
-            }}>
-              {metric.region}
-            </div>
-          )}
+        {/* 2D 뇌 다이어그램 — 클릭한 지표의 영역이 하이라이트 */}
+        <div style={{ height: 200, marginBottom: 16, display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <BrainDiagram highlighted={selected} />
         </div>
 
         {/* 지표 목록 — 클릭 가능 */}

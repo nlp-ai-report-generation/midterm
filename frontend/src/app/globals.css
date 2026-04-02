@@ -2259,7 +2259,7 @@ body {
 .tl-filter-on:hover { background: #1d1d1f; }
 
 /* 점수 추이 차트 */
-.tl-chart { position: relative; height: 48px; }
+.tl-chart { position: relative; height: 96px; }
 .tl-chart svg { display: block; }
 .tl-chart-labels { position: absolute; right: -24px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; font-size: 8px; color: #d2d2d7; }
 
