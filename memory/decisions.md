@@ -2,6 +2,12 @@
 
 ## 2026-04-03
 
+### `/presentation`은 raw 덱 iframe이 아니라 공개 소개 랜딩으로 운영한다
+
+- 결정: 발표 공개 경로 `/presentation`은 발표 HTML을 바로 임베드하는 페이지 대신, 프로젝트 소개와 발표 흐름을 설명하는 공개 랜딩으로 두고, 발표 덱과 Notion 보고서 샘플은 그 안의 보조 CTA로 연결한다.
+- 이유: 사용자는 기존 "중간발표 자료 보기"보다 발표용 맥락을 먼저 설명하는 소개 페이지를 원했고, 심사자도 바로 덱보다 문제 정의, 신뢰도, 시뮬레이션 가치, 서비스 입구를 한 화면에서 보는 편이 이해가 빠르다.
+- 결과: `frontend/src/pages/PresentationPage.tsx`는 Apple 레퍼런스 기반 소개 페이지로 정리하고, 포인트 색만 오렌지로 바꾸며, 공개 덱은 `frontend/public/presentation/index.html`로 계속 유지한다.
+
 ### evaluation JSON은 non-break 섹션마다 최소 1개 evidence를 남기도록 다시 쓴다
 
 - 결정: `frontend/public/data/evaluations/YYYY-MM-DD.json`을 손으로 재평가할 때는 `break`를 제외한 각 섹션마다 최소 1개 이상의 evidence timestamp가 매핑되도록 채운다.

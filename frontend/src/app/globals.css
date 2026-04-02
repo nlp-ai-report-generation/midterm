@@ -3014,6 +3014,27 @@ body {
   color: #fff;
 }
 
+.presentation-inline-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.43;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.presentation-inline-link:hover {
+  color: #fff;
+}
+
+.presentation-section-light .presentation-inline-link {
+  color: rgba(29, 29, 31, 0.72);
+}
+
+.presentation-section-light .presentation-inline-link:hover {
+  color: #1d1d1f;
+}
+
 .presentation-topbar-actions {
   display: flex;
   align-items: center;
@@ -3361,7 +3382,7 @@ body {
 .presentation-bar-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #ff9a4d 0%, #ff6b00 100%);
+  background: var(--primary);
 }
 
 .presentation-experiment-grid {
@@ -3461,6 +3482,17 @@ body {
 .presentation-closing-copy p {
   margin-top: 16px;
   color: rgba(29, 29, 31, 0.72);
+}
+
+.presentation-limit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+  padding-left: 18px;
+  color: rgba(29, 29, 31, 0.68);
+  font-size: 15px;
+  line-height: 1.47;
 }
 
 .presentation-fade-up {

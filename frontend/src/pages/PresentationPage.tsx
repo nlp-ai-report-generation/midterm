@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 function withBasePath(baseUrl: string, path: string) {
@@ -90,6 +91,21 @@ const EXPERIMENTS = [
   },
 ];
 
+const SAMPLE_REPORTS = [
+  {
+    title: "2026-02-02 Java I/O",
+    desc: "버퍼드 리더/라이터 설명과 파일 방문자 패턴 구간을 비교해서 설명 속도와 실습 전환을 같이 짚었어요.",
+  },
+  {
+    title: "2026-02-09 Front-End",
+    desc: "문자열 함수 실습은 반응이 좋았고, INFORMATION_SCHEMA 설명 구간은 시각 보조가 더 필요하다는 흐름으로 정리했어요.",
+  },
+  {
+    title: "2026-02-24 MySQL",
+    desc: "트랜잭션 롤백 실습은 강점으로, 파티션 유형 설명은 압축이 심한 구간으로 읽어 마무리 요약 부족까지 연결했어요.",
+  },
+];
+
 const SCREENS = [
   {
     title: "Dashboard",
@@ -119,9 +135,16 @@ const REPORT_POINTS = [
   "시뮬레이션은 구간별 반응과 설명 리듬을 같이 보여줘요.",
 ];
 
+const LIMITS = [
+  "텍스트 기반 평가라 제스처와 표정 같은 비언어 신호는 아직 반영하지 못해요.",
+  "TRIBE v2 시뮬레이션은 현재 3개 강의를 중심으로 실데이터 검증을 진행했어요.",
+  "한국어 강의 전반에 대한 외부 검증은 앞으로 더 쌓아야 해요.",
+];
+
 export default function PresentationPage() {
   const baseUrl = import.meta.env.BASE_URL;
   const deckSrc = withBasePath(baseUrl, "presentation/index.html");
+  const notionSrc = "https://www.notion.so/syjin1999/AI-33626a79dcd3812abf6ceac2397e2fb3";
 
   return (
     <div className="presentation-shell">
@@ -130,11 +153,12 @@ export default function PresentationPage() {
           AI Lecture Report
         </Link>
         <div className="presentation-topbar-actions">
-          <Link to="/" className="btn-secondary">
-            서비스 입구 보기
-          </Link>
+          <a href={notionSrc} target="_blank" rel="noreferrer" className="presentation-inline-link">
+            보고서 샘플
+            <ArrowUpRight size={14} />
+          </a>
           <a href={deckSrc} target="_blank" rel="noreferrer" className="btn-primary">
-            발표 덱 열기
+            공개 발표 덱 열기
           </a>
         </div>
       </div>
@@ -145,7 +169,9 @@ export default function PresentationPage() {
           <h1>
             강의 피드백을
             <br />
-            점수에서 근거로 바꿔요
+            점수에서 근거로
+            <br />
+            바꿔요
           </h1>
           <p className="presentation-hero-body">
             AI가 강의 원문을 처음부터 끝까지 읽고 18개 항목으로 평가해요.
@@ -154,10 +180,13 @@ export default function PresentationPage() {
           </p>
           <div className="presentation-hero-actions">
             <a href={deckSrc} target="_blank" rel="noreferrer" className="btn-primary">
-              발표 자료 보기
+              공개 발표 덱 보기
             </a>
-            <Link to="/" className="btn-secondary">
-              서비스 들어가기
+            <a href={notionSrc} target="_blank" rel="noreferrer" className="btn-secondary">
+              Notion 보고서 보기
+            </a>
+            <Link to="/" className="presentation-inline-link">
+              서비스 보기
             </Link>
           </div>
         </div>
@@ -314,6 +343,31 @@ export default function PresentationPage() {
         </div>
       </section>
 
+      <section className="presentation-section presentation-section-light">
+        <div className="presentation-section-heading">
+          <p className="presentation-kicker">REPORT SAMPLES</p>
+          <h2>실제 강의는 이런 식으로 요약해요</h2>
+          <p>
+            최종 보고서에서 대표 장면만 골라서, 어떤 설명이 잘 먹혔고 어디서
+            리듬이 무너졌는지 발표용 문장으로 다시 압축했어요.
+          </p>
+        </div>
+
+        <div className="presentation-flow-grid">
+          {SAMPLE_REPORTS.map((item, index) => (
+            <article
+              key={item.title}
+              className="presentation-flow-card presentation-fade-up"
+              style={{ animationDelay: `${index * 90}ms` }}
+            >
+              <span>sample</span>
+              <h3>{item.title}</h3>
+              <p>{item.desc}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="presentation-section presentation-section-dark">
         <div className="presentation-section-heading presentation-section-heading-dark">
           <p className="presentation-kicker">SIMULATION</p>
@@ -366,12 +420,20 @@ export default function PresentationPage() {
               다음 단계는 실데이터 연결 범위를 넓히고, 발표 리허설 기준으로
               시뮬레이션 화면을 더 다듬는 일이에요.
             </p>
+            <ul className="presentation-limit-list">
+              {LIMITS.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
           </div>
           <div className="presentation-closing-actions">
             <a href={deckSrc} target="_blank" rel="noreferrer" className="btn-primary">
               새 탭에서 발표 자료 열기
             </a>
-            <Link to="/" className="btn-secondary">
+            <a href={notionSrc} target="_blank" rel="noreferrer" className="btn-secondary">
+              Notion 열기
+            </a>
+            <Link to="/" className="presentation-inline-link">
               첫 화면으로 돌아가기
             </Link>
           </div>

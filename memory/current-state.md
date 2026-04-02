@@ -6,6 +6,7 @@
 
 ## 최근 완료
 
+- 공개 발표 경로 재구성: `/presentation`을 단순 iframe 덱이 아니라 Apple 계열 소개 랜딩으로 다시 만들고, 발표 덱 HTML과 Notion 최종 보고서 샘플을 보조 CTA로 연결한 뒤 `cd frontend && npm run build` 재검증까지 완료 (`frontend/src/pages/PresentationPage.tsx`, `frontend/src/app/globals.css`)
 - Claude 인계용 요약 문서 추가: sections/evaluations 재작업 범위, 검증 결과, 강의별 1~2문장 흐름 요약을 한 파일에 정리 (`memory/handoff-2026-04-03-sections-evaluations.md`)
 - evaluation JSON 전수 재평가 완료: `2026-02-02`~`2026-02-27` 15개 강의의 `frontend/public/data/evaluations/*.json`을 원문 txt, sections JSON, `강의 품질 기준.md` 기준으로 다시 손봐 18개 항목 구조와 `break` 제외 섹션 coverage 0건 해소까지 완료
 - evaluation JSON 재평가 완료: `2026-02-23`~`2026-02-27` 5개 파일을 원문 txt, sections JSON, `강의 품질 기준.md` 기준으로 다시 써서, `break` 제외 섹션 coverage가 0이 아니도록 보정하고 strengths/improvements/recommendations/report_markdown을 날짜별로 갱신
@@ -109,6 +110,7 @@
 - 기존 코드(src/preprocessing, src/rule_analysis 등): 유지, 하이브리드 활용 가능
 - 테스트: 54개 통과 (window 실험 비교 테스트 포함 전체 단위 테스트)
 - 프론트 UI: Apple 스타일 rail + 플로팅 내비 패널 + 모바일 하단 탭 + 공통 hero/panel 체계 기준으로 재정비 완료 (`frontend/`)
+- 프레젠테이션 공개 페이지: `/presentation`은 이제 발표용 소개 랜딩으로 동작하고, 공개 덱/Notion 보고서 샘플/서비스 입구를 한 화면에서 연결함 (`frontend/src/pages/PresentationPage.tsx`)
 - 프론트 시뮬레이션 UI: 파일럿 3강의 대상 실험용 3D 뇌 시각화/원문 브라우저 라우트 추가 완료, `fsaverage5` cortical mesh GLB 자산 연결 완료 (`frontend/src/pages/LectureSimulationPage.tsx`, `frontend/src/pages/LectureSimulationTranscriptPage.tsx`, `frontend/public/data/simulations/brain-mesh.glb`)
 - 정적 평가 데이터: `2026-02-02`~`2026-02-27` 15개 evaluation JSON을 원문 기준으로 재평가해 반영 완료
 - 정적 시뮬레이션 데이터: `2026-02-02`는 실제 TRIBE raw 기반 ROI 해석 결과로 교체 완료, 나머지 파일럿 날짜는 추가 실데이터 확보 필요
