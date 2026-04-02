@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   RadarChart,
@@ -17,8 +17,16 @@ import { exportReportToNotion, uploadToDrive } from "@/lib/api";
 import { supabase } from "@/lib/supabase";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import FeedbackCard from "@/components/shared/FeedbackCard";
+import TimelineBar from "@/components/timeline/TimelineBar";
+import SegmentDrawer from "@/components/timeline/SegmentDrawer";
+import {
+  segmentHealthScore,
+  computeBrainProfile8,
+  computeFunctionalProfile,
+  roiPrescription,
+} from "@/lib/simulation";
 import type { EvaluationResult, CategoryResult, ItemScore } from "@/types/evaluation";
-import type { SimulationResult } from "@/types/simulation";
+import type { SimulationResult, TranscriptBrowserData } from "@/types/simulation";
 
 const SimulationView = lazy(() => import("@/components/simulation/SimulationView"));
 
@@ -33,6 +41,9 @@ export default function LectureDetailPage() {
   const [error, setError] = useState(false);
   const [tab, setTab] = useState<"eval" | "sim" | "report">("eval");
   const [simLoaded, setSimLoaded] = useState(false);
+  const [phases, setPhases] = useState<Record<string, string>>({});
+  const [transcript, setTranscript] = useState<TranscriptBrowserData | null>(null);
+  const [selectedSegIdx, setSelectedSegIdx] = useState<number | null>(null);
 
   useEffect(() => {
     if (!date) return;
@@ -60,6 +71,26 @@ export default function LectureDetailPage() {
       cancelled = true;
     };
   }, [date]);
+
+  // Fetch phases JSON and transcript for timeline
+  useEffect(() => {
+    if (!date) return;
+    const base = import.meta.env.BASE_URL;
+    fetch(`${base}data/simulations/${date}-phases.json`)
+      .then((r) => (r.ok ? r.json() : {}))
+      .then(setPhases)
+      .catch(() => setPhases({}));
+    fetch(`${base}data/transcripts/${date}-transcript-browser.json`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then(setTranscript)
+      .catch(() => setTranscript(null));
+  }, [date]);
+
+  // Evidence-to-segment mapping
+  const evidenceMap = useMemo(() => {
+    if (!evaluation || !simulation) return new Map<string, Array<{ itemName: string; score: number; text: string }>>();
+    return mapEvidenceToSegments(evaluation, simulation.segments);
+  }, [evaluation, simulation]);
 
   if (loading) {
     return (
@@ -241,92 +272,134 @@ export default function LectureDetailPage() {
             ))}
           </div>
 
-          {/* Radar Chart */}
-          <div className="card card-padded">
-            <h2 className="text-section" style={{ marginBottom: 4 }}>카테고리별 점수</h2>
-            <p className="text-caption" style={{ marginBottom: 24 }}>넓을수록 균형 잡힌 강의예요. 안쪽으로 들어간 영역이 개선 포인트예요</p>
-            <div style={{ height: 340 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="72%">
-                  <PolarGrid stroke="var(--border)" />
-                  <PolarAngleAxis
-                    dataKey="category"
-                    tick={{ fill: "var(--grey-700)", fontSize: 13, fontWeight: 600 }}
-                  />
-                  <PolarRadiusAxis
-                    angle={90}
-                    domain={[0, 5]}
-                    tick={{ fill: "var(--text-muted)", fontSize: 11 }}
-                  />
-                  <Tooltip
-                    content={({ payload }) => {
-                      if (!payload?.[0]) return null;
-                      const d = payload[0].payload;
-                      return (
-                        <div
-                          className="card"
-                          style={{ padding: "12px 16px", boxShadow: "var(--shadow-hover)" }}
-                        >
-                          <p
-                            className="font-semibold"
-                            style={{ fontSize: 13, color: "var(--text-primary)" }}
-                          >
-                            {d.fullName}
-                          </p>
-                          <p
-                            className="font-bold"
-                            style={{ fontSize: 18, marginTop: 4, color: scoreColor(d.score) }}
-                          >
-                            {d.score.toFixed(2)}
-                          </p>
-                        </div>
-                      );
-                    }}
-                  />
-                  <Radar
-                    name="점수"
-                    dataKey="score"
-                    stroke="var(--primary)"
-                    fill="var(--primary)"
-                    fillOpacity={0.1}
-                    strokeWidth={2}
-                  />
-                </RadarChart>
-              </ResponsiveContainer>
+          {/* Timeline Bar (sticky) — only when simulation data exists */}
+          {simulation && simulation.segments.length > 0 && (
+            <div className="timeline-bar-sticky">
+              <TimelineBar
+                segments={simulation.segments}
+                phases={phases}
+                selectedIndex={selectedSegIdx}
+                onSelect={setSelectedSegIdx}
+              />
             </div>
-          </div>
+          )}
 
-          {/* Category Detail */}
-          <div>
-            <h2 className="text-section" style={{ marginBottom: 20 }}>카테고리별 상세 평가</h2>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {category_results.map((cat) => (
-                <CategorySection key={cat.category_name} category={cat} />
-              ))}
-            </div>
-          </div>
+          {/* Segment Drawer — when a segment is selected */}
+          {simulation && selectedSegIdx !== null && simulation.segments[selectedSegIdx] && (() => {
+            const seg = simulation.segments[selectedSegIdx];
+            const health = segmentHealthScore(seg);
+            const profile8 = computeBrainProfile8(seg);
+            const funcProfile = computeFunctionalProfile(
+              seg.roi_insights?.top_active_rois,
+              seg.roi_insights?.top_changed_rois,
+            );
+            const rx = roiPrescription(funcProfile);
+            const transcriptSeg = transcript?.segments.find((t) => t.segment_id === seg.segment_id);
+            const evs = evidenceMap.get(seg.segment_id) ?? [];
+            return (
+              <SegmentDrawer
+                segment={seg}
+                transcript={transcriptSeg}
+                evidences={evs}
+                brainProfile={profile8}
+                health={health}
+                prescription={{ text: rx.prescription, urgency: rx.urgency }}
+                onClose={() => setSelectedSegIdx(null)}
+              />
+            );
+          })()}
 
-          {/* Feedback */}
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-            <FeedbackCard
-              title={feedbackConfig.strengthTitle}
-              subtitle={feedbackConfig.strengthSubtitle}
-              items={strengths}
-              color="var(--primary)"
-            />
-            <FeedbackCard
-              title={feedbackConfig.improvementTitle}
-              subtitle={feedbackConfig.improvementSubtitle}
-              items={improvements}
-              color="var(--score-3)"
-            />
-            <FeedbackCard
-              title={feedbackConfig.recommendationTitle}
-              subtitle={feedbackConfig.recommendationSubtitle}
-              items={recommendations}
-              color="var(--grey-500)"
-            />
-          </div>
+          {/* Default view: Radar + categories + feedback (when no segment selected) */}
+          {selectedSegIdx === null && (
+            <>
+              {/* Radar Chart */}
+              <div className="card card-padded">
+                <h2 className="text-section" style={{ marginBottom: 4 }}>카테고리별 점수</h2>
+                <p className="text-caption" style={{ marginBottom: 24 }}>넓을수록 균형 잡힌 강의예요. 안쪽으로 들어간 영역이 개선 포인트예요</p>
+                <div style={{ height: 340 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="72%">
+                      <PolarGrid stroke="var(--border)" />
+                      <PolarAngleAxis
+                        dataKey="category"
+                        tick={{ fill: "var(--grey-700)", fontSize: 13, fontWeight: 600 }}
+                      />
+                      <PolarRadiusAxis
+                        angle={90}
+                        domain={[0, 5]}
+                        tick={{ fill: "var(--text-muted)", fontSize: 11 }}
+                      />
+                      <Tooltip
+                        content={({ payload }) => {
+                          if (!payload?.[0]) return null;
+                          const d = payload[0].payload;
+                          return (
+                            <div
+                              className="card"
+                              style={{ padding: "12px 16px", boxShadow: "var(--shadow-hover)" }}
+                            >
+                              <p
+                                className="font-semibold"
+                                style={{ fontSize: 13, color: "var(--text-primary)" }}
+                              >
+                                {d.fullName}
+                              </p>
+                              <p
+                                className="font-bold"
+                                style={{ fontSize: 18, marginTop: 4, color: scoreColor(d.score) }}
+                              >
+                                {d.score.toFixed(2)}
+                              </p>
+                            </div>
+                          );
+                        }}
+                      />
+                      <Radar
+                        name="점수"
+                        dataKey="score"
+                        stroke="var(--primary)"
+                        fill="var(--primary)"
+                        fillOpacity={0.1}
+                        strokeWidth={2}
+                      />
+                    </RadarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Category Detail */}
+              <div>
+                <h2 className="text-section" style={{ marginBottom: 20 }}>카테고리별 상세 평가</h2>
+                <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                  {category_results.map((cat) => (
+                    <CategorySection key={cat.category_name} category={cat} />
+                  ))}
+                </div>
+              </div>
+
+              {/* Feedback */}
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+                <FeedbackCard
+                  title={feedbackConfig.strengthTitle}
+                  subtitle={feedbackConfig.strengthSubtitle}
+                  items={strengths}
+                  color="var(--primary)"
+                />
+                <FeedbackCard
+                  title={feedbackConfig.improvementTitle}
+                  subtitle={feedbackConfig.improvementSubtitle}
+                  items={improvements}
+                  color="var(--score-3)"
+                />
+                <FeedbackCard
+                  title={feedbackConfig.recommendationTitle}
+                  subtitle={feedbackConfig.recommendationSubtitle}
+                  items={recommendations}
+                  color="var(--grey-500)"
+                />
+              </div>
+            </>
+          )}
         </>
       )}
 
@@ -688,4 +761,28 @@ function buildReportMarkdown(data: {
   }
 
   return lines.join("\n");
+}
+
+/* ─── Evidence → Segment Mapping ─── */
+
+function mapEvidenceToSegments(
+  evaluation: EvaluationResult,
+  segments: SimulationResult["segments"],
+): Map<string, Array<{ itemName: string; score: number; text: string }>> {
+  const result = new Map<string, Array<{ itemName: string; score: number; text: string }>>();
+  for (const cat of evaluation.category_results) {
+    for (const item of cat.items) {
+      for (const ev of item.evidence) {
+        const match = ev.match(/<(\d{2}:\d{2}:\d{2})>/);
+        if (!match) continue;
+        const time = match[1];
+        const seg = segments.find((s) => time >= s.start_time && time <= s.end_time);
+        if (!seg) continue;
+        const existing = result.get(seg.segment_id) ?? [];
+        existing.push({ itemName: item.item_name, score: item.score, text: ev });
+        result.set(seg.segment_id, existing);
+      }
+    }
+  }
+  return result;
 }
