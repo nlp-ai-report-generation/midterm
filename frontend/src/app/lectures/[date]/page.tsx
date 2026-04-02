@@ -263,15 +263,18 @@ export default function LectureDetailPage() {
       {/* ─── Tab: 평가 ─── */}
       {tab === "eval" && (
         <>
-          {/* 이 강의에서 다룬 내용 */}
-          {sections.length > 0 && (
-            <div style={{ marginBottom: 12 }}>
-              <p className="text-caption" style={{ marginBottom: 6 }}>이 강의에서 다룬 내용</p>
-              <p style={{ fontSize: 15, color: "#1d1d1f", lineHeight: 1.6 }}>
-                {sections.filter((s) => s.type !== "break").map((s) => s.label).join(" → ")}
+          {/* 이 강의 요약 */}
+          {sections.length > 0 && (() => {
+            const topics = sections.filter((s) => s.type === "concept" || s.type === "practice").map((s) => s.label);
+            const summary = topics.length <= 4
+              ? topics.join(", ")
+              : `${topics.slice(0, 3).join(", ")} 등 ${topics.length}개 주제`;
+            return (
+              <p style={{ fontSize: 14, color: "#86868b", marginBottom: 8, lineHeight: 1.47 }}>
+                {summary}를 다룬 강의예요
               </p>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Timeline Bar (sticky) — only when sections data exists */}
           {sections.length > 0 && (
@@ -291,8 +294,8 @@ export default function LectureDetailPage() {
             const evs = evidenceMap.get(selectedSectionIdx) ?? [];
 
             // Find matching simulation segment for brain data
-            const matchingSegment = simulation?.segments.find(
-              (seg) => seg.start_time >= section.start && seg.start_time < section.end,
+            const matchingSegment = simulation?.segments.find((seg) =>
+              isTimeInSection(seg.start_time, section),
             );
             const health = matchingSegment ? segmentHealthScore(matchingSegment) : undefined;
             const profile8 = matchingSegment ? computeBrainProfile8(matchingSegment) : undefined;
@@ -722,8 +725,7 @@ function ReportInline({
             const riskProfile = riskSeg ? computeBrainProfile8(riskSeg) : null;
             // sections에서 해당 시간 구간의 라벨(실제 내용) 찾기
             const findSectionLabel = (seg: { start_time: string }) => {
-              const t = seg.start_time;
-              const sec = sections.find((s) => t >= s.start && t <= s.end);
+              const sec = sections.find((s) => isTimeInSection(seg.start_time, s));
               return sec?.label ?? "";
             };
             const strongLabel = strongSeg ? findSectionLabel(strongSeg) : "";
@@ -831,6 +833,11 @@ function timeToSec(t: string): number {
   const [h, m, s] = t.split(":").map(Number);
   const base = h * 3600 + m * 60 + (s || 0);
   return h < 6 ? base + 12 * 3600 : base;
+}
+
+function isTimeInSection(time: string, section: Section): boolean {
+  const sec = timeToSec(time);
+  return sec >= timeToSec(section.start) && sec < timeToSec(section.end);
 }
 
 function mapEvidenceToSections(
