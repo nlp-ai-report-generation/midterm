@@ -206,21 +206,21 @@ const TRIBE_FLOW = [
 const REPORT_SAMPLES = [
   {
     date: "2026-02-02", subject: "Java I/O", score: 3.8,
-    strengths: "BufferedReader/Writer 단계별 설명, 질문 즉시 응답",
-    improvements: "도입부 학습 목표 생략, 고급 개념 속도 과다",
-    brainPeak: "01:26~01:31 — 기술 용어 반복 설명",
+    strengths: "BufferedReader/Writer를 단계별로 잘 설명했어요. 질문에 즉시 응답했어요.",
+    improvements: "도입부에서 학습 목표를 안내하지 않았어요. 고급 개념 설명이 너무 빨라요.",
+    brainPeak: "01:26~01:31 — 기술 용어를 반복 설명한 구간이에요",
   },
   {
     date: "2026-02-09", subject: "Front-End (문자열 함수)", score: 3.5,
-    strengths: "POST/SUBSTRING 예제 직관적 구성",
-    improvements: "INFORMATION_SCHEMA 추상 개념 시각 보조 부족",
-    brainPeak: "09:30~09:35 — 문자열 함수 예제",
+    strengths: "POST/SUBSTRING 예제를 직관적으로 잘 구성했어요.",
+    improvements: "INFORMATION_SCHEMA 같은 추상 개념에 시각 보조가 부족해요.",
+    brainPeak: "09:30~09:35 — 문자열 함수 예제 구간이에요",
   },
   {
     date: "2026-02-24", subject: "MySQL 파티션·트랜잭션", score: 3.6,
-    strengths: "트랜잭션 롤백 실습 구성",
-    improvements: "파티션 유형 설명 밀도 과다",
-    brainPeak: "11:50~11:55 — 트랜잭션 롤백 실습",
+    strengths: "트랜잭션 롤백 실습을 잘 구성했어요.",
+    improvements: "파티션 유형 설명이 너무 밀도가 높아요.",
+    brainPeak: "11:50~11:55 — 트랜잭션 롤백 실습 구간이에요",
   },
 ];
 
@@ -464,7 +464,7 @@ export default function PresentationPage() {
             ))}
           </div>
           <div className="pres-optimal reveal" style={{ animationDelay: "300ms" }}>
-            <h3>🎯 최적 파이프라인 설정</h3>
+            <h3>🎯 최적 파이프라인 설정이에요</h3>
             <div className="pres-optimal__grid">
               {OPTIMAL_CONFIG.map((c) => (
                 <div key={c.label} className="pres-optimal__item">
@@ -504,7 +504,7 @@ export default function PresentationPage() {
 
           {/* 처리 흐름 */}
           <div className="pres-tribe-flow reveal" style={{ animationDelay: "400ms" }}>
-            <h3>🔄 처리 흐름</h3>
+            <h3>🔄 이렇게 처리해요</h3>
             <div className="pres-flow-steps">
               {TRIBE_FLOW.map((step, i) => (
                 <div key={i} className="pres-flow-step">
@@ -518,7 +518,7 @@ export default function PresentationPage() {
           </div>
 
           {/* 뇌 영역 카드 */}
-          <h3 className="pres-section-subtitle reveal" style={{ animationDelay: "460ms" }}>🧠 뇌 영역별 학생 상태 해석</h3>
+          <h3 className="pres-section-subtitle reveal" style={{ animationDelay: "460ms" }}>🧠 뇌 영역별로 학생 상태를 읽어요</h3>
           <div className="pres-brain-grid">
             {BRAIN_STATES.map((b, i) => (
               <div key={i} className="pres-brain-card reveal" style={{ animationDelay: `${500 + i * 80}ms` }}>
@@ -588,7 +588,7 @@ export default function PresentationPage() {
       <section className="pres-section pres-section--light">
         <div className="pres-container">
           <p className="pres-kicker pres-kicker--dark reveal">STACK</p>
-          <h2 className="reveal" style={{ animationDelay: "80ms" }}>기술 구성</h2>
+          <h2 className="reveal" style={{ animationDelay: "80ms" }}>이런 기술로 만들었어요</h2>
           <div className="pres-tech reveal" style={{ animationDelay: "160ms" }}>
             {TECH_STACK.map((t) => (
               <div key={t.label} className="pres-tech__row">
@@ -607,7 +607,7 @@ export default function PresentationPage() {
           <div className="pres-closing-grid">
             <div className="reveal">
               <p className="pres-kicker">BOUNDARY</p>
-              <h2>아직 못하는 것</h2>
+              <h2>아직 못하는 것들이에요</h2>
               <ul className="pres-list">
                 {LIMITATIONS.map((l) => (
                   <li key={l.text}><span>{l.emoji}</span> {l.text}</li>
@@ -616,7 +616,7 @@ export default function PresentationPage() {
             </div>
             <div className="reveal" style={{ animationDelay: "140ms" }}>
               <p className="pres-kicker">NEXT</p>
-              <h2>다음에 할 것</h2>
+              <h2>다음에 할 것들이에요</h2>
               <ol className="pres-list pres-list--ordered">
                 {NEXT_STEPS.map((n) => (
                   <li key={n.text}><span>{n.emoji}</span> {n.text}</li>
@@ -631,7 +631,7 @@ export default function PresentationPage() {
       <section className="pres-cta">
         <div className="pres-container">
           <p className="pres-kicker reveal">THANK YOU</p>
-          <h2 className="reveal" style={{ animationDelay: "80ms" }}>AI 강의 분석 리포트</h2>
+          <h2 className="reveal" style={{ animationDelay: "80ms" }}>AI 강의 분석 리포트예요</h2>
           <p className="pres-cta__sub reveal" style={{ animationDelay: "140ms" }}>
             멋쟁이사자처럼 · NLP 자연어처리 심화 부트캠프 3기 인턴십
           </p>
