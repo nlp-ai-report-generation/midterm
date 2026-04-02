@@ -436,6 +436,7 @@ export default function LectureDetailPage() {
           recommendations={recommendations ?? []}
           simulationSummary={simulation?.lecture_summary?.summary_text}
           simulationData={simulation}
+          sections={sections}
           reportMarkdown={reportMarkdown}
         />
       )}
@@ -561,6 +562,7 @@ interface ReportInlineProps {
   recommendations: string[];
   simulationSummary?: string;
   simulationData?: SimulationResult | null;
+  sections?: Section[];
   reportMarkdown: string;
 }
 
@@ -576,6 +578,7 @@ function ReportInline({
   recommendations,
   simulationSummary,
   simulationData,
+  sections = [],
   reportMarkdown,
 }: ReportInlineProps) {
   const [exporting, setExporting] = useState<"notion" | "drive" | null>(null);
@@ -707,24 +710,34 @@ function ReportInline({
             const riskSeg = simulationData.segments.find((s: { segment_id: string }) => s.segment_id === riskId);
             const strongProfile = strongSeg ? computeBrainProfile8(strongSeg) : null;
             const riskProfile = riskSeg ? computeBrainProfile8(riskSeg) : null;
+            // sections에서 해당 시간 구간의 라벨(실제 내용) 찾기
+            const findSectionLabel = (seg: { start_time: string }) => {
+              const t = seg.start_time;
+              const sec = sections.find((s) => t >= s.start && t <= s.end);
+              return sec?.label ?? "";
+            };
+            const strongLabel = strongSeg ? findSectionLabel(strongSeg) : "";
+            const riskLabel = riskSeg ? findSectionLabel(riskSeg) : "";
             return (
               <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
                 {strongSeg && strongProfile && (
-                  <div style={{ padding: "12px 16px", background: "rgba(255,107,0,0.06)", borderRadius: 10 }}>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: "#1d1d1f" }}>
-                      반응이 큰 구간 ({strongSeg.start_time.slice(0, 5)}~{strongSeg.end_time.slice(0, 5)})
+                  <div style={{ padding: "14px 18px", background: "rgba(255,107,0,0.06)", borderRadius: 12 }}>
+                    <p style={{ fontSize: 15, fontWeight: 600, color: "#1d1d1f", lineHeight: 1.47 }}>
+                      {strongLabel ? `"${strongLabel}"` : `${strongSeg.start_time.slice(0, 5)}~${strongSeg.end_time.slice(0, 5)}`} 구간에서 반응이 가장 높아요
                     </p>
-                    <p style={{ fontSize: 14, color: "#6e6e73", marginTop: 4 }}>{strongProfile.interpretation}</p>
-                    {strongSeg.labels?.[0] && <p style={{ fontSize: 13, color: "#86868b", marginTop: 2 }}>{strongSeg.labels[0]}</p>}
+                    <p style={{ fontSize: 14, color: "#6e6e73", marginTop: 6, lineHeight: 1.47 }}>
+                      {strongProfile.interpretation}. {strongSeg.labels?.[0] ? `이 구간은 "${strongSeg.labels[0]}" 상태로 분류됩니다.` : ""}
+                    </p>
                   </div>
                 )}
                 {riskSeg && riskProfile && (
-                  <div style={{ padding: "12px 16px", background: "rgba(0,0,0,0.03)", borderRadius: 10 }}>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: "#1d1d1f" }}>
-                      주의 필요 구간 ({riskSeg.start_time.slice(0, 5)}~{riskSeg.end_time.slice(0, 5)})
+                  <div style={{ padding: "14px 18px", background: "rgba(0,0,0,0.03)", borderRadius: 12 }}>
+                    <p style={{ fontSize: 15, fontWeight: 600, color: "#1d1d1f", lineHeight: 1.47 }}>
+                      {riskLabel ? `"${riskLabel}"` : `${riskSeg.start_time.slice(0, 5)}~${riskSeg.end_time.slice(0, 5)}`} 구간은 주의가 필요해요
                     </p>
-                    <p style={{ fontSize: 14, color: "#6e6e73", marginTop: 4 }}>{riskProfile.interpretation}</p>
-                    {riskSeg.labels?.[0] && <p style={{ fontSize: 13, color: "#86868b", marginTop: 2 }}>{riskSeg.labels[0]}</p>}
+                    <p style={{ fontSize: 14, color: "#6e6e73", marginTop: 6, lineHeight: 1.47 }}>
+                      {riskProfile.interpretation}. {riskSeg.labels?.[0] ? `이 구간은 "${riskSeg.labels[0]}" 상태로, 설명 방식이나 속도를 조정해보세요.` : ""}
+                    </p>
                   </div>
                 )}
               </div>
