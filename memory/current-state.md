@@ -60,6 +60,7 @@
 - 발표 자료를 프론트 공개본과 Remotion 공개 자산으로 동기화하는 스크립트 추가 (`scripts/sync_presentation_assets.py`)
 - 발표 시연용 UI 캡처 4종 생성 (`presentation/assets/ui-dashboard.png`, `presentation/assets/ui-experiments.png`, `presentation/assets/ui-eda.png`, `presentation/assets/ui-lecture-detail.png`)
 - Remotion 기반 3분 설명형 영상 프로젝트 골격 추가, TTS 내레이션 8개 생성, 최종 MP4 렌더 완료 (`presentation/remotion/`, `presentation/remotion/out/midterm-deck.mp4`)
+- Git 푸시 상태: 소개 페이지 정리 커밋 `8dc070d8`를 `origin/main`, `origin/feature/tribe-roi-20260202`, `personal/main`에 반영했고, `midterm`은 unrelated history 때문에 `feature/tribe-roi-20260202` 브랜치로만 안전하게 푸시함
 - LangGraph 기반 평가 파이프라인 전체 구현 (5-노드 병렬 그래프)
 - 5개 카테고리 하네스 MD 작성 (18개 항목 세부 기준 + 5점 앵커)
 - 보정 하네스 및 리포트 생성 하네스 작성
