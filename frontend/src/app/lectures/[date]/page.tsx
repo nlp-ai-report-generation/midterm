@@ -548,6 +548,9 @@ function ReportInline({
           </div>
           <span className="report-score-pct">{Math.round((score / 5) * 100)}%</span>
         </div>
+        <p className="text-body" style={{ marginTop: 4 }}>
+          {score >= 4.0 ? "전반적으로 우수한 강의예요." : score >= 3.0 ? "괜찮지만 몇 가지 개선할 점이 있어요." : "개선이 필요한 영역이 있어요."}
+        </p>
       </div>
 
       {/* Categories */}
@@ -602,15 +605,13 @@ function ReportInline({
       )}
 
       {/* Simulation summary */}
-      {simulationSummary && (
-        <div className="report-section">
-          <div className="report-section-header" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <img src={`${import.meta.env.BASE_URL}emoji/dna.png`} alt="" width={20} height={20} />
-            <p className="report-section-title">뇌 반응 시뮬레이션 요약</p>
-          </div>
-          <p className="report-sim-text">{simulationSummary}</p>
+      <div className="report-section">
+        <div className="report-section-header" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <img src={`${import.meta.env.BASE_URL}emoji/dna.png`} alt="" width={20} height={20} />
+          <p className="report-section-title">뇌 반응 시뮬레이션 요약</p>
         </div>
-      )}
+        <p className="report-sim-text">{simulationSummary || "시뮬레이션 데이터가 아직 준비되지 않았어요."}</p>
+      </div>
 
       {/* Actions */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>

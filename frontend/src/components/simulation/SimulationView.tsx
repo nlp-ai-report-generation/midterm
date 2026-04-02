@@ -190,36 +190,49 @@ export default function SimulationView({ date }: SimulationViewProps) {
           </div>
         </div>
 
-        {/* Right: Insight panel (scrollable) */}
+        {/* Right: Insight panel */}
         <div className="sim-insight-panel">
-          {/* 1. 현재 텍스트 */}
-          <div className="sim-insight-section">
-            <p className="sim-card-lbl">현재 텍스트</p>
-            <p className="sim-now-text">{line.text}</p>
-            <p className="sim-now-signal"><strong>{interp.dominantSignal}</strong> — {interp.microSummary}</p>
+          {/* 상태 헤드라인 */}
+          <div className="sim-status-headline">
+            <span className="sim-status-emoji">
+              {brainProfile.dominantFunction === "executive" ? "✅" :
+               brainProfile.dominantFunction === "dmn" ? "⚠️" :
+               brainProfile.dominantFunction === "conflict" ? "🔶" :
+               brainProfile.dominantFunction === "memory" ? "📚" :
+               brainProfile.dominantFunction === "attention" ? "👀" :
+               brainProfile.dominantFunction === "language" ? "🎧" :
+               brainProfile.dominantFunction === "visual" ? "🖥️" : "🔊"}
+            </span>
+            <span className="sim-status-text">
+              {brainProfile.dominantFunction === "executive" ? "적극적으로 이해하고 있어요" :
+               brainProfile.dominantFunction === "dmn" ? "주의가 빠져나가고 있어요" :
+               brainProfile.dominantFunction === "conflict" ? "혼란스러워하고 있어요" :
+               brainProfile.dominantFunction === "memory" ? "기억에 저장하는 중이에요" :
+               brainProfile.dominantFunction === "attention" ? "집중해서 듣고 있어요" :
+               brainProfile.dominantFunction === "language" ? "설명을 따라가고 있어요" :
+               brainProfile.dominantFunction === "visual" ? "화면을 보고 있어요" :
+               "소리를 듣고 있어요"}
+            </span>
           </div>
 
-          {/* 2. 활성 뇌 영역 (A등급 직접 해석) */}
+          {/* 지금 이 부분 */}
           <div className="sim-insight-section">
-            <p className="sim-card-lbl">활성 뇌 영역</p>
-            {topRois.map((roi, i) => (
-              <div key={i} className="sim-roi-direct">
-                <div className="sim-roi-direct-header">
+            <p className="sim-now-text">{line.text}</p>
+          </div>
+
+          {/* 뇌가 반응하는 곳 + 활동 요약 */}
+          <div className="sim-insight-section">
+            <div className="sim-roi-compact">
+              {topRois.map((roi, i) => (
+                <div key={i} className="sim-roi-direct">
                   <span className="sim-roi-direct-label">{roi.label}</span>
                   <span className="sim-roi-direct-hemi">{roi.hemisphere === "left" ? "좌" : "우"}</span>
                   <span className="sim-roi-direct-val">{(roi.response * 100).toFixed(1)}</span>
                 </div>
-                <p className="sim-roi-direct-interp">{roi.interpretation}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* 3. 뇌 기능 프로필 8카테고리 */}
-          <div className="sim-insight-section">
-            <p className="sim-card-lbl">뇌 기능 프로필</p>
-            <p className="sim-card-desc">{brainProfile.interpretation}</p>
+              ))}
+            </div>
             <div className="sim-bars">
-              {brainProfile.categories.map((c) => (
+              {brainProfile.categories.slice(0, 3).map((c) => (
                 <div key={c.key} className={`sim-bar-row${c.isTop ? " top" : ""}`}>
                   <span className="sim-bar-lbl">{c.label}</span>
                   <div className="sim-bar-track"><div className="sim-bar-fill" style={{ width: `${Math.max(3, c.value)}%` }} /></div>
@@ -229,46 +242,32 @@ export default function SimulationView({ date }: SimulationViewProps) {
             </div>
           </div>
 
-          {/* 4. 강사 처방 */}
+          {/* 이렇게 바꿔보세요 */}
           <div className="sim-insight-section">
-            <p className="sim-card-lbl">강사 처방</p>
             <div className={`sim-prescription sim-prescription-${rx.urgency}`}>
               <p>{rx.text}</p>
             </div>
           </div>
 
-          {/* 5. 구간 상태 */}
-          <div className="sim-insight-section">
-            <p className="sim-card-lbl">구간 상태</p>
-            <div className="sim-status-grid">
-              <div className="sim-status-item">
-                <span className="sim-status-label">건강도</span>
-                <span className="sim-status-val" style={{ color: health.color }}>{health.score}</span>
-                <span className="sim-status-badge" style={{ color: health.color }}>{health.label}</span>
-              </div>
-              <div className="sim-status-item">
-                <span className="sim-status-label">반구 균형</span>
-                <div className="sim-hemisphere-bar"><div className="sim-hemisphere-left" style={{ width: `${hemisphere.left}%` }} /></div>
-                <span className="sim-status-badge">{hemisphere.label}</span>
-              </div>
-              <div className="sim-status-item">
-                <span className="sim-status-label">전환</span>
-                <span className="sim-status-val">{similarity < 0.85 ? "급전환" : similarity < 0.95 ? "전환" : "연속"}</span>
-              </div>
-              <div className="sim-status-item">
-                <span className="sim-status-label">부하 회복</span>
-                <span className="sim-status-val">{recovery.label}</span>
-              </div>
+          {/* 이 구간은 */}
+          <div className="sim-insight-section sim-status-compact">
+            <div className="sim-status-row">
+              <span>학습 효과</span>
+              <span style={{ color: health.color }}>{health.label}</span>
+            </div>
+            <div className="sim-status-row">
+              <span>뇌 활동</span>
+              <span>{hemisphere.dominant === "balanced" ? "균형" : hemisphere.dominant === "left" ? "분석적" : "직관적"}</span>
+            </div>
+            <div className="sim-status-row">
+              <span>내용 전환</span>
+              <span>{similarity < 0.85 ? "급전환" : similarity < 0.95 ? "전환" : "연속"}</span>
+            </div>
+            <div className="sim-status-row">
+              <span>난이도</span>
+              <span>{recovery.label}</span>
             </div>
           </div>
-
-          {/* 6. 텍스트 분석 참고 (접기 가능) */}
-          <details className="sim-insight-section sim-text-ref">
-            <summary className="sim-card-lbl">텍스트 분석 참고</summary>
-            <div className="sim-text-ref-content">
-              <span>Att {a.toFixed(0)} · Load {l.toFixed(0)} · Nov {n.toFixed(0)}</span>
-            </div>
-          </details>
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   AreaChart,
   Area,
@@ -420,6 +420,7 @@ function ScoreTrendChart({ data, count }: { data: { date: string; score: number 
 }
 
 function LectureCalendar({ evaluations }: { evaluations: EvaluationResult[] }) {
+  const navigate = useNavigate();
   const scoreMap = new Map<number, EvaluationResult>();
   for (const e of evaluations) {
     const day = parseInt(e.lecture_date.split("-")[2], 10);
@@ -502,7 +503,7 @@ function LectureCalendar({ evaluations }: { evaluations: EvaluationResult[] }) {
               <div
                 key={dIdx}
                 onClick={() => {
-                  if (ev) window.location.href = `/lectures/${ev.lecture_date}`;
+                  if (ev) navigate(`/lectures/${ev.lecture_date}`);
                 }}
                 style={{
                   minHeight: 80,

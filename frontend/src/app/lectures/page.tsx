@@ -24,6 +24,14 @@ export default function LecturesPage() {
   const [uploadDragOver, setUploadDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [toast, setToast] = useState("");
+  const [simDates, setSimDates] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.BASE_URL}data/simulations/manifest.json`)
+      .then((r) => r.json())
+      .then((m) => setSimDates(m.dates ?? []))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     getAllEvaluations()
@@ -557,7 +565,7 @@ export default function LecturesPage() {
           {displayed.map((evaluation) => (
             <div key={evaluation.lecture_date} className="lecture-card">
               <div className="lecture-card-header">
-                <span className="lecture-card-subject">{evaluation.metadata.subjects?.[0] ?? "강의"}</span>
+                <span className="lecture-card-subject">{evaluation.metadata.subjects?.[0] ?? "강의"}{simDates.includes(evaluation.lecture_date) && " 🧬"}</span>
                 <span className="lecture-card-score">{evaluation.weighted_average.toFixed(1)}</span>
               </div>
               <p className="lecture-card-meta">{formatDateShort(evaluation.lecture_date)} · {evaluation.metadata.instructor ?? "-"}</p>
@@ -590,7 +598,7 @@ export default function LecturesPage() {
                 {formatDateShort(evaluation.lecture_date)}
               </span>
               <span style={{ fontSize: 15, fontWeight: 600, color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", paddingRight: 12 }}>
-                {evaluation.metadata.subjects?.[0] ?? "강의"}
+                {evaluation.metadata.subjects?.[0] ?? "강의"}{simDates.includes(evaluation.lecture_date) && " 🧬"}
               </span>
               <span className="text-body lecture-list-instructor" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {evaluation.metadata.instructor ?? "-"}
