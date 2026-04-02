@@ -9,90 +9,138 @@
     },
     {
       "start": "09:15:04",
-      "end": "09:18:30",
+      "end": "09:19:32",
       "label": "정형·반정형·비정형 데이터 구분",
       "type": "concept"
     },
     {
-      "start": "09:18:30",
-      "end": "09:21:35",
+      "start": "09:19:32",
+      "end": "09:23:00",
       "label": "JSON·XML과 MySQL 변환",
       "type": "concept"
     },
     {
-      "start": "09:21:35",
-      "end": "09:25:00",
-      "label": "엔티티와 컬럼·로우 구조 개념",
+      "start": "09:23:00",
+      "end": "09:25:47",
+      "label": "엔티티와 컬럼·로우 구조 설명",
       "type": "concept"
     },
     {
-      "start": "09:25:00",
-      "end": "09:29:43",
+      "start": "09:25:47",
+      "end": "09:31:52",
       "label": "DDL·DML·DCL·TCL 분류",
       "type": "concept"
     },
     {
-      "start": "09:29:43",
-      "end": "09:36:48",
-      "label": "CREATE·ALTER·DROP와 제약조건",
+      "start": "09:31:52",
+      "end": "09:38:41",
+      "label": "CREATE·ALTER·DROP 제약조건",
       "type": "concept"
     },
     {
-      "start": "09:36:48",
-      "end": "09:41:43",
-      "label": "ALTER TABLE과 DROP 명령",
+      "start": "09:38:41",
+      "end": "09:45:06",
+      "label": "트랜잭션과 커밋·롤백 개념 정리",
       "type": "concept"
     },
     {
-      "start": "09:41:43",
-      "end": "09:47:15",
-      "label": "기본키·외래키와 무결성 규칙",
-      "type": "concept"
-    },
-    {
-      "start": "09:47:15",
+      "start": "09:45:06",
       "end": "09:50:52",
       "label": "데이터 타입과 공간 데이터 분류",
       "type": "concept"
     },
     {
       "start": "09:50:52",
-      "end": "09:54:20",
-      "label": "정수·문자·날짜 타입 비교",
-      "type": "concept"
-    },
-    {
-      "start": "09:54:20",
       "end": "09:58:04",
       "label": "BLOB·TEXT와 블록 단위",
       "type": "concept"
     },
     {
       "start": "09:58:04",
-      "end": "03:34:16",
+      "end": "10:23:27",
+      "label": "워크벤치 도움말과 데이터형 정리",
+      "type": "concept"
+    },
+    {
+      "start": "10:23:27",
+      "end": "10:42:39",
+      "label": "기본값과 널 처리 규칙 설명",
+      "type": "practice"
+    },
+    {
+      "start": "10:42:39",
+      "end": "11:06:41",
+      "label": "UTF8MB4와 행 바이트 길이",
+      "type": "concept"
+    },
+    {
+      "start": "11:06:41",
+      "end": "11:13:21",
+      "label": "UTF8MB4와 PK·AUTO_INCREMENT",
+      "type": "concept"
+    },
+    {
+      "start": "11:13:21",
+      "end": "11:46:29",
+      "label": "이모지 저장과 인덱스 길이 확인",
+      "type": "practice"
+    },
+    {
+      "start": "11:46:29",
+      "end": "01:00:12",
       "label": "(점심시간)",
       "type": "break"
     },
     {
+      "start": "01:00:12",
+      "end": "01:16:00",
+      "label": "DATE_FORMAT과 서식 출력",
+      "type": "concept"
+    },
+    {
+      "start": "01:16:00",
+      "end": "01:33:00",
+      "label": "별칭과 문자열 함수 계산 실습하기",
+      "type": "practice"
+    },
+    {
+      "start": "01:33:00",
+      "end": "01:46:48",
+      "label": "IFNULL·COALESCE와 NULL",
+      "type": "concept"
+    },
+    {
+      "start": "01:46:48",
+      "end": "02:07:00",
+      "label": "집계함수와 COUNT·AVG",
+      "type": "concept"
+    },
+    {
+      "start": "02:07:00",
+      "end": "02:41:19",
+      "label": "GROUP BY와 HAVING 비교",
+      "type": "concept"
+    },
+    {
+      "start": "02:41:19",
+      "end": "03:03:15",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "03:03:15",
+      "end": "03:34:16",
+      "label": "ROLLUP과 그룹별 총계 확인",
+      "type": "practice"
+    },
+    {
       "start": "03:34:16",
-      "end": "03:39:58",
-      "label": "IFNULL과 COALESCE 비교",
-      "type": "concept"
-    },
-    {
-      "start": "03:39:58",
-      "end": "03:46:48",
-      "label": "NULL 대체값과 연락처 예시",
-      "type": "concept"
-    },
-    {
-      "start": "03:46:48",
-      "end": "03:51:37",
-      "label": "SELECT 워크숍과 팀별 과제 안내",
+      "end": "03:48:40",
+      "label": "워크숍 예고와 ERD 과제 안내",
       "type": "wrapup"
     },
     {
-      "start": "03:51:37",
+      "start": "03:48:40",
       "end": "05:50:10",
       "label": "(쉬는시간)",
       "type": "break"

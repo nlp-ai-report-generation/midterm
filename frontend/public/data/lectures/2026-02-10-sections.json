@@ -9,14 +9,32 @@
     },
     {
       "start": "09:14:31",
-      "end": "09:50:00",
+      "end": "09:24:31",
       "label": "INNER JOIN과 ON·USING 차이",
       "type": "concept"
     },
     {
+      "start": "09:24:31",
+      "end": "09:39:06",
+      "label": "이너 조인 결과와 NULL 처리",
+      "type": "concept"
+    },
+    {
+      "start": "09:39:06",
+      "end": "09:50:00",
+      "label": "LEFT OUTER JOIN과 주종 관계",
+      "type": "concept"
+    },
+    {
       "start": "09:50:00",
+      "end": "10:12:30",
+      "label": "RIGHT OUTER JOIN과 NULL 채움",
+      "type": "concept"
+    },
+    {
+      "start": "10:12:30",
       "end": "10:27:10",
-      "label": "LEFT·RIGHT OUTER JOIN 정리",
+      "label": "크로스·셀프·내추럴 조인 개요",
       "type": "concept"
     },
     {
@@ -27,8 +45,26 @@
     },
     {
       "start": "10:50:50",
+      "end": "11:02:25",
+      "label": "SELF JOIN과 계층 구조",
+      "type": "concept"
+    },
+    {
+      "start": "11:02:25",
+      "end": "11:15:20",
+      "label": "ON·USING과 별칭 사용법",
+      "type": "concept"
+    },
+    {
+      "start": "11:15:20",
+      "end": "11:31:02",
+      "label": "LEFT/RIGHT OUTER JOIN 예제",
+      "type": "concept"
+    },
+    {
+      "start": "11:31:02",
       "end": "11:50:06",
-      "label": "SELF JOIN·NATURAL JOIN·등가조인",
+      "label": "도시·국가 조인 실습",
       "type": "concept"
     },
     {
@@ -45,14 +81,26 @@
     },
     {
       "start": "01:31:46",
-      "end": "02:04:09",
-      "label": "JOIN 문법과 ON·USING 비교",
+      "end": "01:50:00",
+      "label": "JOIN 문법과 별칭 비교",
       "type": "concept"
     },
     {
-      "start": "02:04:09",
+      "start": "01:50:00",
+      "end": "02:12:37",
+      "label": "도시·국가 조회와 인덱스 확인",
+      "type": "concept"
+    },
+    {
+      "start": "02:12:37",
+      "end": "02:31:13",
+      "label": "EXPLAIN과 실행 계획",
+      "type": "concept"
+    },
+    {
+      "start": "02:31:13",
       "end": "02:48:58",
-      "label": "EXPLAIN과 옵티마이저 실행 계획",
+      "label": "옵티마이저 코스트와 인덱스",
       "type": "concept"
     },
     {
@@ -63,14 +111,20 @@
     },
     {
       "start": "03:10:19",
+      "end": "03:40:00",
+      "label": "조인 워크숍과 도시·국가 조회",
+      "type": "practice"
+    },
+    {
+      "start": "03:40:00",
       "end": "04:08:47",
-      "label": "조인 워크숍과 테이블 명세 정리",
+      "label": "조인 문제 풀이와 명세 검토",
       "type": "practice"
     },
     {
       "start": "04:08:47",
       "end": "05:50:53",
-      "label": "조인 정리와 서브쿼리·워크숍 예고",
+      "label": "조인 정리와 서브쿼리 예고",
       "type": "wrapup"
     }
   ]

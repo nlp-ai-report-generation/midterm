@@ -9,8 +9,14 @@
     },
     {
       "start": "09:39:06",
-      "end": "10:18:40",
+      "end": "10:00:00",
       "label": "UNION·INTERSECT·EXCEPT 정리",
+      "type": "concept"
+    },
+    {
+      "start": "10:00:00",
+      "end": "10:18:40",
+      "label": "셋 연산자와 세로 병합 조건",
       "type": "concept"
     },
     {
@@ -27,8 +33,14 @@
     },
     {
       "start": "11:10:37",
-      "end": "11:29:08",
+      "end": "11:20:00",
       "label": "단일행 서브쿼리와 비교 연산",
+      "type": "concept"
+    },
+    {
+      "start": "11:20:00",
+      "end": "11:29:08",
+      "label": "비교 연산자와 스칼라 서브쿼리",
       "type": "concept"
     },
     {
@@ -45,26 +57,50 @@
     },
     {
       "start": "01:11:06",
-      "end": "02:53:05",
+      "end": "01:40:00",
+      "label": "인라인 뷰와 임시 테이블 활용",
+      "type": "concept"
+    },
+    {
+      "start": "01:40:00",
+      "end": "02:19:03",
       "label": "인라인 뷰와 계산별칭 재구성",
+      "type": "concept"
+    },
+    {
+      "start": "02:19:03",
+      "end": "02:53:05",
+      "label": "상관 서브쿼리와 외부쿼리 반복",
       "type": "concept"
     },
     {
       "start": "02:53:05",
       "end": "03:25:21",
-      "label": "상관 서브쿼리와 EXISTS 판별",
-      "type": "concept"
+      "label": "EXISTS·NOT EXISTS 판별",
+      "type": "practice"
     },
     {
       "start": "03:25:21",
+      "end": "03:32:08",
+      "label": "부서 존재 여부 EXISTS 판별",
+      "type": "practice"
+    },
+    {
+      "start": "03:32:08",
+      "end": "03:44:24",
+      "label": "부서·사원 조건과 DISTINCT 비교",
+      "type": "practice"
+    },
+    {
+      "start": "03:44:24",
       "end": "03:55:00",
-      "label": "EXISTS·NOT EXISTS와 결과 유무",
+      "label": "EXISTS 최적화와 해시테이블",
       "type": "practice"
     },
     {
       "start": "03:55:00",
       "end": "05:50:20",
-      "label": "워크숍 안내와 서브쿼리 정리",
+      "label": "서브쿼리 정리와 내일 CTE 예고",
       "type": "wrapup"
     }
   ]

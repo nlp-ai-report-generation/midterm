@@ -15,20 +15,26 @@
     },
     {
       "start": "09:21:25",
-      "end": "09:34:06",
-      "label": "문자열 함수와 윈도우 함수",
+      "end": "09:31:30",
+      "label": "문자열 함수와 윈도우 함수 처리",
       "type": "concept"
     },
     {
-      "start": "09:34:06",
-      "end": "09:45:06",
+      "start": "09:31:30",
+      "end": "09:39:17",
       "label": "LIKE·REGEXP와 패턴 매칭",
+      "type": "concept"
+    },
+    {
+      "start": "09:39:17",
+      "end": "09:45:06",
+      "label": "LIKE와 대소문자 비교 방식",
       "type": "concept"
     },
     {
       "start": "09:45:06",
       "end": "10:20:48",
-      "label": "REGEXP 패턴과 줄바꿈 탐색",
+      "label": "REGEXP 패턴 매칭 실습",
       "type": "practice"
     },
     {
@@ -58,32 +64,104 @@
     {
       "start": "11:13:21",
       "end": "11:17:08",
-      "label": "PK·UK와 오토인크리먼트 키",
+      "label": "PK·UK와 AUTO_INCREMENT",
       "type": "concept"
     },
     {
       "start": "11:17:08",
-      "end": "03:46:47",
+      "end": "01:10:42",
       "label": "(점심시간)",
       "type": "break"
     },
     {
-      "start": "03:46:47",
-      "end": "03:49:00",
-      "label": "윈도우 함수와 GROUP_CONCAT",
+      "start": "01:10:42",
+      "end": "01:21:16",
+      "label": "CI·BIN과 대소문자 구분",
       "type": "concept"
     },
     {
-      "start": "03:49:00",
-      "end": "03:56:58",
-      "label": "SELECT 풀이와 스키마 역공학",
+      "start": "01:21:16",
+      "end": "01:33:00",
+      "label": "컬레이션과 테이블 기본값 비교",
       "type": "practice"
     },
     {
-      "start": "03:56:58",
-      "end": "05:50:14",
-      "label": "ERD 관계도와 워크숍 마무리 안내",
-      "type": "wrapup"
+      "start": "01:33:00",
+      "end": "01:49:10",
+      "label": "중복 가입과 로그인 검증 규칙",
+      "type": "concept"
+    },
+    {
+      "start": "01:49:10",
+      "end": "01:56:25",
+      "label": "집계함수와 GROUP_CONCAT",
+      "type": "concept"
+    },
+    {
+      "start": "01:56:25",
+      "end": "02:01:09",
+      "label": "윈도우 함수와 ROW_NUMBER",
+      "type": "concept"
+    },
+    {
+      "start": "02:01:09",
+      "end": "02:05:50",
+      "label": "ROW_NUMBER·RANK 순위 함수",
+      "type": "concept"
+    },
+    {
+      "start": "02:05:50",
+      "end": "02:21:42",
+      "label": "프레임 START·END와 BETWEEN",
+      "type": "concept"
+    },
+    {
+      "start": "02:21:42",
+      "end": "02:38:18",
+      "label": "GROUP BY와 HAVING 비교",
+      "type": "concept"
+    },
+    {
+      "start": "02:38:18",
+      "end": "03:05:43",
+      "label": "윈도우 함수와 파티션 정리 실습",
+      "type": "concept"
+    },
+    {
+      "start": "03:05:43",
+      "end": "03:31:20",
+      "label": "프레임 옵션과 LAST_VALUE",
+      "type": "concept"
+    },
+    {
+      "start": "03:31:20",
+      "end": "03:39:36",
+      "label": "binary log와 변경 이력",
+      "type": "concept"
+    },
+    {
+      "start": "03:39:36",
+      "end": "03:46:35",
+      "label": "LOAD DATA와 local_infile",
+      "type": "practice"
+    },
+    {
+      "start": "03:46:35",
+      "end": "03:58:30",
+      "label": "INI 파일과 서버·클라이언트",
+      "type": "concept"
+    },
+    {
+      "start": "03:58:30",
+      "end": "04:19:07",
+      "label": "로컬 인파일 수정과 재시작 처리",
+      "type": "practice"
+    },
+    {
+      "start": "04:19:07",
+      "end": "05:50:20",
+      "label": "(쉬는시간)",
+      "type": "break"
     }
   ]
 }

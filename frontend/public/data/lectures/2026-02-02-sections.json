@@ -4,7 +4,7 @@
     {
       "start": "09:11:17",
       "end": "09:15:00",
-      "label": "Java I/O·NIO·NIO2 개요",
+      "label": "수업 시작과 I/O 개요 안내",
       "type": "intro"
     },
     {
@@ -16,67 +16,127 @@
     {
       "start": "09:21:27",
       "end": "09:28:18",
-      "label": "코어 라이브러리에서 Collections 보기",
-      "type": "concept"
+      "label": "Collections 화면과 JShell 실습",
+      "type": "practice"
     },
     {
       "start": "09:28:18",
       "end": "09:33:33",
-      "label": "JShell로 Java 셸 실습",
-      "type": "practice"
+      "label": "Java I/O·NIO·NIO2 차이 비교",
+      "type": "concept"
     },
     {
       "start": "09:33:33",
       "end": "09:40:46",
-      "label": "Java I/O·NIO·NIO2 차이 비교",
+      "label": "바이트·캐릭터·오브젝트 스트림 처리",
       "type": "concept"
     },
     {
       "start": "09:40:46",
       "end": "09:47:16",
-      "label": "바이트·캐릭터·오브젝트 구분",
+      "label": "스트림 블로킹과 직렬화 개념",
       "type": "concept"
     },
     {
       "start": "09:47:16",
       "end": "09:55:46",
-      "label": "스트림 기반 블로킹과 직렬화",
+      "label": "InputStream·OutputStream 구조",
       "type": "concept"
     },
     {
       "start": "09:55:46",
       "end": "10:05:22",
-      "label": "InputStream·OutputStream 구조 읽기",
+      "label": "FileWriter·FileReader 코드 작성",
       "type": "practice"
     },
     {
       "start": "10:05:22",
       "end": "10:12:44",
-      "label": "FileWriter·FileReader 코드 작성",
+      "label": "읽기 루프와 append 옵션 확인",
       "type": "practice"
     },
     {
       "start": "10:12:44",
       "end": "10:18:30",
-      "label": "읽기 루프와 append 옵션 확인",
+      "label": "FileReader 한 글자 읽기 실습",
       "type": "practice"
     },
     {
       "start": "10:18:30",
-      "end": "03:49:06",
+      "end": "10:43:08",
+      "label": "BufferedReader와 readLine 사용",
+      "type": "practice"
+    },
+    {
+      "start": "10:43:08",
+      "end": "11:48:11",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "11:48:11",
+      "end": "01:00:30",
       "label": "(점심시간)",
       "type": "break"
     },
     {
-      "start": "03:49:06",
-      "end": "03:55:41",
-      "label": "MySQL 커뮤니티·엔터프라이즈 안내",
+      "start": "01:00:30",
+      "end": "01:13:00",
+      "label": "Files·Path의 읽기·쓰기 메서드",
       "type": "concept"
     },
     {
-      "start": "03:55:41",
+      "start": "01:13:00",
+      "end": "01:27:00",
+      "label": "readAllLines·readAllBytes 사용",
+      "type": "concept"
+    },
+    {
+      "start": "01:27:00",
+      "end": "01:50:00",
+      "label": "ObjectInputStream 직렬화 예제",
+      "type": "concept"
+    },
+    {
+      "start": "01:50:00",
+      "end": "02:10:00",
+      "label": "BasicFileAttributes 조회",
+      "type": "concept"
+    },
+    {
+      "start": "02:10:00",
+      "end": "02:30:00",
+      "label": "FileVisitor와 walkFileTree 탐색",
+      "type": "concept"
+    },
+    {
+      "start": "02:30:00",
+      "end": "02:50:25",
+      "label": "디렉터리 삭제와 크기 계산 실습",
+      "type": "practice"
+    },
+    {
+      "start": "02:50:25",
+      "end": "03:11:00",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "03:11:00",
+      "end": "03:29:00",
+      "label": "FileVisitor 예제와 재귀 탐색",
+      "type": "practice"
+    },
+    {
+      "start": "03:29:00",
+      "end": "03:47:04",
+      "label": "NIO 채널·Selector와 네트워킹",
+      "type": "concept"
+    },
+    {
+      "start": "03:47:04",
       "end": "03:58:34",
-      "label": "LTS 8.4.8 설치 버전 선택",
+      "label": "MySQL 커뮤니티·엔터프라이즈",
       "type": "wrapup"
     }
   ]

@@ -66,10 +66,10 @@ export default function SectionDrawer({
         {evidences.length > 0 ? (
           <>
             <p style={{ fontSize: 11, fontWeight: 590, color: "#86868b", letterSpacing: "0.02em", textTransform: "uppercase" as const, marginBottom: 8 }}>
-              관련 평가 ({evidences.length})
+              관련 평가 ({evidences.length > 3 ? `3/${evidences.length}` : evidences.length})
             </p>
             <div className="section-evidence">
-              {evidences.map((ev, i) => (
+              {evidences.slice(0, 3).map((ev, i) => (
                 <div key={i} className="section-evidence-item">
                   <span className="section-evidence-score">{ev.score.toFixed(1)}</span>
                   <div style={{ minWidth: 0 }}>

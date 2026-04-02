@@ -174,16 +174,16 @@ export default function SimulationView({ date }: SimulationViewProps) {
       {(() => {
         const strongId = sim.lecture_summary?.strongest_segment_ids?.[0];
         const riskId = sim.lecture_summary?.risk_segment_ids?.[0];
-        const strongSeg = trans?.segments.find((s) => s.segment_id === strongId);
-        const riskSeg = trans?.segments.find((s) => s.segment_id === riskId);
-        const strongText = strongSeg?.lines?.[0]?.text?.slice(0, 40) ?? "";
-        const riskText = riskSeg?.lines?.[0]?.text?.slice(0, 40) ?? "";
+        const strongBound = bounds.get(strongId ?? "");
+        const riskBound = bounds.get(riskId ?? "");
+        const strongLabel = strongId ? `${fmtSec(strongBound?.start ?? 0)}~${fmtSec(strongBound?.end ?? 0)} (${strongId})` : "-";
+        const riskLabel = riskId ? `${fmtSec(riskBound?.start ?? 0)}~${fmtSec(riskBound?.end ?? 0)} (${riskId})` : "-";
         return (
           <div className="sim-summary-banner">
             <img src={`${import.meta.env.BASE_URL}emoji/dna.png`} alt="" width={18} height={18} />
             <div className="sim-summary-text">
               <p className="sim-summary-main">
-                반응이 가장 큰 구간은 <strong>"{strongText}..."</strong>이고, <strong>"{riskText}..."</strong> 구간은 주의가 필요해요.
+                가장 반응이 큰 구간은 <strong>{strongLabel}</strong>이고, <strong>{riskLabel}</strong> 구간은 주의가 필요해요.
               </p>
               <p className="sim-summary-sub">{sim.lecture_summary?.caution_text}</p>
             </div>

@@ -9,39 +9,105 @@
     },
     {
       "start": "09:14:14",
-      "end": "10:23:35",
-      "label": "CONCAT·SUBSTR·TRIM·LOCATE 설명",
+      "end": "09:40:28",
+      "label": "CONCAT·SUBSTR·LOCATE 기본문자열 처리",
       "type": "concept"
     },
     {
+      "start": "09:40:28",
+      "end": "09:47:44",
+      "label": "사원 이름 조합과 문자열 추출 실습",
+      "type": "practice"
+    },
+    {
+      "start": "09:47:44",
+      "end": "09:55:58",
+      "label": "INSTR·LOCATE로 위치 찾기",
+      "type": "practice"
+    },
+    {
+      "start": "09:55:58",
+      "end": "10:23:35",
+      "label": "REPLACE·UPPER·LOWER 문자열 변환",
+      "type": "practice"
+    },
+    {
       "start": "10:23:35",
+      "end": "10:30:24",
+      "label": "REPLACE INTO와 중복키 처리",
+      "type": "practice"
+    },
+    {
+      "start": "10:30:24",
       "end": "10:39:49",
-      "label": "REPLACE INTO와 문자열 대체 저장",
+      "label": "PK·UK와 AUTO_INCREMENT 규칙",
       "type": "practice"
     },
     {
       "start": "10:39:49",
+      "end": "10:50:06",
+      "label": "복합키와 REPLACE 실행",
+      "type": "practice"
+    },
+    {
+      "start": "10:50:06",
       "end": "11:03:40",
-      "label": "AUTO_INCREMENT와 PK 생성 규칙",
+      "label": "LOAD_FILE과 BLOB·TEXT 저장",
       "type": "concept"
     },
     {
       "start": "11:03:40",
-      "end": "11:50:06",
-      "label": "LOAD_FILE과 BLOB·TEXT 저장",
+      "end": "11:40:09",
+      "label": "텍스트·이미지 파일 로드 실습",
       "type": "practice"
     },
     {
+      "start": "11:40:09",
+      "end": "11:50:06",
+      "label": "로드파일 속성과 64MB 패킷 제한",
+      "type": "concept"
+    },
+    {
       "start": "11:50:06",
-      "end": "01:11:42",
+      "end": "11:58:51",
+      "label": "파일 처리와 문자 인코딩 확인",
+      "type": "concept"
+    },
+    {
+      "start": "11:58:51",
+      "end": "01:17:10",
       "label": "(점심시간)",
       "type": "break"
     },
     {
-      "start": "01:11:42",
-      "end": "02:43:15",
+      "start": "01:17:10",
+      "end": "01:30:11",
       "label": "문자셋·콜레이션과 인코딩 설정",
       "type": "concept"
+    },
+    {
+      "start": "01:30:11",
+      "end": "01:50:09",
+      "label": "문자셋 조회와 로케이트 비교",
+      "type": "concept"
+    },
+    {
+      "start": "01:50:09",
+      "end": "02:10:00",
+      "label": "TRIM·LPAD·RPAD 공백 제거",
+      "type": "concept"
+    },
+    {
+      "start": "02:10:00",
+      "end": "02:30:03",
+      "label": "문자 위치 추출과 복합속성 이해",
+      "type": "concept"
+    },
+    {
+      "start": "02:30:03",
+      "end": "02:43:15",
+      "label": "문자셋별 표현과 인코딩 확인",
+      "type": "practice"
     },
     {
       "start": "02:43:15",
@@ -51,14 +117,20 @@
     },
     {
       "start": "03:10:16",
+      "end": "03:52:28",
+      "label": "식별키와 복합속성 이해",
+      "type": "concept"
+    },
+    {
+      "start": "03:52:28",
       "end": "04:07:13",
-      "label": "식별·비식별 관계와 부모 테이블",
+      "label": "비식별 관계와 부모 테이블",
       "type": "concept"
     },
     {
       "start": "04:07:13",
       "end": "04:10:46",
-      "label": "ERD 관계도와 다음날 조인 안내",
+      "label": "ERD 관계 정리와 조인 예고",
       "type": "wrapup"
     }
   ]

@@ -4,7 +4,7 @@
     {
       "start": "09:10:21",
       "end": "09:16:06",
-      "label": "프로시저 예외 처리와 SQLSTATE 복습",
+      "label": "프로시저 예외 처리와 SQLSTATE",
       "type": "review"
     },
     {
@@ -15,30 +15,18 @@
     },
     {
       "start": "09:42:34",
-      "end": "10:39:02",
-      "label": "HANDLER와 커스텀 에러 메시지 실습",
+      "end": "10:53:34",
+      "label": "HANDLER와 커스텀 에러 메시지",
       "type": "practice"
     },
     {
-      "start": "10:39:02",
-      "end": "11:00:25",
+      "start": "10:53:34",
+      "end": "11:56:41",
       "label": "(쉬는시간)",
       "type": "break"
     },
     {
-      "start": "11:00:25",
-      "end": "11:43:00",
-      "label": "DIAGNOSTICS와 CONTINUE HANDLER",
-      "type": "practice"
-    },
-    {
-      "start": "11:43:00",
-      "end": "11:50:00",
-      "label": "커서 반복과 NOT FOUND 종료 처리",
-      "type": "practice"
-    },
-    {
-      "start": "11:50:00",
+      "start": "11:56:41",
       "end": "01:11:43",
       "label": "(점심시간)",
       "type": "break"
@@ -51,27 +39,39 @@
     },
     {
       "start": "01:36:48",
-      "end": "02:10:00",
+      "end": "02:26:22",
       "label": "CREATE FUNCTION과 SELECT 호출",
       "type": "practice"
     },
     {
-      "start": "02:10:00",
+      "start": "02:26:22",
+      "end": "02:46:32",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "02:46:32",
       "end": "03:00:05",
-      "label": "함수 RETURNS와 권한 속성 정리",
+      "label": "파티션 필요성과 RANGE 분할",
       "type": "concept"
     },
     {
       "start": "03:00:05",
-      "end": "03:55:08",
-      "label": "파티션 조회와 EXPLAIN 실습",
+      "end": "03:11:00",
+      "label": "파티션 정보 조회와 추가",
       "type": "practice"
     },
     {
-      "start": "03:55:08",
+      "start": "03:11:00",
+      "end": "03:30:00",
+      "label": "실행 비용과 파티션 프루닝",
+      "type": "concept"
+    },
+    {
+      "start": "03:30:00",
       "end": "04:00:46",
-      "label": "워크숍 범위와 내일 학습 안내",
-      "type": "wrapup"
+      "label": "LIST와 HASH 파티션 실습",
+      "type": "practice"
     },
     {
       "start": "04:00:46",

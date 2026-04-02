@@ -560,23 +560,37 @@ export default function LecturesPage() {
           <p className="text-body">파일을 드래그하거나 클릭해서 업로드해보세요</p>
         </div>
       ) : !isOperator ? (
-        /* 강사 모드: 카드 그리드 */
-        <div className="lecture-card-grid">
+        /* 강사 모드: 리스트 */
+        <div className="card" style={{ overflow: "hidden" }}>
+          <div className="lecture-list-header">
+            <span className="text-label">날짜</span>
+            <span className="text-label" style={{ flex: 1 }}>과목</span>
+            <span className="text-label" style={{ textAlign: "right", width: 48 }}>점수</span>
+            <span className="text-label" style={{ flex: 2 }}>개선포인트</span>
+            <span className="text-label" style={{ width: 40, textAlign: "right" }}></span>
+          </div>
           {displayed.map((evaluation) => (
-            <div key={evaluation.lecture_date} className="lecture-card">
-              <div className="lecture-card-header">
-                <span className="lecture-card-subject">{evaluation.metadata.subjects?.[0] ?? "강의"}{simDates.includes(evaluation.lecture_date) && " 🧬"}</span>
-                <span className="lecture-card-score">{evaluation.weighted_average.toFixed(1)}</span>
+            <Link
+              key={evaluation.lecture_date}
+              to={`/lectures/${evaluation.lecture_date}`}
+              className="lecture-list-row"
+            >
+              <span style={{ fontFamily: "var(--font-mono, monospace)", fontSize: 14, color: "var(--text-tertiary)", fontWeight: 500 }}>
+                {formatDateShort(evaluation.lecture_date)}
+              </span>
+              <span style={{ flex: 1, fontSize: 15, fontWeight: 600, color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", paddingRight: 12 }}>
+                {evaluation.metadata.subjects?.[0] ?? "강의"}{simDates.includes(evaluation.lecture_date) && " 🧬"}
+              </span>
+              <div style={{ width: 48, display: "flex", justifyContent: "flex-end" }}>
+                <ScoreBadge score={evaluation.weighted_average} size="sm" />
               </div>
-              <p className="lecture-card-meta">{formatDateShort(evaluation.lecture_date)} · {evaluation.metadata.instructor ?? "-"}</p>
-              {evaluation.improvements?.[0] && (
-                <p className="lecture-card-improvement">⚠ {evaluation.improvements[0]}</p>
-              )}
-              <div className="lecture-card-actions">
-                <Link to={`/lectures/${evaluation.lecture_date}`} className="btn-secondary">상세</Link>
-                <Link to={`/lectures/${evaluation.lecture_date}?tab=sim`} className="btn-primary">시뮬레이션</Link>
-              </div>
-            </div>
+              <span style={{ flex: 2, fontSize: 13, color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", paddingLeft: 12 }}>
+                {evaluation.improvements?.[0] ?? "-"}
+              </span>
+              <span style={{ width: 40, textAlign: "right", fontSize: 13, fontWeight: 500, color: "var(--primary)" }}>
+                보기
+              </span>
+            </Link>
           ))}
         </div>
       ) : (

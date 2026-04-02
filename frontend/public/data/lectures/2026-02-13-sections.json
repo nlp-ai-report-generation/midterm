@@ -15,20 +15,26 @@
     },
     {
       "start": "09:25:45",
-      "end": "10:01:58",
+      "end": "09:45:00",
       "label": "부모·자식 관계와 ON DELETE CASCADE",
       "type": "concept"
     },
     {
-      "start": "10:01:58",
-      "end": "10:11:27",
+      "start": "09:45:00",
+      "end": "10:01:58",
       "label": "식별·비식별 관계와 자식 테이블 도식",
       "type": "concept"
     },
     {
-      "start": "10:11:27",
-      "end": "10:39:05",
+      "start": "10:01:58",
+      "end": "10:20:00",
       "label": "REFERENTIAL ACTION 옵션 정리",
+      "type": "concept"
+    },
+    {
+      "start": "10:20:00",
+      "end": "10:39:05",
+      "label": "참조 옵션과 삭제 규칙 비교",
       "type": "concept"
     },
     {

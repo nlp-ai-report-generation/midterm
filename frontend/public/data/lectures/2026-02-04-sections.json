@@ -10,67 +10,145 @@
     {
       "start": "09:12:35",
       "end": "09:18:25",
-      "label": "INI 설정과 Workbench 역할",
+      "label": "my.ini 옵션 파일과 Workbench",
       "type": "concept"
     },
     {
       "start": "09:18:25",
       "end": "09:24:11",
-      "label": "워크벤치 화면 구조와 스키마",
+      "label": "스키마·메타데이터·IBD 파일",
       "type": "concept"
     },
     {
       "start": "09:24:11",
       "end": "09:29:57",
-      "label": "스키마·메타데이터·IBD 파일",
+      "label": "Temp 디렉터리와 로그 파일",
       "type": "concept"
     },
     {
       "start": "09:29:57",
       "end": "09:37:44",
-      "label": "Temp 디렉터리와 로그 파일",
-      "type": "concept"
+      "label": "계정 생성과 퍼미션 권한 설정",
+      "type": "practice"
     },
     {
       "start": "09:37:44",
       "end": "09:44:29",
-      "label": "계정 생성과 퍼미션 권한 설정",
+      "label": "상태 변수와 시스템 설정 확인",
       "type": "practice"
     },
     {
       "start": "09:44:29",
       "end": "09:50:39",
-      "label": "상태·시스템 변수 편집 실습",
-      "type": "practice"
-    },
-    {
-      "start": "09:50:39",
-      "end": "09:56:17",
       "label": "오토커밋과 문자셋 상태 확인",
       "type": "concept"
     },
     {
-      "start": "09:56:17",
+      "start": "09:50:39",
+      "end": "10:00:00",
+      "label": "데이터 익스포트와 대시보드 화면",
+      "type": "concept"
+    },
+    {
+      "start": "10:00:00",
       "end": "10:06:50",
-      "label": "데이터 익스포트와 대시보드 확인",
+      "label": "설치 구성요소와 인스턴스 설정",
       "type": "concept"
     },
     {
       "start": "10:06:50",
-      "end": "04:07:57",
+      "end": "10:16:50",
+      "label": "연결 이름과 루트 계정 설정",
+      "type": "concept"
+    },
+    {
+      "start": "10:16:50",
+      "end": "10:28:42",
+      "label": "Workbench 연결 프로필 수정",
+      "type": "practice"
+    },
+    {
+      "start": "10:28:42",
+      "end": "11:01:31",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "11:01:31",
+      "end": "11:12:00",
+      "label": "SQL 스크립트와 쿼리 창 확인",
+      "type": "practice"
+    },
+    {
+      "start": "11:12:00",
+      "end": "11:28:00",
+      "label": "샘플 SQL과 스키마 생성 실습",
+      "type": "practice"
+    },
+    {
+      "start": "11:28:00",
+      "end": "11:45:46",
+      "label": "CREATE DATABASE와 USE 확인",
+      "type": "practice"
+    },
+    {
+      "start": "11:45:46",
+      "end": "12:00:54",
+      "label": "기본값과 널 처리 규칙 설명",
+      "type": "concept"
+    },
+    {
+      "start": "12:00:54",
+      "end": "01:21:23",
       "label": "(점심시간)",
       "type": "break"
     },
     {
-      "start": "04:07:57",
-      "end": "04:14:32",
-      "label": "LOAD DATA와 SOURCE 명령",
+      "start": "01:21:23",
+      "end": "01:46:00",
+      "label": "SELECT와 컬럼 별칭 연습",
       "type": "practice"
     },
     {
-      "start": "04:14:32",
+      "start": "01:46:00",
+      "end": "02:14:00",
+      "label": "산술식과 문자열 함수 계산 실습",
+      "type": "practice"
+    },
+    {
+      "start": "02:14:00",
+      "end": "02:36:50",
+      "label": "ORDER BY와 컬럼 번호 정렬",
+      "type": "concept"
+    },
+    {
+      "start": "02:36:50",
+      "end": "02:49:37",
+      "label": "LIKE·BETWEEN·IN 연산자",
+      "type": "concept"
+    },
+    {
+      "start": "02:49:37",
+      "end": "03:10:16",
+      "label": "(쉬는시간)",
+      "type": "break"
+    },
+    {
+      "start": "03:10:16",
+      "end": "03:29:33",
+      "label": "WHERE 절과 비교 연산 실습",
+      "type": "practice"
+    },
+    {
+      "start": "03:29:33",
+      "end": "03:47:20",
+      "label": "문자열 연결과 CONCAT 함수",
+      "type": "practice"
+    },
+    {
+      "start": "03:47:20",
       "end": "04:19:07",
-      "label": "워크숍 예고와 테이블 삭제 안내",
+      "label": "워크숍 예고와 SELECT 정리",
       "type": "wrapup"
     },
     {
