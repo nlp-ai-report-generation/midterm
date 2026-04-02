@@ -197,7 +197,7 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
       </div>
 
       {/* Score Trend */}
-      <ScoreTrendChart data={trendData} count={evaluations.length} />
+      <ScoreTrendChart data={trendData} count={evaluations.length} evaluations={evaluations} />
 
       {/* 강의 목록 바로가기 */}
       <Link
@@ -367,13 +367,29 @@ function InstructorDashboard({ evaluations }: { evaluations: EvaluationResult[] 
 
 /* ─── Shared Components ─── */
 
-function ScoreTrendChart({ data, count }: { data: { date: string; score: number }[]; count: number }) {
+function ScoreTrendChart({ data, count, evaluations }: { data: { date: string; score: number }[]; count: number; evaluations?: EvaluationResult[] }) {
+  const [trendTab, setTrendTab] = useState("전체");
+  const categoryNames = evaluations?.[0]?.category_results?.map((c) => c.category_name) ?? [];
+  const tabs = ["전체", ...categoryNames];
+
+  const chartData = trendTab === "전체" ? data : (evaluations ?? []).map((e) => {
+    const cat = e.category_results?.find((c) => c.category_name === trendTab);
+    return { date: e.lecture_date, score: cat?.weighted_average ?? 0 };
+  });
+
   return (
     <div className="card card-padded">
       <h2 className="text-section" style={{ marginBottom: 4 }}>점수 추이</h2>
-      <p className="text-caption" style={{ marginBottom: 24 }}>{count}개 강의 가중 평균</p>
+      <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 16 }}>
+        {tabs.map((t) => (
+          <button key={t} onClick={() => setTrendTab(t)} className={`tab-item${trendTab === t ? " active" : ""}`} style={{ padding: "2px 8px", fontSize: 11 }}>
+            {t}
+          </button>
+        ))}
+      </div>
+      <p className="text-caption" style={{ marginBottom: 12 }}>{count}개 강의 · {trendTab}</p>
       <ResponsiveContainer width="100%" height={280}>
-        <AreaChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+        <AreaChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
           <defs>
             <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.15} />

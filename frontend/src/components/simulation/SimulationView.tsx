@@ -171,11 +171,15 @@ export default function SimulationView({ date }: SimulationViewProps) {
       </div>
 
       {/* ─── 강의 요약 배너 ─── */}
-      {sim.lecture_summary?.summary_text && (
-        <div className="sim-summary-banner">
-          <p>{sim.lecture_summary.summary_text}</p>
+      <div className="sim-summary-banner">
+        <img src={`${import.meta.env.BASE_URL}emoji/dna.png`} alt="" width={18} height={18} />
+        <div className="sim-summary-text">
+          <p className="sim-summary-main">
+            <strong>{sim.lecture_summary?.strongest_segment_ids?.[0]}</strong> 구간에서 반응이 가장 크고, <strong>{sim.lecture_summary?.risk_segment_ids?.[0]}</strong> 구간은 주의가 필요해요.
+          </p>
+          <p className="sim-summary-sub">{sim.lecture_summary?.caution_text}</p>
         </div>
-      )}
+      </div>
 
       {/* ─── Main 2-column layout ─── */}
       <div className="sim-main">

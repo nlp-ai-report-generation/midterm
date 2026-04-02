@@ -1433,12 +1433,17 @@ body {
 
 /* Summary banner */
 .sim-summary-banner {
-  padding: 6px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
   background: var(--grey-50);
-  font-size: 12px;
-  color: rgba(0,0,0,0.5);
   flex-shrink: 0;
 }
+.sim-summary-text { display: flex; flex-direction: column; gap: 2px; }
+.sim-summary-main { font-size: 12px; color: rgba(0,0,0,0.85); }
+.sim-summary-main strong { color: var(--primary); }
+.sim-summary-sub { font-size: 11px; color: rgba(0,0,0,0.25); }
 
 /* Metrics row */
 .sim-metrics-row {
