@@ -1,5 +1,15 @@
-import { ArrowUpRight } from "lucide-react";
+import { useEffect } from "react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  BrainCircuit,
+  ChartColumnIncreasing,
+  FileText,
+  Layers,
+  Sparkles,
+} from "lucide-react";
 import { Link } from "react-router-dom";
+import "./PresentationPage.css";
 
 function withBasePath(baseUrl: string, path: string) {
   const normalized = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
@@ -7,435 +17,343 @@ function withBasePath(baseUrl: string, path: string) {
 }
 
 const HERO_METRICS = [
-  { value: "15", label: "강의를 끝까지 읽고 평가해요" },
-  { value: "18", label: "체크리스트 항목을 남겨요" },
-  { value: "0.877", label: "평균 ICC로 신뢰도를 봤어요" },
-  { value: "4", label: "실험으로 설정을 검증했어요" },
+  { value: "15", label: "강의 전체 분석" },
+  { value: "18", label: "평가 항목" },
+  { value: "0.877", label: "평균 ICC" },
+  { value: "4", label: "핵심 실험" },
 ];
 
-const FLOW_SECTIONS = [
+const PILLARS = [
   {
-    step: "01",
-    title: "문제를 다시 정의했어요",
-    desc: "점수만 주는 평가가 아니라, 강사가 다음 수업에서 바로 바꿀 수 있는 근거형 피드백으로 풀었어요.",
+    icon: Layers,
+    title: "원문 기반 평가",
+    desc: "강의 원문과 품질 기준을 같이 읽고 점수와 근거를 함께 남겨요.",
   },
   {
-    step: "02",
-    title: "원문과 기준을 같이 읽어요",
-    desc: "15개 강의 스크립트와 품질 기준을 같이 묶어 감상평이 아니라 기준 기반 평가가 되게 했어요.",
+    icon: ChartColumnIncreasing,
+    title: "신뢰도 검증",
+    desc: "반복 평가 일관성과 청킹 민감도를 실험으로 먼저 확인해요.",
   },
   {
-    step: "03",
-    title: "평가 파이프라인을 시간축으로 묶었어요",
-    desc: "강의를 30분 윈도우로 자르고, 5개 카테고리가 병렬로 읽고, 가중 평균과 리포트까지 한 흐름으로 이어가요.",
-  },
-  {
-    step: "04",
-    title: "실험으로 흔들림을 확인했어요",
-    desc: "같은 강의를 세 번 읽었을 때 얼마나 비슷한지, 청크 크기와 윈도우가 점수를 얼마나 바꾸는지 직접 검증했어요.",
-  },
-  {
-    step: "05",
-    title: "수강자 반응도 시간축으로 보여줘요",
-    desc: "TRIBE v2로 구간별 뇌 반응을 예측해, 어느 설명에서 따라오고 어느 장면에서 이탈하는지 시각화했어요.",
-  },
-  {
-    step: "06",
-    title: "리포트는 행동 단위로 마무리해요",
-    desc: "관찰된 사실, 해석, 다음 액션을 분리해서 강사가 바로 적용할 수 있는 언어로 정리했어요.",
+    icon: BrainCircuit,
+    title: "시간축 시뮬레이션",
+    desc: "TRIBE v2로 구간별 반응 흐름을 보여줘서 처방 포인트를 잡아요.",
   },
 ];
 
-const PIPELINE_NODES = [
-  "강의 STT 원문",
+const PIPELINE = [
+  "강의 원문 수집",
   "시간 윈도우 청킹",
   "5개 카테고리 병렬 평가",
   "18개 항목 집계",
-  "리포트 생성",
+  "행동 제안 리포트",
 ];
 
-const RELIABILITY_METRICS = [
-  { label: "ICC", value: "0.877", note: "Good" },
-  { label: "Kappa", value: "0.883", note: "Almost Perfect" },
-  { label: "Alpha", value: "0.873", note: "Reliable" },
-  { label: "SSI", value: "0.974", note: "Very Stable" },
+const RELIABILITY = [
+  { label: "ICC", value: "0.877", pct: 88 },
+  { label: "Kappa", value: "0.883", pct: 88 },
+  { label: "Alpha", value: "0.873", pct: 87 },
+  { label: "SSI", value: "0.974", pct: 97 },
 ];
 
-const DISTRIBUTION = [
-  { label: "Excellent", count: 8, width: 88 },
-  { label: "Good", count: 5, width: 60 },
-  { label: "Moderate", count: 2, width: 28 },
-  { label: "Poor", count: 0, width: 8 },
-];
+const TIMELINE_STRIP = [62, 68, 74, 78, 86, 80, 73, 71, 79, 83, 76, 66];
 
-const EXPERIMENTS = [
+const SIMULATION_POINTS = [
   {
-    title: "반복 평가 신뢰도",
-    value: "13 / 15",
-    detail: "15개 강의 중 13개가 Good 이상이었어요.",
+    title: "반응 피크 구간",
+    value: "01:26 ~ 01:31",
+    desc: "기술 용어를 단계별로 반복 설명한 장면에서 반응이 가장 높게 올라갔어요.",
   },
   {
-    title: "청크 크기 민감도",
-    value: "+0.212",
-    detail: "30분 청크가 15분 청크보다 평균 점수가 높았어요.",
+    title: "주의 필요 구간",
+    value: "03:26 ~ 03:31",
+    desc: "고급 개념을 짧게 몰아서 설명한 장면에서 반응이 내려갔어요.",
   },
   {
-    title: "효과 크기",
-    value: "1.142",
-    detail: "청크 차이가 작지 않다는 점을 실험으로 확인했어요.",
-  },
-  {
-    title: "권장 운영 설정",
-    value: "60 / 30",
-    detail: "60분 윈도우와 30분 hop 조합이 균형이 좋았어요.",
+    title: "실습 전환 효과",
+    value: "실행 직후 반등",
+    desc: "설명에서 실습으로 넘어가는 순간 반응이 다시 올라오는 흐름이 보여요.",
   },
 ];
 
-const SAMPLE_REPORTS = [
-  {
-    title: "2026-02-02 Java I/O",
-    desc: "버퍼드 리더/라이터 설명과 파일 방문자 패턴 구간을 비교해서 설명 속도와 실습 전환을 같이 짚었어요.",
-  },
-  {
-    title: "2026-02-09 Front-End",
-    desc: "문자열 함수 실습은 반응이 좋았고, INFORMATION_SCHEMA 설명 구간은 시각 보조가 더 필요하다는 흐름으로 정리했어요.",
-  },
-  {
-    title: "2026-02-24 MySQL",
-    desc: "트랜잭션 롤백 실습은 강점으로, 파티션 유형 설명은 압축이 심한 구간으로 읽어 마무리 요약 부족까지 연결했어요.",
-  },
+const REPORT_SAMPLES = [
+  "Java I/O 강의는 실습 구간 반응이 높고, 고급 개념에서 속도 조절이 필요했어요.",
+  "Front-End 강의는 문자열 함수 예제가 강점이었고, 추상 개념은 시각 보조가 더 필요했어요.",
+  "MySQL 강의는 롤백 실습이 강점이었고, 파티션 설명은 압축이 커서 마무리 보강이 필요했어요.",
 ];
 
-const SCREENS = [
-  {
-    title: "Dashboard",
-    desc: "심사자는 먼저 전체 강의 흐름과 주요 지표를 봐요.",
-    file: "presentation/assets/ui-dashboard.png",
-  },
-  {
-    title: "Lecture Detail",
-    desc: "날짜별 강의에서 점수, 근거, 시뮬레이션 흐름을 같이 읽어요.",
-    file: "presentation/assets/ui-lecture-detail.png",
-  },
-  {
-    title: "EDA",
-    desc: "분포와 카테고리 차이를 한눈에 비교해요.",
-    file: "presentation/assets/ui-eda.png",
-  },
-  {
-    title: "Experiments",
-    desc: "신뢰도와 변수 민감도 결과를 별도 화면에서 확인해요.",
-    file: "presentation/assets/ui-experiments.png",
-  },
+const UI_SHOTS = [
+  { title: "운영 허브", file: "presentation/assets/ui-dashboard.png" },
+  { title: "강의 상세", file: "presentation/assets/ui-lecture-detail.png" },
+  { title: "검증 화면", file: "presentation/assets/ui-validation.png" },
+  { title: "연동 화면", file: "presentation/assets/ui-integrations.png" },
 ];
 
-const REPORT_POINTS = [
-  "강점, 개선점, 다음 액션을 따로 보여줘요.",
-  "근거 타임스탬프를 남겨서 다시 확인할 수 있어요.",
-  "시뮬레이션은 구간별 반응과 설명 리듬을 같이 보여줘요.",
-];
-
-const LIMITS = [
-  "텍스트 기반 평가라 제스처와 표정 같은 비언어 신호는 아직 반영하지 못해요.",
-  "TRIBE v2 시뮬레이션은 현재 3개 강의를 중심으로 실데이터 검증을 진행했어요.",
-  "한국어 강의 전반에 대한 외부 검증은 앞으로 더 쌓아야 해요.",
+const BOUNDARIES = [
+  "텍스트 기반이라 비언어 신호는 아직 반영하지 못해요.",
+  "TRIBE v2는 현재 3개 강의를 중심으로 검증했어요.",
+  "한국어 강의 전반의 외부 검증은 더 필요해요.",
 ];
 
 export default function PresentationPage() {
   const baseUrl = import.meta.env.BASE_URL;
-  const deckSrc = withBasePath(baseUrl, "presentation/index.html");
-  const notionSrc = "https://www.notion.so/syjin1999/AI-33626a79dcd3812abf6ceac2397e2fb3";
+  const notionSrc =
+    "https://www.notion.so/syjin1999/AI-33626a79dcd3812abf6ceac2397e2fb3";
+
+  useEffect(() => {
+    const scenes = document.querySelectorAll<HTMLElement>(".pres2-scene");
+    if (!scenes.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.24, rootMargin: "-8% 0px" }
+    );
+
+    for (const scene of scenes) observer.observe(scene);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="presentation-shell">
-      <div className="presentation-topbar">
-        <Link to="/" className="presentation-wordmark">
+    <div className="pres2-page">
+      <header className="pres2-topbar">
+        <Link to="/" className="pres2-brand">
+          <Sparkles size={14} />
           AI Lecture Report
         </Link>
-        <div className="presentation-topbar-actions">
-          <a href={notionSrc} target="_blank" rel="noreferrer" className="presentation-inline-link">
+        <nav className="pres2-scene-nav" aria-label="장면 이동">
+          <a href="#scene-pillars">핵심</a>
+          <a href="#scene-pipeline">흐름</a>
+          <a href="#scene-simulation">시뮬레이션</a>
+          <a href="#scene-report">결과</a>
+        </nav>
+        <div className="pres2-topbar-actions">
+          <a
+            href={notionSrc}
+            target="_blank"
+            rel="noreferrer"
+            className="pres2-inline-link"
+          >
             보고서 샘플
             <ArrowUpRight size={14} />
           </a>
-          <a href={deckSrc} target="_blank" rel="noreferrer" className="btn-primary">
-            공개 발표 덱 열기
-          </a>
+          <Link to="/" className="btn-primary">
+            서비스 보기
+          </Link>
         </div>
-      </div>
+      </header>
 
-      <section className="presentation-hero">
-        <div className="presentation-hero-copy presentation-fade-up">
-          <p className="presentation-kicker">PROJECT INTRODUCTION</p>
-          <h1>
-            강의 피드백을
-            <br />
-            점수에서 근거로
-            <br />
-            바꿔요
-          </h1>
-          <p className="presentation-hero-body">
-            AI가 강의 원문을 처음부터 끝까지 읽고 18개 항목으로 평가해요.
-            여기에 TRIBE v2 시뮬레이션을 더해, 어느 구간이 따라가기 쉬웠고
-            어디서 설명 리듬이 무너졌는지 시간축으로 보여줘요.
-          </p>
-          <div className="presentation-hero-actions">
-            <a href={deckSrc} target="_blank" rel="noreferrer" className="btn-primary">
-              공개 발표 덱 보기
-            </a>
-            <a href={notionSrc} target="_blank" rel="noreferrer" className="btn-secondary">
-              Notion 보고서 보기
-            </a>
-            <Link to="/" className="presentation-inline-link">
-              서비스 보기
-            </Link>
-          </div>
-        </div>
-
-        <div className="presentation-hero-panel presentation-fade-up" style={{ animationDelay: "120ms" }}>
-          <div className="presentation-hero-panel-head">
-            <span>이번 발표에서 보여주는 것</span>
-            <strong>신뢰도 + UX + 실데이터</strong>
-          </div>
-          <div className="presentation-metric-grid">
-            {HERO_METRICS.map((metric, index) => (
-              <article
-                key={metric.label}
-                className="presentation-metric-card"
-                style={{ animationDelay: `${index * 80 + 180}ms` }}
-              >
-                <strong>{metric.value}</strong>
-                <span>{metric.label}</span>
-              </article>
-            ))}
-          </div>
-          <div className="presentation-hero-aside">
-            <p>22,756줄 원문과 15개 강의 구간을 다시 정리했어요.</p>
-            <p>평가 데이터는 non-break 섹션 coverage 0건을 없애고 다시 맞췄어요.</p>
-          </div>
-        </div>
-      </section>
-
-      <section className="presentation-section presentation-section-light">
-        <div className="presentation-section-heading">
-          <p className="presentation-kicker">FLOW</p>
-          <h2>발표는 이 흐름으로 읽으면 돼요</h2>
-          <p>
-            README와 최종 보고서 내용을 발표에 맞게 줄이고, 심사자가 바로 이해할
-            수 있는 장면 중심으로 다시 배치했어요.
-          </p>
-        </div>
-
-        <div className="presentation-flow-grid">
-          {FLOW_SECTIONS.map((section, index) => (
-            <article
-              key={section.step}
-              className="presentation-flow-card presentation-fade-up"
-              style={{ animationDelay: `${index * 80}ms` }}
-            >
-              <span>{section.step}</span>
-              <h3>{section.title}</h3>
-              <p>{section.desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="presentation-section presentation-section-dark">
-        <div className="presentation-section-heading presentation-section-heading-dark">
-          <p className="presentation-kicker">SYSTEM</p>
-          <h2>평가와 리포트를 한 장면으로 묶었어요</h2>
-          <p>
-            토큰이 아니라 시간 기준으로 청킹하고, 카테고리별 하네스를 분리해서
-            바뀐 기준도 추적할 수 있게 했어요.
-          </p>
-        </div>
-
-        <div className="presentation-pipeline">
-          {PIPELINE_NODES.map((node, index) => (
-            <div key={node} className="presentation-pipeline-node">
-              <span>{`0${index + 1}`}</span>
-              <strong>{node}</strong>
-            </div>
-          ))}
-        </div>
-
-        <div className="presentation-dual-grid">
-          <article className="presentation-info-card">
-            <p className="presentation-card-label">FACT</p>
-            <h3>하네스는 코드가 아니라 문서에 있어요</h3>
-            <p>
-              평가 기준, 5점 앵커, chunk focus, 출력 JSON 형식을 MD로 관리해서
-              기준 변경 이유를 남기고 빠르게 보정할 수 있어요.
+      <section id="scene-hero" className="pres2-hero pres2-scene">
+        <div className="pres2-wrap pres2-hero-grid">
+          <div className="pres2-copy">
+            <p className="pres2-eyebrow pres2-reveal">PROJECT INTRODUCTION</p>
+            <h1 className="pres2-reveal" style={{ animationDelay: "80ms" }}>
+              강의 피드백을
+              <br />
+              점수에서 근거로
+              <br />
+              바꿔요
+            </h1>
+            <p className="pres2-reveal" style={{ animationDelay: "140ms" }}>
+              강의 원문을 끝까지 읽어 항목별 점수와 근거를 남기고, 시간축 시뮬레이션으로
+              어느 구간을 고치면 되는지 한 화면에서 바로 보여줘요.
             </p>
-          </article>
-          <article className="presentation-info-card">
-            <p className="presentation-card-label">INTERPRETATION</p>
-            <h3>리포트의 핵심은 채점이 아니라 다음 액션이에요</h3>
-            <p>
-              점수만 주지 않고 관찰된 사실, 해석, 개선 제안을 따로 써서 강의
-              설계로 바로 이어지게 만들었어요.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section className="presentation-section presentation-section-light">
-        <div className="presentation-section-heading">
-          <p className="presentation-kicker">VALIDATION</p>
-          <h2>이 점수를 믿어도 되는지 먼저 확인했어요</h2>
-          <p>
-            반복 평가 신뢰도와 청크 민감도를 같이 보여줘야, 발표가 기능 소개에
-            머물지 않고 측정 도구의 설득력까지 전달돼요.
-          </p>
-        </div>
-
-        <div className="presentation-validation-grid">
-          <div className="presentation-metric-stack">
-            {RELIABILITY_METRICS.map((metric, index) => (
-              <article
-                key={metric.label}
-                className="presentation-validation-card presentation-fade-up"
-                style={{ animationDelay: `${index * 70}ms` }}
-              >
-                <span>{metric.label}</span>
-                <strong>{metric.value}</strong>
-                <p>{metric.note}</p>
-              </article>
-            ))}
+            <div className="pres2-actions pres2-reveal" style={{ animationDelay: "200ms" }}>
+              <a href="#scene-pipeline" className="btn-primary">
+                핵심 흐름 보기
+                <ArrowRight size={15} />
+              </a>
+              <a href={notionSrc} target="_blank" rel="noreferrer" className="btn-secondary">
+                Notion 열기
+              </a>
+            </div>
           </div>
 
-          <div className="presentation-chart-card">
-            <div className="presentation-chart-head">
-              <div>
-                <p className="presentation-card-label">ICC DISTRIBUTION</p>
-                <h3>15개 강의 중 13개가 Good 이상이었어요</h3>
-              </div>
-              <span className="presentation-pill">평균 ICC 0.877</span>
-            </div>
-            <div className="presentation-bar-list">
-              {DISTRIBUTION.map((item) => (
-                <div key={item.label} className="presentation-bar-row">
-                  <div className="presentation-bar-meta">
-                    <span>{item.label}</span>
-                    <strong>{item.count}</strong>
-                  </div>
-                  <div className="presentation-bar-track">
-                    <div className="presentation-bar-fill" style={{ width: `${item.width}%` }} />
-                  </div>
-                </div>
+          <aside className="pres2-panel pres2-reveal" style={{ animationDelay: "120ms" }}>
+            <div className="pres2-metric-grid">
+              {HERO_METRICS.map((metric, index) => (
+                <article
+                  key={metric.label}
+                  className="pres2-metric"
+                  style={{ animationDelay: `${170 + index * 70}ms` }}
+                >
+                  <strong>{metric.value}</strong>
+                  <span>{metric.label}</span>
+                </article>
               ))}
             </div>
-          </div>
-        </div>
-
-        <div className="presentation-experiment-grid">
-          {EXPERIMENTS.map((item, index) => (
-            <article
-              key={item.title}
-              className="presentation-experiment-card"
-              style={{ animationDelay: `${index * 60}ms` }}
-            >
-              <span>{item.title}</span>
-              <strong>{item.value}</strong>
-              <p>{item.detail}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="presentation-section presentation-section-light">
-        <div className="presentation-section-heading">
-          <p className="presentation-kicker">REPORT SAMPLES</p>
-          <h2>실제 강의는 이런 식으로 요약해요</h2>
-          <p>
-            최종 보고서에서 대표 장면만 골라서, 어떤 설명이 잘 먹혔고 어디서
-            리듬이 무너졌는지 발표용 문장으로 다시 압축했어요.
-          </p>
-        </div>
-
-        <div className="presentation-flow-grid">
-          {SAMPLE_REPORTS.map((item, index) => (
-            <article
-              key={item.title}
-              className="presentation-flow-card presentation-fade-up"
-              style={{ animationDelay: `${index * 90}ms` }}
-            >
-              <span>sample</span>
-              <h3>{item.title}</h3>
-              <p>{item.desc}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="presentation-section presentation-section-dark">
-        <div className="presentation-section-heading presentation-section-heading-dark">
-          <p className="presentation-kicker">SIMULATION</p>
-          <h2>TRIBE v2는 어느 구간에서 따라오고 이탈하는지 보여줘요</h2>
-          <p>
-            정적 점수만으로는 놓치는 시간축 변화를 3D 뇌 반응과 설명 리듬으로
-            같이 보여줘서, 문제 구간을 더 구체적으로 읽게 했어요.
-          </p>
-        </div>
-
-        <div className="presentation-highlight-panel">
-          <div>
-            <p className="presentation-card-label">WHY IT MATTERS</p>
-            <h3>평가가 전체 요약이라면, 시뮬레이션은 구간 처방이에요</h3>
-          </div>
-          <ul>
-            {REPORT_POINTS.map((point) => (
-              <li key={point}>{point}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="presentation-screen-grid">
-          {SCREENS.map((screen, index) => (
-            <article
-              key={screen.title}
-              className="presentation-screen-card presentation-fade-up"
-              style={{ animationDelay: `${index * 90}ms` }}
-            >
-              <div className="presentation-screen-frame">
-                <img src={withBasePath(baseUrl, screen.file)} alt={screen.title} />
-              </div>
-              <div className="presentation-screen-copy">
-                <span>{screen.title}</span>
-                <p>{screen.desc}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="presentation-section presentation-section-light">
-        <div className="presentation-closing">
-          <div className="presentation-closing-copy">
-            <p className="presentation-kicker">NEXT</p>
-            <h2>이번 발표는 기능보다 운영 완성도를 설득하는 장면이에요</h2>
-            <p>
-              지금은 전체 sections와 evaluations를 원문 기준으로 다시 맞췄고,
-              발표용 소개 페이지와 공개 덱 흐름까지 같은 톤으로 정리했어요.
-              다음 단계는 실데이터 연결 범위를 넓히고, 발표 리허설 기준으로
-              시뮬레이션 화면을 더 다듬는 일이에요.
+            <p className="pres2-panel-note">
+              22,756줄 원문과 15개 강의를 다시 맞춰서, 구간 흐름과 평가 근거가
+              끊기지 않게 정리했어요.
             </p>
-            <ul className="presentation-limit-list">
-              {LIMITS.map((item) => (
-                <li key={item}>{item}</li>
+          </aside>
+        </div>
+      </section>
+
+      <section id="scene-pillars" className="pres2-section pres2-section-light pres2-scene">
+        <div className="pres2-wrap">
+          <div className="pres2-section-head pres2-reveal">
+            <p className="pres2-eyebrow pres2-eyebrow-light">CORE PILLARS</p>
+            <h2>발표 핵심을 네 장면으로 압축했어요</h2>
+          </div>
+          <div className="pres2-card-grid">
+            {PILLARS.map((item, index) => (
+              <article
+                key={item.title}
+                className="pres2-card pres2-reveal"
+                style={{ animationDelay: `${index * 90}ms` }}
+              >
+                <item.icon size={18} className="pres2-card-icon" />
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="scene-pipeline" className="pres2-section pres2-section-dark pres2-scene">
+        <div className="pres2-wrap">
+          <div className="pres2-section-head pres2-reveal">
+            <p className="pres2-eyebrow">PIPELINE + RELIABILITY</p>
+            <h2>평가 흐름과 신뢰도를 같이 보여줘요</h2>
+          </div>
+
+          <div className="pres2-pipeline">
+            {PIPELINE.map((step, index) => (
+              <div
+                key={step}
+                className="pres2-pipeline-item pres2-reveal"
+                style={{ animationDelay: `${index * 70}ms` }}
+              >
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <p>{step}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="pres2-reliability-grid">
+            <div className="pres2-bars">
+              {RELIABILITY.map((metric, index) => (
+                <article
+                  key={metric.label}
+                  className="pres2-bar-row pres2-reveal"
+                  style={{ animationDelay: `${120 + index * 70}ms` }}
+                >
+                  <div className="pres2-bar-meta">
+                    <span>{metric.label}</span>
+                    <strong>{metric.value}</strong>
+                  </div>
+                  <div className="pres2-bar-track">
+                    <span style={{ width: `${metric.pct}%` }} />
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <aside className="pres2-info-graphic pres2-reveal" style={{ animationDelay: "220ms" }}>
+              <div className="pres2-ring" aria-hidden="true">
+                <span>87%</span>
+              </div>
+              <p>15개 중 13개 강의가 Good 이상으로 수렴했어요.</p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section id="scene-simulation" className="pres2-section pres2-section-light pres2-scene">
+        <div className="pres2-wrap">
+          <div className="pres2-section-head pres2-reveal">
+            <p className="pres2-eyebrow pres2-eyebrow-light">SIMULATION</p>
+            <h2>장면 전환마다 반응 리듬을 같이 읽어요</h2>
+          </div>
+
+          <div className="pres2-strip pres2-reveal" style={{ animationDelay: "80ms" }}>
+            {TIMELINE_STRIP.map((value, index) => (
+              <span key={`${value}-${index}`} style={{ height: `${value}%` }} />
+            ))}
+          </div>
+
+          <div className="pres2-sim-grid">
+            {SIMULATION_POINTS.map((item, index) => (
+              <article
+                key={item.title}
+                className="pres2-sim-card pres2-reveal"
+                style={{ animationDelay: `${130 + index * 90}ms` }}
+              >
+                <p className="pres2-sim-card__value">{item.value}</p>
+                <h3>{item.title}</h3>
+                <p>{item.desc}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="scene-report" className="pres2-section pres2-section-light pres2-scene">
+        <div className="pres2-wrap">
+          <div className="pres2-section-head pres2-reveal">
+            <p className="pres2-eyebrow pres2-eyebrow-light">REPORT + UI</p>
+            <h2>결과를 실제 화면으로 바로 보여줘요</h2>
+          </div>
+
+          <div className="pres2-sample-list">
+            {REPORT_SAMPLES.map((line, index) => (
+              <div
+                key={line}
+                className="pres2-sample-item pres2-reveal"
+                style={{ animationDelay: `${index * 90}ms` }}
+              >
+                <FileText size={15} />
+                <p>{line}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="pres2-shot-grid">
+            {UI_SHOTS.map((shot, index) => (
+              <figure
+                key={shot.title}
+                className="pres2-shot pres2-reveal"
+                style={{ animationDelay: `${130 + index * 70}ms` }}
+              >
+                <img src={withBasePath(baseUrl, shot.file)} alt={shot.title} />
+                <figcaption>{shot.title}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="scene-close" className="pres2-cta pres2-scene">
+        <div className="pres2-wrap pres2-cta-inner">
+          <div className="pres2-reveal">
+            <p className="pres2-eyebrow">BOUNDARY</p>
+            <h2>지금 가능한 범위와 다음 단계도 같이 공개해요</h2>
+            <ul className="pres2-boundary-list">
+              {BOUNDARIES.map((line) => (
+                <li key={line}>{line}</li>
               ))}
             </ul>
           </div>
-          <div className="presentation-closing-actions">
-            <a href={deckSrc} target="_blank" rel="noreferrer" className="btn-primary">
-              새 탭에서 발표 자료 열기
-            </a>
+
+          <div className="pres2-actions pres2-reveal" style={{ animationDelay: "100ms" }}>
+            <Link to="/" className="btn-primary">
+              서비스로 이동
+              <ArrowRight size={15} />
+            </Link>
             <a href={notionSrc} target="_blank" rel="noreferrer" className="btn-secondary">
               Notion 열기
             </a>
-            <Link to="/" className="presentation-inline-link">
-              첫 화면으로 돌아가기
-            </Link>
+            <a href="#scene-hero" className="pres2-inline-link">
+              위로 이동
+            </a>
           </div>
         </div>
       </section>

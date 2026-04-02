@@ -10,6 +10,7 @@ import ValidationPage from "@/pages/ValidationPage";
 import SettingsPage from "@/pages/SettingsPage";
 import IntegrationsPage from "@/pages/IntegrationsPage";
 import PresentationPage from "@/pages/PresentationPage";
+import AboutPage from "@/pages/AboutPage";
 
 
 function RequireRole({ children }: { children: React.ReactNode }) {
@@ -28,7 +29,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<RoleSelectPage />} />
       <Route path="/presentation" element={<PresentationPage />} />
-      <Route path="/about" element={<PresentationPage />} />
+      <Route path="/about" element={<AboutPage />} />
       <Route
         element={
           <RequireRole>
