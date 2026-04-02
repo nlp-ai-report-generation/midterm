@@ -422,13 +422,18 @@ export default function LectureDetailPage() {
             <Suspense fallback={null}>
               <SimExplainerPopup
                 onClose={() => setShowExplainer(false)}
-                onDismiss={() => {
-                  try { localStorage.setItem("sim-explainer-dismissed", "1"); } catch {}
-                  setShowExplainer(false);
-                }}
+                onDismiss={() => setShowExplainer(false)}
               />
             </Suspense>
           )}
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+            <button
+              onClick={() => setShowExplainer(true)}
+              style={{ fontSize: 13, color: "#86868b", background: "none", border: "none", cursor: "pointer", padding: "4px 0" }}
+            >
+              시뮬레이션 설명 보기 →
+            </button>
+          </div>
           <Suspense fallback={<div className="flex h-64 items-center justify-center"><div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" /></div>}>
             {simLoaded && <SimulationView date={date} />}
           </Suspense>
