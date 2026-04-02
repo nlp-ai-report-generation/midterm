@@ -20,7 +20,7 @@ function timeToSeconds(t: string): number {
 
 const TYPE_COLORS: Record<string, string> = {
   concept: "#1d1d1f",
-  practice: "#0071e3",
+  practice: "#FF6B00",
   intro: "#6e6e73",
   review: "#6e6e73",
   break: "#e8e8ed",

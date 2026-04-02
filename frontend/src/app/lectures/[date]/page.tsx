@@ -417,6 +417,7 @@ export default function LectureDetailPage() {
           improvements={improvements ?? []}
           recommendations={recommendations ?? []}
           simulationSummary={simulation?.lecture_summary?.summary_text}
+          simulationData={simulation}
           reportMarkdown={reportMarkdown}
         />
       )}
@@ -541,6 +542,7 @@ interface ReportInlineProps {
   improvements: string[];
   recommendations: string[];
   simulationSummary?: string;
+  simulationData?: SimulationResult | null;
   reportMarkdown: string;
 }
 
@@ -555,6 +557,7 @@ function ReportInline({
   improvements,
   recommendations,
   simulationSummary,
+  simulationData,
   reportMarkdown,
 }: ReportInlineProps) {
   const [exporting, setExporting] = useState<"notion" | "drive" | null>(null);
@@ -672,13 +675,43 @@ function ReportInline({
       )}
 
       {/* Simulation summary — 시뮬레이션 데이터 있을 때만 */}
-      {simulationSummary && (
+      {simulationData && (
         <div className="report-section">
           <div className="report-section-header" style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <img src={`${import.meta.env.BASE_URL}emoji/dna.png`} alt="" width={20} height={20} />
             <p className="report-section-title">뇌 반응 시뮬레이션</p>
           </div>
-          <p className="report-sim-text">{simulationSummary}</p>
+          {simulationSummary && <p className="report-sim-text">{simulationSummary}</p>}
+          {(() => {
+            const strongId = simulationData.lecture_summary?.strongest_segment_ids?.[0];
+            const riskId = simulationData.lecture_summary?.risk_segment_ids?.[0];
+            const strongSeg = simulationData.segments.find((s: { segment_id: string }) => s.segment_id === strongId);
+            const riskSeg = simulationData.segments.find((s: { segment_id: string }) => s.segment_id === riskId);
+            const strongProfile = strongSeg ? computeBrainProfile8(strongSeg) : null;
+            const riskProfile = riskSeg ? computeBrainProfile8(riskSeg) : null;
+            return (
+              <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 8 }}>
+                {strongSeg && strongProfile && (
+                  <div style={{ padding: "12px 16px", background: "rgba(255,107,0,0.06)", borderRadius: 10 }}>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: "#1d1d1f" }}>
+                      반응이 큰 구간 ({strongSeg.start_time.slice(0, 5)}~{strongSeg.end_time.slice(0, 5)})
+                    </p>
+                    <p style={{ fontSize: 14, color: "#6e6e73", marginTop: 4 }}>{strongProfile.interpretation}</p>
+                    {strongSeg.labels?.[0] && <p style={{ fontSize: 13, color: "#86868b", marginTop: 2 }}>{strongSeg.labels[0]}</p>}
+                  </div>
+                )}
+                {riskSeg && riskProfile && (
+                  <div style={{ padding: "12px 16px", background: "rgba(0,0,0,0.03)", borderRadius: 10 }}>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: "#1d1d1f" }}>
+                      주의 필요 구간 ({riskSeg.start_time.slice(0, 5)}~{riskSeg.end_time.slice(0, 5)})
+                    </p>
+                    <p style={{ fontSize: 14, color: "#6e6e73", marginTop: 4 }}>{riskProfile.interpretation}</p>
+                    {riskSeg.labels?.[0] && <p style={{ fontSize: 13, color: "#86868b", marginTop: 2 }}>{riskSeg.labels[0]}</p>}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
       )}
 

@@ -124,7 +124,7 @@ export default function SectionDrawer({
                       style={{
                         height: "100%",
                         width: `${cat.value}%`,
-                        background: cat.isTop ? "#0071e3" : "#d2d2d7",
+                        background: cat.isTop ? "#FF6B00" : "#d2d2d7",
                         borderRadius: 999,
                         transition: "width 0.3s ease",
                       }}
