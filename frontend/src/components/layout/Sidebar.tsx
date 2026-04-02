@@ -5,6 +5,8 @@ import {
   FileText,
   BarChart2,
   ShieldCheck,
+  Settings,
+  Link2,
   type LucideIcon,
 } from "lucide-react";
 
@@ -19,7 +21,7 @@ interface NavGroup {
   items: NavItem[];
 }
 
-const OPERATOR_NAV: NavGroup[] = [
+const NAV_GROUPS: NavGroup[] = [
   {
     items: [
       { to: "/dashboard", label: "홈", icon: Home },
@@ -33,20 +35,18 @@ const OPERATOR_NAV: NavGroup[] = [
       { to: "/validation", label: "검증", icon: ShieldCheck },
     ],
   },
-];
-
-const INSTRUCTOR_NAV: NavGroup[] = [
   {
+    label: "설정",
     items: [
-      { to: "/dashboard", label: "홈", icon: Home },
-      { to: "/lectures", label: "내 강의", icon: FileText },
+      { to: "/settings", label: "설정", icon: Settings },
+      { to: "/integrations", label: "연동", icon: Link2 },
     ],
   },
 ];
 
 export default function Sidebar() {
   const { isOperator } = useRole();
-  const navGroups = isOperator ? OPERATOR_NAV : INSTRUCTOR_NAV;
+  const navGroups = NAV_GROUPS;
 
   return (
     <aside

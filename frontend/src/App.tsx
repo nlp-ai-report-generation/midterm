@@ -7,6 +7,8 @@ import DashboardPage from "@/app/dashboard/page";
 import LecturesPage from "@/app/lectures/page";
 import LectureDetailPage from "@/app/lectures/[date]/page";
 import ValidationPage from "@/pages/ValidationPage";
+import SettingsPage from "@/pages/SettingsPage";
+import IntegrationsPage from "@/pages/IntegrationsPage";
 
 
 function RequireRole({ children }: { children: React.ReactNode }) {
@@ -36,6 +38,8 @@ export default function App() {
         <Route path="/lectures/:date" element={<LectureDetailPage />} />
         <Route path="/analysis" element={<DashboardPage />} /> {/* TODO: AnalysisPage */}
         <Route path="/validation" element={<ValidationPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/integrations" element={<IntegrationsPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
