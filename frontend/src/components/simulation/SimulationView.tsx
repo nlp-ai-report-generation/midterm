@@ -20,7 +20,7 @@ import {
   getSimulationTimelineFrames,
   getSimulationTranscript,
 } from "@/lib/data";
-import { formatDate } from "@/lib/utils";
+// formatDate removed — unused
 import {
   computeBrainProfile8,
   flattenTranscript,
@@ -122,7 +122,6 @@ export default function SimulationView({ date }: SimulationViewProps) {
     for (const f of liveFrames.frames) { const e = m.get(f.segment_id); if (!e) m.set(f.segment_id, { start: f.lecture_seconds, end: f.lecture_seconds }); else { e.start = Math.min(e.start, f.lecture_seconds); e.end = Math.max(e.end, f.lecture_seconds); } }
     return m;
   }, [liveFrames]);
-  const jumpIds = useMemo(() => sim ? [...sim.lecture_summary.strongest_segment_ids, ...sim.lecture_summary.risk_segment_ids].slice(0, MAX_JUMPS) : [], [sim]);
 
   /* ── playback ── */
   useEffect(() => {
@@ -172,21 +171,32 @@ export default function SimulationView({ date }: SimulationViewProps) {
           <span className="sim-counter">{fi + 1}/{liveFrames.frames.length}</span>
         </div>
 
-        {/* 미니 점수 차트 (시간축 동기화) */}
-        <div style={{ height: 64, padding: "0 12px" }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={tlData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
-              <CartesianGrid stroke="#f5f5f7" vertical={false} />
-              {sim.lecture_summary.strongest_segment_ids.map((id) => { const b = bounds.get(id); return b ? <ReferenceArea key={`s-${id}`} x1={b.start} x2={b.end} fill="rgba(255,107,0,0.08)" strokeOpacity={0} /> : null; })}
-              {sim.lecture_summary.risk_segment_ids.map((id) => { const b = bounds.get(id); return b ? <ReferenceArea key={`r-${id}`} x1={b.start} x2={b.end} fill="rgba(0,0,0,0.03)" strokeOpacity={0} /> : null; })}
-              <ReferenceLine x={tlFrame.lecture_seconds} stroke="#FF6B00" strokeWidth={2} />
-              <XAxis dataKey="lecture_seconds" type="number" domain={["dataMin", "dataMax"]} tick={false} axisLine={false} height={0} />
-              <YAxis domain={[0, 100]} tick={false} axisLine={false} width={0} />
-              <Line type="basis" dataKey="attention_display" stroke="#FF6B00" strokeWidth={1.5} dot={false} connectNulls />
-              <Line type="basis" dataKey="load_display" stroke="#1d1d1f" strokeWidth={1} dot={false} connectNulls />
-              <Line type="basis" dataKey="novelty_display" stroke="#86868b" strokeWidth={1} dot={false} connectNulls />
-            </LineChart>
-          </ResponsiveContainer>
+        {/* 평가 점수 미니 차트 (세그먼트별 건강도, 시간축 동기화) */}
+        <div style={{ height: 48, padding: "0 12px", display: "flex", alignItems: "end", gap: 1 }}>
+          {sim.segments.map((s, i) => {
+            const h = segmentHealthScore(s);
+            const barH = Math.max(4, (h.score / 100) * 44);
+            const isCurrent = s.segment_id === seg.segment_id;
+            return (
+              <div
+                key={i}
+                style={{
+                  flex: 1,
+                  height: barH,
+                  background: isCurrent ? "#FF6B00" : h.score >= 65 ? "#34C759" : h.score >= 35 ? "#FF9500" : "#FF3B30",
+                  opacity: isCurrent ? 1 : 0.5,
+                  borderRadius: "2px 2px 0 0",
+                  cursor: "pointer",
+                  transition: "all 0.15s",
+                }}
+                title={`${s.start_time.slice(0, 5)} · 건강도 ${h.score} (${h.label})`}
+                onClick={() => {
+                  const idx = liveFrames.frames.findIndex((f) => f.segment_id === s.segment_id);
+                  if (idx >= 0) jump(idx);
+                }}
+              />
+            );
+          })}
         </div>
       </div>
 
