@@ -29,8 +29,8 @@ const PAIN_SOLVE = [
       icon: "icons/check.png",
       title: "18개 항목 기준으로 원문을 채점해요",
       body: "강의 품질 기준 문서에 따라 5개 카테고리 18개 항목으로 채점하고, 항목마다 원문 인용과 행동 제안을 붙여요.",
-      link: "#eval",
-      linkText: "평가 체계 보기",
+      link: "/lectures/2026-02-03",
+      linkText: "강의 평가 보기",
     },
   },
   {
@@ -43,7 +43,7 @@ const PAIN_SOLVE = [
       icon: "icons/page.png",
       title: "4개 실험으로 검증했어요",
       body: "반복 일관성, 청크 크기, 윈도우 길이, 호핑 비율까지 네 가지 실험으로 파이프라인을 검증했어요. ICC 0.877 달성했어요.",
-      link: "#reliability",
+      link: "/validation",
       linkText: "신뢰도 검증 보기",
     },
   },
@@ -57,8 +57,8 @@ const PAIN_SOLVE = [
       icon: "icons/lightbulb.png",
       title: "뇌 반응을 시뮬레이션해요",
       body: "Meta AI의 TRIBE v2 모델로 수강자의 뇌 반응을 예측해서, 5분 단위로 집중·이탈 구간을 짚어요.",
-      link: "#tribe",
-      linkText: "TRIBE v2 보기",
+      link: "/lectures/2026-02-02",
+      linkText: "뇌 시뮬레이션 보기",
     },
   },
 ];
@@ -271,10 +271,15 @@ function ScoreRing({ score, size = 96 }: { score: number; size?: number }) {
 }
 
 function SectionBanner({ text, link, linkText }: { text: string; link: string; linkText: string }) {
+  const isInternal = link.startsWith("/");
   return (
     <div className="pres-banner reveal">
       <span className="pres-banner__text">{text}</span>
-      <a href={link} className="pres-banner__link">{linkText} ↗</a>
+      {isInternal ? (
+        <Link to={link} className="pres-banner__link">{linkText} →</Link>
+      ) : (
+        <a href={link} className="pres-banner__link">{linkText} ↗</a>
+      )}
     </div>
   );
 }
@@ -305,11 +310,11 @@ export default function PresentationPage() {
         <div className="pres-container">
           <p className="pres-kicker reveal">LIKELION · NLP 자연어처리 심화 부트캠프 3기 인턴십</p>
           <h1 className="reveal" style={{ animationDelay: "100ms" }}>
-            강의를 읽고,<br />근거를 남겨요.
+            AI 강의 분석 리포트
           </h1>
           <p className="pres-hero__sub reveal" style={{ animationDelay: "180ms" }}>
-            AI가 강의 원문 전체를 읽고 18개 항목으로 채점해요.<br />
-            TRIBE v2 뇌 시뮬레이션으로 '어느 구간을 고칠지'까지 짚어요.
+            AI로 강의를 18개 항목으로 채점해요.<br />
+            수강생 시뮬레이션으로 피드백을 받아봐요.
           </p>
           <div className="pres-hero__actions reveal" style={{ animationDelay: "260ms" }}>
             <a href="#problem" className="pres-btn-primary">어떤 문제를 풀었나요 →</a>
@@ -351,7 +356,7 @@ export default function PresentationPage() {
                     <span className="pres-ps__label pres-ps__label--solve">해결</span>
                     <h3>{ps.solve.title}</h3>
                     <p>{ps.solve.body}</p>
-                    <a href={ps.solve.link} className="pres-ps__link">{ps.solve.linkText} →</a>
+                    <Link to={ps.solve.link} className="pres-ps__link">{ps.solve.linkText} →</Link>
                   </div>
                 </div>
               </div>
@@ -363,7 +368,7 @@ export default function PresentationPage() {
       {/* ═══ PIPELINE ═══ */}
       <section id="pipeline" className="pres-section pres-section--dark">
         <div className="pres-container">
-          <SectionBanner text="AI 평가 기준이 없어요 → 이렇게 만들었어요" link="#problem" linkText="문제 정의" />
+          <SectionBanner text="AI 평가 기준이 없어요 → 이렇게 만들었어요" link="/lectures/2026-02-03" linkText="강의 평가 보기" />
           <p className="pres-kicker reveal">PIPELINE</p>
           <h2 className="reveal" style={{ animationDelay: "80ms" }}>
             원문에서 리포트까지, 다섯 단계로 만들어요.
@@ -392,7 +397,7 @@ export default function PresentationPage() {
       {/* ═══ EVALUATION ═══ */}
       <section id="eval" className="pres-section pres-section--light">
         <div className="pres-container">
-          <SectionBanner text="AI 평가 기준이 없어요 → 이 기준으로 채점해요" link="#problem" linkText="문제 정의" />
+          <SectionBanner text="AI 평가 기준이 없어요 → 이 기준으로 채점해요" link="/lectures/2026-02-03" linkText="강의 평가 보기" />
           <p className="pres-kicker pres-kicker--dark reveal">EVALUATION</p>
           <h2 className="reveal" style={{ animationDelay: "80ms" }}>
             5개 카테고리, 18개 항목으로 평가해요.
@@ -418,7 +423,7 @@ export default function PresentationPage() {
       {/* ═══ RELIABILITY ═══ */}
       <section id="reliability" className="pres-section pres-section--dark">
         <div className="pres-container">
-          <SectionBanner text="AI 평가를 신뢰할 수 없어요 → 실험으로 검증했어요" link="#problem" linkText="문제 정의" />
+          <SectionBanner text="AI 평가를 신뢰할 수 없어요 → 실험으로 검증했어요" link="/validation" linkText="검증 화면 보기" />
           <p className="pres-kicker reveal">RELIABILITY</p>
           <h2 className="reveal" style={{ animationDelay: "80ms" }}>
             네 번 실험하고 네 번 검증했어요.
@@ -465,7 +470,7 @@ export default function PresentationPage() {
       {/* ═══ TRIBE v2 ═══ */}
       <section id="tribe" className="pres-section pres-section--light">
         <div className="pres-container">
-          <SectionBanner text="수강생 반응을 알 수 없어요 → 뇌 반응으로 예측해요" link="#problem" linkText="문제 정의" />
+          <SectionBanner text="수강생 반응을 알 수 없어요 → 뇌 반응으로 예측해요" link="/lectures/2026-02-02" linkText="시뮬레이션 보기" />
           <p className="pres-kicker pres-kicker--dark reveal">TRIBE v2</p>
           <h2 className="reveal" style={{ animationDelay: "80ms" }}>
             점수에 시간축을 입혀요.
@@ -526,7 +531,7 @@ export default function PresentationPage() {
       {/* ═══ RESULTS ═══ */}
       <section id="results" className="pres-section pres-section--dark">
         <div className="pres-container">
-          <SectionBanner text="AI 평가 기준이 없어요 → 이런 리포트가 나와요" link="#problem" linkText="문제 정의" />
+          <SectionBanner text="AI 평가 기준이 없어요 → 이런 리포트가 나와요" link="/lectures/2026-02-03" linkText="리포트 보기" />
           <p className="pres-kicker reveal">RESULTS</p>
           <h2 className="reveal" style={{ animationDelay: "80ms" }}>
             리포트 세 건, 이렇게 나와요.
@@ -609,6 +614,10 @@ export default function PresentationPage() {
         <div className="pres-container">
           <p className="pres-kicker reveal">THANK YOU</p>
           <h2 className="reveal" style={{ animationDelay: "80ms" }}>AI 강의 분석 리포트</h2>
+          <p className="pres-cta__sub2 reveal" style={{ animationDelay: "110ms" }}>
+            AI로 강의를 18개 항목으로 채점해요.<br />
+            수강생 시뮬레이션으로 피드백을 받아봐요.
+          </p>
           <p className="pres-cta__sub reveal" style={{ animationDelay: "140ms" }}>
             멋쟁이사자처럼 · NLP 자연어처리 심화 부트캠프 3기 인턴십
           </p>

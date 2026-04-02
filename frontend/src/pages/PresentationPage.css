@@ -1124,6 +1124,13 @@
   margin-bottom: 10px;
 }
 
+.pres-cta__sub2 {
+  font-size: 17px;
+  line-height: 1.47;
+  color: var(--pres-light-muted);
+  margin-bottom: 12px;
+}
+
 .pres-cta__sub {
   font-size: 19px;
   font-weight: 500;
