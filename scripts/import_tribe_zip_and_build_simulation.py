@@ -214,10 +214,18 @@ def update_simulation_payload(frontend_payload: dict, prepared_segments: list[di
     return frontend_payload
 
 
-def copy_from_zip(zip_path: Path, member: str, target: Path) -> None:
+def copy_from_zip(zip_path: Path, member: str, target: Path, optional: bool = False) -> None:
     target.parent.mkdir(parents=True, exist_ok=True)
-    with zipfile.ZipFile(zip_path) as archive, archive.open(member) as source, open(target, "wb") as dest:
-        shutil.copyfileobj(source, dest)
+    try:
+        with zipfile.ZipFile(zip_path) as archive, archive.open(member) as source, open(target, "wb") as dest:
+            shutil.copyfileobj(source, dest)
+    except KeyError:
+        if optional and target.exists():
+            print(f"  [skip] {member} not in zip, using existing {target}")
+        elif optional:
+            print(f"  [skip] {member} not in zip (no local fallback)")
+        else:
+            raise
 
 
 def parse_args() -> argparse.Namespace:
@@ -247,9 +255,9 @@ def main() -> None:
     copy_from_zip(args.zip_path, f"outputs/prepared/{date}/segments.json", prepared_dir / date / "segments.json")
     copy_from_zip(args.zip_path, f"outputs/prepared/{date}/transcript.json", prepared_dir / date / "transcript.json")
     copy_from_zip(args.zip_path, f"outputs/prepared/{date}/metadata.json", prepared_dir / date / "metadata.json")
-    copy_from_zip(args.zip_path, f"outputs/frontend/{date}.json", args.frontend_dir / f"{date}.json")
-    copy_from_zip(args.zip_path, f"outputs/frontend/{date}-transcript.json", args.frontend_dir / f"{date}-transcript.json")
-    copy_from_zip(args.zip_path, f"outputs/assets/{date}-segment-colors.json", args.frontend_dir / f"{date}-segment-colors.json")
+    copy_from_zip(args.zip_path, f"outputs/frontend/{date}.json", args.frontend_dir / f"{date}.json", optional=True)
+    copy_from_zip(args.zip_path, f"outputs/frontend/{date}-transcript.json", args.frontend_dir / f"{date}-transcript.json", optional=True)
+    copy_from_zip(args.zip_path, f"outputs/assets/{date}-segment-colors.json", args.frontend_dir / f"{date}-segment-colors.json", optional=True)
 
     metadata_by_date = load_metadata(args.metadata_csv)
 
