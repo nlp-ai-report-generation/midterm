@@ -63,12 +63,18 @@
     },
     {
       "start": "11:13:21",
-      "end": "11:17:08",
-      "label": "PK·UK와 AUTO_INCREMENT",
+      "end": "11:30:40",
+      "label": "PK·UK와 ERD 속성 표기",
       "type": "concept"
     },
     {
-      "start": "11:17:08",
+      "start": "11:30:40",
+      "end": "11:49:10",
+      "label": "이모지 검색과 B-Tree 인덱스",
+      "type": "practice"
+    },
+    {
+      "start": "11:49:10",
       "end": "01:10:42",
       "label": "(점심시간)",
       "type": "break"
@@ -147,21 +153,9 @@
     },
     {
       "start": "03:46:35",
-      "end": "03:58:30",
-      "label": "INI 파일과 서버·클라이언트",
-      "type": "concept"
-    },
-    {
-      "start": "03:58:30",
-      "end": "04:19:07",
-      "label": "로컬 인파일 수정과 재시작 처리",
+      "end": "03:59:24",
+      "label": "Workbench PK·FK 시각화 확인",
       "type": "practice"
-    },
-    {
-      "start": "04:19:07",
-      "end": "05:50:20",
-      "label": "(쉬는시간)",
-      "type": "break"
     }
   ]
 }

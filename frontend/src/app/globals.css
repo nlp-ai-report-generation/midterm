@@ -1899,13 +1899,15 @@ body {
 }
 .report-cat-row {
   display: grid;
-  grid-template-columns: 120px 1fr 36px;
-  gap: 8px;
+  grid-template-columns: 140px 1fr 40px;
+  gap: 12px;
   align-items: center;
 }
 .report-cat-name {
-  font-size: 13px;
-  color: rgba(0,0,0,0.85);
+  font-size: 14px;
+  font-weight: 500;
+  color: #1d1d1f;
+  white-space: nowrap;
 }
 .report-cat-bar {
   height: 4px;

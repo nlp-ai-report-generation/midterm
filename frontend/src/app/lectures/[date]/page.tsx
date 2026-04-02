@@ -671,23 +671,16 @@ function ReportInline({
         </div>
       )}
 
-      {/* Simulation summary */}
-      <div className="report-section">
-        <div className="report-section-header" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <img src={`${import.meta.env.BASE_URL}emoji/dna.png`} alt="" width={20} height={20} />
-          <p className="report-section-title">뇌 반응 시뮬레이션</p>
+      {/* Simulation summary — 시뮬레이션 데이터 있을 때만 */}
+      {simulationSummary && (
+        <div className="report-section">
+          <div className="report-section-header" style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <img src={`${import.meta.env.BASE_URL}emoji/dna.png`} alt="" width={20} height={20} />
+            <p className="report-section-title">뇌 반응 시뮬레이션</p>
+          </div>
+          <p className="report-sim-text">{simulationSummary}</p>
         </div>
-        <p className="report-sim-text">{simulationSummary || "시뮬레이션 데이터가 아직 준비되지 않았어요."}</p>
-        <div className="report-sim-legend">
-          <p className="report-section-title" style={{ marginTop: 8 }}>뇌 활동 해석 기준</p>
-          <ul className="report-list">
-            <li><strong>개념을 정리하는 중</strong> — 전두엽(DLPFC)이 활성. API 메소드 순서 설명 등 단계적 정리 구간에서 나타남</li>
-            <li><strong>딴생각 가능성</strong> — 후대상회(DMN)가 양쪽 활성. 강의 마무리, 미래 계획 언급 구간에서 나타남</li>
-            <li><strong>설명을 이해하는 중</strong> — 상측두회(Wernicke)가 활성. 기술 용어 반복 설명 구간에서 가장 강하게 나타남</li>
-            <li><strong>화면을 보는 중</strong> — 후두엽(시각피질)이 활성. 화면 전환, 시각 자료 제시 구간에서 나타남</li>
-          </ul>
-        </div>
-      </div>
+      )}
 
       {/* Actions */}
       <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>

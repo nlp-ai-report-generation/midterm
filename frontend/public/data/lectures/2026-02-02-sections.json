@@ -75,6 +75,12 @@
     },
     {
       "start": "11:48:11",
+      "end": "11:48:26",
+      "label": "오전 I/O 실습 정리와 NIO2 예고",
+      "type": "wrapup"
+    },
+    {
+      "start": "11:48:26",
       "end": "01:00:30",
       "label": "(점심시간)",
       "type": "break"
@@ -138,6 +144,12 @@
       "end": "03:58:34",
       "label": "MySQL 커뮤니티·엔터프라이즈",
       "type": "wrapup"
+    },
+    {
+      "start": "03:58:34",
+      "end": "04:10:39",
+      "label": "MySQL 설치 옵션과 버전 선택",
+      "type": "practice"
     }
   ]
 }

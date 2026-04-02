@@ -6,6 +6,8 @@
 
 ## 최근 완료
 
+- sections JSON 전수 재검산 완료: `2026-02-02`~`2026-02-27` 15개 강의의 `frontend/public/data/lectures/*-sections.json`을 원문 txt 기준으로 다시 점검해, 누락 구간 복원, 실제 공백 기준 `break` 재배치, 원문 첫/끝 타임스탬프 정렬까지 완료
+- 원문 기반 강의 구간 재보정 완료: `2026-02-02`~`2026-02-06` 5개 파일을 전체 타임라인 기준으로 다시 분할하고 라벨 길이/휴식 구간을 재정렬 (`frontend/public/data/lectures/2026-02-02-sections.json`~`2026-02-06-sections.json`)
 - 원문 기반 강의 구간 재보정 완료: `2026-02-23`~`2026-02-27` 5개 강의를 처음부터 끝까지 다시 읽어 누락 구간을 채우고, `frontend/public/data/lectures/YYYY-MM-DD-sections.json`을 전체 타임라인 기준으로 확장 저장
 - 원문 기반 강의 구간 분류 15일치 완료: `2026-02-02`~`2026-02-27` 강의 스크립트를 직접 읽어 주제 전환/실습 전환/긴 시간 갭 기준으로 섹션 JSON 생성 (`frontend/public/data/lectures/*-sections.json`)
 - 구간 JSON 추가 보정: `2026-02-09`~`2026-02-13` 파일을 다시 읽어 점심/쉬는시간 시작 시각을 실제 공백 지점에 맞춰 조정하고, 누락되던 오후 구간을 더 세분화해 재저장 (`frontend/public/data/lectures/2026-02-09-sections.json`~`2026-02-13-sections.json`)
@@ -95,7 +97,7 @@
 
 ## 현재 저장소 상태
 
-- 강의 섹션 정적 데이터: **15개 강의 수작업 구간화 완료, 최근 5개 날짜는 전체 타임라인 재보정 완료** (`frontend/public/data/lectures/*.json`)
+- 강의 섹션 정적 데이터: **15개 강의 전체 타임라인 커버 재검산 완료, 원문 첫/끝 시각과 실제 쉬는시간 경계까지 재정렬 완료** (`frontend/public/data/lectures/*.json`)
 - 평가 파이프라인: **구현 완료** (`src/graph/`, `src/harnesses/`, `src/chunking/`, `src/scoring/`)
 - 실험 프레임워크: **구현 완료** (`src/experiment/`)
 - 기존 코드(src/preprocessing, src/rule_analysis 등): 유지, 하이브리드 활용 가능
