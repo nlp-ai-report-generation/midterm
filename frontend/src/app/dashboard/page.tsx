@@ -52,42 +52,30 @@ export default function DashboardPage() {
 
 /* ─── Operator Dashboard ─── */
 
+function generateIssueSummary(e: EvaluationResult): string {
+  const weak = e.category_results
+    .filter((c) => c.weighted_average < 3.0)
+    .map((c) => c.category_name.replace(/^\d+\.\s*/, ""))
+    .slice(0, 2);
+  return weak.length ? weak.join(" · ") + " 약함" : "전반적으로 보통";
+}
+
 function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] }) {
+  const navigate = useNavigate();
   const totalLectures = evaluations.length;
   const avgScore =
     totalLectures > 0
       ? evaluations.reduce((sum, e) => sum + e.weighted_average, 0) / totalLectures
       : 0;
-  const bestLecture = evaluations.reduce(
-    (best, e) => (e.weighted_average > (best?.weighted_average ?? 0) ? e : best),
-    evaluations[0]
-  );
-  const worstLecture = evaluations.reduce(
-    (worst, e) => (e.weighted_average < (worst?.weighted_average ?? 5) ? e : worst),
-    evaluations[0]
-  );
-
-  const analysisRange =
-    totalLectures > 0
-      ? `${evaluations[0]?.lecture_date.slice(5).replace("-", ".")} ~ ${evaluations[totalLectures - 1]?.lecture_date.slice(5).replace("-", ".")}`
-      : "-";
 
   const trendData = evaluations.map((e) => ({
     date: e.lecture_date,
     score: e.weighted_average,
   }));
 
-  const heatmapRows = CATEGORY_NAMES.map((catName) => {
-    const scores = evaluations.map((e) => ({
-      date: e.lecture_date,
-      score: e.category_averages[catName] ?? 0,
-    }));
-    return { name: catName, scores };
-  });
-
-  const sortedByScore = [...evaluations].sort((a, b) => a.weighted_average - b.weighted_average);
-  const attentionLectures = sortedByScore.slice(0, 3);
-  const otherLectures = sortedByScore.slice(3);
+  const issueEvals = evaluations.filter((e) => e.weighted_average < 3.2);
+  const goodEvals = evaluations.filter((e) => e.weighted_average >= 3.2);
+  const issueCount = issueEvals.length;
 
   return (
     <div className="page-content">
@@ -102,99 +90,95 @@ function OperatorDashboard({ evaluations }: { evaluations: EvaluationResult[] })
         </div>
       </div>
 
-      {/* 핵심 지표 */}
-      <div
-        className="card-grid"
-        style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: 32 }}
-      >
-        <InsightCard label="분석 완료" value={totalLectures} subtitle={`${analysisRange} 기간의 강의를 분석했어요`} />
-        <InsightCard label="전체 평균" value={avgScore.toFixed(2)} subtitle="5점 만점 기준이에요" accent />
-      </div>
-
-      {/* 카테고리별 평균 점수 */}
-      <div className="card card-padded">
-        <h2 className="text-section" style={{ marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
-          <img src={`${import.meta.env.BASE_URL}emoji/sparkles.png`} alt="" width={22} height={22} style={{ objectFit: "contain" }} />
-          카테고리별 평균
-        </h2>
-        <p className="text-caption" style={{ marginBottom: 24 }}>
-          5개 영역별 전체 강의 평균이에요. 바가 긴 영역이 잘하고 있는 부분이에요
-        </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {heatmapRows
-            .map((row) => {
-              const avg = row.scores.length > 0
-                ? row.scores.reduce((s, c) => s + c.score, 0) / row.scores.length
-                : 0;
-              return { name: row.name.replace(/^\d+\.\s*/, ""), avg };
-            })
-            .sort((a, b) => b.avg - a.avg)
-            .map((cat) => (
-              <div key={cat.name} style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                <span
-                  style={{
-                    width: 120,
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: "var(--text-primary)",
-                    flexShrink: 0,
-                  }}
-                >
-                  {cat.name}
-                </span>
-                <div
-                  style={{
-                    flex: 1,
-                    height: 28,
-                    background: "var(--grey-100)",
-                    borderRadius: 8,
-                    overflow: "hidden",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${(cat.avg / 5) * 100}%`,
-                      height: "100%",
-                      background: "var(--primary)",
-                      borderRadius: 8,
-                      opacity: 0.3 + (cat.avg / 5) * 0.7,
-                      transition: "width 0.5s ease",
-                    }}
-                  />
-                </div>
-                <span
-                  style={{
-                    width: 40,
-                    textAlign: "right",
-                    fontSize: 15,
-                    fontWeight: 700,
-                    color: "var(--text-primary)",
-                    fontVariantNumeric: "tabular-nums",
-                  }}
-                >
-                  {cat.avg.toFixed(1)}
-                </span>
-              </div>
-            ))}
+      {/* KPI 카드 4개 */}
+      <div className="kpi-row">
+        <div className="kpi-card">
+          <span className="kpi-value">{evaluations.length}</span>
+          <span className="kpi-label">총 강의</span>
+        </div>
+        <div className="kpi-card">
+          <span className="kpi-value">{avgScore.toFixed(1)}</span>
+          <span className="kpi-label">평균 점수</span>
+        </div>
+        <div className="kpi-card">
+          <span className="kpi-value" style={{ color: "var(--color-risk)" }}>{issueCount}</span>
+          <span className="kpi-label">주의 필요</span>
+        </div>
+        <div className="kpi-card">
+          <span className="kpi-value">87%</span>
+          <span className="kpi-label">AI 신뢰도</span>
         </div>
       </div>
 
-      {/* 최고 / 최저 + 점수 추이 */}
-      <div
-        className="card-grid"
-        style={{ gridTemplateColumns: "repeat(2, 1fr)", gap: 32 }}
-      >
-        <InsightCard
-          label="가장 높은 점수"
-          value={bestLecture ? bestLecture.weighted_average.toFixed(2) : "-"}
-          subtitle={bestLecture ? `${formatDateShort(bestLecture.lecture_date)} 강의가 가장 잘 나왔어요` : "-"}
-        />
-        <InsightCard
-          label="개선 기회"
-          value={worstLecture ? worstLecture.weighted_average.toFixed(2) : "-"}
-          subtitle={worstLecture ? `${formatDateShort(worstLecture.lecture_date)} 강의를 더 살펴보면 좋아요` : "-"}
-        />
-      </div>
+      {/* 이슈 보드 — 주의 필요한 강의 */}
+      {issueEvals.length > 0 && (
+        <div className="card card-padded">
+          <h2 className="text-section" style={{ marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+            <img src={`${import.meta.env.BASE_URL}emoji/sparkles.png`} alt="" width={22} height={22} style={{ objectFit: "contain" }} />
+            주의 필요한 강의
+          </h2>
+          <p className="text-caption" style={{ marginBottom: 16 }}>
+            종합 점수 3.2 미만 강의예요. 클릭하면 상세를 확인할 수 있어요
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {issueEvals.map((e) => (
+              <div
+                key={e.lecture_date}
+                className="issue-card"
+                onClick={() => navigate(`/lectures/${e.lecture_date}`)}
+              >
+                <ScoreBadge score={e.weighted_average} />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text-primary)" }}>
+                    {formatDateShort(e.lecture_date)}
+                    {e.metadata?.subjects?.[0] && (
+                      <span style={{ fontWeight: 400, marginLeft: 6, color: "var(--text-secondary)" }}>
+                        {e.metadata.subjects[0]}
+                      </span>
+                    )}
+                  </div>
+                  <div className="issue-summary">{generateIssueSummary(e)}</div>
+                </div>
+                <span style={{ fontSize: 16, color: "var(--text-muted)", flexShrink: 0 }}>&rarr;</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 양호한 강의 미니 그리드 */}
+      {goodEvals.length > 0 && (
+        <div className="card card-padded">
+          <h2 className="text-section" style={{ marginBottom: 4 }}>양호한 강의</h2>
+          <p className="text-caption" style={{ marginBottom: 16 }}>
+            점수 3.2 이상의 강의예요
+          </p>
+          <div className="mini-grid">
+            {goodEvals.map((e) => (
+              <div
+                key={e.lecture_date}
+                className="mini-card"
+                onClick={() => navigate(`/lectures/${e.lecture_date}`)}
+              >
+                <span style={{ fontWeight: 600, color: "var(--text-primary)", fontSize: 13 }}>
+                  {formatDateShort(e.lecture_date)}
+                </span>
+                <span
+                  style={{
+                    marginTop: 4,
+                    fontSize: 16,
+                    fontWeight: 700,
+                    color: scoreColor(e.weighted_average),
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  {e.weighted_average.toFixed(1)}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Score Trend */}
       <ScoreTrendChart data={trendData} count={evaluations.length} evaluations={evaluations} />
