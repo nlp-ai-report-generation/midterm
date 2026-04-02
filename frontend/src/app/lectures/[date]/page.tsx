@@ -263,6 +263,16 @@ export default function LectureDetailPage() {
       {/* ─── Tab: 평가 ─── */}
       {tab === "eval" && (
         <>
+          {/* 이 강의에서 다룬 내용 */}
+          {sections.length > 0 && (
+            <div style={{ marginBottom: 12 }}>
+              <p className="text-caption" style={{ marginBottom: 6 }}>이 강의에서 다룬 내용</p>
+              <p style={{ fontSize: 15, color: "#1d1d1f", lineHeight: 1.6 }}>
+                {sections.filter((s) => s.type !== "break").map((s) => s.label).join(" → ")}
+              </p>
+            </div>
+          )}
+
           {/* Timeline Bar (sticky) — only when sections data exists */}
           {sections.length > 0 && (
             <div className="timeline-bar-sticky">
