@@ -160,13 +160,33 @@ export default function SimulationView({ date }: SimulationViewProps) {
 
   return (
     <div className="sim-page">
-      {/* ─── Toolbar ─── */}
-      <div className="sim-toolbar">
-        <span className="sim-toolbar-title">{sim.metadata.subject}</span>
-        <div className="sim-toolbar-controls">
-          <button className="sim-play" onClick={() => setPlaying((p) => !p)}>{playing ? <Pause size={14} /> : <Play size={14} />}</button>
-          <div className="sim-speeds">{SPEEDS.map((s) => <button key={s} onClick={() => setSpeed(s)} className={`sim-spd${speed === s ? " on" : ""}`}>{s}x</button>)}</div>
+      {/* ─── 상단: 재생 컨트롤 + 타임라인 차트 (sticky) ─── */}
+      <div style={{ position: "sticky", top: 0, zIndex: 10, background: "#fff" }}>
+        {/* 재생 바 */}
+        <div className="sim-toolbar">
+          <div className="sim-toolbar-controls">
+            <button className="sim-play" onClick={() => setPlaying((p) => !p)}>{playing ? <Pause size={14} /> : <Play size={14} />}</button>
+            <div className="sim-speeds">{SPEEDS.map((s) => <button key={s} onClick={() => setSpeed(s)} className={`sim-spd${speed === s ? " on" : ""}`}>{s}x</button>)}</div>
+          </div>
+          <input className="sim-scrub" type="range" min={0} max={liveFrames.frames.length - 1} value={fi} onChange={(e) => jump(Number(e.target.value))} style={{ flex: 1 }} />
           <span className="sim-counter">{fi + 1}/{liveFrames.frames.length}</span>
+        </div>
+
+        {/* 미니 점수 차트 (시간축 동기화) */}
+        <div style={{ height: 64, padding: "0 12px" }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={tlData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+              <CartesianGrid stroke="#f5f5f7" vertical={false} />
+              {sim.lecture_summary.strongest_segment_ids.map((id) => { const b = bounds.get(id); return b ? <ReferenceArea key={`s-${id}`} x1={b.start} x2={b.end} fill="rgba(255,107,0,0.08)" strokeOpacity={0} /> : null; })}
+              {sim.lecture_summary.risk_segment_ids.map((id) => { const b = bounds.get(id); return b ? <ReferenceArea key={`r-${id}`} x1={b.start} x2={b.end} fill="rgba(0,0,0,0.03)" strokeOpacity={0} /> : null; })}
+              <ReferenceLine x={tlFrame.lecture_seconds} stroke="#FF6B00" strokeWidth={2} />
+              <XAxis dataKey="lecture_seconds" type="number" domain={["dataMin", "dataMax"]} tick={false} axisLine={false} height={0} />
+              <YAxis domain={[0, 100]} tick={false} axisLine={false} width={0} />
+              <Line type="basis" dataKey="attention_display" stroke="#FF6B00" strokeWidth={1.5} dot={false} connectNulls />
+              <Line type="basis" dataKey="load_display" stroke="#1d1d1f" strokeWidth={1} dot={false} connectNulls />
+              <Line type="basis" dataKey="novelty_display" stroke="#86868b" strokeWidth={1} dot={false} connectNulls />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
 
@@ -204,13 +224,8 @@ export default function SimulationView({ date }: SimulationViewProps) {
             <BrainCanvas meshUrl={sim.assets.mesh_glb} colors={colorSeg.hemispheres} intensity={frame.heuristic_intensity} changeBoost={frame.heuristic_change_boost} />
           </div>
           <div className="sim-brain-controls">
-            <div className="sim-ctrl-bar">
-              <span className="sim-seg-pill">{seg.segment_id}</span>
-              <span className="sim-ts">{line.timestamp}</span>
-              <span className="sim-meta-date">{formatDate(sim.lecture_date)}</span>
-            </div>
-            <input className="sim-scrub" type="range" min={0} max={liveFrames.frames.length - 1} value={fi} onChange={(e) => jump(Number(e.target.value))} />
-            <div className="sim-jumps">{jumpIds.map((id) => <button key={id} className={`sim-jmp${id === seg.segment_id ? " on" : ""}`} onClick={() => { const i = liveFrames.frames.findIndex((f) => f.segment_id === id); if (i >= 0) jump(i); }}>{id}</button>)}</div>
+            <span className="sim-ts">{line.timestamp}</span>
+            <span className="sim-meta-date">{seg.segment_id}</span>
           </div>
         </div>
 
