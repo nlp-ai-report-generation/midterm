@@ -908,25 +908,25 @@ export interface BrainProfile8 {
 }
 
 const FUNCTION_LABELS: Record<BrainFunction, string> = {
-  auditory: "청각 처리",
-  language: "언어 이해",
-  executive: "실행 기능",
-  attention: "주의 집중",
-  visual: "시각 처리",
-  memory: "기억 부호화",
-  conflict: "인지 갈등",
-  dmn: "내적 사고",
+  auditory: "말을 듣는 중",
+  language: "설명을 이해하는 중",
+  executive: "개념을 정리하는 중",
+  attention: "집중하는 중",
+  visual: "화면을 보는 중",
+  memory: "기억에 저장하는 중",
+  conflict: "헷갈리는 중",
+  dmn: "딴생각 가능성",
 };
 
 const FUNCTION_INTERPRETATIONS: Record<BrainFunction, string> = {
-  auditory: "음성 자극을 적극적으로 처리하고 있어요",
-  language: "언어적 설명을 따라가며 의미를 해석하고 있어요",
-  executive: "정보를 능동적으로 정리하고 통합하고 있어요 — 가장 이상적인 학습 상태",
-  attention: "주의를 의도적으로 집중하거나 전환하고 있어요",
-  visual: "시각 자료를 처리하고 있어요",
-  memory: "정보를 기억에 부호화하거나 기존 지식과 연결하고 있어요",
-  conflict: "인지적 갈등이 감지됐어요 — 혼란이거나 깊은 사고일 수 있어요",
-  dmn: "내적 사고 중이에요 — 맥락 연결이거나 주의 이탈 가능성",
+  auditory: "음성을 듣고 있어요",
+  language: "설명을 따라가며 이해하고 있어요",
+  executive: "적극적으로 개념을 정리하고 있어요 — 가장 좋은 학습 상태예요",
+  attention: "주의를 기울이고 있어요",
+  visual: "화면이나 자료를 보고 있어요",
+  memory: "배운 내용을 기억에 저장하는 중이에요",
+  conflict: "내용이 어렵거나 헷갈리고 있어요",
+  dmn: "집중이 흐트러지고 있을 수 있어요",
 };
 
 export function computeBrainProfile8(segment: SimulationSegment): BrainProfile8 {
@@ -964,12 +964,20 @@ export function computeBrainProfile8(segment: SimulationSegment): BrainProfile8 
     isTop: false,
   }));
 
-  // 상위 2개 isTop
+  // 상위 2개 isTop (청각/언어 제외 후 결정 — 음성 강의에서 항상 높아 변별력 없음)
   categories.sort((a, b) => b.value - a.value);
-  if (categories[0]) categories[0].isTop = true;
-  if (categories[1]) categories[1].isTop = true;
+  const nonAuditoryTop = categories.find((c) => c.key !== "auditory" && c.key !== "language");
+  if (nonAuditoryTop) nonAuditoryTop.isTop = true;
+  const secondTop = categories.find((c) => c !== nonAuditoryTop && c.key !== "auditory" && c.key !== "language");
+  if (secondTop && secondTop.value > 0) secondTop.isTop = true;
+  // 만약 비청각 ROI가 전부 0이면 언어를 isTop으로
+  if (!nonAuditoryTop || nonAuditoryTop.value === 0) {
+    if (categories[0]) categories[0].isTop = true;
+    if (categories[1]) categories[1].isTop = true;
+  }
 
-  const dominant = categories[0]?.key ?? "language";
+  // dominant도 청각/언어 제외 후 결정
+  const dominant = (nonAuditoryTop && nonAuditoryTop.value > 0) ? nonAuditoryTop.key : categories[0]?.key ?? "language";
 
   return {
     categories,

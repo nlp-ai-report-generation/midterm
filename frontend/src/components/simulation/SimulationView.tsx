@@ -26,7 +26,6 @@ import {
   flattenTranscript,
   hemisphereBalance,
   interpretLineHeuristics,
-  interpretTopRois,
   loadRecovery,
   segmentHealthScore,
   segmentSimilarity,
@@ -151,7 +150,6 @@ export default function SimulationView({ date }: SimulationViewProps) {
   const l = tlFrame.load_display ?? seg.proxies.load_proxy;
   const n = tlFrame.novelty_display ?? seg.proxies.novelty_proxy;
   const brainProfile = computeBrainProfile8(seg);
-  const topRois = interpretTopRois(seg);
   const intensity = tribeResponseIntensity(seg);
   const change = tribeResponseChange(seg);
   const hemisphere = hemisphereBalance(seg);
@@ -171,6 +169,13 @@ export default function SimulationView({ date }: SimulationViewProps) {
           <span className="sim-counter">{fi + 1}/{liveFrames.frames.length}</span>
         </div>
       </div>
+
+      {/* ─── 강의 요약 배너 ─── */}
+      {sim.lecture_summary?.summary_text && (
+        <div className="sim-summary-banner">
+          <p>{sim.lecture_summary.summary_text}</p>
+        </div>
+      )}
 
       {/* ─── Main 2-column layout ─── */}
       <div className="sim-main">
@@ -215,24 +220,16 @@ export default function SimulationView({ date }: SimulationViewProps) {
             </span>
           </div>
 
-          {/* 지금 이 부분 */}
+          {/* 현재 텍스트 */}
           <div className="sim-insight-section">
             <p className="sim-now-text">{line.text}</p>
           </div>
 
-          {/* 뇌가 반응하는 곳 + 활동 요약 */}
+          {/* 뇌 활동 분포 (전체 카테고리, 0인 건 제외) */}
           <div className="sim-insight-section">
-            <div className="sim-roi-compact">
-              {topRois.map((roi, i) => (
-                <div key={i} className="sim-roi-direct">
-                  <span className="sim-roi-direct-label">{roi.label}</span>
-                  <span className="sim-roi-direct-hemi">{roi.hemisphere === "left" ? "좌" : "우"}</span>
-                  <span className="sim-roi-direct-val">{(roi.response * 100).toFixed(1)}</span>
-                </div>
-              ))}
-            </div>
+            <p className="sim-card-desc">{brainProfile.interpretation}</p>
             <div className="sim-bars">
-              {brainProfile.categories.slice(0, 3).map((c) => (
+              {brainProfile.categories.filter((c) => c.value > 0).map((c) => (
                 <div key={c.key} className={`sim-bar-row${c.isTop ? " top" : ""}`}>
                   <span className="sim-bar-lbl">{c.label}</span>
                   <div className="sim-bar-track"><div className="sim-bar-fill" style={{ width: `${Math.max(3, c.value)}%` }} /></div>
@@ -242,14 +239,14 @@ export default function SimulationView({ date }: SimulationViewProps) {
             </div>
           </div>
 
-          {/* 이렇게 바꿔보세요 */}
+          {/* 강사 처방 */}
           <div className="sim-insight-section">
             <div className={`sim-prescription sim-prescription-${rx.urgency}`}>
               <p>{rx.text}</p>
             </div>
           </div>
 
-          {/* 이 구간은 */}
+          {/* 구간 요약 */}
           <div className="sim-insight-section sim-status-compact">
             <div className="sim-status-row">
               <span>학습 효과</span>

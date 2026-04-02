@@ -1358,7 +1358,6 @@ body {
   height: 38px;
   padding: 0 16px;
   background: #F5F5F5;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
   flex-shrink: 0;
 }
 .sim-toolbar-title {
@@ -1384,7 +1383,6 @@ body {
 .sim-brain-panel {
   display: flex;
   flex-direction: column;
-  border-right: 1px solid rgba(0,0,0,0.08);
   overflow: hidden;
 }
 .sim-brain {
@@ -1397,7 +1395,6 @@ body {
   flex-direction: column;
   gap: 6px;
   padding: 12px 16px;
-  border-top: 1px solid rgba(0,0,0,0.06);
   background: #F9F9F9;
 }
 
@@ -1434,19 +1431,25 @@ body {
   padding: 2px 0;
 }
 
+/* Summary banner */
+.sim-summary-banner {
+  padding: 6px 16px;
+  background: var(--grey-50);
+  font-size: 12px;
+  color: rgba(0,0,0,0.5);
+  flex-shrink: 0;
+}
+
 /* Metrics row */
 .sim-metrics-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0;
-  border-top: 1px solid rgba(0,0,0,0.08);
   flex-shrink: 0;
 }
 .sim-metrics-row > * {
-  border-right: 1px solid rgba(0,0,0,0.06);
   border-radius: 0;
 }
-.sim-metrics-row > *:last-child { border-right: none; }
 
 /* Timeline */
 .sim-timeline-section {
@@ -1454,7 +1457,6 @@ body {
   flex-direction: column;
   gap: 8px;
   padding: 12px 16px;
-  border-top: 1px solid rgba(0,0,0,0.08);
   flex-shrink: 0;
 }
 .sim-sec-title {
@@ -1743,7 +1745,7 @@ body {
 /* Responsive */
 @media (max-width: 767px) {
   .sim-main { grid-template-columns: 1fr; }
-  .sim-brain-panel { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .sim-brain-panel { border: none; }
   .sim-brain { min-height: 250px; }
   .sim-metrics-row { grid-template-columns: 1fr; }
   .sim-chart { height: 150px; }
