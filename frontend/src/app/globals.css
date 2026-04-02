@@ -2245,13 +2245,31 @@ body {
 }
 
 /* ─── Timeline v2 (sections-based) ─── */
-.tl-wrap { display: flex; flex-direction: column; }
-.tl-sections { display: flex; gap: 2px; min-height: 56px; }
+.tl-wrap { display: flex; flex-direction: column; gap: 4px; }
+
+/* 범례 + 필터 */
+.tl-legend { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.tl-legend-colors { display: flex; gap: 12px; align-items: center; }
+.tl-legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #86868b; }
+.tl-legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.tl-filters { display: flex; gap: 2px; }
+.tl-filter { padding: 2px 8px; font-size: 11px; font-weight: 500; color: #86868b; background: none; border: none; border-radius: 6px; cursor: pointer; }
+.tl-filter:hover { background: #f5f5f7; }
+.tl-filter-on { background: #1d1d1f; color: #fff; }
+.tl-filter-on:hover { background: #1d1d1f; }
+
+/* 점수 추이 차트 */
+.tl-chart { position: relative; height: 48px; }
+.tl-chart svg { display: block; }
+.tl-chart-labels { position: absolute; right: -24px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; font-size: 8px; color: #d2d2d7; }
+
+/* 섹션 블록 */
+.tl-sections { display: flex; gap: 2px; min-height: 28px; }
 .tl-sec {
-  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
-  padding: 6px 8px; border: none; border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 4px; border: none; border-radius: 4px; cursor: pointer;
   transition: all 0.15s; min-width: 0; overflow: hidden;
-  font-family: inherit;
+  font-family: inherit; height: 28px;
 }
 .tl-sec:hover { opacity: 0.85; }
 .tl-sec-on { box-shadow: none; }

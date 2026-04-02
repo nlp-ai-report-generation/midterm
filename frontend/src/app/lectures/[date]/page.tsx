@@ -270,6 +270,7 @@ export default function LectureDetailPage() {
                 sections={sections}
                 selectedIndex={selectedSectionIdx}
                 onSelect={setSelectedSectionIdx}
+                evaluation={evaluation}
               />
             </div>
           )}
