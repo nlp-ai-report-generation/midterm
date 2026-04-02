@@ -2,6 +2,12 @@
 
 ## 2026-04-03
 
+### 소개 페이지 스크린샷은 현재 라우트 기준 자산만 유지한다
+
+- 결정: `/presentation` 소개 페이지에 노출하는 대표 화면은 현재 SPA 라우트에서 실제 접근 가능한 화면(`dashboard`, `lectures/:date`, `validation`, `integrations`) 기반 자산으로 고정한다.
+- 이유: 기존 캡처 스크립트는 구 라우트(`/eda`, `/experiments`)를 사용해 동일한 루트 화면이 중복 저장되는 문제가 있었고, 그대로 쓰면 소개 페이지 시각 품질이 떨어진다.
+- 결과: 소개 페이지 이미지 맵을 `ui-dashboard`, `ui-lecture-detail`, `ui-validation`, `ui-integrations`로 교체했고, 구 라우트 스크린샷은 발표용 페이지에서 더 이상 사용하지 않는다.
+
 ### `/presentation`은 raw 덱 iframe이 아니라 공개 소개 랜딩으로 운영한다
 
 - 결정: 발표 공개 경로 `/presentation`은 발표 HTML을 바로 임베드하는 페이지 대신, 프로젝트 소개와 발표 흐름을 설명하는 공개 랜딩으로 두고, 발표 덱과 Notion 보고서 샘플은 그 안의 보조 CTA로 연결한다.

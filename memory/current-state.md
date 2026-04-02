@@ -6,6 +6,8 @@
 
 ## 최근 완료
 
+- 프레젠테이션 페이지 최종 정리: `/presentation` 소개 페이지를 scene 단위 전환 애니메이션 + 인포그래픽 중심 레이아웃으로 교체하고, `/about`은 다시 `AboutPage`로 분리해 기존 서비스 라우팅 충돌을 제거함 (`frontend/src/pages/PresentationPage.tsx`, `frontend/src/pages/PresentationPage.css`, `frontend/src/App.tsx`)
+- 소개 페이지용 스크린샷 갱신: 현재 라우트 기준으로 `ui-dashboard`, `ui-lecture-detail`, `ui-validation`, `ui-integrations`를 업데이트해 공개 페이지 시각 자산을 최신 상태로 반영함 (`frontend/public/presentation/assets/`)
 - 공개 발표 경로 재구성: `/presentation`을 단순 iframe 덱이 아니라 Apple 계열 소개 랜딩으로 다시 만들고, 발표 덱 HTML과 Notion 최종 보고서 샘플을 보조 CTA로 연결한 뒤 `cd frontend && npm run build` 재검증까지 완료 (`frontend/src/pages/PresentationPage.tsx`, `frontend/src/app/globals.css`)
 - Claude 인계용 요약 문서 추가: sections/evaluations 재작업 범위, 검증 결과, 강의별 1~2문장 흐름 요약을 한 파일에 정리 (`memory/handoff-2026-04-03-sections-evaluations.md`)
 - evaluation JSON 전수 재평가 완료: `2026-02-02`~`2026-02-27` 15개 강의의 `frontend/public/data/evaluations/*.json`을 원문 txt, sections JSON, `강의 품질 기준.md` 기준으로 다시 손봐 18개 항목 구조와 `break` 제외 섹션 coverage 0건 해소까지 완료
@@ -119,7 +121,7 @@
 - TRIBE 코랩 노트북: audio-only fallback을 실제 audio-only preprocessing으로 최적화했고, worker 수를 0으로 낮췄으며 날짜별 partial resume 저장을 지원함 (`colab/tribev2-student-reaction/01_run_tribev2.ipynb`)
 - 발표 자산: `presentation/`이 소스 오브 트루스이며, `scripts/sync_presentation_assets.py`로 `frontend/public/presentation/`과 `presentation/remotion/public/`에 동기화함
 - 발표 영상: `presentation/remotion/`에서 TTS 자막형 설명 영상 렌더링 가능, 캡처 자산 4종과 내레이션 mp3 8개 생성 완료
-- Git 상태: 프론트 Apple 스타일 UX 재설계 관련 변경 존재, `.claude/` 디렉터리는 계속 미추적 상태
+- Git 상태: `feature/tribe-roi-20260202`에 소개 페이지 개편 커밋(`a92adc62`) 푸시 완료. 로컬에는 `frontend/src/app/globals.css` 단일 미커밋 변경과 `.claude/` 미추적 파일만 남아 있음
 
 ## 다음 세션 시작 체크리스트
 
