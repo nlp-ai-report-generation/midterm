@@ -11,27 +11,50 @@ const HERO_METRICS = [
   { value: "4", label: "실험" },
 ];
 
-const PROBLEMS = [
+function withBase(path: string) {
+  const base = import.meta.env.BASE_URL;
+  return `${base.endsWith("/") ? base : `${base}/`}${path.replace(/^\//, "")}`;
+}
+
+const PAIN_SOLVE = [
   {
-    idx: "01",
-    title: "설문지에 갇힌 평가",
-    body: "수강생 설문만으로는 '어떤 설명이 좋았고, 어디서 흐름이 끊겼는지' 짚어낼 수 없다.",
-    solve: "원문 전체를 읽고 18개 항목으로 채점한다.",
-    solveLink: "#eval",
+    pain: {
+      icon: "icons/clipboard.png",
+      title: "설문지에 갇힌 평가",
+      body: "수강생 설문만으로는 '어떤 설명이 좋았고, 어디서 흐름이 끊겼는지' 짚어낼 수 없다.",
+    },
+    solve: {
+      icon: "icons/check.png",
+      title: "원문 전체를 읽고 채점한다",
+      body: "AI가 강의 원문 22,756줄을 전부 읽고, 5개 카테고리 18개 항목으로 점수와 근거를 남긴다.",
+      link: "#eval",
+    },
   },
   {
-    idx: "02",
-    title: "시간이 빠진 피드백",
-    body: "총점 하나로는 50분짜리 강의 어디를 고쳐야 할지 알 수 없다.",
-    solve: "TRIBE v2가 5분 단위 뇌 반응 지도를 그린다.",
-    solveLink: "#tribe",
+    pain: {
+      icon: "icons/clock.png",
+      title: "시간이 빠진 피드백",
+      body: "총점 하나로는 50분짜리 강의 어디를 고쳐야 할지 알 수 없다.",
+    },
+    solve: {
+      icon: "icons/lightbulb.png",
+      title: "5분 단위 뇌 반응 지도",
+      body: "TRIBE v2가 구간별 뇌 반응을 시뮬레이션해서 '어느 5분을 고칠지' 짚는다.",
+      link: "#tribe",
+    },
   },
   {
-    idx: "03",
-    title: "근거 없는 점수",
-    body: "'3.5점'이라는 숫자 뒤에 왜 그런지, 뭘 바꿔야 하는지가 없다.",
-    solve: "항목마다 원문 인용과 행동 제안을 붙인다.",
-    solveLink: "#results",
+    pain: {
+      icon: "icons/faq.png",
+      title: "근거 없는 점수",
+      body: "'3.5점'이라는 숫자 뒤에 왜 그런지, 뭘 바꿔야 하는지가 없다.",
+    },
+    solve: {
+      icon: "icons/page.png",
+      title: "원문 인용 + 행동 제안",
+      body: "항목마다 원문 근거를 인용하고, '이 구간에서 이렇게 바꿔라'는 구체 행동을 제안한다.",
+      link: "#results",
+    },
   },
 ];
 
@@ -375,18 +398,32 @@ export default function PresentationPage() {
         <div className="pres-container">
           <p className="pres-kicker pres-kicker--dark reveal">PROBLEM — SOLUTION</p>
           <h2 className="reveal" style={{ animationDelay: "80ms" }}>
-            기존 강의 평가의 세 가지 빈칸.
+            기존 강의 평가의 세 가지 빈칸,<br />
+            이렇게 채웠다.
           </h2>
-          <div className="pres-grid-3">
-            {PROBLEMS.map((p, i) => (
-              <article key={p.idx} className="pres-card reveal" style={{ animationDelay: `${120 + i * 100}ms` }}>
-                <span className="pres-card__idx">{p.idx}</span>
-                <h3>{p.title}</h3>
-                <p>{p.body}</p>
-                <a href={p.solveLink} className="pres-card__solve">
-                  → {p.solve}
-                </a>
-              </article>
+
+          <div className="pres-ps-list">
+            {PAIN_SOLVE.map((ps, i) => (
+              <div key={i} className="pres-ps reveal" style={{ animationDelay: `${140 + i * 120}ms` }}>
+                <div className="pres-ps__pain">
+                  <img src={withBase(ps.pain.icon)} alt="" className="pres-ps__icon" />
+                  <div>
+                    <span className="pres-ps__label pres-ps__label--pain">문제</span>
+                    <h3>{ps.pain.title}</h3>
+                    <p>{ps.pain.body}</p>
+                  </div>
+                </div>
+                <div className="pres-ps__arrow" aria-hidden="true">→</div>
+                <div className="pres-ps__solve">
+                  <img src={withBase(ps.solve.icon)} alt="" className="pres-ps__icon" />
+                  <div>
+                    <span className="pres-ps__label pres-ps__label--solve">해결</span>
+                    <h3>{ps.solve.title}</h3>
+                    <p>{ps.solve.body}</p>
+                    <a href={ps.solve.link} className="pres-ps__link">자세히 보기 →</a>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
