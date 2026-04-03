@@ -2,6 +2,24 @@
 
 ## 2026-04-03
 
+### Notion 내보내기는 고정 컬럼명 대신 DB 스키마 자동 매핑을 사용한다
+
+- 결정: Notion `create-page`/`create-report`는 `"강의 날짜"`, `"점수"`, `"모델"`, `"과목"` 고정 속성명을 강제하지 않고, DB 스키마 조회 후 title/date/number/rich_text 타입을 자동 매핑해 페이지를 생성한다.
+- 이유: 사용자 DB마다 속성명이 달라 고정 컬럼명 요청이 400 validation 오류를 자주 만들었다.
+- 결과: 최소한 title은 항상 채워서 저장되고, 일치하는 date/score/model/subject 타입 속성이 있으면 자동으로 추가 입력한다.
+
+### OAuth 연동은 Supabase 우선 + 백엔드 콜백 복귀 fallback으로 이중화한다
+
+- 결정: Google Drive/Notion 연결 버튼은 우선 백엔드 `/api/auth/*` URL을 받아 인증하고, 콜백은 `state(frontend_redirect)`를 통해 `/integrations`로 복귀해 토큰을 저장한다. 실패 시 Supabase OAuth를 fallback으로 유지한다.
+- 이유: 환경별로 Supabase `provider_token` 노출 여부가 다르고, 기존 백엔드 콜백은 JSON만 반환해 프론트 복귀가 되지 않아 “설정은 되어 있는데 연결 실패”가 반복됐다.
+- 결과: 연동 최소 기능은 두 경로 중 하나만 정상이어도 동작하며, Drive/Notion 토큰이 `localStorage`에 저장되어 파일 조회/리포트 내보내기에서 재사용된다.
+
+### 연동 OAuth는 Supabase 세션 토큰을 단일 소스로 사용한다
+
+- 결정: Google Drive/Notion 연동은 백엔드 자체 OAuth 콜백(`api/auth/*/callback`)에 의존하지 않고, 프론트에서 Supabase OAuth로 인증 후 세션 `provider_token`을 `drive-integration`/`notion-integration`에 저장해 사용한다.
+- 이유: 기존 구조는 Notion redirect URI가 백엔드로 고정돼 프론트 연동 화면으로 돌아오지 않았고, Drive 연결 상태도 단순 로그인 유무로 판단해 토큰 없는 세션에서 실패가 반복됐다.
+- 결과: 연동 화면, 강의 목록의 Drive 가져오기, 리포트 Drive/Notion 내보내기가 같은 저장 토큰을 재사용하는 구조로 통일했다.
+
 ### 소개 페이지 스크린샷은 현재 라우트 기준 자산만 유지한다
 
 - 결정: `/presentation` 소개 페이지에 노출하는 대표 화면은 현재 SPA 라우트에서 실제 접근 가능한 화면(`dashboard`, `lectures/:date`, `validation`, `integrations`) 기반 자산으로 고정한다.

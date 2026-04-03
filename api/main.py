@@ -17,6 +17,7 @@ from urllib.parse import urlencode
 import httpx
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
@@ -53,6 +54,24 @@ GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:8000/ap
 NOTION_CLIENT_ID = os.getenv("NOTION_CLIENT_ID", "")
 NOTION_CLIENT_SECRET = os.getenv("NOTION_CLIENT_SECRET", "")
 NOTION_REDIRECT_URI = os.getenv("NOTION_REDIRECT_URI", "http://localhost:8000/api/auth/notion/callback")
+
+
+def _notion_title_property_name(properties: dict) -> str:
+    for name, meta in properties.items():
+        if meta.get("type") == "title":
+            return name
+    return "Name"
+
+
+def _pick_notion_property(properties: dict, prop_type: str, candidates: list[str]) -> str | None:
+    for candidate in candidates:
+        meta = properties.get(candidate)
+        if meta and meta.get("type") == prop_type:
+            return candidate
+    for name, meta in properties.items():
+        if meta.get("type") == prop_type:
+            return name
+    return None
 
 
 # --- Request/Response Models ---
@@ -266,21 +285,23 @@ async def get_experiment(experiment_id: str):
 
 
 @app.get("/api/auth/google")
-async def google_auth():
+async def google_auth(frontend_redirect: str | None = None):
     """Redirect to Google OAuth consent screen."""
+    state = frontend_redirect or ""
     params = {
         "client_id": GOOGLE_CLIENT_ID,
         "redirect_uri": GOOGLE_REDIRECT_URI,
         "response_type": "code",
-        "scope": "https://www.googleapis.com/auth/drive.readonly",
+        "scope": "https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/drive.file",
         "access_type": "offline",
         "prompt": "consent",
+        "state": state,
     }
     return {"url": f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}"}
 
 
 @app.get("/api/auth/google/callback")
-async def google_callback(code: str):
+async def google_callback(code: str, state: str | None = None):
     """Exchange code for token, store in session."""
     async with httpx.AsyncClient() as client:
         resp = await client.post("https://oauth2.googleapis.com/token", data={
@@ -291,9 +312,16 @@ async def google_callback(code: str):
             "redirect_uri": GOOGLE_REDIRECT_URI,
         })
         tokens = resp.json()
+    access_token = tokens.get("access_token", "")
+    refresh_token = tokens.get("refresh_token", "")
+
+    if state:
+        redirect_url = f"{state}?{urlencode({'google_access_token': access_token, 'google_refresh_token': refresh_token})}"
+        return RedirectResponse(url=redirect_url)
+
     # Return token to frontend (frontend stores in localStorage)
     # In production, use httpOnly cookies
-    return {"access_token": tokens.get("access_token"), "refresh_token": tokens.get("refresh_token")}
+    return {"access_token": access_token, "refresh_token": refresh_token}
 
 
 @app.get("/api/drive/files")
@@ -305,7 +333,11 @@ async def list_drive_files(token: str):
             headers={"Authorization": f"Bearer {token}"},
             params={"q": "mimeType='text/plain'", "fields": "files(id,name,modifiedTime)"},
         )
-        return resp.json()
+        data = resp.json()
+        if not resp.is_success:
+            err = data.get("error", {}).get("message", f"Google Drive API 오류 ({resp.status_code})")
+            return {"files": [], "error": err}
+        return {"files": data.get("files", []), "error": ""}
 
 
 @app.get("/api/drive/download/{file_id}")
@@ -317,26 +349,30 @@ async def download_drive_file(file_id: str, token: str):
             headers={"Authorization": f"Bearer {token}"},
             params={"alt": "media"},
         )
-        return {"content": resp.text, "filename": file_id}
+        if not resp.is_success:
+            return {"content": "", "filename": file_id, "error": f"파일 다운로드 실패 ({resp.status_code})"}
+        return {"content": resp.text, "filename": file_id, "error": ""}
 
 
 # --- Notion OAuth ---
 
 
 @app.get("/api/auth/notion")
-async def notion_auth():
+async def notion_auth(frontend_redirect: str | None = None):
     """Redirect to Notion OAuth consent screen."""
+    state = frontend_redirect or ""
     params = {
         "client_id": NOTION_CLIENT_ID,
         "redirect_uri": NOTION_REDIRECT_URI,
         "response_type": "code",
         "owner": "user",
+        "state": state,
     }
     return {"url": f"https://api.notion.com/v1/oauth/authorize?{urlencode(params)}"}
 
 
 @app.get("/api/auth/notion/callback")
-async def notion_callback(code: str):
+async def notion_callback(code: str, state: str | None = None):
     """Exchange Notion auth code for access token."""
     auth = base64.b64encode(f"{NOTION_CLIENT_ID}:{NOTION_CLIENT_SECRET}".encode()).decode()
     async with httpx.AsyncClient() as client:
@@ -346,12 +382,22 @@ async def notion_callback(code: str):
             json={"grant_type": "authorization_code", "code": code, "redirect_uri": NOTION_REDIRECT_URI},
         )
         data = resp.json()
+        access_token = data.get("access_token", "")
+        workspace_name = data.get("workspace_name", "")
+        workspace_id = data.get("workspace_id", "")
+        bot_id = data.get("bot_id", "")
+        duplicated_template_id = data.get("duplicated_template_id")
+
+        if state:
+            redirect_url = f"{state}?{urlencode({'notion_access_token': access_token, 'workspace_name': workspace_name})}"
+            return RedirectResponse(url=redirect_url)
+
         return {
-            "access_token": data.get("access_token", ""),
-            "workspace_name": data.get("workspace_name", ""),
-            "workspace_id": data.get("workspace_id", ""),
-            "bot_id": data.get("bot_id", ""),
-            "duplicated_template_id": data.get("duplicated_template_id"),
+            "access_token": access_token,
+            "workspace_name": workspace_name,
+            "workspace_id": workspace_id,
+            "bot_id": bot_id,
+            "duplicated_template_id": duplicated_template_id,
         }
 
 
@@ -369,6 +415,8 @@ async def list_notion_databases(token: str):
             json={"filter": {"value": "database", "property": "object"}},
         )
         data = resp.json()
+        if not resp.is_success:
+            return {"databases": [], "error": data.get("message", f"Notion API 오류 ({resp.status_code})")}
         databases = []
         for db in data.get("results", []):
             title_parts = db.get("title", [])
@@ -378,7 +426,7 @@ async def list_notion_databases(token: str):
                 "title": title,
                 "url": db.get("url", ""),
             })
-        return {"databases": databases}
+        return {"databases": databases, "error": ""}
 
 
 class NotionExportRequest(BaseModel):
@@ -425,6 +473,43 @@ async def create_notion_page(req: NotionExportRequest):
         add_bullets(req.recommendations)
 
     async with httpx.AsyncClient() as client:
+        schema_resp = await client.get(
+            f"https://api.notion.com/v1/databases/{req.database_id}",
+            headers={
+                "Authorization": f"Bearer {req.token}",
+                "Notion-Version": "2022-06-28",
+            },
+        )
+        schema_data = schema_resp.json()
+        if not schema_resp.is_success:
+            return {
+                "success": False,
+                "url": "",
+                "id": "",
+                "error": schema_data.get("message", f"데이터베이스 조회 실패 ({schema_resp.status_code})"),
+            }
+
+        properties = schema_data.get("properties", {})
+        title_name = _notion_title_property_name(properties)
+        date_name = _pick_notion_property(properties, "date", ["강의 날짜", "날짜", "Date"])
+        score_name = _pick_notion_property(properties, "number", ["점수", "Score"])
+        model_name = _pick_notion_property(properties, "rich_text", ["모델", "Model"])
+        subject_name = _pick_notion_property(properties, "rich_text", ["과목", "Subject"])
+
+        notion_props: dict = {
+            title_name: {
+                "title": [{"type": "text", "text": {"content": f"{req.lecture_date} {req.subject or '강의'}"}}]
+            }
+        }
+        if date_name:
+            notion_props[date_name] = {"date": {"start": req.lecture_date}}
+        if score_name:
+            notion_props[score_name] = {"number": req.score}
+        if model_name:
+            notion_props[model_name] = {"rich_text": [{"type": "text", "text": {"content": req.model}}]}
+        if subject_name:
+            notion_props[subject_name] = {"rich_text": [{"type": "text", "text": {"content": req.subject}}]}
+
         resp = await client.post(
             "https://api.notion.com/v1/pages",
             headers={
@@ -434,21 +519,16 @@ async def create_notion_page(req: NotionExportRequest):
             },
             json={
                 "parent": {"database_id": req.database_id},
-                "properties": {
-                    "강의 날짜": {"date": {"start": req.lecture_date}},
-                    "점수": {"number": req.score},
-                    "모델": {"rich_text": [{"text": {"content": req.model}}]},
-                    "과목": {"rich_text": [{"text": {"content": req.subject}}]},
-                },
+                "properties": notion_props,
                 "children": children,
             },
         )
         data = resp.json()
         return {
-            "success": resp.status_code == 200,
+            "success": resp.is_success,
             "url": data.get("url", ""),
             "id": data.get("id", ""),
-            "error": data.get("message", "") if resp.status_code != 200 else "",
+            "error": data.get("message", "") if not resp.is_success else "",
         }
 
 
@@ -489,10 +569,10 @@ async def upload_to_drive(req: DriveUploadRequest):
         data = resp.json()
         file_id = data.get("id", "")
         return {
-            "success": resp.status_code == 200,
+            "success": resp.is_success,
             "fileId": file_id,
             "url": f"https://docs.google.com/document/d/{file_id}" if file_id else "",
-            "error": data.get("error", {}).get("message", "") if resp.status_code != 200 else "",
+            "error": data.get("error", {}).get("message", "") if not resp.is_success else "",
         }
 
 
@@ -599,6 +679,43 @@ async def create_notion_report(req: NotionReportRequest):
         add_paragraph(req.simulation_summary)
 
     async with httpx.AsyncClient() as client:
+        schema_resp = await client.get(
+            f"https://api.notion.com/v1/databases/{req.database_id}",
+            headers={
+                "Authorization": f"Bearer {req.token}",
+                "Notion-Version": "2022-06-28",
+            },
+        )
+        schema_data = schema_resp.json()
+        if not schema_resp.is_success:
+            return {
+                "success": False,
+                "url": "",
+                "id": "",
+                "error": schema_data.get("message", f"데이터베이스 조회 실패 ({schema_resp.status_code})"),
+            }
+
+        properties = schema_data.get("properties", {})
+        title_name = _notion_title_property_name(properties)
+        date_name = _pick_notion_property(properties, "date", ["강의 날짜", "날짜", "Date"])
+        score_name = _pick_notion_property(properties, "number", ["점수", "Score"])
+        model_name = _pick_notion_property(properties, "rich_text", ["모델", "Model"])
+        subject_name = _pick_notion_property(properties, "rich_text", ["과목", "Subject"])
+
+        notion_props: dict = {
+            title_name: {
+                "title": [{"type": "text", "text": {"content": f"[리포트] {req.lecture_date} {req.subject or '강의'}"}}]
+            }
+        }
+        if date_name:
+            notion_props[date_name] = {"date": {"start": req.lecture_date}}
+        if score_name:
+            notion_props[score_name] = {"number": req.score}
+        if model_name:
+            notion_props[model_name] = {"rich_text": [{"type": "text", "text": {"content": req.model}}]}
+        if subject_name:
+            notion_props[subject_name] = {"rich_text": [{"type": "text", "text": {"content": req.subject}}]}
+
         resp = await client.post(
             "https://api.notion.com/v1/pages",
             headers={
@@ -608,19 +725,14 @@ async def create_notion_report(req: NotionReportRequest):
             },
             json={
                 "parent": {"database_id": req.database_id},
-                "properties": {
-                    "강의 날짜": {"date": {"start": req.lecture_date}},
-                    "점수": {"number": req.score},
-                    "모델": {"rich_text": [{"text": {"content": req.model}}]},
-                    "과목": {"rich_text": [{"text": {"content": f"[리포트] {req.subject}"}}]},
-                },
+                "properties": notion_props,
                 "children": children,
             },
         )
         data = resp.json()
         return {
-            "success": resp.status_code == 200,
+            "success": resp.is_success,
             "url": data.get("url", ""),
             "id": data.get("id", ""),
-            "error": data.get("message", "") if resp.status_code != 200 else "",
+            "error": data.get("message", "") if not resp.is_success else "",
         }

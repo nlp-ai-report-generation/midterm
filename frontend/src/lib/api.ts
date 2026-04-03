@@ -102,8 +102,20 @@ export async function exportToNotion(params: {
 }
 
 /** Get Notion OAuth URL */
-export async function getNotionAuthUrl(): Promise<{ url: string }> {
-  const res = await fetch(`${API_BASE_URL}/api/auth/notion`);
+export async function getNotionAuthUrl(frontendRedirect?: string): Promise<{ url: string }> {
+  const qs = frontendRedirect
+    ? `?frontend_redirect=${encodeURIComponent(frontendRedirect)}`
+    : "";
+  const res = await fetch(`${API_BASE_URL}/api/auth/notion${qs}`);
+  return res.json();
+}
+
+/** Get Google OAuth URL */
+export async function getGoogleAuthUrl(frontendRedirect?: string): Promise<{ url: string }> {
+  const qs = frontendRedirect
+    ? `?frontend_redirect=${encodeURIComponent(frontendRedirect)}`
+    : "";
+  const res = await fetch(`${API_BASE_URL}/api/auth/google${qs}`);
   return res.json();
 }
 
@@ -124,7 +136,11 @@ export async function listNotionDatabases(
   const res = await fetch(
     `${API_BASE_URL}/api/notion/databases?token=${encodeURIComponent(token)}`
   );
-  return res.json();
+  const data = await res.json();
+  if (!res.ok || data.error) {
+    throw new Error(data.error || `Notion DB 조회 실패 (${res.status})`);
+  }
+  return data;
 }
 
 /** List Google Drive text files */
@@ -134,7 +150,11 @@ export async function listDriveFiles(
   const res = await fetch(
     `${API_BASE_URL}/api/drive/files?token=${encodeURIComponent(token)}`
   );
-  return res.json();
+  const data = await res.json();
+  if (!res.ok || data.error) {
+    throw new Error(data.error || `Drive 파일 조회 실패 (${res.status})`);
+  }
+  return data;
 }
 
 /** Download a file from Google Drive */
@@ -160,7 +180,11 @@ export async function uploadToDrive(params: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(params),
   });
-  return res.json();
+  const data = await res.json();
+  if (!res.ok || data.error || !data.success) {
+    throw new Error(data.error || `Drive 업로드 실패 (${res.status})`);
+  }
+  return data;
 }
 
 /** Generate a comprehensive lecture report */
@@ -201,5 +225,9 @@ export async function exportReportToNotion(params: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(params),
   });
-  return res.json();
+  const data = await res.json();
+  if (!res.ok || data.error || !data.success) {
+    throw new Error(data.error || `Notion 내보내기 실패 (${res.status})`);
+  }
+  return data;
 }

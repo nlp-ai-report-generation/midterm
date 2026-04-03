@@ -2,8 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { getAllEvaluations } from "@/lib/data";
 import { listDriveFiles } from "@/lib/api";
+import { getDriveToken } from "@/lib/integrations";
 import { formatDateShort } from "@/lib/utils";
-import { supabase } from "@/lib/supabase";
 import { useRole } from "@/contexts/RoleContext";
 import ScoreBadge from "@/components/shared/ScoreBadge";
 import type { EvaluationResult } from "@/types/evaluation";
@@ -65,19 +65,10 @@ export default function LecturesPage() {
   };
 
   const handleDriveImport = async () => {
-    const session = await supabase.auth.getSession();
-    const token = session.data.session?.provider_token;
+    const token = await getDriveToken();
 
     if (!token) {
-      // 구글 로그인 안 됨 → 바로 OAuth 시작
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          scopes: "https://www.googleapis.com/auth/drive.readonly",
-          redirectTo: window.location.origin + window.location.pathname,
-        },
-      });
-      if (error) showToastMsg("구글 로그인에 실패했어요");
+      showToastMsg("연동 설정에서 구글 드라이브를 먼저 연결해주세요");
       return;
     }
 
@@ -91,8 +82,8 @@ export default function LecturesPage() {
       } else {
         showToastMsg("구글 드라이브 접근 권한을 확인해주세요. Google Cloud Console에서 테스트 사용자를 추가하거나 앱을 게시해야 해요");
       }
-    } catch {
-      showToastMsg("구글 드라이브에 연결할 수 없어요. 다시 로그인해주세요");
+    } catch (error) {
+      showToastMsg(error instanceof Error ? error.message : "구글 드라이브에 연결할 수 없어요. 다시 로그인해주세요");
     } finally {
       setDriveLoading(false);
     }

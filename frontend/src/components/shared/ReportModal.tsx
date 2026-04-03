@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { X, Download, FileText } from "lucide-react";
 import { exportReportToNotion, uploadToDrive } from "@/lib/api";
-import { supabase } from "@/lib/supabase";
+import { getDriveToken } from "@/lib/integrations";
 
 interface ReportModalProps {
   open: boolean;
@@ -63,13 +63,12 @@ export default function ReportModal({
         strengths, improvements, recommendations, simulation_summary: simulationSummary,
       });
       setMessage(result.success ? "Notion에 저장했습니다" : result.error || "저장 실패");
-    } catch { setMessage("Notion 내보내기 실패"); }
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Notion 내보내기 실패"); }
     finally { setExporting(null); }
   }, [lectureDate, score, model, subject, reportMarkdown, strengths, improvements, recommendations, simulationSummary]);
 
   const handleDriveExport = useCallback(async () => {
-    const session = await supabase.auth.getSession();
-    const token = session.data.session?.provider_token;
+    const token = await getDriveToken();
     if (!token) { setMessage("Google 로그인이 필요합니다"); return; }
     setExporting("drive");
     setMessage("");
@@ -78,7 +77,7 @@ export default function ReportModal({
         token, filename: `${lectureDate}-report.md`, content: reportMarkdown,
       });
       setMessage(result.success ? "Drive에 저장했습니다" : result.error || "업로드 실패");
-    } catch { setMessage("Drive 업로드 실패"); }
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Drive 업로드 실패"); }
     finally { setExporting(null); }
   }, [lectureDate, reportMarkdown]);
 

@@ -1,11 +1,19 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import {
-  listDriveFiles,
+  getGoogleAuthUrl,
   getNotionAuthUrl,
-  notionCallback,
+  listDriveFiles,
   listNotionDatabases,
 } from "@/lib/api";
+import {
+  clearStoredDriveIntegration,
+  clearStoredNotionIntegration,
+  getStoredDriveIntegration,
+  getStoredNotionIntegration,
+  setStoredDriveIntegration,
+  setStoredNotionIntegration,
+} from "@/lib/integrations";
 
 interface DriveFile {
   id: string;
@@ -20,11 +28,11 @@ interface NotionDb {
 }
 
 export default function IntegrationsPage() {
-  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState("");
 
   // 구글 드라이브
+  const [driveToken, setDriveToken] = useState("");
   const [driveFiles, setDriveFiles] = useState<DriveFile[]>([]);
   const [driveLoading, setDriveLoading] = useState(false);
 
@@ -35,37 +43,103 @@ export default function IntegrationsPage() {
   const [selectedDb, setSelectedDb] = useState<NotionDb | null>(null);
   const [notionLoading, setNotionLoading] = useState(false);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data.session?.user ?? null);
-      setLoading(false);
-    });
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
+  const fetchNotionDatabases = useCallback(async (token: string) => {
+    const dbResult = await listNotionDatabases(token);
+    setNotionDbs(dbResult.databases ?? []);
+  }, []);
 
-    // localStorage에서 노션 설정 복원
-    const stored = localStorage.getItem("notion-integration");
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        setNotionToken(parsed.token ?? "");
-        setNotionWorkspace(parsed.workspace ?? "");
-        if (parsed.database) setSelectedDb(parsed.database);
-      } catch { /* ignore */ }
+  const syncIntegrationFromSession = useCallback(async (session: any) => {
+    const provider = session?.user?.app_metadata?.provider as string | undefined;
+    const providerToken = session?.provider_token as string | undefined;
+    if (!provider || !providerToken) return;
+
+    if (provider === "google") {
+      setDriveToken(providerToken);
+      setStoredDriveIntegration({ token: providerToken });
     }
 
-    // URL에서 Notion OAuth 콜백 코드 확인
+    if (provider === "notion") {
+      const workspaceName =
+        notionWorkspace ||
+        session?.user?.user_metadata?.name ||
+        "Notion 워크스페이스";
+      setNotionToken(providerToken);
+      setNotionWorkspace(workspaceName);
+      setStoredNotionIntegration({
+        ...(getStoredNotionIntegration() ?? {}),
+        token: providerToken,
+        workspace: workspaceName,
+      });
+
+      try {
+        await fetchNotionDatabases(providerToken);
+      } catch (error) {
+        showToast(error instanceof Error ? error.message : "노션 DB 목록을 불러오지 못했어요");
+      }
+    }
+  }, [fetchNotionDatabases, notionWorkspace]);
+
+  useEffect(() => {
+    const storedDrive = getStoredDriveIntegration();
+    if (storedDrive?.token) setDriveToken(storedDrive.token);
+
+    const storedNotion = getStoredNotionIntegration();
+    if (storedNotion) {
+      setNotionToken(storedNotion.token ?? "");
+      setNotionWorkspace(storedNotion.workspace ?? "");
+      if (storedNotion.database) setSelectedDb(storedNotion.database);
+      if (storedNotion.token) {
+        fetchNotionDatabases(storedNotion.token).catch((error) => {
+          showToast(error instanceof Error ? error.message : "노션 DB 목록을 불러오지 못했어요");
+        });
+      }
+    }
+
+    supabase.auth.getSession().then(async ({ data }) => {
+      await syncIntegrationFromSession(data.session);
+      setLoading(false);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      await syncIntegrationFromSession(session);
+    });
+
     const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    if (code) {
-      handleNotionCallback(code);
-      // URL에서 code 파라미터 제거
+    const googleAccessToken = params.get("google_access_token");
+    const notionAccessToken = params.get("notion_access_token");
+    const workspaceName = params.get("workspace_name");
+    const authError = params.get("error_description") || params.get("error");
+
+    if (googleAccessToken) {
+      setDriveToken(googleAccessToken);
+      setStoredDriveIntegration({ token: googleAccessToken });
+      showToast("구글 드라이브를 연결했어요");
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+
+    if (notionAccessToken) {
+      const workspace = workspaceName || "Notion 워크스페이스";
+      setNotionToken(notionAccessToken);
+      setNotionWorkspace(workspace);
+      setStoredNotionIntegration({
+        ...(getStoredNotionIntegration() ?? {}),
+        token: notionAccessToken,
+        workspace,
+      });
+      fetchNotionDatabases(notionAccessToken).catch((error) => {
+        showToast(error instanceof Error ? error.message : "노션 DB 목록을 불러오지 못했어요");
+      });
+      showToast(`${workspace}에 연결했어요`);
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+
+    if (authError) {
+      showToast(decodeURIComponent(authError));
       window.history.replaceState({}, "", window.location.pathname);
     }
 
     return () => listener.subscription.unsubscribe();
-  }, []);
+  }, [fetchNotionDatabases, syncIntegrationFromSession]);
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -75,19 +149,27 @@ export default function IntegrationsPage() {
   // ─── 구글 드라이브 ───
 
   const signInWithGoogle = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        scopes: "https://www.googleapis.com/auth/drive.readonly",
-        redirectTo: window.location.origin + window.location.pathname,
-      },
-    });
-    if (error) showToast("구글 로그인에 실패했어요");
+    const redirectTo = `${window.location.origin}${import.meta.env.BASE_URL}integrations`;
+    try {
+      const { url } = await getGoogleAuthUrl(redirectTo);
+      window.location.href = url;
+    } catch {
+      // Fallback: Supabase OAuth
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          scopes:
+            "https://www.googleapis.com/auth/drive.readonly https://www.googleapis.com/auth/drive.file",
+          queryParams: { access_type: "offline", prompt: "consent" },
+          redirectTo,
+        },
+      });
+      if (error) showToast("구글 로그인에 실패했어요");
+    }
   };
 
   const loadDriveFiles = async () => {
-    const session = await supabase.auth.getSession();
-    const token = session.data.session?.provider_token;
+    const token = driveToken;
     if (!token) {
       showToast("구글 드라이브 토큰이 없어요. 다시 연결해주세요");
       return;
@@ -97,64 +179,54 @@ export default function IntegrationsPage() {
       const result = await listDriveFiles(token);
       setDriveFiles(result.files ?? []);
       if (!result.files?.length) showToast("드라이브에 .txt 파일이 없어요");
-    } catch {
-      showToast("파일 목록을 가져오지 못했어요");
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "파일 목록을 가져오지 못했어요");
     } finally {
       setDriveLoading(false);
     }
   };
 
+  const disconnectDrive = () => {
+    clearStoredDriveIntegration();
+    setDriveToken("");
+    setDriveFiles([]);
+    showToast("구글 드라이브 연결을 해제했어요");
+  };
+
   // ─── 노션 OAuth ───
 
   const startNotionAuth = async () => {
+    const redirectTo = `${window.location.origin}${import.meta.env.BASE_URL}integrations`;
+    setNotionLoading(true);
     try {
-      const { url } = await getNotionAuthUrl();
-      // 현재 페이지 URL을 state로 전달 (콜백 후 돌아오기 위해)
+      const { url } = await getNotionAuthUrl(redirectTo);
       window.location.href = url;
     } catch {
-      showToast("노션 인증 URL을 가져오지 못했어요");
+      // Fallback: Supabase OAuth
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "notion",
+        options: { redirectTo },
+      });
+      if (error) {
+        setNotionLoading(false);
+        showToast("노션 로그인에 실패했어요");
+      }
     }
   };
 
-  const handleNotionCallback = useCallback(async (code: string) => {
-    setNotionLoading(true);
-    try {
-      const result = await notionCallback(code);
-      if (result.access_token) {
-        setNotionToken(result.access_token);
-        setNotionWorkspace(result.workspace_name ?? "");
-
-        // 접근 가능한 DB 목록 가져오기
-        const dbResult = await listNotionDatabases(result.access_token);
-        setNotionDbs(dbResult.databases ?? []);
-
-        showToast(`${result.workspace_name ?? "노션"} 워크스페이스에 연결했어요`);
-      } else {
-        showToast("노션 연결에 실패했어요");
-      }
-    } catch {
-      showToast("노션 인증 처리 중 오류가 발생했어요");
-    } finally {
-      setNotionLoading(false);
-    }
-  }, []);
-
   const selectDatabase = (db: NotionDb) => {
     setSelectedDb(db);
-    localStorage.setItem(
-      "notion-integration",
-      JSON.stringify({
-        token: notionToken,
-        database_id: db.id,
-        workspace: notionWorkspace,
-        database: db,
-      })
-    );
+    setStoredNotionIntegration({
+      token: notionToken,
+      database_id: db.id,
+      workspace: notionWorkspace,
+      database: db,
+    });
     showToast(`"${db.title}" 데이터베이스를 선택했어요`);
   };
 
   const disconnectNotion = () => {
-    localStorage.removeItem("notion-integration");
+    clearStoredNotionIntegration();
     setNotionToken("");
     setNotionWorkspace("");
     setNotionDbs([]);
@@ -163,6 +235,7 @@ export default function IntegrationsPage() {
   };
 
   const isNotionConnected = !!notionToken && !!selectedDb;
+  const isDriveConnected = !!driveToken;
 
   if (loading) {
     return (
@@ -190,12 +263,12 @@ export default function IntegrationsPage() {
               드라이브에서 트랜스크립트 파일을 가져올 수 있어요
             </p>
           </div>
-          <span style={{ fontSize: 12, fontWeight: 600, color: user ? "var(--primary)" : "var(--text-muted)" }}>
-            {user ? "연결됨" : "미연결"}
+          <span style={{ fontSize: 12, fontWeight: 600, color: isDriveConnected ? "var(--primary)" : "var(--text-muted)" }}>
+            {isDriveConnected ? "연결됨" : "미연결"}
           </span>
         </div>
 
-        {!user ? (
+        {!isDriveConnected ? (
           <button onClick={signInWithGoogle} className="btn-primary" style={{ width: "100%" }}>
             구글 계정으로 연결하기
           </button>
@@ -225,6 +298,9 @@ export default function IntegrationsPage() {
                 ))}
               </div>
             )}
+            <button onClick={disconnectDrive} className="btn-secondary" style={{ width: "100%" }}>
+              연결 해제
+            </button>
           </div>
         )}
       </div>

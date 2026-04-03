@@ -6,6 +6,9 @@
 
 ## 최근 완료
 
+- 연동 실패 보강: Notion 페이지 생성 시 DB 스키마를 조회해 title/date/number/rich_text 속성을 자동 매핑하도록 변경해, DB 컬럼명이 달라도 최소 저장이 되게 수정. Google/Notion API 실패 메시지도 프론트 토스트로 그대로 노출되게 정리 (`api/main.py`, `frontend/src/lib/api.ts`, `frontend/src/pages/IntegrationsPage.tsx`, `frontend/src/app/lectures/[date]/page.tsx`, `frontend/src/components/shared/ReportModal.tsx`)
+- Google/Notion 연동 복구: 백엔드 OAuth 콜백이 프론트 `/integrations`로 돌아오도록 `frontend_redirect(state)` 경로를 추가하고, 프론트는 Supabase 세션 토큰 + 백엔드 콜백 토큰을 모두 수용하는 fallback 연동 흐름으로 정리함 (`api/main.py`, `frontend/src/lib/api.ts`, `frontend/src/pages/IntegrationsPage.tsx`, `frontend/src/lib/integrations.ts`)
+- 연동 기능 최소 동작 복구: `IntegrationsPage`를 백엔드 콜백 기반 Notion OAuth에서 Supabase OAuth 기반으로 정리하고, Google Drive/Notion 토큰을 로컬 저장해 파일 조회·리포트 내보내기에서 재사용되게 수정 (`frontend/src/pages/IntegrationsPage.tsx`, `frontend/src/lib/integrations.ts`, `frontend/src/components/shared/ReportModal.tsx`, `frontend/src/app/lectures/page.tsx`, `frontend/src/app/lectures/[date]/page.tsx`)
 - 프레젠테이션 페이지 최종 정리: `/presentation` 소개 페이지를 scene 단위 전환 애니메이션 + 인포그래픽 중심 레이아웃으로 교체하고, `/about`은 다시 `AboutPage`로 분리해 기존 서비스 라우팅 충돌을 제거함 (`frontend/src/pages/PresentationPage.tsx`, `frontend/src/pages/PresentationPage.css`, `frontend/src/App.tsx`)
 - 소개 페이지용 스크린샷 갱신: 현재 라우트 기준으로 `ui-dashboard`, `ui-lecture-detail`, `ui-validation`, `ui-integrations`를 업데이트해 공개 페이지 시각 자산을 최신 상태로 반영함 (`frontend/public/presentation/assets/`)
 - 공개 발표 경로 재구성: `/presentation`을 단순 iframe 덱이 아니라 Apple 계열 소개 랜딩으로 다시 만들고, 발표 덱 HTML과 Notion 최종 보고서 샘플을 보조 CTA로 연결한 뒤 `cd frontend && npm run build` 재검증까지 완료 (`frontend/src/pages/PresentationPage.tsx`, `frontend/src/app/globals.css`)
